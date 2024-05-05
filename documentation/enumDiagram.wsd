@@ -1,0 +1,134 @@
+
+    enum NoncomplianceEfects{
+        Advetisement
+        Blocked
+        Suspended
+        Canceled
+    }
+
+
+    enum TYPE_OF_WATER_SUPPLY {
+        GENERAL_DISTRIBUTION_NETWORK
+        WELL_OR_SPRING
+        WATER_CISTERN
+        KITE_CAR
+        OTHERS
+    }
+
+    enum SEWAGE_COLLECTION {
+        SEWAGE_OR_RAIN_COLLECTION_NETWORK
+        SEPTIC_TANK
+        RUDIMENTARY_FIT
+        DIRECT_TO_DITCH_OR_RIVER_OR_LAKE_OR_SEA
+        HOUSEHOLD_WITHOUT_BATHROOM
+    }
+
+    enum GARBAGE_COLLECTION {
+        DIRECT_COLLECTION
+        DIRECT_INCOLLECTION
+        DONT_HAS
+    }
+
+    enum HAS_ELECTRIC_POWER {
+        OWN_METER
+        SHARED_METER
+        NO_METER
+        DONT_HAS
+    }
+
+    enum UNITY_TYPE {
+        CRAS
+        CREAS
+    }
+
+    enum TYPE_LOCATION {
+        URBANO
+        RURAL
+    }
+
+    enum GENDER {
+        MALE
+        FEMALE
+    }
+
+    enum HOUSE_MATERIAL {
+        MASONRY_OR_PAIRED_WOOD 
+        PRECARIOUS_MATERIALS
+    }
+
+    enum TYPE_OF_RESIDENCE {
+        OWNED
+        LEASED
+        CEDED
+        OCCUPIED 
+    }
+
+    enum DOCUMENTS_REQUIRED {
+        CN
+        RG
+        CTPS
+        CPF
+        TE
+    }
+    
+    enum EDUCATION_CODE {
+        NEVER_ATTENDED_A_SCHOOL = 00
+        NURSERY = 01
+        CHILD_EDUCATION = 02
+        FIRST_YEAR_OF_ELEMENTARY_EDUCATION = 11
+        SECOND_YEAR_OF_ELEMENTARY_EDUCATION = 12
+        THIRD_YEAR_OF_ELEMENTARY_EDUCATION = 13
+        FOURTH_YEAR_OF_ELEMENTARY_EDUCATION = 14
+        FIFTH_YEAR_OF_ELEMENTARY_EDUCATION = 15
+        SIXTH_YEAR_OF_ELEMENTARY_EDUCATION = 16
+        SEVENTH_YEAR_OF_ELEMENTARY_EDUCATION = 17
+        EIGHTH_YEAR_OF_ELEMENTARY_EDUCATION = 18
+        NINTH_YEAR_OF_ELEMENTARY_EDUCATION = 19
+        FIRST_YEAR_OF_HIGH_SCHOOL = 21
+        SECOND_YEAR_OF_HIGH_SCHOOL = 22
+        THIRD_YEAR_OF_HIGH_SCHOOL = 23
+        INCOMPLETE_HIGHER = 30
+        COMPLETE_HIGHER = 31
+        EJA_ELEMENTARY_EDUCATION = 40
+        EJA_HIGH_SCHOOL = 41
+        OUTHERS = 99
+    }
+
+    enum ACTIVITY_DESCRIPTION_CODE {
+        individualized_socio-assistance_service = 1
+        continuous_collective_activities_attendance = 2
+        non_continuous_collective_activities_participation = 3
+        registration_or_update_of_registration = 4
+        MSE_follow_up = 5
+        request_or_granting_of_occasional_benefits = 6
+        home_visit = 7
+        others = 8
+    }
+
+    enum SOCIAL_REFERENCE_PERSON_KINSHIP{
+        referencePerson = 1
+        spouse = 2
+        son = 3
+        stepson = 4
+        grandchild = 5
+        parents = 6
+        fatherInLaw = 7
+        brothers = 8
+        genre = 9
+        otherRelative = 10
+        notRelated = 11
+    } 
+
+    enum ENTRY_TYPE {
+        spontaneous_demand = 1
+        active_team_serach = 2
+        referral_from_other_service_or_unit = 3
+        referral_from_other_service_or_special_unit = 4
+        referral_from_health_unit = 5
+        referral_from_education_unit = 6
+        referral_from_others_sectoral_policies = 7
+        referral_from_guardianship_council = 8
+        referral_from_judicial_power = 9
+        referral_from_public_security = 10
+        others_referral = 11
+    }

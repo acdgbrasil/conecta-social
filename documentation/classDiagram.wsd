@@ -1,0 +1,70 @@
+@startuml
+
+    class ResorceLog{
+        +ObjectID id
+        +Date createdAt
+        +Date updatedAt
+        +Number nOrderPerson
+        +String description
+        +ACTIVITY_DESCRIPTION_CODE code
+        +String nameOfInCharge
+        +ObjectID idOfInCharge
+        +ObjectID idMedicalResorce
+    }
+
+    class MedicalResorce {
+        -ObjectID id
+        -Date createdAt
+        -Date updatedAt
+        -String referenceName
+        -Number resorceNumber
+        -UNITY_TYPE unityType 
+        -Number unityNumber
+        -String unityName
+        -List<ResorceLog> resorceLog
+        -List<String> observations
+    }
+
+    class Family {
+        -ObjectID id
+        -boolean livinInShelter
+        -Date createdAt
+        -Date updatedAt
+        -String fullNameOfReferencePerson
+        -String socialName
+        -String motherName
+        -Number referencePersonNIS
+        -String referencePersonCPF
+        -RG referencePersonRG
+        -String adress
+        -String adressNumber
+        -String complement
+        -String neighborhood
+        -String CEP
+        -String referenceAdressPoints
+        -TYPE_LOCATION locationType
+        -ENTRY_TYPE entryType
+        -String whoRefered
+        -String familyFirstDemand
+        -ageGroup ageGroup
+        -map<String,dynamic> familySpecifics
+        -map<String,Bool> socialBenefits
+        -List<String> referencePhone
+        -List<FamilyMember> familyMembers
+        -List<String> observations
+    }
+
+    class FamilyMember{
+        -ObjectID id
+        -Date createdAt
+        -Date updatedAt
+        -Number nOrder
+        -GENDER gender
+        -String birthName
+        -Number age
+        -SOCIAL_REFERENCE_PERSON_KINSHIP kinship
+        -DOCUMENTS_REQUIRED documentsRequired
+        -List<String> observations
+    }
+
+@enduml

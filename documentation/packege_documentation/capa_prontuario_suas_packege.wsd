@@ -1,0 +1,50 @@
+@startuml
+    
+    package "capa do prontuario do suas" {
+
+        enum UNITY_TYPE {
+            CRAS
+            CREAS
+        }
+
+        enum ACTIVITY_DESCRIPTION_CODE {
+            individualized_socio-assistance_service = 1
+            continuous_collective_activities_attendance = 2
+            non_continuous_collective_activities_participation = 3
+            registration_or_update_of_registration = 4
+            MSE_follow_up = 5
+            request_or_granting_of_occasional_benefits = 6
+            home_visit = 7
+            others = 8
+        }
+
+        class MedicalResorce {
+            -ObjectID id
+            -Date createdAt
+            -Date updatedAt
+            -String referenceName
+            -Number resorceNumber
+            -UNITY_TYPE unityType 
+            -Number unityNumber
+            -String unityName
+            -List<ResorceLog> resorceLog
+            -List<String> observations
+        }
+
+        class ResorceLog {
+            +ObjectID id
+            +Date createdAt
+            +Date updatedAt
+            +Number nOrderPerson
+            +String description
+            +ACTIVITY_DESCRIPTION_CODE code
+            +String nameOfInCharge
+            +ObjectID idOfInCharge
+            +ObjectID idMedicalResorce
+        }
+    }
+
+    MedicalResorce <--> ResorceLog
+    UNITY_TYPE -- MedicalResorce
+    ACTIVITY_DESCRIPTION_CODE -- MedicalResorce
+@enduml

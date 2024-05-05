@@ -1,0 +1,38 @@
+    map "social_benefits <String,bool>" as socialBenefits {
+        bolsa_familia => false
+        BPC => false
+        PETI => false
+        others => false
+    }
+
+    map "family_specifics <String,dynamic>" as familySpecifics {
+        homeless_family => false
+        quilombola_family => false
+        ribeirinha_family => false
+        gypsy_family => false
+        indigenous_family_living_in_tribe => List<String,dynamic> { isIndigenous => false, nameOfTribe => "name" }
+        indigenous_family_not_living_in_tribe => List<String,dynamic> { isIndigenous => false, nameOfTribe => "name" }
+        others => "observations"
+
+    }
+
+    map "age_group <String,Number>" as ageGroup {
+        ZERO_TO_SIX_PEAPLE => 0
+        SEVEN_TO_FOURTEEN => 0
+        FIFTEEN_TO_SEVENTEEN => 0
+        EIGHTEEN_TO_TWENTY-NINE => 0
+        THIRTY_TO_FIFTY-NINE => 0
+        SIXTY_TO_SIXTY-FOUR => 0
+        SIXTY-FIVE_TO_SIXTY-NINE => 0
+        SEVENTY_OR_MORE => 0
+        TOTAL_OF_PEOPLE => 0
+    }
+
+    map "SchoolVunerabilityIndex <String,Number> " as SchoolVunerabilityIndex{
+        0_5Years_dont_go_to_school => 0
+        6_14Years_dont_go_to_school => 0
+        15_17Years_dont_go_to_school => 0
+        10_17Years_dont_know_how_to_read_or_write => 0
+        18_59Years_dont_know_how_to_read_or_write => 0
+        60_MOREYears_dont_know_how_to_read_or_write => 0
+    }
