@@ -1,0 +1,128 @@
+@startuml
+title SUAS MongoDB Collections
+
+' Definições das Classes e Atributos
+class PessoaReferencia {
+  +_id: ObjectId
+  +nome: String
+  +nomeSocial: String (opcional)
+  +nomeMae: String (opcional)
+  +nis: String (hasheado, opcional)
+  +cpf: String (obrigatório)
+  +rg: String (obrigatório)
+  +endereco: Objeto
+  +telefone: String
+  +localizacao: String (Urbano, Rural, Abrigo)
+  +dataAbertura: Date
+}
+
+class ComposicaoFamiliar {
+  +numeroOrdem: Número
+  +nomeCompleto: String
+  +sexo: String (M/F)
+  +dataNascimento: Date
+  +idade: Número
+  +parentesco: Número (Código)
+  +deficiencia: Boolean
+  +documentacaoNecessaria: Objeto
+  +perfilEtario: Objeto
+  +grupoSocial: Objeto
+}
+
+class CondicoesHabitacionais {
+  +tipoResidencia: String (Própria, Alugada, etc.)
+  +materialParedes: String (Alvenaria, Madeira, etc.)
+  +acessoEnergia: String
+  +aguaCanalizada: Boolean
+  +abastecimentoAgua: String
+  +escoamentoSanitario: String
+  +coletaLixo: String
+  +numeroComodos: Número
+  +numeroDormitorios: Número
+  +dificuldadeAcesso: Boolean
+}
+
+class CondicoesEducacionais {
+  +numeroOrdem: Número
+  +primeiroNome: String
+  +idade: Número
+  +sabeLerEscrever: Boolean
+  +frequentaEscola: Boolean
+  +escolaridade: Número (Código)
+}
+
+class CondicoesTrabalhoRendimento {
+  +numeroOrdem: Número
+  +primeiroNome: String
+  +idade: Número
+  +possuiCTPS: Boolean
+  +condicaoOcupacao: Número (Código)
+  +qualificacaoProfissional: Boolean
+  +qualificacaoDetalhe: String (opcional)
+  +rendaMensal: Número
+  +rendaFamiliar: Número
+  +programasSociais: Objeto
+}
+
+class CondicoesSaude {
+  +numeroOrdem: Número
+  +primeiroNome: String
+  +deficiencia: Boolean
+  +tiposDeficiencia: Array de Números (Códigos)
+  +necessitaCuidados: Boolean
+  +cuidador: Objeto
+  +gravidez: Boolean
+  +mesesGestacao: Número
+  +remediosControlados: Boolean
+  +alcoolDrogas: Boolean
+}
+
+class ViolenciaViolacoes {
+  +numeroOrdem: Número
+  +primeiroNome: String
+  +tiposViolencia: Array de Números (Códigos)
+  +situacaoSuperada: Boolean
+}
+
+class Encaminhamentos {
+  +codigoArea: Número
+  +orgaoUnidade: String
+  +objetivoMotivo: String
+  +data: Date
+  +nomeProfissional: String
+}
+
+class IngressosDesligamentos {
+  +programa: String (PAIF ou PAEFI)
+  +dataIngresso: Date
+  +dataDesligamento: Date
+  +razaoDesligamento: Número (Código)
+}
+
+' Relações entre Classes/Collections
+PessoaReferencia "1" -- "1..*" ComposicaoFamiliar: "contém"
+PessoaReferencia "1" -- "1" CondicoesHabitacionais: "residência"
+PessoaReferencia "1" -- "1..*" CondicoesEducacionais: "envolve"
+PessoaReferencia "1" -- "1..*" CondicoesTrabalhoRendimento: "envolve"
+PessoaReferencia "1" -- "1..*" CondicoesSaude: "envolve"
+PessoaReferencia "1" -- "0..*" ViolenciaViolacoes: "relata"
+PessoaReferencia "1" -- "0..*" Encaminhamentos: "realiza"
+PessoaReferencia "1" -- "0..1" IngressosDesligamentos: "participa"
+
+' Comentários explicativos
+'note right of PessoaReferencia
+'  PessoaReferencia é a coleção que armazena os dados da pessoa principal de referência.
+'  Ela possui atributos obrigatórios como CPF e RG, além de outros opcionais como NIS hasheado.
+'end note
+'
+'note right of CondicoesHabitacionais
+'  Esta coleção representa as condições habitacionais do grupo familiar,
+'  incluindo detalhes sobre tipo de residência, material das paredes, etc.
+'end note
+'
+'note right of ViolenciaViolacoes
+'  Esta coleção rastreia casos de violência ou violações de direitos.
+'  Registra os tipos de violência e se a situação foi superada ou não.
+'end note
+
+@enduml
