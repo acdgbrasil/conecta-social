@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ReferencePerson {
+  id                Int                 @id @unique @default(autoincrement())
+  fullName          String
+  socialName        String?
+  motherName        String
+  nis               String?             @unique
+  cpf               String              @unique
+  rgNumber          String
+  rgIssuer          String
+  rgState           String
+  postalCode        String
+  address           String
+  addressNumber     String
+  addressExtra      String?
+  neighborhood      String
+  phone             String
+  city              String
+  locationType      LocationType
+  orderNumber       Int                 @unique @default(0)
+  firstContactForm  FirstContactForm?
+  FamilyComposition FamilyComposition[]
+}
+
+enum LocationType {
+  URBAN
+  RURAL
+}
+
+model FirstContactForm {
+  id                                  Int             @id @default(autoincrement())
+  spontaneousDemand                   Boolean
+  activeSearch                        Boolean
+  referralFromBasicSocialProtection   Boolean
+  referralFromSpecialSocialProtection Boolean
+  referralFromHealth                  Boolean
+  referralFromEducation               Boolean
+  referralFromOtherSectors            Boolean
+  referralFromTutelarCouncil          Boolean
+  referralFromJudiciary               Boolean
+  referralFromRightsGuaranteeSystem   Boolean
+  otherReferrals                      Boolean
+  wasReferral                         Boolean?
+  referrerName                        String?
+  referrerContact                     String?
+  referralReasons                     String?
+  serviceDemands                      String
+  hasFamilyGrant                      Boolean
+  hasBPC                              Boolean
+  hasPETI                             Boolean
+  other                               String?
+  referencePersonId                   Int             @unique
+  ReferencePerson                     ReferencePerson @relation(fields: [referencePersonId], references: [id])
+}
+
+model FamilyComposition {
+  id                 Int                 @id @default(autoincrement())
+  referencePersonId  Int
+  orderNumber        Int                 @unique @default(autoincrement())
+  fullName           String
+  gender             String
+  birthDate          DateTime
+  kinshipCode        KinshipCode
+  hasDisability      Boolean
+  importantDocuments ImportantDocuments?
+  ReferencePerson    ReferencePerson?    @relation(fields: [referencePersonId], references: [id])
+}
+
+model ImportantDocuments {
+  id                  Int               @id @default(autoincrement())
+  cn                  String?
+  rg                  String?
+  ctps                String?
+  cpf                 String?
+  te                  String?
+  familyCompositionId Int               @unique
+  FamilyComposition   FamilyComposition @relation(fields: [familyCompositionId], references: [id])
+}
+
+enum KinshipCode {
+  PERSON_OF_REFERENCE
+  SPOUSE
+  CHILD
+  STEPCHILD
+  GRANDCHILD
+  PARENT
+  PARENT_IN_LAW
+  SIBLING
+  SON_IN_LAW
+  OTHER_RELATIVE
+  NON_RELATIVE
+}
