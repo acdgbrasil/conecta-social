@@ -34,6 +34,10 @@ model ReferencePerson {
   orderNumber       Int                 @unique @default(0)
   firstContactForm  FirstContactForm?
   FamilyComposition FamilyComposition[]
+  EducationalConditions EducationalConditions[]
+  FamilySpecifics   FamilySpecifics?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
 }
 
 enum LocationType {
@@ -91,6 +95,125 @@ model ImportantDocuments {
   FamilyComposition   FamilyComposition @relation(fields: [familyCompositionId], references: [id])
 }
 
+model FamilySpecifics {
+  referencePersonId Int                @unique
+  referencePerson   ReferencePerson    @relation(fields: [referencePersonId], references: [id])
+  id                Int                @id @default(autoincrement())
+  specifics         FamilySpecificity
+  isStreetSituation Boolean
+  residenceType     ResidenceType?
+  wallMaterial      WallMaterial?
+  hasElectricity    AccessElectricity?
+  hasRunningWater   Boolean?
+  waterSupply       WaterSupply?
+  sewageDisposal    SewageDisposal?
+  garbageCollection GarbageCollection?
+  totalRooms        Int?
+  totalBedrooms     Int?
+  peoplePerBedroom  Int?
+  hasAccessibility  Accessibility?
+  isRiskArea        Boolean?
+  isHardAccessArea  Boolean?
+  isConflictArea    Boolean?
+  observations      String?
+}
+
+model EducationalConditions {
+  id Int @id @default(autoincrement())
+  orderNumber Int
+  name String
+  age Int
+  canReadOrWrite Boolean
+  currentlyAttendingSchool Boolean
+  educationLevel EducationLevel
+  schoolVulnerabilityCalculation String
+  hadConditionalityNoncompliance Boolean
+  occurrenceDate DateTime?
+  suspensionRequested Boolean?
+  noncomplianceEffect NoncomplianceEffect?
+  referencePersonId Int
+  ReferencePerson ReferencePerson @relation(fields: [referencePersonId], references: [id])
+}
+
+enum EducationLevel {
+  NEVER_ATTENDED
+  DAYCARE
+  KINDERGARTEN
+  FIRST_GRADE
+  SECOND_GRADE
+  THIRD_GRADE
+  FOURTH_GRADE
+  FIFTH_GRADE
+  SIXTH_GRADE
+  SEVENTH_GRADE
+  EIGHTH_GRADE
+  NINTH_GRADE
+  FIRST_YEAR_HIGH_SCHOOL
+  SECOND_YEAR_HIGH_SCHOOL
+  THIRD_YEAR_HIGH_SCHOOL
+  INCOMPLETE_HIGHER_EDUCATION
+  COMPLETE_HIGHER_EDUCATION
+  ADULT_EDUCATION_ELEMENTARY
+  ADULT_EDUCATION_HIGH
+  OTHER
+}
+
+enum NoncomplianceEffect {
+  WARNING
+  BLOCK
+  SUSPENSION
+  CANCELLATION
+}
+
+enum ResidenceType {
+  OWNED
+  RENTED
+  PROVIDED
+  OCCUPIED
+}
+
+enum WallMaterial {
+  BRICK_OR_WOOD
+  WOOD
+  RECYCLED_WOOD
+  MUD_OR_POOR_MATERIAL
+}
+
+enum AccessElectricity {
+  OWN_METER
+  SHARED_METER
+  HAS_METER
+  NO_ELECTRICITY
+}
+
+enum WaterSupply {
+  PUBLIC_NETWORK
+  WELL_OR_SPRING
+  RAINWATER_CISTERN
+  WATER_TRUCK
+  OTHER
+}
+
+enum SewageDisposal {
+  PUBLIC_NETWORK
+  SEPTIC_TANK
+  RUDIMENTARY_PIT
+  DIRECT_DISCHARGE
+  NO_BATHROOM
+}
+
+enum GarbageCollection {
+  DIRECT_COLLECTION
+  INDIRECT_COLLECTION
+  NO_COLLECTION
+}
+
+enum Accessibility {
+  FULL
+  PARTIAL
+  NONE
+}
+
 enum KinshipCode {
   PERSON_OF_REFERENCE
   SPOUSE
@@ -103,4 +226,15 @@ enum KinshipCode {
   SON_IN_LAW
   OTHER_RELATIVE
   NON_RELATIVE
+}
+
+enum FamilySpecificity {
+  STREET_SITUATION
+  QUILOMBOLA
+  RIVERINE
+  GYPSY
+  INDIGENOUS_RESIDENT
+  INDIGENOUS_NON_RESIDENT
+  OTHER
+  SHELTER
 }
