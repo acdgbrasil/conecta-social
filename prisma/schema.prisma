@@ -33,9 +33,16 @@ model ReferencePerson {
   locationType      LocationType
   orderNumber       Int                 @unique @default(0)
   firstContactForm  FirstContactForm?
-  FamilyComposition FamilyComposition[]
-  EducationalConditions EducationalConditions[]
-  FamilySpecifics   FamilySpecifics?
+  familyComposition FamilyComposition[]
+  educationalConditions EducationalConditions[]
+  wamilySpecifics   FamilySpecifics?
+  workConditionsAndIncome WorkConditionsAndIncome[]
+  communityEngagement CommunityEngagement[]
+  violenceAndRightsViolation ViolenceAndRightsViolation[]
+  socioEducationalMeasuresHistory SocioEducationalMeasuresHistory[]
+  observations      observations[]
+  institutionalOrFamilyCareHistory InstitutionalOrFamilyCareHistory[]
+  familyAndCommunityCohabitation FamilyAndCommunityCohabitation[]
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
 }
@@ -237,4 +244,191 @@ enum FamilySpecificity {
   INDIGENOUS_NON_RESIDENT
   OTHER
   SHELTER
+}
+
+model WorkConditionsAndIncome {
+  id                          Int                  @id @default(autoincrement())
+  orderNumber                 Int
+  firstName                   String
+  age                         Int
+  hasWorkCard                 Boolean
+  employmentCondition         EmploymentCondition
+  hasProfessionalQualification Boolean
+  professionalQualification   String?
+  monthlyIncome               Int
+  ReferencePerson    ReferencePerson?    @relation(fields: [referencePersonId], references: [id])
+  referencePersonId           Int
+  FinancialConditions        FinancialConditions?
+}
+
+enum EmploymentCondition {
+  NAO_TRABALHA
+  TRABALHADOR_CONTA_PROPRIA
+  TRABALHADOR_TEMPORARIO_RURAL
+  EMPREGADO_SEM_CARTEIRA
+  EMPREGADO_COM_CARTEIRA
+  TRABALHADOR_DOMESTICO_SEM_CARTEIRA
+  TRABALHADOR_DOMESTICO_COM_CARTEIRA
+  TRABALHADOR_NAO_REMUNERADO
+  MILITAR_SERVIDOR_PUBLICO
+  EMPREGADOR
+  ESTAGIARIO
+  APRENDIZ
+}
+
+model FinancialConditions {
+  id                           Int         @id @default(autoincrement())
+  totalFamilyIncome            Int
+  perCapitaFamilyIncome        Int
+  receivesSocialProgramIncome  Boolean
+  bolsaFamiliaAmount           Int?
+  bpcAmount                    Int?
+  petiAmount                   Int?
+  otherIncome                  Int?
+  bpcBeneficiariesOrderNumbers Int[]
+  hasRetiredOrPensionerMember  Boolean
+  retireesOrPensionersOrderNumbers Int[]
+  totalIncomeWithBenefits      Int
+  perCapitaIncomeWithBenefits  Int
+  workConditionsAndIncome      WorkConditionsAndIncome? @relation(fields: [workConditionsAndIncomeId], references: [id])
+  workConditionsAndIncomeId    Int @unique
+}
+
+model CommunityEngagement {
+  id                        Int                 @id @default(autoincrement())
+  orderNumber               Int
+  firstName                 String
+  serviceProgramProject     ServiceProgramProject
+  unitCode                  UnitCode
+  startDate                 DateTime
+  endDate                   DateTime?
+  ReferencePerson           ReferencePerson?    @relation(fields: [referencePersonId], references: [id])
+  referencePersonId         Int
+}
+
+enum ServiceProgramProject {
+  SERVICO_CONVIVENCIA_CRIANCAS_ADOLESCENTES
+  SERVICO_CONVIVENCIA_IDOSOS
+  GRUPO_ESPECIFICO_PAIF
+  GRUPO_ESPECIFICO_PAEFI
+  PROGRAMAS_ASSISTENCIA_SOCIAL
+  PROGRAMAS_OUTRAS_POLITICAS_SETORIAIS
+  OUTROS
+}
+
+enum UnitCode {
+  NESTA_PROPRIA_UNIDADE
+  OUTRA_UNIDADE_PUBLICA
+  UNIDADE_PRIVADA
+}
+
+enum ViolenceType {
+  TRABALHO_INFANTIL
+  EXPLORACAO_SEXUAL
+  ABUSO_VIOLENCIA_SEXUAL
+  VIOLENCIA_FISICA
+  VIOLENCIA_PSICOLOGICA
+  NEGLIGENCIA_CONTRA_IDOSO
+  NEGLIGENCIA_CONTRA_CRIANCA
+  NEGLIGENCIA_CONTRA_PCD
+  TRAJETORIA_DE_RUA
+  TRAFICO_DE_PESSOAS
+  VIOLENCIA_PATRIMONIAL_CONTRA_IDOSO_OU_PCD
+  OUTRAS
+}
+
+model ViolenceAndRightsViolation {
+  id                  Int           @id @default(autoincrement())
+  violenceType        ViolenceType
+  isOther             Boolean
+  otherViolenceName   String?
+  situationPersists   Boolean
+  createdAt           DateTime      @default(now())
+  referencePerson     ReferencePerson @relation(fields: [referencePersonId], references: [id])
+  referencePersonId   Int
+}
+
+enum MeasureType {
+  LIBERDADE_ASSISTIDA
+  PRESTACAO_SERVICOS_COMUNIDADE
+  ADVERTENCIA
+  OBRIGACAO_REPARAR_DANO
+  SEMI_LIBERDADE
+  INTERNACAO
+}
+
+model SocioEducationalMeasuresHistory {
+  id                   Int           @id @default(autoincrement())
+  orderNumber          Int
+  firstName            String
+  measureType          MeasureType
+  processNumber        String
+  startDate            DateTime
+  endDate              DateTime?
+  isLAorPSC            Boolean
+  beingMonitoredByCreas Boolean
+  referencePerson      ReferencePerson @relation(fields: [referencePersonId], references: [id])
+  referencePersonId    Int
+}
+
+model observations {
+  id            Int     @id @default(autoincrement())
+  observation   String
+  autor         String
+  createdAt     DateTime @default(now())
+  sectionName   String
+  proficionalId String
+  referencePersonId Int
+  ReferencePerson ReferencePerson @relation(fields: [referencePersonId], references: [id])
+}
+
+model InstitutionalOrFamilyCareHistory {
+  id                              Int           @id @default(autoincrement())
+  orderNumber                     Int
+  firstName                       String
+  careStartDate                   DateTime
+  careEndDate                     DateTime
+  reasonForCare                   String
+  institutionalCareHistory        String?
+  externalGuardHistory            String?
+  hasMemberInPrison               Boolean
+  hasAdolescentInSocioeducativeInternment Boolean
+  referencePerson                 ReferencePerson @relation(fields: [referencePersonId], references: [id])
+  referencePersonId               Int
+}
+
+enum AccessActivityStatus {
+  NAO
+  SIM
+  NAO_SE_APLICA
+}
+
+enum FamilyRelationshipStatus {
+  CONFLITUOSO_SEM_VIOLENCIA
+  CONFLITUOSO_COM_VIOLENCIA
+  SEM_CONFLITOS_RELEVANTES
+}
+
+model FamilyAndCommunityCohabitation {
+  id                                    Int                      @id @default(autoincrement())
+  familyAlwaysLivedInState              Boolean
+  yearsInState                          Int?
+  familyAlwaysLivedInCity               Boolean
+  yearsInCity                           Int?
+  familyAlwaysLivedInNeighborhood       Boolean
+  yearsInNeighborhood                   Int?
+  familyVictimOfThreatsOrDiscrimination Boolean
+  familyHasSupportiveNeighbors          Boolean
+  familyMembersParticipateInGroups      Boolean
+  familyMembersParticipateInMovements   Boolean
+  childrenWithoutLeisureActivities      AccessActivityStatus
+  elderlyWithoutLeisureActivities       AccessActivityStatus
+  dependentPeopleWithoutAdultCompany    Boolean
+  maritalRelations                      FamilyRelationshipStatus
+  parentChildRelations                  FamilyRelationshipStatus
+  siblingRelations                      FamilyRelationshipStatus
+  otherConflictRelations                FamilyRelationshipStatus
+  referencePerson                       ReferencePerson           @relation(fields: [referencePersonId], references: [id])
+  referencePersonId                     Int
+  observations                          String[]
 }
