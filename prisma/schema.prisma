@@ -1,0 +1,434 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ReferencePerson {
+  id                Int                 @id @unique @default(autoincrement())
+  fullName          String
+  socialName        String?
+  motherName        String
+  nis               String?             @unique
+  cpf               String              @unique
+  rgNumber          String
+  rgIssuer          String
+  rgState           String
+  postalCode        String
+  address           String
+  addressNumber     String
+  addressExtra      String?
+  neighborhood      String
+  phone             String
+  city              String
+  locationType      LocationType
+  orderNumber       Int                 @unique @default(0)
+  firstContactForm  FirstContactForm?
+  familyComposition FamilyComposition[]
+  educationalConditions EducationalConditions[]
+  wamilySpecifics   FamilySpecifics?
+  workConditionsAndIncome WorkConditionsAndIncome[]
+  communityEngagement CommunityEngagement[]
+  violenceAndRightsViolation ViolenceAndRightsViolation[]
+  socioEducationalMeasuresHistory SocioEducationalMeasuresHistory[]
+  observations      observations[]
+  institutionalOrFamilyCareHistory InstitutionalOrFamilyCareHistory[]
+  familyAndCommunityCohabitation FamilyAndCommunityCohabitation[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+enum LocationType {
+  URBAN
+  RURAL
+}
+
+model FirstContactForm {
+  id                                  Int             @id @default(autoincrement())
+  spontaneousDemand                   Boolean
+  activeSearch                        Boolean
+  referralFromBasicSocialProtection   Boolean
+  referralFromSpecialSocialProtection Boolean
+  referralFromHealth                  Boolean
+  referralFromEducation               Boolean
+  referralFromOtherSectors            Boolean
+  referralFromTutelarCouncil          Boolean
+  referralFromJudiciary               Boolean
+  referralFromRightsGuaranteeSystem   Boolean
+  otherReferrals                      Boolean
+  wasReferral                         Boolean?
+  referrerName                        String?
+  referrerContact                     String?
+  referralReasons                     String?
+  serviceDemands                      String
+  hasFamilyGrant                      Boolean
+  hasBPC                              Boolean
+  hasPETI                             Boolean
+  other                               String?
+  referencePersonId                   Int             @unique
+  ReferencePerson                     ReferencePerson @relation(fields: [referencePersonId], references: [id])
+}
+
+model FamilyComposition {
+  id                 Int                 @id @default(autoincrement())
+  referencePersonId  Int
+  orderNumber        Int                 @unique @default(autoincrement())
+  fullName           String
+  gender             String
+  birthDate          DateTime
+  kinshipCode        KinshipCode
+  hasDisability      Boolean
+  importantDocuments ImportantDocuments?
+  ReferencePerson    ReferencePerson?    @relation(fields: [referencePersonId], references: [id])
+}
+
+model ImportantDocuments {
+  id                  Int               @id @default(autoincrement())
+  cn                  String?
+  rg                  String?
+  ctps                String?
+  cpf                 String?
+  te                  String?
+  familyCompositionId Int               @unique
+  FamilyComposition   FamilyComposition @relation(fields: [familyCompositionId], references: [id])
+}
+
+model FamilySpecifics {
+  referencePersonId Int                @unique
+  referencePerson   ReferencePerson    @relation(fields: [referencePersonId], references: [id])
+  id                Int                @id @default(autoincrement())
+  specifics         FamilySpecificity
+  isStreetSituation Boolean
+  residenceType     ResidenceType?
+  wallMaterial      WallMaterial?
+  hasElectricity    AccessElectricity?
+  hasRunningWater   Boolean?
+  waterSupply       WaterSupply?
+  sewageDisposal    SewageDisposal?
+  garbageCollection GarbageCollection?
+  totalRooms        Int?
+  totalBedrooms     Int?
+  peoplePerBedroom  Int?
+  hasAccessibility  Accessibility?
+  isRiskArea        Boolean?
+  isHardAccessArea  Boolean?
+  isConflictArea    Boolean?
+  observations      String?
+}
+
+model EducationalConditions {
+  id Int @id @default(autoincrement())
+  orderNumber Int
+  name String
+  age Int
+  canReadOrWrite Boolean
+  currentlyAttendingSchool Boolean
+  educationLevel EducationLevel
+  schoolVulnerabilityCalculation String
+  hadConditionalityNoncompliance Boolean
+  occurrenceDate DateTime?
+  suspensionRequested Boolean?
+  noncomplianceEffect NoncomplianceEffect?
+  referencePersonId Int
+  ReferencePerson ReferencePerson @relation(fields: [referencePersonId], references: [id])
+}
+
+enum EducationLevel {
+  NEVER_ATTENDED
+  DAYCARE
+  KINDERGARTEN
+  FIRST_GRADE
+  SECOND_GRADE
+  THIRD_GRADE
+  FOURTH_GRADE
+  FIFTH_GRADE
+  SIXTH_GRADE
+  SEVENTH_GRADE
+  EIGHTH_GRADE
+  NINTH_GRADE
+  FIRST_YEAR_HIGH_SCHOOL
+  SECOND_YEAR_HIGH_SCHOOL
+  THIRD_YEAR_HIGH_SCHOOL
+  INCOMPLETE_HIGHER_EDUCATION
+  COMPLETE_HIGHER_EDUCATION
+  ADULT_EDUCATION_ELEMENTARY
+  ADULT_EDUCATION_HIGH
+  OTHER
+}
+
+enum NoncomplianceEffect {
+  WARNING
+  BLOCK
+  SUSPENSION
+  CANCELLATION
+}
+
+enum ResidenceType {
+  OWNED
+  RENTED
+  PROVIDED
+  OCCUPIED
+}
+
+enum WallMaterial {
+  BRICK_OR_WOOD
+  WOOD
+  RECYCLED_WOOD
+  MUD_OR_POOR_MATERIAL
+}
+
+enum AccessElectricity {
+  OWN_METER
+  SHARED_METER
+  HAS_METER
+  NO_ELECTRICITY
+}
+
+enum WaterSupply {
+  PUBLIC_NETWORK
+  WELL_OR_SPRING
+  RAINWATER_CISTERN
+  WATER_TRUCK
+  OTHER
+}
+
+enum SewageDisposal {
+  PUBLIC_NETWORK
+  SEPTIC_TANK
+  RUDIMENTARY_PIT
+  DIRECT_DISCHARGE
+  NO_BATHROOM
+}
+
+enum GarbageCollection {
+  DIRECT_COLLECTION
+  INDIRECT_COLLECTION
+  NO_COLLECTION
+}
+
+enum Accessibility {
+  FULL
+  PARTIAL
+  NONE
+}
+
+enum KinshipCode {
+  PERSON_OF_REFERENCE
+  SPOUSE
+  CHILD
+  STEPCHILD
+  GRANDCHILD
+  PARENT
+  PARENT_IN_LAW
+  SIBLING
+  SON_IN_LAW
+  OTHER_RELATIVE
+  NON_RELATIVE
+}
+
+enum FamilySpecificity {
+  STREET_SITUATION
+  QUILOMBOLA
+  RIVERINE
+  GYPSY
+  INDIGENOUS_RESIDENT
+  INDIGENOUS_NON_RESIDENT
+  OTHER
+  SHELTER
+}
+
+model WorkConditionsAndIncome {
+  id                          Int                  @id @default(autoincrement())
+  orderNumber                 Int
+  firstName                   String
+  age                         Int
+  hasWorkCard                 Boolean
+  employmentCondition         EmploymentCondition
+  hasProfessionalQualification Boolean
+  professionalQualification   String?
+  monthlyIncome               Int
+  ReferencePerson    ReferencePerson?    @relation(fields: [referencePersonId], references: [id])
+  referencePersonId           Int
+  FinancialConditions        FinancialConditions?
+}
+
+enum EmploymentCondition {
+  NAO_TRABALHA
+  TRABALHADOR_CONTA_PROPRIA
+  TRABALHADOR_TEMPORARIO_RURAL
+  EMPREGADO_SEM_CARTEIRA
+  EMPREGADO_COM_CARTEIRA
+  TRABALHADOR_DOMESTICO_SEM_CARTEIRA
+  TRABALHADOR_DOMESTICO_COM_CARTEIRA
+  TRABALHADOR_NAO_REMUNERADO
+  MILITAR_SERVIDOR_PUBLICO
+  EMPREGADOR
+  ESTAGIARIO
+  APRENDIZ
+}
+
+model FinancialConditions {
+  id                           Int         @id @default(autoincrement())
+  totalFamilyIncome            Int
+  perCapitaFamilyIncome        Int
+  receivesSocialProgramIncome  Boolean
+  bolsaFamiliaAmount           Int?
+  bpcAmount                    Int?
+  petiAmount                   Int?
+  otherIncome                  Int?
+  bpcBeneficiariesOrderNumbers Int[]
+  hasRetiredOrPensionerMember  Boolean
+  retireesOrPensionersOrderNumbers Int[]
+  totalIncomeWithBenefits      Int
+  perCapitaIncomeWithBenefits  Int
+  workConditionsAndIncome      WorkConditionsAndIncome? @relation(fields: [workConditionsAndIncomeId], references: [id])
+  workConditionsAndIncomeId    Int @unique
+}
+
+model CommunityEngagement {
+  id                        Int                 @id @default(autoincrement())
+  orderNumber               Int
+  firstName                 String
+  serviceProgramProject     ServiceProgramProject
+  unitCode                  UnitCode
+  startDate                 DateTime
+  endDate                   DateTime?
+  ReferencePerson           ReferencePerson?    @relation(fields: [referencePersonId], references: [id])
+  referencePersonId         Int
+}
+
+enum ServiceProgramProject {
+  SERVICO_CONVIVENCIA_CRIANCAS_ADOLESCENTES
+  SERVICO_CONVIVENCIA_IDOSOS
+  GRUPO_ESPECIFICO_PAIF
+  GRUPO_ESPECIFICO_PAEFI
+  PROGRAMAS_ASSISTENCIA_SOCIAL
+  PROGRAMAS_OUTRAS_POLITICAS_SETORIAIS
+  OUTROS
+}
+
+enum UnitCode {
+  NESTA_PROPRIA_UNIDADE
+  OUTRA_UNIDADE_PUBLICA
+  UNIDADE_PRIVADA
+}
+
+enum ViolenceType {
+  TRABALHO_INFANTIL
+  EXPLORACAO_SEXUAL
+  ABUSO_VIOLENCIA_SEXUAL
+  VIOLENCIA_FISICA
+  VIOLENCIA_PSICOLOGICA
+  NEGLIGENCIA_CONTRA_IDOSO
+  NEGLIGENCIA_CONTRA_CRIANCA
+  NEGLIGENCIA_CONTRA_PCD
+  TRAJETORIA_DE_RUA
+  TRAFICO_DE_PESSOAS
+  VIOLENCIA_PATRIMONIAL_CONTRA_IDOSO_OU_PCD
+  OUTRAS
+}
+
+model ViolenceAndRightsViolation {
+  id                  Int           @id @default(autoincrement())
+  violenceType        ViolenceType
+  isOther             Boolean
+  otherViolenceName   String?
+  situationPersists   Boolean
+  createdAt           DateTime      @default(now())
+  referencePerson     ReferencePerson @relation(fields: [referencePersonId], references: [id])
+  referencePersonId   Int
+}
+
+enum MeasureType {
+  LIBERDADE_ASSISTIDA
+  PRESTACAO_SERVICOS_COMUNIDADE
+  ADVERTENCIA
+  OBRIGACAO_REPARAR_DANO
+  SEMI_LIBERDADE
+  INTERNACAO
+}
+
+model SocioEducationalMeasuresHistory {
+  id                   Int           @id @default(autoincrement())
+  orderNumber          Int
+  firstName            String
+  measureType          MeasureType
+  processNumber        String
+  startDate            DateTime
+  endDate              DateTime?
+  isLAorPSC            Boolean
+  beingMonitoredByCreas Boolean
+  referencePerson      ReferencePerson @relation(fields: [referencePersonId], references: [id])
+  referencePersonId    Int
+}
+
+model observations {
+  id            Int     @id @default(autoincrement())
+  observation   String
+  autor         String
+  createdAt     DateTime @default(now())
+  sectionName   String
+  proficionalId String
+  referencePersonId Int
+  ReferencePerson ReferencePerson @relation(fields: [referencePersonId], references: [id])
+}
+
+model InstitutionalOrFamilyCareHistory {
+  id                              Int           @id @default(autoincrement())
+  orderNumber                     Int
+  firstName                       String
+  careStartDate                   DateTime
+  careEndDate                     DateTime
+  reasonForCare                   String
+  institutionalCareHistory        String?
+  externalGuardHistory            String?
+  hasMemberInPrison               Boolean
+  hasAdolescentInSocioeducativeInternment Boolean
+  referencePerson                 ReferencePerson @relation(fields: [referencePersonId], references: [id])
+  referencePersonId               Int
+}
+
+enum AccessActivityStatus {
+  NAO
+  SIM
+  NAO_SE_APLICA
+}
+
+enum FamilyRelationshipStatus {
+  CONFLITUOSO_SEM_VIOLENCIA
+  CONFLITUOSO_COM_VIOLENCIA
+  SEM_CONFLITOS_RELEVANTES
+}
+
+model FamilyAndCommunityCohabitation {
+  id                                    Int                      @id @default(autoincrement())
+  familyAlwaysLivedInState              Boolean
+  yearsInState                          Int?
+  familyAlwaysLivedInCity               Boolean
+  yearsInCity                           Int?
+  familyAlwaysLivedInNeighborhood       Boolean
+  yearsInNeighborhood                   Int?
+  familyVictimOfThreatsOrDiscrimination Boolean
+  familyHasSupportiveNeighbors          Boolean
+  familyMembersParticipateInGroups      Boolean
+  familyMembersParticipateInMovements   Boolean
+  childrenWithoutLeisureActivities      AccessActivityStatus
+  elderlyWithoutLeisureActivities       AccessActivityStatus
+  dependentPeopleWithoutAdultCompany    Boolean
+  maritalRelations                      FamilyRelationshipStatus
+  parentChildRelations                  FamilyRelationshipStatus
+  siblingRelations                      FamilyRelationshipStatus
+  otherConflictRelations                FamilyRelationshipStatus
+  referencePerson                       ReferencePerson           @relation(fields: [referencePersonId], references: [id])
+  referencePersonId                     Int
+  observations                          String[]
+}
