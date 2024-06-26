@@ -13,6 +13,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+enum UserRole{
+  admin
+  user
+}
+
+model user {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  fullName  String
+  crm       String?
+  role      UserRole @default(user)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model ReferencePerson {
   id                Int                 @id @unique @default(autoincrement())
   fullName          String
@@ -20,6 +37,8 @@ model ReferencePerson {
   motherName        String
   nis               String?             @unique
   cpf               String              @unique
+  situation         String
+  state             Boolean
   rgNumber          String
   rgIssuer          String
   rgState           String
