@@ -3,11 +3,45 @@ import { User } from '../../../domain/entity/user';
 import { CustomError } from '../../error/error';
 const prisma = new PrismaClient();
 
-export async function findByEmail(email: string): Promise<User | Error> {
+export async function createADM(user: User): Promise<User | Error> {
+    try{
+        const newUser = await prisma.user.create({
+            data: {
+                fullName: user.fullName,
+                email: user.email,
+                password: user.password,
+                crm: user.crm,
+                role: UserRole.admin,
+            }
+        });
+        return new User(newUser.id,newUser.fullName,newUser.email,newUser.password,newUser.crm,newUser.role.valueOf(),newUser.createdAt,newUser.updatedAt);
+    }catch(e){
+        throw e;
+    }
+}
+
+export async function create(user: User): Promise<User | Error> {
+    try{
+        const newUser = await prisma.user.create({
+            data: {
+                fullName: user.fullName,
+                email: user.email,
+                password: user.password,
+                crm: user.crm,
+                role: UserRole.user,
+            }
+        });
+        return new User(newUser.id,newUser.fullName,newUser.email,newUser.password,newUser.crm,newUser.role.valueOf(),newUser.createdAt,newUser.updatedAt);
+    }catch(e){
+        throw e;
+    }
+}
+
+export async function findByEmail(email: string){
     try{
         const user = await prisma.user.findUnique({where: {email}});
         if(user === null){
-            throw new CustomError('USER_NOT_FOUND', 404,'USER_NOT_FOUND', 'User not found');
+            return false;
         }
         const newUser: User = new User(user.id,user.fullName,user.email,user.password,user.crm,user.role.valueOf(),user.createdAt,user.updatedAt);
         return newUser;

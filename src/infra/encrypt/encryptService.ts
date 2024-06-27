@@ -2,7 +2,7 @@ import { CryptoRepository } from "../../domain/repository/cryptoRepository";
 import { CustomError } from "../error/error";
 import { hashPass, verifyPass } from "./bcrypt/bcryptDto";
 
-class CryptoService implements CryptoRepository{
+export class CryptoService implements CryptoRepository{
 
     hashPass(password: string): Promise<string> {
         try{
