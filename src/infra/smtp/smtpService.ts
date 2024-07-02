@@ -27,7 +27,6 @@ export class SmtpService implements SmtpRepository{
             const sendEmailResult = await sendGenericEmail(from, to, subject, text, html);
             return sendEmailResult;
         } catch (e) {
-            console.log(e);
             throw e;
         }
     }
