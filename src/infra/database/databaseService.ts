@@ -3,12 +3,23 @@ import {UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {create, createADM, findByEmail} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
+import { createCode } from './mongodb/mongodbDto';
 export class DatabaseService implements UserRepository, AuthRepository{
     login(email: string, password: string): Promise<Object> {
         throw new Error('Method not implemented.');
     }
-    forgotPassword(email: string): Promise<void> {
-        throw new Error('Method not implemented.');
+    async forgotPassword(email: string): Promise<string> {
+        try{
+            const user = await findByEmail(email);
+            if(user === false){
+                throw new CustomError('USER_NOT_FOUND', 404,'USER_NOT_FOUND', 'User not found');
+            }
+            const code = Math.random().toString(36).substring(2, 7);
+            const expiredCode = await createCode(code);
+            return expiredCode.toJSON().code;
+        }catch(e){
+            throw e;
+        }
     }
     async create(user: User, isAdm: boolean): Promise<User | Error> {
         try{
