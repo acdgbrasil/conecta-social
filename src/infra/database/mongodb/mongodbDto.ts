@@ -27,3 +27,25 @@ export const createCode = async (code:string) => {
         throw new Error('Error to create code');
     }
 }
+
+export const findCode = async (code:string) => {
+    try{
+        const expiredCode = await CodeModel.findOne({
+            code:code
+        });
+        return expiredCode;
+    }catch(error){
+        throw new Error('Error to find code');
+    }
+}
+
+export const deleteCode = async (code:string) => {
+    try{
+        const expiredCode = await CodeModel.deleteOne({
+            code:code
+        });
+        return expiredCode;
+    }catch(error){
+        throw new Error('Error to delete code');
+    }
+}

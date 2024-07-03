@@ -1,10 +1,24 @@
 import { User } from '../../domain/entity/user';
 import {UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
-import {create, createADM, findByEmail} from '../database/postgress/postgressDTO'
+import {changePassword, create, createADM, findByEmail} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
-import { createCode } from './mongodb/mongodbDto';
+import { createCode, findCode } from './mongodb/mongodbDto';
+
 export class DatabaseService implements UserRepository, AuthRepository{
+    async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
+        try{
+        const hasCode = await findCode(code);
+        if(!hasCode){
+            throw new CustomError('CODE_NOT_FOUND', 404,'CODE_NOT_FOUND', 'Code not found');
+        }
+        const newUser = await changePassword(email, newPassword);
+        await hasCode.deleteOne();
+        return newUser;
+        }catch(e){
+            throw e;
+        }
+    }
     login(email: string, password: string): Promise<Object> {
         throw new Error('Method not implemented.');
     }

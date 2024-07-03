@@ -49,3 +49,17 @@ export async function findByEmail(email: string){
         throw e;
     }
 }
+
+export async function changePassword(email: string, newPassword: string){
+    try{
+        const user = await prisma.user.update({
+            where: {email},
+            data: {
+                password: newPassword
+            }
+        });
+        return user;
+    }catch(e){
+        throw e;
+    }
+}

@@ -3,6 +3,7 @@ import { AuthRepository } from "../../domain/repository/authRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
 import { findByEmail } from "../../infra/database/postgress/postgressDTO";
 import { verifyPass } from "../../infra/encrypt/bcrypt/bcryptDto";
+import { CryptoService } from "../../infra/encrypt/encryptService";
 import { CustomError } from "../../infra/error/error";
 import { createToken } from "../../infra/jwt/jwtToken";
 import { SmtpService } from "../../infra/smtp/smtpService";
@@ -11,7 +12,6 @@ const ONE_MOUTH = 60 * 60 * 24 * 30;
 
 export class AuthController implements AuthRepository{
     
-
     async login(email: string, password: string): Promise<Object> {
         try{
             const databaseService = new DatabaseService();
@@ -35,6 +35,18 @@ export class AuthController implements AuthRepository{
             const responseEmail = await smtp.sendGenericEmail('noreply@acdgbrasil.com.br',email,'Reset de Senha','Seu codigo, para resetar sua senha é: '+expiredCode);
             if(!responseEmail) throw new CustomError('Internal Server Error',500,'Internal Server Error','Error to send email')
             return expiredCode;
+        }catch(e){
+            throw e;
+        }
+    }
+
+    async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
+        try{
+            const databaseService = new DatabaseService();
+            const encrypt = new CryptoService();
+            const hashPass = await encrypt.hashPass(newPassword);
+            const user = databaseService.resetPassword(email,code,hashPass);
+            return user;
         }catch(e){
             throw e;
         }

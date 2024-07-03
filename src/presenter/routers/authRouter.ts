@@ -27,9 +27,25 @@ authRouter.post('/auth/forgot/password', async (req, res) => {
     try{
         const {email} = req.body;
         if(!email) throw new CustomError('Bad Request',400,'Bad Request','Email is required');
-        const authController = new AuthController();
         const response = await authController.forgotPassword(email);
         return res.status(200).json({code:response});
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+});
+
+authRouter.post('/auth/reset/password', async (req, res) => {
+    try{
+        const {email,code,newPassword} = req.body;
+        if(!email) throw new CustomError('Bad Request',400,'Bad Request','Email is required');
+        if(!code) throw new CustomError('Bad Request',400,'Bad Request','Code is required');
+        if(!newPassword) throw new CustomError('Bad Request',400,'Bad Request','New password is required');
+        const response = await authController.resetPassword(email,code,newPassword);
+        return res.status(200).json(response);
     }catch(e){
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
