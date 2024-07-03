@@ -2,11 +2,17 @@ import { User } from "../../domain/entity/user";
 import { UserRepository } from "../../domain/repository/userRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
 import { CryptoService } from "../../infra/encrypt/encryptService";
+import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
     findByEmail(email: string): Promise<User | Error> {
-        throw new Error("Method not implemented.");
+        try{
+            const db = new DatabaseService();
+            return db.findByEmail(email);
+        }catch(e){
+            throw e;
+        }
     }
     async create(user: User, isAdm: boolean): Promise<User | Error> {
         try{
@@ -17,14 +23,14 @@ export class UserController implements UserRepository{
             const userCreate = await db.create(newUser,isAdm);
             if(userCreate != null){
                 const smtp = new SmtpService();
-                const email = await smtp.sendGenericEmail('noreply@acdgbrasil.com.br',newUser.email,'Cadastro Realizando com sucesso','Seu cadastro foi realizado com sucesso!');
-                if(!email) throw new Error('Error to send email');
+                const email = await smtp.sendGenericEmail('noreply@acdgbrasil.com.br',newUser.email,'Cadastro Realizando com sucesso','Cadastro Realizando com sucesso, a senha da sua conta é padrão. Por favor altere a senha: '+user.password);
+                if(!email) throw new CustomError('Internal Server Error',500,'Internal Server Error','Error to send email')
                 return userCreate;
             }
-            throw new Error('Error to create user');
+            throw new CustomError('Internal Server Error',500,'Internal Server Error','Error to create user');
         }
         catch(e){
-            throw new Error('Internal Server Error');
+            throw e;
         }
     }
     delete(email: string): Promise<User | Error> {
