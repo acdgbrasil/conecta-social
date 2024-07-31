@@ -3,9 +3,18 @@ import {UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {changePassword, create, createADM, findByEmail} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
-import { createCode, findCode } from './mongodb/mongodbDto';
+import { createCode, createSuperAdm, findCode } from './mongodb/mongodbDto';
+import { AdmRepository } from '../../domain/repository/admRepository';
+export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    async createSuperAdm(name: string, email: string): Promise<Boolean | Error> {
+       try{
+        const superAdm = await createSuperAdm(name, email);
+        return superAdm ? true : false;
+       }catch(err){
+        throw err;
+       }
+    }
 
-export class DatabaseService implements UserRepository, AuthRepository{
     async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
         try{
         const hasCode = await findCode(code);

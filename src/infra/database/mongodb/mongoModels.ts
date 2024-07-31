@@ -16,5 +16,18 @@ const codeSchema = new mongoose.Schema({
     }
 });
 
+const superAdmSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: true
+    }
+});
+
 codeSchema.index({createdAt: 1},{expireAfterSeconds: FIVE_MINUTES});
 export const CodeModel = mongoose.model('Code', codeSchema);
+export const SuperAdmModel = mongoose.model('superAdm', superAdmSchema);

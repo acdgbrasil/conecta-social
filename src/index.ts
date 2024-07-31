@@ -3,6 +3,7 @@ import userRouter from './presenter/routers/userRouter';
 import authRouter from './presenter/routers/authRouter';
 import { connectionMongose, testConnection } from './infra/database/mongodb/mongodbDto';
 import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClientSingleton';
+import { verifyToken } from './infra/jwt/jwtToken';
 function startDatabase() {
     connectionMongose().then((client) => {
         MongooseClientSingleton.setInstance(client);
@@ -13,9 +14,11 @@ function startDatabase() {
 const app = express();
 const router = express.Router();
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 app.use(router);
-router.use('/api',userRouter);
 router.use('/api',authRouter);
+router.use(verifyToken);
+router.use('/api',userRouter);
 
 
 
