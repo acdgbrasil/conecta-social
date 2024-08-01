@@ -4,6 +4,7 @@ import authRouter from './presenter/routers/authRouter';
 import { connectionMongose, testConnection } from './infra/database/mongodb/mongodbDto';
 import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClientSingleton';
 import { verifyToken } from './infra/jwt/jwtToken';
+const PORT = process.env.PORT || 3000;
 function startDatabase() {
     connectionMongose().then((client) => {
         MongooseClientSingleton.setInstance(client);
@@ -23,7 +24,7 @@ router.use('/api',userRouter);
 
 
 
-app.listen(3000,function(){
+app.listen(PORT,function(){
     console.log('Server is running on port 3000');
     startDatabase();
 })
