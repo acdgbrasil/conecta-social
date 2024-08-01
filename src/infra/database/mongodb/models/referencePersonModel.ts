@@ -1,0 +1,86 @@
+import mongoose from "mongoose";
+import { ReferencePerson } from "../../../../domain/entity/referencePerson";
+
+
+const referencePerson = new mongoose.Schema<ReferencePerson>({
+
+    fullName:{
+        type:String,
+        required:true
+    },
+    socialName:{
+        type:String,
+        required:true
+    },
+    motherName:{
+        type:String,
+        required:true
+    },
+    nis:{
+        type:String,
+        required:false
+    },
+    cpf:{
+        type:String,
+        required:true
+    },
+    situation:{
+        type:String,
+        required:true
+    },
+    state:{
+        type:Boolean,
+        required:true
+    },
+    rgNumber:{
+        type:String,
+        required:true
+    },
+    rgIssuer:{
+        type:String,
+        required:true
+    },
+    rgState:{
+        type:String,
+        required:true
+    },
+    postalCode:{
+        type:String,
+        required:false
+    },
+    address:{
+        type:String,
+        required:true
+    },
+    adressNumber:{
+        type:String,
+        required:true
+    },
+    neighborhood:{
+        type:String,
+        required:true
+    },
+    phone:{
+        type:String,
+        required:true
+    },
+    city:{
+        type:String,
+        required:true
+    },
+    locationType:{
+        type:String,
+        enum:['RURAL','URBAN'],
+        required:true
+    },
+    orderNumber:{
+        type:String,
+        required:true
+    },
+    whoIsTheResponsible:{
+        type:String,
+        required:true
+    }
+});
+
+export const ReferencePersonModel = mongoose.model('ReferencePerson',referencePerson);
