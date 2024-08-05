@@ -49,7 +49,7 @@ authRouter.post('/auth/reset/password', async (req, res) => {
         if(!newPassword) throw new CustomError('Bad Request',400,'Bad Request','New password is required');
         if(!id) throw new CustomError('Bad Request',400,'Bad Request','id is required');
         const user = await userController.findByEmail(email) as User
-        if(user.id != id) throw new CustomError('Bad Request',400,'Bad Request','the Email are request is diferent to email has sended');
+        if(user.id != id) throw new CustomError('Bad Request',400,'Bad Request','the Email requested is diferent to email has sended');
         const response = await authController.resetPassword(email,code,newPassword);
         return res.status(200).json(response);
     }catch(e){
