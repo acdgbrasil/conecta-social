@@ -3,7 +3,7 @@ import {UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
-import { createCode, createSuperAdm, findCode } from './mongodb/mongodbDto';
+import { createCode, findCode } from './mongodb/mongodbDto';
 import { AdmRepository } from '../../domain/repository/admRepository';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
     async deactivateUser(email: string): Promise<Boolean | Error> {
@@ -26,6 +26,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
         try{
         const hasCode = await findCode(code);
+        console.log(hasCode)
         if(!hasCode){
             throw new CustomError('CODE_NOT_FOUND', 404,'CODE_NOT_FOUND', 'Code not found');
         }

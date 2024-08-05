@@ -1,7 +1,6 @@
 import { User } from "../../domain/entity/user";
 import { AuthRepository } from "../../domain/repository/authRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
-import { findByEmail } from "../../infra/database/postgress/postgressDTO";
 import { verifyPass } from "../../infra/encrypt/bcrypt/bcryptDto";
 import { CryptoService } from "../../infra/encrypt/encryptService";
 import { CustomError } from "../../infra/error/error";
