@@ -19,7 +19,7 @@ export class UserController implements UserRepository{
             const db = new DatabaseService();
             const cryptoService = new CryptoService();
             const hashPass = await cryptoService.hashPass(user.password);
-            const newUser = new User(user.id,user.fullName,user.email,hashPass,user.crm,user.role,user.createdAt,user.updatedAt);
+            const newUser = new User(user.id,user.fullName,user.email,hashPass,user.crm,user.role,user.createdAt,user.updatedAt,user.isActive);
             const userCreate = await db.create(newUser,isAdm);
             if(userCreate != null){
                 const smtp = new SmtpService();
