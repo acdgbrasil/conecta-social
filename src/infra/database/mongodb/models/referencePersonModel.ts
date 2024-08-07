@@ -1,6 +1,80 @@
 import mongoose, { Schema } from "mongoose";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
+import { rg } from "./rgModel";
 
-const referencePerson = new mongoose.Schema<ReferencePerson>();
+const referencePerson = new mongoose.Schema<ReferencePerson>({
+    fullName:{
+        required:true,
+        type:String
+    },
+    socialName:{
+        required:true,
+        type:String
+    },
+    motherName:{
+        required:true,
+        type:String
+    },
+    nis:{
+        type:String
+    },
+    cpf:{
+        type:String,
+        required:true
+    },
+    diagnosis:{
+        required:true,
+        type:String
+    },
+    rg:{
+        type:rg,
+        required:true
+    },
+    isShelter:{
+        required:true,
+        type:Boolean
+    },
+    localLocalization:{
+        type:String,
+        required:true,
+        enum:["URBAN","RURAL"]
+    },
+    cep:{
+        type:String
+    },
+    adress:{
+        required:true,
+        type:String
+    },
+    neighborhood:{
+        required:true,
+        type:String
+    },
+    adressComplement:{
+        required:true,
+        type:String
+    },
+    adressNumber:{
+        required:true,
+        type:String
+    },
+    city:{
+        required:true,
+        type:String
+    },
+    phone:{
+        required:true,
+        type:String
+    },
+    state:{
+        required:true,
+        type:String
+    },
+    familyPhoto:{
+        type:Schema.Types.ObjectId,
+        require:true,
+        ref:'familyPhoto'
+    }
+});
 
-export const ReferencePersonModel = mongoose.model('ReferencePerson',referencePerson);
+export const referencePersonModel = mongoose.model('ReferencePerson',referencePerson);

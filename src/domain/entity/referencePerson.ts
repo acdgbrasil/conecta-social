@@ -3,10 +3,16 @@ export enum LOCAL_LOCALIZATION {
     rural = "RURAL"
 }
 
+export enum FILE_EXTENSION{
+    png = "png",
+    jpeg = "jpeg",
+    jpg = "jpg",
+}
+
 export class ReferencePerson {
 
     fullName: string
-    socialNane: string
+    socialName: string
     motherName: string
     nis?: string
     cpf: string
@@ -22,10 +28,13 @@ export class ReferencePerson {
     state: string
     city: string
     phone: string
+    familyPhoto:FamilyPhoto
 
 
-    constructor(fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string) {
+    constructor(fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string,fileBuffer:Buffer, fileExtension:FILE_EXTENSION) {
         const rg = new RG(rgNumber, rgUf, rgIssuingBody, rgIssueDate)
+        const familyPhoto = new FamilyPhoto(fileBuffer,fileExtension)
+        this.familyPhoto = familyPhoto
         this.rg = rg
         this.adress = adress
         this.adressComplement = adressComplement
@@ -41,13 +50,20 @@ export class ReferencePerson {
         this.state = state
         this.phone = phone
         this.motherName = motherName
-        this.socialNane = socialName
+        this.socialName = socialName
     }
-
 }
 
+export class FamilyPhoto{
+    fileBuffer:Buffer
+    fileExtension:FILE_EXTENSION
+    constructor(fileBufer:Buffer,fileExtension:FILE_EXTENSION){
+        this.fileBuffer = fileBufer
+        this.fileExtension = fileExtension
+    }
+}
 
-class RG {
+export class RG {
     number: string
     uf: string
     issuingBody: string
