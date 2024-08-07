@@ -37,7 +37,8 @@ admRouter.patch('/adm/deactivate/user',async(req,res)=>{
         }
         
         const hasSuccesfull = await admController.deactivateUser(email)
-        return res.status(200).json({response:hasSuccesfull})
+        if(hasSuccesfull) return res.status(200).json({"message": "User has been successfully deactivated!"})
+        return res.status(200).json({"message": "Failed to deactivate user!"})
     
     }catch(e){
         if(e instanceof CustomError){
