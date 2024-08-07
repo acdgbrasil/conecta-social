@@ -52,6 +52,35 @@ export const deleteCode = async (code:string) => {
     }
 }
 
-export const createReferencePerson = async (name:string,socialName:string,motherName:string,nis:string) =>{
-    try{}catch(err){}
+export const createReferencePerson = async (name:string,socialName:string,motherName:string,nis:string,cpf:string,situation:string,state:string,rgNumber:string,rgIssuer:string,rgState:string,postalCode:string,address:string,adressNumber:string,neighborhood:string,phone:string,locationType:LOCALIZATION_TYPE,orderNumber:string,whoIsTheResponsible:string,city:string) =>{
+    try{
+        const firstApointment = await FirstApointmentModel.create({})
+        const referencePerson = await ReferencePersonModel.create({
+            address:address,
+            adressNumber:adressNumber,
+            city:city,
+            cpf:cpf,
+            firstApointment:firstApointment.id,
+            fullName:name,
+            locationType:locationType,
+            motherName:motherName,
+            neighborhood:neighborhood,
+            nis:nis,
+            orderNumber:orderNumber,
+            phone:phone,
+            postalCode:postalCode,
+            rgIssuer:rgIssuer,
+            rgNumber:rgNumber,
+            rgState:rgState,
+            situation:situation,
+            socialName:socialName,
+            state:state,
+            whoIsTheResponsible:whoIsTheResponsible
+        })
+
+        return referencePerson
+
+    }catch(err){
+        throw new Error('Error to create referencePerson');
+    }
 }
