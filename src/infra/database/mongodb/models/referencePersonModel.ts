@@ -1,8 +1,6 @@
-import mongoose from "mongoose";
-import { ReferencePerson } from "../../../../domain/entity/referencePerson";
+import mongoose, { Schema } from "mongoose";
 
-
-const referencePerson = new mongoose.Schema<ReferencePerson>({
+const referencePerson = new mongoose.Schema({
 
     fullName:{
         type:String,
@@ -80,6 +78,11 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
     whoIsTheResponsible:{
         type:String,
         required:true
+    },
+    firstApointment:{
+        type: Schema.Types.ObjectId,
+        ref: 'firstApointment',
+        require:true
     }
 });
 

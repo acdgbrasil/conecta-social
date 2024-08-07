@@ -4,6 +4,7 @@ import authRouter from './presenter/routers/authRouter';
 import { connectionMongose, testConnection } from './infra/database/mongodb/mongodbDto';
 import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClientSingleton';
 import { verifyToken } from './infra/jwt/jwtToken';
+import admRouter from './presenter/routers/admRouter';
 const PORT = process.env.PORT || 3000;
 function startDatabase() {
     connectionMongose().then((client) => {
@@ -20,6 +21,7 @@ app.use(router);
 router.use('/api',authRouter);
 router.use(verifyToken);
 router.use('/api',userRouter);
+router.use('/api',admRouter);
 
 
 

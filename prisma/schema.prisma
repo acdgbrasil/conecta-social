@@ -25,16 +25,8 @@ model user {
   password  String
   fullName  String
   crm       String?
+  isActive  Boolean @default(true)
   role      UserRole @default(user)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model adm {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  fullName  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

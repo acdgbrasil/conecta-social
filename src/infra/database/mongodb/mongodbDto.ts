@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { MongooseClientSingleton } from "./mongooseClientSingleton";
-import { CodeModel, SuperAdmModel } from "./mongoModels";
+import { CodeModel } from "./mongoModels";
+import { ReferencePersonModel } from "./models/referencePersonModel";
+import { FirstApointmentModel } from "./models/firstApointment";
 
 export const connectionMongose = async () => {
     try {
@@ -8,15 +10,6 @@ export const connectionMongose = async () => {
         return client;
     } catch (error) {
         console.log('Error to connect MongoDB', error);
-    }
-}
-
-export const createSuperAdm = async (name:string, email:string) => {
-    try{
-        const superAdm = await SuperAdmModel.create({name:name,email:email});
-        return superAdm;
-    }catch(error){
-        throw new Error('Error to create super adm');
     }
 }
 
@@ -57,4 +50,8 @@ export const deleteCode = async (code:string) => {
     }catch(error){
         throw new Error('Error to delete code');
     }
+}
+
+export const createReferencePerson = async (name:string,socialName:string,motherName:string,nis:string) =>{
+    try{}catch(err){}
 }

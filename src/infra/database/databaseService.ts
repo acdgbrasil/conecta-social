@@ -1,23 +1,32 @@
 import { User } from '../../domain/entity/user';
 import {UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
-import {changePassword, create, createADM, findByEmail} from '../database/postgress/postgressDTO'
+import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
-import { createCode, createSuperAdm, findCode } from './mongodb/mongodbDto';
+import { createCode, findCode } from './mongodb/mongodbDto';
 import { AdmRepository } from '../../domain/repository/admRepository';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
-    async createSuperAdm(name: string, email: string): Promise<Boolean | Error> {
-       try{
-        const superAdm = await createSuperAdm(name, email);
-        return superAdm ? true : false;
-       }catch(err){
-        throw err;
-       }
+    async deactivateUser(email: string): Promise<Boolean | Error> {
+        try{
+            const users = await deactivateUser(email)
+            return !users.isActive
+        }catch(err){
+            throw err
+        }
+    }
+    async listAllUsers(): Promise<User[] | Error> {
+        try{
+            const users = await listAllUsers()
+            return users
+        }catch(err){
+            throw err
+        }
     }
 
     async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
         try{
         const hasCode = await findCode(code);
+        console.log(hasCode)
         if(!hasCode){
             throw new CustomError('CODE_NOT_FOUND', 404,'CODE_NOT_FOUND', 'Code not found');
         }

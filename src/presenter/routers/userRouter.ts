@@ -25,7 +25,7 @@ userRouter.post('/create/adm',async (req,res)=>{
             const error = new CustomError('Bad Request',400,'Bad Request','Full Name is required');
             return res.status(400).json(error.toJson('Full Name is required'));
         }
-        const newUser = new User(0,fullName,email,'Senh@123',null,'adm',new Date(),new Date());
+        const newUser = new User(0,fullName,email,'Senh@123',null,'adm',new Date(),new Date(),true);
         const user = await userControle.create(newUser,true);
         return res.status(201).json(user);
 
@@ -56,7 +56,7 @@ userRouter.post('/create/user',async (req,res)=>{
             return res.status(400).json(error.toJson('You are not allowed to create a new user'));
         }
 
-        const newUser = new User(0,fullName,email,'Senh@123',crm,'user',new Date(),new Date());
+        const newUser = new User(0,fullName,email,'Senh@123',crm,'user',new Date(),new Date(),true);
         const user = await userControle.create(newUser,false);
         return res.status(201).json(user);
 

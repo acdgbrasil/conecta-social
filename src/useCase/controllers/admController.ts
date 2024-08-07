@@ -1,15 +1,27 @@
+import { User } from "../../domain/entity/user";
 import { AdmRepository } from "../../domain/repository/admRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
 
 export class AdmController implements AdmRepository{
+   
     
-    async createSuperAdm(name: string, email: string): Promise<Boolean | Error> {
-        const databaseService = new DatabaseService();
+    async deactivateUser(email: string): Promise<Boolean | Error> {
         try{
-            const superAdm = await databaseService.createSuperAdm(name, email);
-            return superAdm ? true : false;
+            const databaseService = new DatabaseService()
+            const users = await databaseService.deactivateUser(email)
+            return users
         }catch(err){
-            throw err;
+            throw err
         }
     }
+    async listAllUsers(): Promise<User[] | Error> {
+        try{
+            const databaseService = new DatabaseService()
+            const users = await databaseService.listAllUsers()
+            return users
+        }catch(err){
+            throw err
+        }
+    }
+
 }
