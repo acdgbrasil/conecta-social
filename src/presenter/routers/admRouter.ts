@@ -12,7 +12,7 @@ admRouter.get('/adm/list/all/:admEmail',async (req,res)=>{
         const superAdmEmail = process.env.SUPER_ADM_EMAIL
         const isSuperAd = superAdmEmail === admEmail
         if(!isSuperAd){
-            throw new CustomError('Bad Request',401,'Bad Request','Your access is denied, because you are not allowed');
+            throw new CustomError('Unauthorized',401,'Unauthorized','Your access is denied, because you are not allowed');
         }
         
         const users = await admController.listAllUsers()
@@ -33,7 +33,7 @@ admRouter.patch('/adm/deactivate/user',async(req,res)=>{
         const superAdmEmail = process.env.SUPER_ADM_EMAIL
         const isSuperAd = superAdmEmail === admEmail
         if(!isSuperAd){
-            throw new CustomError('Bad Request',401,'Bad Request','Your access is denied, because you are not allowed');
+            throw new CustomError('Unauthorized',401,'Unauthorized','Your access is denied, because you are not allowed');
         }
         
         const hasSuccesfull = await admController.deactivateUser(email)
