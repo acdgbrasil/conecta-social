@@ -51,7 +51,3 @@ export const deleteCode = async (code:string) => {
         throw new Error('Error to delete code');
     }
 }
-
-export const createReferencePerson = async (name:string,socialName:string,motherName:string,nis:string) =>{
-    try{}catch(err){}
-}
