@@ -3,9 +3,19 @@ import {UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
-import { createCode, findCode } from './mongodb/mongodbDto';
+import { createCode, createReferencePerson, findCode } from './mongodb/mongodbDto';
 import { AdmRepository } from '../../domain/repository/admRepository';
+import { ReferencePerson } from '../../domain/entity/referencePerson';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    async createReferencePerson(referencePerson: ReferencePerson): Promise<ReferencePerson | Error> {
+        try {
+            const rp = await createReferencePerson(referencePerson)
+            return rp            
+        } catch (err) {
+            throw err
+        }
+    }
+    
     async deactivateUser(email: string): Promise<Boolean | Error> {
         try{
             const users = await deactivateUser(email)

@@ -9,7 +9,6 @@ const familyPhoto = new mongoose.Schema<FamilyPhoto>({
     fileExtension:{
         type:String,
         required:true,
-        enum:["png","jpeg","jpg"]
     }
 })
 

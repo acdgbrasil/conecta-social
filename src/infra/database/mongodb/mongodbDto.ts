@@ -73,8 +73,10 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             state:rp.state
         })
         
+        return referencePerson
+        
     } catch (error) {
-       
+       throw error
     }
    }
    

@@ -19,6 +19,3 @@ export const rg = new mongoose.Schema<RG>({
         type:String
     }
 })
-
-
-export const rgModel = mongoose.model('rg',rg);

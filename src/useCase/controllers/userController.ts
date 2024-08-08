@@ -1,3 +1,4 @@
+import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
 import { UserRepository } from "../../domain/repository/userRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
@@ -6,6 +7,15 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createReferencePerson(referencePerson: ReferencePerson): Promise<ReferencePerson | Error> {
+        try {
+            const db = new DatabaseService()
+            const rp = db.createReferencePerson(referencePerson)
+            return rp
+        } catch (err) {
+            throw err
+        }
+    }
     findByEmail(email: string): Promise<User | Error> {
         try{
             const db = new DatabaseService();

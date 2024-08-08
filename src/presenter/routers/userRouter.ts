@@ -2,9 +2,129 @@ import {Router} from 'express';
 import {UserController} from '../../useCase/controllers/userController';
 import { User } from '../../domain/entity/user';
 import { CustomError } from '../../infra/error/error';
+import { ReferencePerson } from '../../domain/entity/referencePerson';
+import multer from 'multer';
+const uploads = multer();
 
 const userRouter = Router();
 const userControle = new UserController();
+
+
+userRouter.post('/create/reference/person',uploads.single('photo'),async (req,res)=>{
+    try {
+        const {fullName,socialName,motherName,cpf,nis,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone} = req.body
+        
+        const fileBuffer = req.file?.buffer;    
+        const fileExtension = req.file?.mimetype.split('/')[1];
+
+        if(!fileBuffer){
+            const error = new CustomError('Bad Request',400,'Bad Request','Photo is required');
+            return res.status(400).json(error.toJson('Photo is required'));
+        }
+
+        if(!fullName){
+            const error = new CustomError('Bad Request',400,'Bad Request','Full Name is required');
+            return res.status(400).json(error.toJson('Full Name is required'));
+        }
+
+        if(!socialName){
+            const error = new CustomError('Bad Request',400,'Bad Request','Social Name is required');
+            return res.status(400).json(error.toJson('Social Name is required'));
+        }
+
+        if(!motherName){
+            const error = new CustomError('Bad Request',400,'Bad Request','Mother Name is required');
+            return res.status(400).json(error.toJson('Mother Name is required'));
+        }
+
+        if(!cpf){
+            const error = new CustomError('Bad Request',400,'Bad Request','Cpf is required');
+            return res.status(400).json(error.toJson('Cpf is required'));
+        }
+
+        if(!diagnosis){
+            const error = new CustomError('Bad Request',400,'Bad Request','Diagnosis is required');
+            return res.status(400).json(error.toJson('Diagnosis is required'));
+        }
+
+        if(!rgNumber){
+            const error = new CustomError('Bad Request',400,'Bad Request','Rg Number is required');
+            return res.status(400).json(error.toJson('Rg Number is required'));
+        }
+
+        if(!rgUf){
+            const error = new CustomError('Bad Request',400,'Bad Request','Rg Uf is required');
+            return res.status(400).json(error.toJson('Rg Uf is required'));
+        }
+
+        if(!rgIssue){
+            const error = new CustomError('Bad Request',400,'Bad Request','Rg Issue is required');
+            return res.status(400).json(error.toJson('Rg Issue is required'));
+        }
+
+        if(!rgDateIssue){
+            const error = new CustomError('Bad Request',400,'Bad Request','Rg Date Issue is required');
+            return res.status(400).json(error.toJson('Rg Date Issue is required'));
+        }
+
+        if(!isShelter){
+            const error = new CustomError('Bad Request',400,'Bad Request','Is Shelter is required');
+            return res.status(400).json(error.toJson('Is Shelter is required'));
+        }
+
+        if(!localLocalization){
+            const error = new CustomError('Bad Request',400,'Bad Request','Local Localization is required');
+            return res.status(400).json(error.toJson('Local Localization is required'));
+        }
+
+
+        if(!adress){
+            const error = new CustomError('Bad Request',400,'Bad Request','Adress is required');
+            return res.status(400).json(error.toJson('Adress is required'));
+        }
+
+        if(!neighborhood){
+            const error = new CustomError('Bad Request',400,'Bad Request','Neighborhood is required');
+            return res.status(400).json(error.toJson('Neighborhood is required'));
+        }
+
+        if(!adressNumber){
+            const error = new CustomError('Bad Request',400,'Bad Request','Adress Number is required');
+            return res.status(400).json(error.toJson('Adress Number is required'));
+        }
+
+        if(!adressComplement){
+            const error = new CustomError('Bad Request',400,'Bad Request','Adress Complement is required');
+            return res.status(400).json(error.toJson('Adress Complement is required'));
+        }
+
+        if(!state){
+            const error = new CustomError('Bad Request',400,'Bad Request','State is required');
+            return res.status(400).json(error.toJson('State is required'));
+        }
+
+        if(!city){
+            const error = new CustomError('Bad Request',400,'Bad Request','City is required');
+            return res.status(400).json(error.toJson('City is required'));
+        }
+
+        if(!phone){
+            const error = new CustomError('Bad Request',400,'Bad Request','Phone is required');
+            return res.status(400).json(error.toJson('Phone is required'));
+        }
+
+        if(!fileExtension){
+            const error = new CustomError('Bad Request',400,'Bad Request','File Extension is required');
+            return res.status(400).json(error.toJson('File Extension is required'));
+        }
+        const newReferencePerson = new ReferencePerson(fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,fileBuffer,fileExtension);
+        const referencePerson = await userControle.createReferencePerson(newReferencePerson);
+        return res.status(201).json(referencePerson);
+       
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
 
 userRouter.post('/create/adm',async (req,res)=>{
     try{

@@ -5,6 +5,8 @@ import { connectionMongose, testConnection } from './infra/database/mongodb/mong
 import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClientSingleton';
 import { verifyToken } from './infra/jwt/jwtToken';
 import admRouter from './presenter/routers/admRouter';
+
+
 const PORT = process.env.PORT || 3000;
 function startDatabase() {
     connectionMongose().then((client) => {

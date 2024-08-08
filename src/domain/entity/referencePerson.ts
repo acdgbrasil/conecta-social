@@ -3,12 +3,6 @@ export enum LOCAL_LOCALIZATION {
     rural = "RURAL"
 }
 
-export enum FILE_EXTENSION{
-    png = "png",
-    jpeg = "jpeg",
-    jpg = "jpg",
-}
-
 export class ReferencePerson {
 
     fullName: string
@@ -29,9 +23,11 @@ export class ReferencePerson {
     city: string
     phone: string
     familyPhoto:FamilyPhoto
+    createdAt?: Date
+    updatedAt?: Date
 
 
-    constructor(fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string,fileBuffer:Buffer, fileExtension:FILE_EXTENSION) {
+    constructor(fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string,fileBuffer:Buffer, fileExtension:string) {
         const rg = new RG(rgNumber, rgUf, rgIssuingBody, rgIssueDate)
         const familyPhoto = new FamilyPhoto(fileBuffer,fileExtension)
         this.familyPhoto = familyPhoto
@@ -56,8 +52,8 @@ export class ReferencePerson {
 
 export class FamilyPhoto{
     fileBuffer:Buffer
-    fileExtension:FILE_EXTENSION
-    constructor(fileBufer:Buffer,fileExtension:FILE_EXTENSION){
+    fileExtension:string
+    constructor(fileBufer:Buffer,fileExtension:string){
         this.fileBuffer = fileBufer
         this.fileExtension = fileExtension
     }
