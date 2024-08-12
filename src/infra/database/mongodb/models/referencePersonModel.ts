@@ -75,6 +75,10 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
         require:true,
         ref:'familyPhoto'
     },
+    observations:[{
+        type:Schema.Types.ObjectId,
+        ref:'Observations'
+    }],
     createdAt:{
         type:Date,
         default:Date.now

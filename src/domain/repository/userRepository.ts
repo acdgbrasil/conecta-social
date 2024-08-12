@@ -1,3 +1,4 @@
+import { Observations } from "../entity/observations";
 import { ReferencePerson } from "../entity/referencePerson";
 import { User } from "../entity/user";
 
@@ -6,4 +7,8 @@ export interface UserRepository {
     create(user:User,isAdm:boolean): Promise<User | Error>;
     delete(email:string): Promise<User | Error>;
     createReferencePerson(referencePerson:ReferencePerson): Promise<ReferencePerson | Error>;
+    createReferencePersonObservation(observations:Observations,referencePersonId:string): Promise<Observations | Error>;
+    listAllReferencePerson(): Promise<ReferencePerson[] | Error>;
+    getByIdReferencePerson(id:string): Promise<ReferencePerson | Error>;
+    getReferencePersonWithObservations(id:string): Promise<ReferencePerson | Error>;
 }

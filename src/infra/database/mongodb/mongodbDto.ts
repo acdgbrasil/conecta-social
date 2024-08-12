@@ -4,6 +4,8 @@ import { CodeModel } from "./mongoModels";
 import { ReferencePerson } from "../../../domain/entity/referencePerson";
 import { referencePersonModel } from "./models/referencePersonModel";
 import { familyPhotoModel } from "./models/familyPhotoModel";
+import { Observations } from "../../../domain/entity/observations";
+import { observationModel } from "./models/observationModel";
 
 
 
@@ -45,6 +47,50 @@ export const findCode = async (code:string) => {
     }
 }
 
+export const getReferencePersonWithObservations = async (id:string) => {
+    try {
+        const referencePerson = await referencePersonModel.findById(id).populate('observations');
+        return referencePerson;
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getByIdReferencePerson = async (id:string) => {
+    try {
+        const referencePerson = await referencePersonModel.findById(id);
+        return referencePerson;
+    } catch (error) {
+        throw error
+    }
+}
+
+export const listAllReferencePerson = async () => {
+    try {
+        const referencePerson = await referencePersonModel.find();
+        return referencePerson;
+    } catch (error) {
+        throw error
+    }
+}
+
+export const createReferencePersonObservation = async (observations:Observations,referencePersonId:string)=>{
+    try {
+        const getReferencePerson = await referencePersonModel.findById(referencePersonId);
+        if(!getReferencePerson){
+            throw new Error('ReferencePerson not found');
+        }
+        const observation = await observationModel.create({
+            whoIsObservingId:observations.whoIsObservingId,
+            observation:observations.observation,
+        })
+        getReferencePerson.observations?.push(observation);
+        await getReferencePerson.save();
+        return observation
+    } catch (error) {
+        throw error
+    }
+}
 
 export const createReferencePerson = async (rp:ReferencePerson)=>{
     try {
@@ -70,7 +116,8 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             nis:rp.nis,
             phone:rp.phone,
             rg:rp.rg,
-            state:rp.state
+            state:rp.state,
+            whoIsOpeningId:rp.whoIsOpeningId
         })
         
         return referencePerson

@@ -3,10 +3,50 @@ import {UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
-import { createCode, createReferencePerson, findCode } from './mongodb/mongodbDto';
+import { createCode, createReferencePerson, createReferencePersonObservation, findCode, getByIdReferencePerson, getReferencePersonWithObservations, listAllReferencePerson } from './mongodb/mongodbDto';
 import { AdmRepository } from '../../domain/repository/admRepository';
 import { ReferencePerson } from '../../domain/entity/referencePerson';
+import { Observations } from '../../domain/entity/observations';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    async getReferencePersonWithObservations(id: string): Promise<ReferencePerson | Error> {
+        try {
+            const referencePerson = await getReferencePersonWithObservations(id)
+            if(!referencePerson){
+                return new CustomError('REFERENCE_PERSON_NOT_FOUND', 404, 'REFERENCE_PERSON_NOT_FOUND', 'Reference Person not found')
+            }
+            return referencePerson
+        }catch(err){
+            throw err
+        }
+    }
+    async getByIdReferencePerson(id: string): Promise<ReferencePerson | Error> {
+        try {
+            const referencePerson = await getByIdReferencePerson(id)
+            if(!referencePerson){
+                return new CustomError('REFERENCE_PERSON_NOT_FOUND', 404, 'REFERENCE_PERSON_NOT_FOUND', 'Reference Person not found')
+            }
+            return referencePerson
+        }catch(err){
+            throw err
+        }
+    }
+    async listAllReferencePerson(): Promise<ReferencePerson[] | Error> {
+        try {
+            const referencePersons = await listAllReferencePerson()
+            return referencePersons
+        } catch (err) {
+            throw err
+        }
+    }
+    async createReferencePersonObservation(observations: Observations, referencePersonId: string): Promise<Observations | Error> {
+        try {
+            const Observations = await createReferencePersonObservation(observations, referencePersonId)
+            return observations
+        } catch (err) {
+            throw err
+        }
+    }
+   
     async createReferencePerson(referencePerson: ReferencePerson): Promise<ReferencePerson | Error> {
         try {
             const rp = await createReferencePerson(referencePerson)

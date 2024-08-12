@@ -1,3 +1,4 @@
+import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
 import { UserRepository } from "../../domain/repository/userRepository";
@@ -7,6 +8,38 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    getReferencePersonWithObservations(id: string): Promise<ReferencePerson | Error> {
+        try{
+            const db = new DatabaseService();
+            return db.getReferencePersonWithObservations(id);
+        }catch(e){
+            throw e;
+        }
+    }
+    getByIdReferencePerson(id: string): Promise<ReferencePerson | Error> {
+        try{
+            const db = new DatabaseService();
+            return db.getByIdReferencePerson(id);
+        }catch(e){
+            throw e;
+        }
+    }
+    listAllReferencePerson(): Promise<ReferencePerson[] | Error> {
+        try{
+            const db = new DatabaseService();
+            return db.listAllReferencePerson();
+        }catch(e){
+            throw e;
+        }
+    }
+    createReferencePersonObservation(observations: Observations, referencePersonId: string): Promise<Observations | Error> {
+        try{
+            const db = new DatabaseService();
+            return db.createReferencePersonObservation(observations,referencePersonId);
+        }catch(e){
+            throw e;
+        }
+    }
     createReferencePerson(referencePerson: ReferencePerson): Promise<ReferencePerson | Error> {
         try {
             const db = new DatabaseService()
