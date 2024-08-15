@@ -1,7 +1,7 @@
 import express from 'express';
 import userRouter from './presenter/routers/userRouter';
 import authRouter from './presenter/routers/authRouter';
-import { connectionMongose, testConnection } from './infra/database/mongodb/mongodbDto';
+import { connectionMongose, testConnection } from './infra/database/mongodb/mongoDtos/mongodbDto';
 import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClientSingleton';
 import { verifyToken } from './infra/jwt/jwtToken';
 import admRouter from './presenter/routers/admRouter';

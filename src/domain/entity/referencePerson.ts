@@ -1,3 +1,4 @@
+import { FirstEntryInUnity } from "./firstEntryInUnity"
 import { Observations } from "./observations"
 
 export enum LOCAL_LOCALIZATION {
@@ -28,6 +29,7 @@ export class ReferencePerson {
     createdAt?: Date
     updatedAt?: Date
     observations?: [Observations]
+    fistEntryInUnityId?: FirstEntryInUnity
     whoIsOpeningId: string
 
 

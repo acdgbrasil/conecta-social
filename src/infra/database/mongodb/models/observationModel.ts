@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Observations } from "../../../../domain/entity/observations";
 
-const observation = new mongoose.Schema<Observations>({
+export const observation = new mongoose.Schema<Observations>({
     observation:{
         required:true,
         type:String
@@ -10,6 +10,7 @@ const observation = new mongoose.Schema<Observations>({
         required:true,
         type:String
     },
+
     createdAt:{
         type:Date,
         default: Date.now()
@@ -19,5 +20,3 @@ const observation = new mongoose.Schema<Observations>({
         default: Date.now()
     }
 })
-
-export const observationModel = mongoose.model('Observations',observation);

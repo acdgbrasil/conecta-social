@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
 import { rg } from "./rgModel";
+import { observation } from "./observationModel";
 
 const referencePerson = new mongoose.Schema<ReferencePerson>({
     fullName:{
@@ -75,9 +76,16 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
         require:true,
         ref:'familyPhoto'
     },
-    observations:[{
+    whoIsOpeningId:{
+        type:String,
+        required:true
+    },
+    fistEntryInUnityId:{
         type:Schema.Types.ObjectId,
-        ref:'Observations'
+        ref:'firstEntryInUnity'
+    },
+    observations:[{
+        type:observation
     }],
     createdAt:{
         type:Date,
