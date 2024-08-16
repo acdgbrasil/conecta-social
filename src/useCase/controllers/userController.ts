@@ -10,10 +10,20 @@ import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
     getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
-        throw new Error("Method not implemented.");
+        try{
+            const db = new DatabaseService();
+            return db.getFirstEntryInUnity(firstEntryInUnityId);
+        }catch(e){
+            throw e;
+        }
     }
     createFirstEntryInUnityObservation(firstEntryInUnityId: string, observation: Observations): Promise<FirstEntryInUnity | Error> {
-        throw new Error("Method not implemented.");
+        try{
+            const db = new DatabaseService();
+            return db.createFirstEntryInUnityObservation(firstEntryInUnityId, observation);
+        }catch(e){
+            throw e;
+        }
     }
     firstEntryInUnity(firstEntry: FirstEntryInUnity, firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
         try{
