@@ -9,12 +9,18 @@ import { ReferencePerson } from '../../domain/entity/referencePerson';
 import { Observations } from '../../domain/entity/observations';
 import { createReferencePerson, createReferencePersonObservation, getByIdReferencePerson, listAllReferencePerson } from './mongodb/mongoDtos/personReferenceDTO';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
-import { firstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
+import { createFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
+        throw new Error('Method not implemented.');
+    }
+    createFirstEntryInUnityObservation(firstEntryInUnityId: string, observation: Observations): Promise<FirstEntryInUnity | Error> {
+        throw new Error('Method not implemented.');
+    }
 
     async firstEntryInUnity(firstEntry: FirstEntryInUnity, firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
         try{
-            const firstEntryResult = await firstEntryInUnity(firstEntry,firstEntryInUnityId);
+            const firstEntryResult = await createFirstEntryInUnity(firstEntry,firstEntryInUnityId);
             return firstEntryResult;
         }catch(e){
             throw e;

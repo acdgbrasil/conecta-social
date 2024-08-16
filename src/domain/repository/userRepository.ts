@@ -13,4 +13,6 @@ export interface UserRepository {
     getByIdReferencePerson(id:string): Promise<ReferencePerson | Error>;
     getReferencePersonWithObservations(id:string): Promise<ReferencePerson | Error>;
     firstEntryInUnity(firstEntry:FirstEntryInUnity,firstEntryInUnityId:string): Promise<FirstEntryInUnity | Error>;
+    getFirstEntryInUnity(firstEntryInUnityId:string): Promise<FirstEntryInUnity | Error>;
+    createFirstEntryInUnityObservation(firstEntryInUnityId:string,observation:Observations): Promise<FirstEntryInUnity | Error>;
 }
