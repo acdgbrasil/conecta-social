@@ -5,10 +5,70 @@ import { CustomError } from '../../infra/error/error';
 import { ReferencePerson } from '../../domain/entity/referencePerson';
 import multer from 'multer';
 import { Observations } from '../../domain/entity/observations';
+import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 const uploads = multer();
 
 const userRouter = Router();
 const userControle = new UserController();
+
+userRouter.post('/create/first/entry/in/unity',async (req,res)=>{
+    try {
+        const {firstEntryInUnity,motivationForFirstEntry,nameOfUnityToSendFirstEntry,ContactEmailOfUnityToSendFirstEntry,familyBenefits,whoIsResponsibleForFirstEntryId,firstEntryInUnityID} = req.body;
+        
+        if(!firstEntryInUnity){
+            const error = new CustomError('Bad Request',400,'Bad Request','First Entry In Unity is required');
+            return res.status(400).json(error.toJson('First Entry In Unity is required'));
+        }
+        if(!motivationForFirstEntry){
+            const error = new CustomError('Bad Request',400,'Bad Request','Motivation For First Entry is required');
+            return res.status(400).json(error.toJson('Motivation For First Entry is required'));
+        }
+        if(!nameOfUnityToSendFirstEntry){
+            const error = new CustomError('Bad Request',400,'Bad Request','Name Of Unity To Send First Entry is required');
+            return res.status(400).json(error.toJson('Name Of Unity To Send First Entry is required'));
+        }
+        if(!ContactEmailOfUnityToSendFirstEntry){
+            const error = new CustomError('Bad Request',400,'Bad Request','Contact Email Of Unity To Send First Entry is required');
+            return res.status(400).json(error.toJson('Contact Email Of Unity To Send First Entry is required'));
+        }
+        if(!familyBenefits){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Benefits is required');
+            return res.status(400).json(error.toJson('Family Benefits is required'));
+        }
+        
+        if(!whoIsResponsibleForFirstEntryId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Responsible For First Entry Id is required');
+            return res.status(400).json(error.toJson('Who Is Responsible For First Entry Id is required'));
+        }
+
+        if(!firstEntryInUnityID){
+            const error = new CustomError('Bad Request',400,'Bad Request','First Entry In Unity ID is required');
+            return res.status(400).json(error.toJson('First Entry In Unity ID is required'));
+        }
+
+        const newFirstEntryInUnity = new FirstEntryInUnity(
+            firstEntryInUnity,
+            motivationForFirstEntry,
+            familyBenefits,
+            true,
+            new Date(),
+            new Date(),
+            nameOfUnityToSendFirstEntry,
+            ContactEmailOfUnityToSendFirstEntry,
+            firstEntryInUnity
+        );
+
+        const firstEntryInUnityCreated = await userControle.firstEntryInUnity(newFirstEntryInUnity,firstEntryInUnityID);
+        return res.status(201).json(firstEntryInUnityCreated);
+
+    } catch (e) {
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 
 userRouter.get('/list/reference/person/observation/:id',async (req,res)=>{
     try {

@@ -84,6 +84,10 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
         type:Schema.Types.ObjectId,
         ref:'firstEntryInUnity'
     },
+    familyCompositionId:{
+        type:Schema.Types.ObjectId,
+        ref:'familyComposition'
+    },
     observations:[{
         type:observation
     }],

@@ -29,11 +29,13 @@ export class ReferencePerson {
     createdAt?: Date
     updatedAt?: Date
     observations?: [Observations]
+    familyCompositionId?: string
     fistEntryInUnityId?: FirstEntryInUnity
     whoIsOpeningId: string
 
 
-    constructor(fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string,fileBuffer:Buffer, fileExtension:string,whoIsOpeningId:string,observations?: [Observations]) {
+
+    constructor(fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string,fileBuffer:Buffer, fileExtension:string,whoIsOpeningId:string,observations?: [Observations],familyCompositionId?: string, fistEntryInUnityId?: FirstEntryInUnity) {
         const rg = new RG(rgNumber, rgUf, rgIssuingBody, rgIssueDate)
         const familyPhoto = new FamilyPhoto(fileBuffer,fileExtension)
         this.familyPhoto = familyPhoto
@@ -55,6 +57,9 @@ export class ReferencePerson {
         this.socialName = socialName
         this.observations = observations
         this.whoIsOpeningId = whoIsOpeningId
+        this.nis = nis
+        this.familyCompositionId = familyCompositionId
+        this.fistEntryInUnityId = fistEntryInUnityId
     }
 }
 

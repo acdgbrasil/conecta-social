@@ -1,3 +1,4 @@
+import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
 import { Observations } from "../entity/observations";
 import { ReferencePerson } from "../entity/referencePerson";
 import { User } from "../entity/user";
@@ -11,4 +12,5 @@ export interface UserRepository {
     listAllReferencePerson(): Promise<ReferencePerson[] | Error>;
     getByIdReferencePerson(id:string): Promise<ReferencePerson | Error>;
     getReferencePersonWithObservations(id:string): Promise<ReferencePerson | Error>;
+    firstEntryInUnity(firstEntry:FirstEntryInUnity,firstEntryInUnityId:string): Promise<FirstEntryInUnity | Error>;
 }

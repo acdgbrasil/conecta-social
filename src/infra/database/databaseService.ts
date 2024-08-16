@@ -8,7 +8,19 @@ import { AdmRepository } from '../../domain/repository/admRepository';
 import { ReferencePerson } from '../../domain/entity/referencePerson';
 import { Observations } from '../../domain/entity/observations';
 import { createReferencePerson, createReferencePersonObservation, getByIdReferencePerson, listAllReferencePerson } from './mongodb/mongoDtos/personReferenceDTO';
+import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
+import { firstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+
+    async firstEntryInUnity(firstEntry: FirstEntryInUnity, firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
+        try{
+            const firstEntryResult = await firstEntryInUnity(firstEntry,firstEntryInUnityId);
+            return firstEntryResult;
+        }catch(e){
+            throw e;
+        }
+    }
+    
     async getReferencePersonWithObservations(id: string): Promise<ReferencePerson | Error> {
         throw new Error('Method not implemented.');
     }

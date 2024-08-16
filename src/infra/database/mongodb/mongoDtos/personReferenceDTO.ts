@@ -1,5 +1,6 @@
 import { Observations } from "../../../../domain/entity/observations";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
+import { familyCompositionModel } from "../models/familyCompositionModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
 import { referencePersonModel } from "../models/referencePersonModel";
@@ -46,6 +47,8 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             fileExtension:rp.familyPhoto.fileExtension
         })
         
+        const familyComposition = await familyCompositionModel.create({})
+
         const fistEntryInUnity = await firstEntryInUnityModel.create({})
 
         const referencePerson = await referencePersonModel.create({
@@ -68,7 +71,8 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             rg:rp.rg,
             state:rp.state,
             whoIsOpeningId:rp.whoIsOpeningId,
-            fistEntryInUnityId:fistEntryInUnity.id
+            fistEntryInUnityId:fistEntryInUnity.id,
+            familyCompositionId:familyComposition.id,
         })
         
         return referencePerson

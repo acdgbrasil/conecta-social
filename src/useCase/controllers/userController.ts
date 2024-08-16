@@ -1,3 +1,4 @@
+import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
 import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
@@ -8,6 +9,15 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    firstEntryInUnity(firstEntry: FirstEntryInUnity, firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
+        try{
+            const db = new DatabaseService();
+            return db.firstEntryInUnity(firstEntry,firstEntryInUnityId);
+        }catch(e){
+            throw e;
+        }
+    }
+
     getReferencePersonWithObservations(id: string): Promise<ReferencePerson | Error> {
         try{
             const db = new DatabaseService();
