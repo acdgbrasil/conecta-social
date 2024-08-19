@@ -91,6 +91,14 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
     observations:[{
         type:observation
     }],
+    birthDate:{
+        type:Date,
+        required:true
+    },
+    biologicalGender:{
+        type:String,
+        required:true
+    },
     createdAt:{
         type:Date,
         default:Date.now

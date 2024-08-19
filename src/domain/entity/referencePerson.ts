@@ -11,12 +11,14 @@ export class ReferencePerson {
     fullName: string
     socialName: string
     motherName: string
+    biologicalGender:string
     nis?: string
     cpf: string
     diagnosis: string
     rg: RG
     isShelter: boolean
     localLocalization: string
+    birthDate:Date
     cep?: string
     adress: string
     neighborhood: string
@@ -35,7 +37,7 @@ export class ReferencePerson {
 
 
 
-    constructor(fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string,fileBuffer:Buffer, fileExtension:string,whoIsOpeningId:string,observations?: [Observations],familyCompositionId?: string, fistEntryInUnityId?: FirstEntryInUnity) {
+    constructor(fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string,biologicalGender:string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string,fileBuffer:Buffer, fileExtension:string,birthDate:Date,whoIsOpeningId:string,observations?: [Observations],familyCompositionId?: string, fistEntryInUnityId?: FirstEntryInUnity) {
         const rg = new RG(rgNumber, rgUf, rgIssuingBody, rgIssueDate)
         const familyPhoto = new FamilyPhoto(fileBuffer,fileExtension)
         this.familyPhoto = familyPhoto
@@ -60,6 +62,8 @@ export class ReferencePerson {
         this.nis = nis
         this.familyCompositionId = familyCompositionId
         this.fistEntryInUnityId = fistEntryInUnityId
+        this.birthDate = birthDate 
+        this.biologicalGender = biologicalGender
     }
 }
 

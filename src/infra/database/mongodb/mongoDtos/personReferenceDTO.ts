@@ -1,3 +1,4 @@
+import { FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
 import { Observations } from "../../../../domain/entity/observations";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
 import { familyCompositionModel } from "../models/familyCompositionModel";
@@ -48,6 +49,9 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
         })
         
         const familyComposition = await familyCompositionModel.create({})
+        const familyCompositionReferencePerson = new FamilyCompositionPerson(rp.fullName,rp.birthDate,rp.biologicalGender,true,[],1)
+        familyComposition.familyCompositionPerson.push(familyCompositionReferencePerson)
+        familyComposition.save()
 
         const fistEntryInUnity = await firstEntryInUnityModel.create({})
 
@@ -73,6 +77,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             whoIsOpeningId:rp.whoIsOpeningId,
             fistEntryInUnityId:fistEntryInUnity.id,
             familyCompositionId:familyComposition.id,
+            birthDate:rp.birthDate
         })
         
         return referencePerson
