@@ -1,6 +1,7 @@
 import { FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
 import { Observations } from "../../../../domain/entity/observations";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
+import { CustomError } from "../../../error/error";
 import { familyCompositionModel } from "../models/familyCompositionModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
@@ -30,7 +31,7 @@ export const createReferencePersonObservation = async (observations:Observations
     try {
         const getReferencePerson = await referencePersonModel.findById(referencePersonId);
         if(!getReferencePerson){
-            throw new Error('ReferencePerson not found');
+            throw new CustomError('REFERENCE_PERSON_NOT_FOUND',404,'REFERENCE_PERSON_NOT_FOUND','Reference Person not found');
         }
 
         getReferencePerson.observations?.push(observations);
@@ -77,7 +78,8 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             whoIsOpeningId:rp.whoIsOpeningId,
             fistEntryInUnityId:fistEntryInUnity.id,
             familyCompositionId:familyComposition.id,
-            birthDate:rp.birthDate
+            birthDate:rp.birthDate,
+            biologicalGender:rp.biologicalGender,
         })
         
         return referencePerson

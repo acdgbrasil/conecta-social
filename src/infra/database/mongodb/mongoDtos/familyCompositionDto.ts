@@ -5,11 +5,11 @@ import { familyCompositionModel } from "../models/familyCompositionModel";
 export const createFamilyPerson = async (familyCompositionPerson:FamilyCompositionPerson,familyCompositionID:string) => {
     try {
         const familyComposition = await familyCompositionModel.findById(familyCompositionID)
-        if(!familyComposition) throw new Error("NOT FOUND")
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
         familyComposition.familyCompositionPerson.push(familyCompositionPerson)
         familyComposition.isInUse = true 
         familyComposition.save()
-        return ""
+        return familyComposition
     } catch (err) {
         throw err 
     }

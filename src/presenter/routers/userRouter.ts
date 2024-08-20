@@ -169,7 +169,7 @@ userRouter.post('/create/reference/person/observation',async (req,res)=>{
 
 userRouter.post('/create/reference/person',uploads.single('photo'),async (req,res)=>{
     try {
-        const {fullName,socialName,motherName,cpf,nis,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,whoIsObservingId} = req.body
+        const {fullName,socialName,motherName,cpf,nis,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,whoIsObservingId,birthDate,biologicalGender} = req.body
         
         const fileBuffer = req.file?.buffer;    
         const fileExtension = req.file?.mimetype.split('/')[1];
@@ -177,6 +177,16 @@ userRouter.post('/create/reference/person',uploads.single('photo'),async (req,re
         if(!fileBuffer){
             const error = new CustomError('Bad Request',400,'Bad Request','Photo is required');
             return res.status(400).json(error.toJson('Photo is required'));
+        }
+
+        if(!birthDate){
+            const error = new CustomError('Bad Request',400,'Bad Request','Birth Date is required');
+            return res.status(400).json(error.toJson('Birth Date is required'));
+        }
+
+        if(!biologicalGender){
+            const error = new CustomError('Bad Request',400,'Bad Request','biologicalGender is required');
+            return res.status(400).json(error.toJson('biologicalGender is required'));
         }
 
         if(!whoIsObservingId){
@@ -279,7 +289,9 @@ userRouter.post('/create/reference/person',uploads.single('photo'),async (req,re
             const error = new CustomError('Bad Request',400,'Bad Request','File Extension is required');
             return res.status(400).json(error.toJson('File Extension is required'));
         }
-        const newReferencePerson = new ReferencePerson(fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,fileBuffer,fileExtension,whoIsObservingId);
+
+        const birthDateFormatted = new Date(birthDate);
+        const newReferencePerson = new ReferencePerson(fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,fileBuffer,fileExtension,birthDateFormatted,whoIsObservingId);
         const referencePerson = await userControle.createReferencePerson(newReferencePerson);
         return res.status(201).json(referencePerson);
        

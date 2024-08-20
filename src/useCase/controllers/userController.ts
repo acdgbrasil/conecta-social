@@ -9,76 +9,76 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
-    getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
+    async getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
         try{
             const db = new DatabaseService();
-            return db.getFirstEntryInUnity(firstEntryInUnityId);
+            return await db.getFirstEntryInUnity(firstEntryInUnityId);
         }catch(e){
             throw e;
         }
     }
-    createFirstEntryInUnityObservation(firstEntryInUnityId: string, observation: Observations): Promise<FirstEntryInUnity | Error> {
+    async createFirstEntryInUnityObservation(firstEntryInUnityId: string, observation: Observations): Promise<FirstEntryInUnity | Error> {
         try{
             const db = new DatabaseService();
-            return db.createFirstEntryInUnityObservation(firstEntryInUnityId, observation);
+            return await db.createFirstEntryInUnityObservation(firstEntryInUnityId, observation);
         }catch(e){
             throw e;
         }
     }
-    firstEntryInUnity(firstEntry: FirstEntryInUnity, firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
+    async firstEntryInUnity(firstEntry: FirstEntryInUnity, firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
         try{
             const db = new DatabaseService();
-            return db.firstEntryInUnity(firstEntry,firstEntryInUnityId);
+            return await db.firstEntryInUnity(firstEntry,firstEntryInUnityId);
         }catch(e){
             throw e;
         }
     }
 
-    getReferencePersonWithObservations(id: string): Promise<ReferencePerson | Error> {
+    async getReferencePersonWithObservations(id: string): Promise<ReferencePerson | Error> {
         try{
             const db = new DatabaseService();
-            return db.getReferencePersonWithObservations(id);
+            return await db.getReferencePersonWithObservations(id);
         }catch(e){
             throw e;
         }
     }
-    getByIdReferencePerson(id: string): Promise<ReferencePerson | Error> {
+    async getByIdReferencePerson(id: string): Promise<ReferencePerson | Error> {
         try{
             const db = new DatabaseService();
-            return db.getByIdReferencePerson(id);
+            return await db.getByIdReferencePerson(id);
         }catch(e){
             throw e;
         }
     }
-    listAllReferencePerson(): Promise<ReferencePerson[] | Error> {
+    async listAllReferencePerson(): Promise<ReferencePerson[] | Error> {
         try{
             const db = new DatabaseService();
-            return db.listAllReferencePerson();
+            return await db.listAllReferencePerson();
         }catch(e){
             throw e;
         }
     }
-    createReferencePersonObservation(observations: Observations, referencePersonId: string): Promise<Observations | Error> {
+    async createReferencePersonObservation(observations: Observations, referencePersonId: string): Promise<Observations | Error> {
         try{
             const db = new DatabaseService();
-            return db.createReferencePersonObservation(observations,referencePersonId);
+            return await db.createReferencePersonObservation(observations,referencePersonId);
         }catch(e){
             throw e;
         }
     }
-    createReferencePerson(referencePerson: ReferencePerson): Promise<ReferencePerson | Error> {
+    async createReferencePerson(referencePerson: ReferencePerson): Promise<ReferencePerson | Error> {
         try {
             const db = new DatabaseService()
-            const rp = db.createReferencePerson(referencePerson)
+            const rp = await db.createReferencePerson(referencePerson)
             return rp
         } catch (err) {
             throw err
         }
     }
-    findByEmail(email: string): Promise<User | Error> {
+    async findByEmail(email: string): Promise<User | Error> {
         try{
             const db = new DatabaseService();
-            return db.findByEmail(email);
+            return await db.findByEmail(email);
         }catch(e){
             throw e;
         }

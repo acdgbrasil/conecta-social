@@ -11,9 +11,9 @@ import { createReferencePerson, createReferencePersonObservation, getByIdReferen
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
-    getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
+    async getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
         try{
-            const firstEntry = getFirstEntryInUnity(firstEntryInUnityId);
+            const firstEntry = await getFirstEntryInUnity(firstEntryInUnityId);
             return firstEntry;
         }catch(e){
             throw e;
