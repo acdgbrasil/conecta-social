@@ -21,6 +21,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(router);
 router.use('/api',authRouter);
+router.use('/api/ping',(_,res) => {
+    res.send("PONG!!!");
+});
 router.use(verifyToken);
 router.use('/api',userRouter);
 router.use('/api',admRouter);
