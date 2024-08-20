@@ -1,89 +1,112 @@
 import mongoose, { Schema } from "mongoose";
+import { ReferencePerson } from "../../../../domain/entity/referencePerson";
+import { rg } from "./rgModel";
+import { observation } from "./observationModel";
 
-const referencePerson = new mongoose.Schema({
-
+const referencePerson = new mongoose.Schema<ReferencePerson>({
     fullName:{
-        type:String,
-        required:true
+        required:true,
+        type:String
     },
     socialName:{
-        type:String,
-        required:true
+        required:true,
+        type:String
     },
     motherName:{
-        type:String,
-        required:true
+        required:true,
+        type:String
     },
     nis:{
-        type:String,
-        required:false
+        type:String
     },
     cpf:{
         type:String,
         required:true
     },
-    situation:{
-        type:String,
+    diagnosis:{
+        required:true,
+        type:String
+    },
+    rg:{
+        type:rg,
         required:true
     },
-    state:{
-        type:Boolean,
-        required:true
+    isShelter:{
+        required:true,
+        type:Boolean
     },
-    rgNumber:{
+    localLocalization:{
         type:String,
-        required:true
+        required:true,
+        enum:["URBAN","RURAL"]
     },
-    rgIssuer:{
-        type:String,
-        required:true
+    cep:{
+        type:String
     },
-    rgState:{
-        type:String,
-        required:true
-    },
-    postalCode:{
-        type:String,
-        required:false
-    },
-    address:{
-        type:String,
-        required:true
-    },
-    adressNumber:{
-        type:String,
-        required:true
+    adress:{
+        required:true,
+        type:String
     },
     neighborhood:{
-        type:String,
-        required:true
+        required:true,
+        type:String
     },
-    phone:{
-        type:String,
-        required:true
+    adressComplement:{
+        required:true,
+        type:String
+    },
+    adressNumber:{
+        required:true,
+        type:String
     },
     city:{
+        required:true,
+        type:String
+    },
+    phone:{
+        required:true,
+        type:String
+    },
+    state:{
+        required:true,
+        type:String
+    },
+    familyPhoto:{
+        type:Schema.Types.ObjectId,
+        require:true,
+        ref:'familyPhoto'
+    },
+    whoIsOpeningId:{
         type:String,
         required:true
     },
-    locationType:{
-        type:String,
-        enum:['RURAL','URBAN'],
+    fistEntryInUnityId:{
+        type:Schema.Types.ObjectId,
+        ref:'firstEntryInUnity'
+    },
+    familyCompositionId:{
+        type:Schema.Types.ObjectId,
+        ref:'familyComposition'
+    },
+    observations:[{
+        type:observation
+    }],
+    birthDate:{
+        type:Date,
         required:true
     },
-    orderNumber:{
+    biologicalGender:{
         type:String,
         required:true
     },
-    whoIsTheResponsible:{
-        type:String,
-        required:true
+    createdAt:{
+        type:Date,
+        default:Date.now
     },
-    firstApointment:{
-        type: Schema.Types.ObjectId,
-        ref: 'firstApointment',
-        require:true
+    updatedAt:{
+        type:Date,
+        default:Date.now
     }
 });
 
-export const ReferencePersonModel = mongoose.model('ReferencePerson',referencePerson);
+export const referencePersonModel = mongoose.model('ReferencePerson',referencePerson);

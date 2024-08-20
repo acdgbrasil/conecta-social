@@ -2,9 +2,303 @@ import {Router} from 'express';
 import {UserController} from '../../useCase/controllers/userController';
 import { User } from '../../domain/entity/user';
 import { CustomError } from '../../infra/error/error';
+import { ReferencePerson } from '../../domain/entity/referencePerson';
+import multer from 'multer';
+import { Observations } from '../../domain/entity/observations';
+import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
+const uploads = multer();
 
 const userRouter = Router();
 const userControle = new UserController();
+
+userRouter.get('/list/first/entry/in/unity/:id',async (req,res)=>{
+    try {
+        const {id} = req.params;
+        if(!id){
+            const error = new CustomError('Bad Request',400,'Bad Request','First Entry In Unity Id is required');
+            return res.status(400).json(error.toJson('First Entry In Unity Id is required'));
+        }
+        const firstEntryInUnity = await userControle.getFirstEntryInUnity(id);
+        return res.status(200).json(firstEntryInUnity);
+    } catch (e) {
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.post('/create/first/entry/observation',async (req,res)=>{
+    try {
+        const {observation,whoIsObservingId,firstEntryInUnityId} = req.body;
+        if(!observation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
+            return res.status(400).json(error.toJson('Observation is required'));
+        }
+        if(!whoIsObservingId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
+            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
+        }
+        if(!firstEntryInUnityId){
+            const error = new CustomError('Bad Request',400,'Bad Request','First Entry In Unity Id is required');
+            return res.status(400).json(error.toJson('First Entry In Unity Id is required'));
+        }
+        const newObservation = new Observations(observation,whoIsObservingId);
+        const observationCreated = await userControle.createFirstEntryInUnityObservation(firstEntryInUnityId,newObservation);
+        return res.status(201).json(observationCreated);
+    } catch (e) {
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.post('/create/first/entry/in/unity',async (req,res)=>{
+    try {
+        const {firstEntryInUnity,motivationForFirstEntry,nameOfUnityToSendFirstEntry,ContactEmailOfUnityToSendFirstEntry,familyBenefits,whoIsResponsibleForFirstEntryId,firstEntryInUnityID} = req.body;
+        
+        if(!firstEntryInUnity){
+            const error = new CustomError('Bad Request',400,'Bad Request','First Entry In Unity is required');
+            return res.status(400).json(error.toJson('First Entry In Unity is required'));
+        }
+        if(!motivationForFirstEntry){
+            const error = new CustomError('Bad Request',400,'Bad Request','Motivation For First Entry is required');
+            return res.status(400).json(error.toJson('Motivation For First Entry is required'));
+        }
+        if(!nameOfUnityToSendFirstEntry){
+            const error = new CustomError('Bad Request',400,'Bad Request','Name Of Unity To Send First Entry is required');
+            return res.status(400).json(error.toJson('Name Of Unity To Send First Entry is required'));
+        }
+        if(!ContactEmailOfUnityToSendFirstEntry){
+            const error = new CustomError('Bad Request',400,'Bad Request','Contact Email Of Unity To Send First Entry is required');
+            return res.status(400).json(error.toJson('Contact Email Of Unity To Send First Entry is required'));
+        }
+        if(!familyBenefits){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Benefits is required');
+            return res.status(400).json(error.toJson('Family Benefits is required'));
+        }
+        
+        if(!whoIsResponsibleForFirstEntryId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Responsible For First Entry Id is required');
+            return res.status(400).json(error.toJson('Who Is Responsible For First Entry Id is required'));
+        }
+
+        if(!firstEntryInUnityID){
+            const error = new CustomError('Bad Request',400,'Bad Request','First Entry In Unity ID is required');
+            return res.status(400).json(error.toJson('First Entry In Unity ID is required'));
+        }
+
+        const newFirstEntryInUnity = new FirstEntryInUnity(
+            firstEntryInUnity,
+            motivationForFirstEntry,
+            familyBenefits,
+            true,
+            new Date(),
+            new Date(),
+            nameOfUnityToSendFirstEntry,
+            ContactEmailOfUnityToSendFirstEntry,
+            firstEntryInUnity
+        );
+
+        const firstEntryInUnityCreated = await userControle.firstEntryInUnity(newFirstEntryInUnity,firstEntryInUnityID);
+        return res.status(201).json(firstEntryInUnityCreated);
+
+    } catch (e) {
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.get('/list/reference/person/observation/:id',async (req,res)=>{
+    try {
+        const {id} = req.params;
+        const referencePerson = await userControle.getReferencePersonWithObservations(id);
+        return res.status(200).json(referencePerson);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+
+userRouter.get('/list/reference/person/:id',async (req,res)=>{
+    try {
+        const {id} = req.params;
+        const referencePerson = await userControle.getByIdReferencePerson(id);
+        return res.status(200).json(referencePerson);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+
+userRouter.get('/list/reference/person',async (req,res)=>{
+    try {
+        const referencePerson = await userControle.listAllReferencePerson();
+        return res.status(200).json(referencePerson);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+
+userRouter.post('/create/reference/person/observation',async (req,res)=>{
+    const {observation,whoIsObservingId,referencePersonId} = req.body;
+    try {
+        if(!observation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
+            return res.status(400).json(error.toJson('Observation is required'));
+        }
+        if(!whoIsObservingId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
+            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
+        }
+        if(!referencePersonId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Reference Person Id is required');
+            return res.status(400).json(error.toJson('Reference Person Id is required'));
+        }
+        const newObservation = new Observations(observation,whoIsObservingId);
+        const observationCreated = await userControle.createReferencePersonObservation(newObservation,referencePersonId);
+        return res.status(201).json(observationCreated);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
+
+userRouter.post('/create/reference/person',uploads.single('photo'),async (req,res)=>{
+    try {
+        const {fullName,socialName,motherName,cpf,nis,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,whoIsObservingId,birthDate,biologicalGender} = req.body
+        
+        const fileBuffer = req.file?.buffer;    
+        const fileExtension = req.file?.mimetype.split('/')[1];
+
+        if(!fileBuffer){
+            const error = new CustomError('Bad Request',400,'Bad Request','Photo is required');
+            return res.status(400).json(error.toJson('Photo is required'));
+        }
+
+        if(!birthDate){
+            const error = new CustomError('Bad Request',400,'Bad Request','Birth Date is required');
+            return res.status(400).json(error.toJson('Birth Date is required'));
+        }
+
+        if(!biologicalGender){
+            const error = new CustomError('Bad Request',400,'Bad Request','biologicalGender is required');
+            return res.status(400).json(error.toJson('biologicalGender is required'));
+        }
+
+        if(!whoIsObservingId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
+            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
+        }
+
+        if(!fullName){
+            const error = new CustomError('Bad Request',400,'Bad Request','Full Name is required');
+            return res.status(400).json(error.toJson('Full Name is required'));
+        }
+
+        if(!socialName){
+            const error = new CustomError('Bad Request',400,'Bad Request','Social Name is required');
+            return res.status(400).json(error.toJson('Social Name is required'));
+        }
+
+        if(!motherName){
+            const error = new CustomError('Bad Request',400,'Bad Request','Mother Name is required');
+            return res.status(400).json(error.toJson('Mother Name is required'));
+        }
+
+        if(!cpf){
+            const error = new CustomError('Bad Request',400,'Bad Request','Cpf is required');
+            return res.status(400).json(error.toJson('Cpf is required'));
+        }
+
+        if(!diagnosis){
+            const error = new CustomError('Bad Request',400,'Bad Request','Diagnosis is required');
+            return res.status(400).json(error.toJson('Diagnosis is required'));
+        }
+
+        if(!rgNumber){
+            const error = new CustomError('Bad Request',400,'Bad Request','Rg Number is required');
+            return res.status(400).json(error.toJson('Rg Number is required'));
+        }
+
+        if(!rgUf){
+            const error = new CustomError('Bad Request',400,'Bad Request','Rg Uf is required');
+            return res.status(400).json(error.toJson('Rg Uf is required'));
+        }
+
+        if(!rgIssue){
+            const error = new CustomError('Bad Request',400,'Bad Request','Rg Issue is required');
+            return res.status(400).json(error.toJson('Rg Issue is required'));
+        }
+
+        if(!rgDateIssue){
+            const error = new CustomError('Bad Request',400,'Bad Request','Rg Date Issue is required');
+            return res.status(400).json(error.toJson('Rg Date Issue is required'));
+        }
+
+        if(!isShelter){
+            const error = new CustomError('Bad Request',400,'Bad Request','Is Shelter is required');
+            return res.status(400).json(error.toJson('Is Shelter is required'));
+        }
+
+        if(!localLocalization){
+            const error = new CustomError('Bad Request',400,'Bad Request','Local Localization is required');
+            return res.status(400).json(error.toJson('Local Localization is required'));
+        }
+
+
+        if(!adress){
+            const error = new CustomError('Bad Request',400,'Bad Request','Adress is required');
+            return res.status(400).json(error.toJson('Adress is required'));
+        }
+
+        if(!neighborhood){
+            const error = new CustomError('Bad Request',400,'Bad Request','Neighborhood is required');
+            return res.status(400).json(error.toJson('Neighborhood is required'));
+        }
+
+        if(!adressNumber){
+            const error = new CustomError('Bad Request',400,'Bad Request','Adress Number is required');
+            return res.status(400).json(error.toJson('Adress Number is required'));
+        }
+
+        if(!adressComplement){
+            const error = new CustomError('Bad Request',400,'Bad Request','Adress Complement is required');
+            return res.status(400).json(error.toJson('Adress Complement is required'));
+        }
+
+        if(!state){
+            const error = new CustomError('Bad Request',400,'Bad Request','State is required');
+            return res.status(400).json(error.toJson('State is required'));
+        }
+
+        if(!city){
+            const error = new CustomError('Bad Request',400,'Bad Request','City is required');
+            return res.status(400).json(error.toJson('City is required'));
+        }
+
+        if(!phone){
+            const error = new CustomError('Bad Request',400,'Bad Request','Phone is required');
+            return res.status(400).json(error.toJson('Phone is required'));
+        }
+
+        if(!fileExtension){
+            const error = new CustomError('Bad Request',400,'Bad Request','File Extension is required');
+            return res.status(400).json(error.toJson('File Extension is required'));
+        }
+
+        const birthDateFormatted = new Date(birthDate);
+        const newReferencePerson = new ReferencePerson(fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,fileBuffer,fileExtension,birthDateFormatted,whoIsObservingId);
+        const referencePerson = await userControle.createReferencePerson(newReferencePerson);
+        return res.status(201).json(referencePerson);
+       
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
 
 userRouter.post('/create/adm',async (req,res)=>{
     try{

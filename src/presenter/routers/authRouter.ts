@@ -4,6 +4,7 @@ import { CustomError } from "../../infra/error/error";
 import { UserController } from "../../useCase/controllers/userController";
 import { User } from "../../domain/entity/user";
 
+
 const authRouter = Router();
 const authController = new AuthController();
 const userController = new UserController();
@@ -20,6 +21,7 @@ authRouter.post('/auth/login', async (req, res) => {
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
         }else{
+            console.log(e);
             res.status(500).json({error:'Internal server error'});
         }
 

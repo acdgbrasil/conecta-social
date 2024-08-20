@@ -1,3 +1,6 @@
+import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
+import { Observations } from "../../domain/entity/observations";
+import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
 import { UserRepository } from "../../domain/repository/userRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
@@ -6,10 +9,76 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
-    findByEmail(email: string): Promise<User | Error> {
+    async getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
         try{
             const db = new DatabaseService();
-            return db.findByEmail(email);
+            return await db.getFirstEntryInUnity(firstEntryInUnityId);
+        }catch(e){
+            throw e;
+        }
+    }
+    async createFirstEntryInUnityObservation(firstEntryInUnityId: string, observation: Observations): Promise<FirstEntryInUnity | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.createFirstEntryInUnityObservation(firstEntryInUnityId, observation);
+        }catch(e){
+            throw e;
+        }
+    }
+    async firstEntryInUnity(firstEntry: FirstEntryInUnity, firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.firstEntryInUnity(firstEntry,firstEntryInUnityId);
+        }catch(e){
+            throw e;
+        }
+    }
+
+    async getReferencePersonWithObservations(id: string): Promise<ReferencePerson | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.getReferencePersonWithObservations(id);
+        }catch(e){
+            throw e;
+        }
+    }
+    async getByIdReferencePerson(id: string): Promise<ReferencePerson | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.getByIdReferencePerson(id);
+        }catch(e){
+            throw e;
+        }
+    }
+    async listAllReferencePerson(): Promise<ReferencePerson[] | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.listAllReferencePerson();
+        }catch(e){
+            throw e;
+        }
+    }
+    async createReferencePersonObservation(observations: Observations, referencePersonId: string): Promise<Observations | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.createReferencePersonObservation(observations,referencePersonId);
+        }catch(e){
+            throw e;
+        }
+    }
+    async createReferencePerson(referencePerson: ReferencePerson): Promise<ReferencePerson | Error> {
+        try {
+            const db = new DatabaseService()
+            const rp = await db.createReferencePerson(referencePerson)
+            return rp
+        } catch (err) {
+            throw err
+        }
+    }
+    async findByEmail(email: string): Promise<User | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.findByEmail(email);
         }catch(e){
             throw e;
         }

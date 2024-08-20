@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
-import { MongooseClientSingleton } from "./mongooseClientSingleton";
-import { CodeModel } from "./mongoModels";
-import { ReferencePersonModel } from "./models/referencePersonModel";
-import { FirstApointmentModel } from "./models/firstApointment";
+import { MongooseClientSingleton } from "../mongooseClientSingleton";
+import { CodeModel } from "../mongoModels";
 
 export const connectionMongose = async () => {
     try {
@@ -41,6 +39,7 @@ export const findCode = async (code:string) => {
     }
 }
 
+
 export const deleteCode = async (code:string) => {
     try{
         const expiredCode = await CodeModel.deleteOne({
@@ -50,8 +49,4 @@ export const deleteCode = async (code:string) => {
     }catch(error){
         throw new Error('Error to delete code');
     }
-}
-
-export const createReferencePerson = async (name:string,socialName:string,motherName:string,nis:string) =>{
-    try{}catch(err){}
 }

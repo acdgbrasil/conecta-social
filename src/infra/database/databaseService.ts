@@ -3,9 +3,80 @@ import {UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
-import { createCode, findCode } from './mongodb/mongodbDto';
+import { createCode, findCode } from './mongodb/mongoDtos/mongodbDto';
 import { AdmRepository } from '../../domain/repository/admRepository';
+import { ReferencePerson } from '../../domain/entity/referencePerson';
+import { Observations } from '../../domain/entity/observations';
+import { createReferencePerson, createReferencePersonObservation, getByIdReferencePerson, listAllReferencePerson } from './mongodb/mongoDtos/personReferenceDTO';
+import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
+import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    async getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
+        try{
+            const firstEntry = await getFirstEntryInUnity(firstEntryInUnityId);
+            return firstEntry;
+        }catch(e){
+            throw e;
+        }
+    }
+    createFirstEntryInUnityObservation(firstEntryInUnityId: string, observation: Observations): Promise<FirstEntryInUnity | Error> {
+        try{
+            const firstEntry = createFirstEntryInUnityObservation(firstEntryInUnityId, observation);
+            return firstEntry;
+        }catch(e){
+            throw e;
+        }
+    }
+
+    async firstEntryInUnity(firstEntry: FirstEntryInUnity, firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
+        try{
+            const firstEntryResult = await createFirstEntryInUnity(firstEntry,firstEntryInUnityId);
+            return firstEntryResult;
+        }catch(e){
+            throw e;
+        }
+    }
+    
+    async getReferencePersonWithObservations(id: string): Promise<ReferencePerson | Error> {
+        throw new Error('Method not implemented.');
+    }
+    async getByIdReferencePerson(id: string): Promise<ReferencePerson | Error> {
+        try {
+            const referencePerson = await getByIdReferencePerson(id)
+            if(!referencePerson){
+                return new CustomError('REFERENCE_PERSON_NOT_FOUND', 404, 'REFERENCE_PERSON_NOT_FOUND', 'Reference Person not found')
+            }
+            return referencePerson
+        }catch(err){
+            throw err
+        }
+    }
+    async listAllReferencePerson(): Promise<ReferencePerson[] | Error> {
+        try {
+            const referencePersons = await listAllReferencePerson()
+            return referencePersons
+        } catch (err) {
+            throw err
+        }
+    }
+    async createReferencePersonObservation(observations: Observations, referencePersonId: string): Promise<Observations | Error> {
+        try {
+            const Observations = await createReferencePersonObservation(observations, referencePersonId)
+            return observations
+        } catch (err) {
+            throw err
+        }
+    }
+   
+    async createReferencePerson(referencePerson: ReferencePerson): Promise<ReferencePerson | Error> {
+        try {
+            const rp = await createReferencePerson(referencePerson)
+            return rp            
+        } catch (err) {
+            throw err
+        }
+    }
+    
     async deactivateUser(email: string): Promise<Boolean | Error> {
         try{
             const users = await deactivateUser(email)
