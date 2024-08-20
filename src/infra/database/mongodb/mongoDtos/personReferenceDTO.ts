@@ -44,6 +44,13 @@ export const createReferencePersonObservation = async (observations:Observations
 
 export const createReferencePerson = async (rp:ReferencePerson)=>{
     try {
+        
+        const _referencePerson = await referencePersonModel.findOne({cpf:rp.cpf});
+
+        if(_referencePerson){
+            throw new CustomError('CPF_ALREADY_EXISTS',400,'CPF_ALREADY_EXISTS','CPF already exists');
+        }
+        
         const familyPhoto = await familyPhotoModel.create({
             fileBuffer:rp.familyPhoto.fileBuffer,
             fileExtension:rp.familyPhoto.fileExtension
