@@ -33,9 +33,9 @@ const familyCompositionPerson = new mongoose.Schema<FamilyCompositionPerson>({
     personWithDisability:{
         type:Boolean,
     },
-    documents:[{
+    documents:{
         type:documents
-    }],
+    },
     kinship:{
         type:Number,
     }

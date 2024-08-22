@@ -1,3 +1,4 @@
+import { FamilyCompositionPerson, FamilyComposition, Documents } from "../../domain/entity/familyComposition";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
 import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
@@ -9,6 +10,53 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+
+    async createEtnicalEspecifications(etnicalEspecifications: string, familyCompositionID: string): Promise<FamilyComposition | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.createEtnicalEspecifications(etnicalEspecifications,familyCompositionID);
+        }catch(e){
+            throw e;
+        }
+    }
+
+    async createDocuments(documents: Documents, familyCompositionID: string, kinship: number): Promise<FamilyComposition | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.createDocuments(documents,familyCompositionID,kinship);
+        }catch(e){
+            throw e;
+        }
+    }
+
+    async createSocialEspecifications(socialEspecifications: string, familyCompositionID: string): Promise<FamilyComposition | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.createSocialEspecifications(socialEspecifications,familyCompositionID);
+        }catch(e){
+            throw e;
+        }
+    }
+
+
+    async createFamilyCompositionObservation(observation: Observations, familyCompositionID: string): Promise<FamilyComposition | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.createFamilyCompositionObservation(observation,familyCompositionID);
+        }catch(e){
+            throw e;
+        }
+    }
+
+    async createFamilyPerson(familyCompositionPerson: FamilyCompositionPerson, familyCompositionID: string): Promise<FamilyComposition | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.createFamilyPerson(familyCompositionPerson, familyCompositionID);
+        }catch(e){
+            throw e;
+        }
+    }
+
     async getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
         try{
             const db = new DatabaseService();

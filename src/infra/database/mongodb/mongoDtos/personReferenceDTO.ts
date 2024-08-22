@@ -1,4 +1,4 @@
-import { FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
+import { Documents, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
 import { Observations } from "../../../../domain/entity/observations";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
 import { CustomError } from "../../../error/error";
@@ -57,7 +57,8 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
         })
         
         const familyComposition = await familyCompositionModel.create({})
-        const familyCompositionReferencePerson = new FamilyCompositionPerson(rp.fullName,rp.birthDate,rp.biologicalGender,true,[],1)
+        const documents = new Documents(false,false,false,false,false)
+        const familyCompositionReferencePerson = new FamilyCompositionPerson(rp.fullName,rp.birthDate,rp.biologicalGender,true,documents,1)
         familyComposition.familyCompositionPerson.push(familyCompositionReferencePerson)
         familyComposition.save()
 

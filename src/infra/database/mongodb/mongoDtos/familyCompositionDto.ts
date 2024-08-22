@@ -33,11 +33,11 @@ export const createDocuments = async (documents:Documents,familyCompositionID:st
     try {
         const familyComposition = await familyCompositionModel.findById(familyCompositionID)
         if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
-        const familyPerson = familyComposition.familyCompositionPerson.find((person) => person.kinship === kinship)
-        if(!familyPerson) throw new CustomError('FAMILY_PERSON_NOT_FOUND',404,'FAMILY_PERSON_NOT_FOUND','Family Person not found')
-        familyPerson.documents.push(documents)
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person) => person.kinship == kinship)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+        familyCompositionPerson.documents = documents
         familyComposition.isInUse = true
-        familyComposition.save()
+        await familyComposition.save()
         return familyComposition
     } catch (err) {
         throw err 

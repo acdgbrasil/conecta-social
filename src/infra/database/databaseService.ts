@@ -10,7 +10,49 @@ import { Observations } from '../../domain/entity/observations';
 import { createReferencePerson, createReferencePersonObservation, getByIdReferencePerson, listAllReferencePerson } from './mongodb/mongoDtos/personReferenceDTO';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
+import { FamilyCompositionPerson, FamilyComposition, Documents } from '../../domain/entity/familyComposition';
+import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyPerson, createSocialEspecifications } from './mongodb/mongoDtos/familyCompositionDto';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    async createEtnicalEspecifications(etnicalEspecifications: string, familyCompositionID: string): Promise<FamilyComposition | Error> {
+        try{
+            const familyComposition = await createEtnicalEspecifications(etnicalEspecifications, familyCompositionID);
+            return familyComposition;
+        }catch(e){
+            throw e;
+        }
+    }
+    async createDocuments(documents: Documents, familyCompositionID: string, kinship: number): Promise<FamilyComposition | Error> {
+        try{
+            const familyComposition = await createDocuments(documents, familyCompositionID, kinship);
+            return familyComposition;
+        }catch(e){
+            throw e;
+        }
+    }
+    async createSocialEspecifications(socialEspecifications: string, familyCompositionID: string): Promise<FamilyComposition | Error> {
+        try{
+            const familyComposition = await createSocialEspecifications(socialEspecifications, familyCompositionID);
+            return familyComposition;
+        }catch(e){
+            throw e;
+        }
+    }
+    async createFamilyCompositionObservation(observation: Observations, familyCompositionID: string): Promise<FamilyComposition | Error> {
+        try{
+            const observationResult = await createFamilyCompositionObservation(observation, familyCompositionID);
+            return observationResult;
+        }catch(e){
+            throw e;
+        }
+    }
+    async createFamilyPerson(familyCompositionPerson: FamilyCompositionPerson, familyCompositionID: string): Promise<FamilyComposition | Error> {
+        try{
+            const familyComposition = await createFamilyPerson(familyCompositionPerson, familyCompositionID);
+            return familyComposition;
+        }catch(e){
+            throw e;
+        }
+    }
     async getFirstEntryInUnity(firstEntryInUnityId: string): Promise<FirstEntryInUnity | Error> {
         try{
             const firstEntry = await getFirstEntryInUnity(firstEntryInUnityId);
