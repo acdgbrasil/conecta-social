@@ -21,10 +21,10 @@ export class FamilyCompositionPerson{
     birthDate: Date;
     biologicalGender: string;
     personWithDisability: boolean;
-    documents: Documents[];
+    documents: Documents;
     kinship: number;
 
-    constructor(fullName:string, birthDate:Date, biologicalGender:string, personWithDisability:boolean, documents:Documents[], kinship:number){
+    constructor(fullName:string, birthDate:Date, biologicalGender:string, personWithDisability:boolean, documents:Documents, kinship:number){
         this.fullName = fullName;
         this.birthDate = birthDate;
         this.biologicalGender = biologicalGender;

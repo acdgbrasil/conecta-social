@@ -6,10 +6,135 @@ import { ReferencePerson } from '../../domain/entity/referencePerson';
 import multer from 'multer';
 import { Observations } from '../../domain/entity/observations';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
+import { Documents, FamilyComposition, FamilyCompositionPerson } from '../../domain/entity/familyComposition';
 const uploads = multer();
 
 const userRouter = Router();
 const userControle = new UserController();
+
+userRouter.post('/create/family/composition/observation',async (req,res)=>{
+    try{
+        const {observation,whoIsObservingId,familyCompositionID} = req.body;
+        if(!observation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
+            return res.status(400).json(error.toJson('Observation is required'));
+        }
+        if(!whoIsObservingId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
+            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
+        }
+        if(!familyCompositionID){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Composition ID is required');
+            return res.status(400).json(error.toJson('Family Composition ID is required'));
+        }
+        const newObservation = new Observations(observation,whoIsObservingId);
+        const observationCreated = await userControle.createFamilyCompositionObservation(newObservation,familyCompositionID);
+        return res.status(201).json(observationCreated);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.post('/create/etinical/documents',async (req,res)=>{ 
+    try{
+        let {document,familyCompositionID,kinship} = req.body;
+        
+        if(!familyCompositionID){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Composition ID is required');
+            return res.status(400).json(error.toJson('Family Composition ID is required'));
+        }
+
+        if(!kinship){
+            const error = new CustomError('Bad Request',400,'Bad Request','Kinship is required');
+            return res.status(400).json(error.toJson('Kinship is required'));
+        }
+        
+
+        const documents = new Documents(document[0],document[1],document[2],document[3],document[4]);
+
+        const familyComposition = await userControle.createDocuments(documents,familyCompositionID,kinship);
+        return res.status(201).json(familyComposition);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.post('/create/etnical/especifications',async (req,res)=>{
+    try{
+        const {etnicalEspecifications,familyCompositionID} = req.body;
+        if(!etnicalEspecifications){
+            const error = new CustomError('Bad Request',400,'Bad Request','Etnical Especifications is required');
+            return res.status(400).json(error.toJson('Etnical Especifications is required'));
+        }
+        if(!familyCompositionID){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Composition ID is required');
+            return res.status(400).json(error.toJson('Family Composition ID is required'));
+        }
+        const familyComposition = await userControle.createEtnicalEspecifications(etnicalEspecifications,familyCompositionID);
+        return res.status(201).json(familyComposition);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.post('/create/family/person',async (req,res)=>{
+    try{
+        const {fullname,birthDate,biologicalGender,kinship,personWithDisabilities,familyPersonId} = req.body;
+        
+        if(!fullname){
+            const error = new CustomError('Bad Request',400,'Bad Request','Full Name is required');
+            return res.status(400).json(error.toJson('Full Name is required'));
+        }
+        if(!birthDate){
+            const error = new CustomError('Bad Request',400,'Bad Request','Birth Date is required');
+            return res.status(400).json(error.toJson('Birth Date is required'));
+        }
+
+        if(!biologicalGender){
+            const error = new CustomError('Bad Request',400,'Bad Request','biologicalGender is required');
+            return res.status(400).json(error.toJson('biologicalGender is required'));
+        }
+
+        if(!kinship){
+            const error = new CustomError('Bad Request',400,'Bad Request','Kinship is required');
+            return res.status(400).json(error.toJson('Kinship is required'));
+        }
+
+        if(!familyPersonId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Person Id is required');
+            return res.status(400).json(error.toJson('Family Person Id is required'));
+        }
+
+        if(!personWithDisabilities){
+            const error = new CustomError('Bad Request',400,'Bad Request','Person With Disabilities is required');
+            return res.status(400).json(error.toJson('Person With Disabilities is required'));
+        }
+
+        const documents = new Documents(false,false,false,false,false);
+        const date = new Date(birthDate);
+        const familyCompositionPerson = new FamilyCompositionPerson(fullname,date,biologicalGender,personWithDisabilities,documents,kinship);
+        const familyPerson = await userControle.createFamilyPerson(familyCompositionPerson,familyPersonId);
+        return res.status(201).json(familyPerson);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+});
 
 userRouter.get('/list/first/entry/in/unity/:id',async (req,res)=>{
     try {

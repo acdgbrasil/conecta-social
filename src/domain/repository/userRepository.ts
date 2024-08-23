@@ -1,3 +1,4 @@
+import { Documents, FamilyComposition, FamilyCompositionPerson } from "../entity/familyComposition";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
 import { Observations } from "../entity/observations";
 import { ReferencePerson } from "../entity/referencePerson";
@@ -15,4 +16,9 @@ export interface UserRepository {
     firstEntryInUnity(firstEntry:FirstEntryInUnity,firstEntryInUnityId:string): Promise<FirstEntryInUnity | Error>;
     getFirstEntryInUnity(firstEntryInUnityId:string): Promise<FirstEntryInUnity | Error>;
     createFirstEntryInUnityObservation(firstEntryInUnityId:string,observation:Observations): Promise<FirstEntryInUnity | Error>;
+    createFamilyPerson(familyCompositionPerson:FamilyCompositionPerson,familyCompositionID:string): Promise<FamilyComposition | Error>;
+    createEtnicalEspecifications(etnicalEspecifications:string,familyCompositionID:string): Promise<FamilyComposition | Error>;
+    createDocuments(documents:Documents,familyCompositionID:string,kinship:number): Promise<FamilyComposition | Error>;
+    createSocialEspecifications(socialEspecifications:string,familyCompositionID:string): Promise<FamilyComposition | Error>;
+    createFamilyCompositionObservation(observation:Observations,familyCompositionID:string): Promise<FamilyComposition | Error>;
 }
