@@ -7,10 +7,131 @@ import multer from 'multer';
 import { Observations } from '../../domain/entity/observations';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { Documents, FamilyComposition, FamilyCompositionPerson } from '../../domain/entity/familyComposition';
+import { HomeConditions } from '../../domain/entity/homeConditions';
 const uploads = multer();
 
 const userRouter = Router();
 const userControle = new UserController();
+
+userRouter.post('/create/home/conditions/observation',async (req,res)=>{
+    try{
+        const {observation,whoIsObservingId,homeConditionsId} = req.body;
+        if(!observation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
+            return res.status(400).json(error.toJson('Observation is required'));
+        }
+        if(!whoIsObservingId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
+            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
+        }
+        if(!homeConditionsId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Home Conditions Id is required');
+            return res.status(400).json(error.toJson('Home Conditions Id is required'));
+        }
+        const newObservation = new Observations(observation,whoIsObservingId);
+        const observationCreated = await userControle.createHomeConditionsObservation(newObservation,homeConditionsId);
+        return res.status(201).json(observationCreated);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.post('/create/home/conditions',async (req,res)=>{
+    try{
+        const {typeResidence,materialOfExternalWalls,hasAcessEnergy,waterSupply,sewageDisposal,garbageCollection,hasWasteCollection,homeConditionIsInRiskArea,difficultyToAccessHome,hasHomeInsurance,hasHomeInsuranceValue,numberOfRooms,numberOfBedrooms,numberOfPeapleInBedrooms,homeConditionsId} = req.body;
+        if(!typeResidence){
+            const error = new CustomError('Bad Request',400,'Bad Request','Type Residence is required');
+            return res.status(400).json(error.toJson('Type Residence is required'));
+        }
+        if(!materialOfExternalWalls){
+            const error = new CustomError('Bad Request',400,'Bad Request','Material Of External Walls is required');
+            return res.status(400).json(error.toJson('Material Of External Walls is required'));
+        }
+        if(!hasAcessEnergy){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Acess Energy is required');
+            return res.status(400).json(error.toJson('Has Acess Energy is required'));
+        }
+        if(!waterSupply){
+            const error = new CustomError('Bad Request',400,'Bad Request','Water Supply is required');
+            return res.status(400).json(error.toJson('Water Supply is required'));
+        }
+        if(!sewageDisposal){
+            const error = new CustomError('Bad Request',400,'Bad Request','Sewage Disposal is required');
+            return res.status(400).json(error.toJson('Sewage Disposal is required'));
+        }
+        if(!garbageCollection){
+            const error = new CustomError('Bad Request',400,'Bad Request','Garbage Collection is required');
+            return res.status(400).json(error.toJson('Garbage Collection is required'));
+        }
+        if(!hasWasteCollection){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Waste Collection is required');
+            return res.status(400).json(error.toJson('Has Waste Collection is required'));
+        }
+        if(!homeConditionIsInRiskArea){
+            const error = new CustomError('Bad Request',400,'Bad Request','Home Condition Is In Risk Area is required');
+            return res.status(400).json(error.toJson('Home Condition Is In Risk Area is required'));
+        }
+        if(!difficultyToAccessHome){
+            const error = new CustomError('Bad Request',400,'Bad Request','Difficulty To Access Home is required');
+            return res.status(400).json(error.toJson('Difficulty To Access Home is required'));
+        }
+        if(!hasHomeInsurance){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Home Insurance is required');
+            return res.status(400).json(error.toJson('Has Home Insurance is required'));
+        }
+        if(!hasHomeInsuranceValue){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Home Insurance Value is required');
+            return res.status(400).json(error.toJson('Has Home Insurance Value is required'));
+        }
+        if(!numberOfRooms){
+            const error = new CustomError('Bad Request',400,'Bad Request','Number Of Rooms is required');
+            return res.status(400).json(error.toJson('Number Of Rooms is required'));
+        }
+        if(!numberOfBedrooms){
+            const error = new CustomError('Bad Request',400,'Bad Request','Number Of Bedrooms is required');
+            return res.status(400).json(error.toJson('Number Of Bedrooms is required'));
+        }
+        if(!numberOfPeapleInBedrooms){
+            const error = new CustomError('Bad Request',400,'Bad Request','Number Of Peaple In Bedrooms is required');
+            return res.status(400).json(error.toJson('Number Of Peaple In Bedrooms is required'));
+        }
+        if(!homeConditionsId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Home Conditions Id is required');
+            return res.status(400).json(error.toJson('Home Conditions Id is required'));
+        }
+
+        const homeConditions = new HomeConditions(
+            typeResidence,
+            materialOfExternalWalls,
+            hasAcessEnergy,
+            waterSupply,
+            sewageDisposal,
+            garbageCollection,
+            hasWasteCollection,
+            homeConditionIsInRiskArea,
+            difficultyToAccessHome,
+            hasHomeInsurance,
+            hasHomeInsuranceValue,
+            numberOfRooms,
+            numberOfBedrooms,
+            numberOfPeapleInBedrooms
+        )
+
+        const homeConditionsCreated = await userControle.createHomeConditions(homeConditions,homeConditionsId);
+        return res.status(201).json(homeConditionsCreated);
+    }catch(e){
+        console.log(e)
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 
 userRouter.post('/create/family/composition/observation',async (req,res)=>{
     try{

@@ -5,6 +5,7 @@ import { CustomError } from "../../../error/error";
 import { familyCompositionModel } from "../models/familyCompositionModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
+import { homeConditionsModel } from "../models/homeConditionsModel";
 import { referencePersonModel } from "../models/referencePersonModel";
 
 
@@ -63,6 +64,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
         familyComposition.save()
 
         const fistEntryInUnity = await firstEntryInUnityModel.create({})
+        const homeCondition = await homeConditionsModel.create({})
 
         const referencePerson = await referencePersonModel.create({
             fullName:rp.fullName,
@@ -88,6 +90,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             familyCompositionId:familyComposition.id,
             birthDate:rp.birthDate,
             biologicalGender:rp.biologicalGender,
+            homeConditionsId:homeCondition.id
         })
         
         return referencePerson

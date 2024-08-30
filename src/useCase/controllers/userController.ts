@@ -1,5 +1,6 @@
 import { FamilyCompositionPerson, FamilyComposition, Documents } from "../../domain/entity/familyComposition";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
+import { HomeConditions } from "../../domain/entity/homeConditions";
 import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
@@ -10,6 +11,22 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createHomeConditions(homeConditions: HomeConditions, homeConditionsId: string): Promise<HomeConditions | Error> {
+        try{
+            const db = new DatabaseService();
+            return db.createHomeConditions(homeConditions,homeConditionsId);
+        }catch(e){
+            throw e;
+        }
+    }
+    createHomeConditionsObservation(observation: Observations, homeConditionsId: string): Promise<HomeConditions | Error> {
+        try{
+            const db = new DatabaseService();
+            return db.createHomeConditionsObservation(observation,homeConditionsId);
+        }catch(e){
+            throw e;
+        }
+    }
 
     async createEtnicalEspecifications(etnicalEspecifications: string, familyCompositionID: string): Promise<FamilyComposition | Error> {
         try{
