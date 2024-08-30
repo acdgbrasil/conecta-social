@@ -12,7 +12,26 @@ import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 import { FamilyCompositionPerson, FamilyComposition, Documents } from '../../domain/entity/familyComposition';
 import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyPerson, createSocialEspecifications } from './mongodb/mongoDtos/familyCompositionDto';
+import { HomeConditions } from '../../domain/entity/homeConditions';
+import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    async createHomeConditions(homeConditions: HomeConditions, homeConditionsId: string): Promise<HomeConditions | Error> {
+        try{
+            const familyComposition = await createHomeConditionsdDTO(homeConditions, homeConditionsId);
+            return familyComposition;
+        }catch(e){
+            throw e;
+        }
+    }
+    
+    createHomeConditionsObservation(observation: Observations, homeConditionsId: string): Promise<HomeConditions | Error> {
+        try{
+            const familyComposition = createHomeConditionsObservation(observation, homeConditionsId);
+            return familyComposition;
+        }catch(e){
+            throw e;
+        }
+    }
     async createEtnicalEspecifications(etnicalEspecifications: string, familyCompositionID: string): Promise<FamilyComposition | Error> {
         try{
             const familyComposition = await createEtnicalEspecifications(etnicalEspecifications, familyCompositionID);
