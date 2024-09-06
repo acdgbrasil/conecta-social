@@ -33,7 +33,7 @@ authRouter.post('/auth/forgot/password', async (req, res) => {
         const {email} = req.body;
         if(!email) throw new CustomError('Bad Request',400,'Bad Request','Email is required');
         const response = await authController.forgotPassword(email);
-        return res.status(200).json({code:response});
+        return res.status(200).json({message:"Code sent to user email"});
     }catch(e){
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
