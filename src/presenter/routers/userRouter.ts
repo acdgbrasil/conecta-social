@@ -6,12 +6,14 @@ import { ReferencePerson } from '../../domain/entity/referencePerson';
 import multer from 'multer';
 import { Observations } from '../../domain/entity/observations';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
-import { Documents, FamilyComposition, FamilyCompositionPerson } from '../../domain/entity/familyComposition';
+import { Documents, FamilyCompositionPerson } from '../../domain/entity/familyComposition';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 const uploads = multer();
 
 const userRouter = Router();
 const userControle = new UserController();
+
+
 
 userRouter.post('/create/home/conditions/observation',async (req,res)=>{
     try{

@@ -1,5 +1,5 @@
 import { User } from '../../domain/entity/user';
-import {UserRepository} from '../../domain/repository/userRepository';
+import {PhotoResponse, UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
@@ -14,7 +14,17 @@ import { FamilyCompositionPerson, FamilyComposition, Documents } from '../../dom
 import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyPerson, createSocialEspecifications } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
+import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    getPersonReferencePhoto(photoId: string): Promise<PhotoResponse> {
+        try{
+            const photo = getPersonReferencePhotoDto(photoId);
+            return photo;
+        }catch(e){
+            throw e;
+        }
+    }
+    
     async createHomeConditions(homeConditions: HomeConditions, homeConditionsId: string): Promise<HomeConditions | Error> {
         try{
             const familyComposition = await createHomeConditionsdDTO(homeConditions, homeConditionsId);
@@ -112,7 +122,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
             throw err
         }
     }
-    async listAllReferencePerson(): Promise<ReferencePerson[] | Error> {
+    async listAllReferencePerson(): Promise<ReferencePerson[]> {
         try {
             const referencePersons = await listAllReferencePerson()
             return referencePersons

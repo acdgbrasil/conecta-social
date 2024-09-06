@@ -9,7 +9,6 @@ import { homeConditionsModel } from "../models/homeConditionsModel";
 import { referencePersonModel } from "../models/referencePersonModel";
 
 
-
 export const getByIdReferencePerson = async (id:string) => {
     try {
         const referencePerson = await referencePersonModel.findById(id);

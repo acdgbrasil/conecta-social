@@ -4,13 +4,22 @@ import { HomeConditions } from "../../domain/entity/homeConditions";
 import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
-import { UserRepository } from "../../domain/repository/userRepository";
+import { PhotoResponse, UserRepository } from "../../domain/repository/userRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
 import { CryptoService } from "../../infra/encrypt/encryptService";
 import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    async getPersonReferencePhoto(photoId: string): Promise<PhotoResponse> {
+        try{
+            const db = new DatabaseService();
+            return await db.getPersonReferencePhoto(photoId);
+        }catch(e){
+            throw e;
+        }
+    }
+
     createHomeConditions(homeConditions: HomeConditions, homeConditionsId: string): Promise<HomeConditions | Error> {
         try{
             const db = new DatabaseService();
@@ -115,7 +124,7 @@ export class UserController implements UserRepository{
             throw e;
         }
     }
-    async listAllReferencePerson(): Promise<ReferencePerson[] | Error> {
+    async listAllReferencePerson(): Promise<ReferencePerson[]> {
         try{
             const db = new DatabaseService();
             return await db.listAllReferencePerson();

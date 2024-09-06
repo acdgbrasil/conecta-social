@@ -5,6 +5,11 @@ import { Observations } from "../entity/observations";
 import { ReferencePerson } from "../entity/referencePerson";
 import { User } from "../entity/user";
 
+export type PhotoResponse = {
+    fileBuffer:Buffer;
+    fileExtension:string;
+}
+
 export interface UserRepository {
     findByEmail(email:string):Promise<any>;
     create(user:User,isAdm:boolean): Promise<User | Error>;
@@ -24,4 +29,5 @@ export interface UserRepository {
     createFamilyCompositionObservation(observation:Observations,familyCompositionID:string): Promise<FamilyComposition | Error>;
     createHomeConditions(homeConditions:HomeConditions,homeConditionsId:string): Promise<HomeConditions | Error>;
     createHomeConditionsObservation(observation:Observations,homeConditionsId:string): Promise<HomeConditions | Error>;
+    getPersonReferencePhoto(photoId:string): Promise<PhotoResponse>;
 }
