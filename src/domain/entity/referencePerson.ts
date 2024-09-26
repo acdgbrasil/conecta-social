@@ -7,7 +7,7 @@ export enum LOCAL_LOCALIZATION {
 }
 
 export class ReferencePerson {
-
+    id: string
     fullName: string
     socialName: string
     motherName: string
@@ -38,9 +38,10 @@ export class ReferencePerson {
 
 
 
-    constructor(fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string,biologicalGender:string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string,fileBuffer:Buffer, fileExtension:string,birthDate:Date,whoIsOpeningId:string,observations?: [Observations],familyCompositionId?: string, fistEntryInUnityId?: FirstEntryInUnity,homeConditionsId?: string) {
+    constructor(id: string, fullName: string, socialName: string, motherName: string,nis: string | undefined, cpf: string, diagnosis: string, rgNumber: string,biologicalGender:string, rgUf: string, rgIssuingBody: string,rgIssueDate: string, isShelter: boolean, localLocalization: LOCAL_LOCALIZATION, cep: string | undefined, adress: string, neighborhood: string, adressNumber: string, adressComplement: string, state: string, city: string, phone: string,fileBuffer:Buffer, fileExtension:string,birthDate:Date,whoIsOpeningId:string,observations?: [Observations],familyCompositionId?: string, fistEntryInUnityId?: FirstEntryInUnity,homeConditionsId?: string) {
         const rg = new RG(rgNumber, rgUf, rgIssuingBody, rgIssueDate)
         const familyPhoto = new FamilyPhoto(fileBuffer,fileExtension)
+        this.id = id
         this.familyPhoto = familyPhoto
         this.rg = rg
         this.adress = adress

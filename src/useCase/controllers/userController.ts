@@ -10,6 +10,25 @@ import { CryptoService } from "../../infra/encrypt/encryptService";
 import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
+type ShortReferencePerson = {
+    id: string
+    fullName: string
+    socialName: string
+    motherName: string
+    cpf: string
+    diagnosis: string
+    birthDate:Date
+    cep?: string
+    adress: string
+    neighborhood: string
+    adressNumber: string
+    adressComplement: string
+    phone: string
+    familyPhoto: string
+    whoIsOpening: string
+}
+
+
 export class UserController implements UserRepository{
     async getPersonReferencePhoto(photoId: string): Promise<PhotoResponse> {
         try{
@@ -132,6 +151,39 @@ export class UserController implements UserRepository{
             throw e;
         }
     }
+    async listAllReducedReferencePerson(): Promise<ShortReferencePerson[]> {
+        try{
+            const userControle = new UserController();
+            const db = new DatabaseService();
+            const ReferencePersonList = await db.listAllReferencePerson();
+            const finalResponse = await Promise.all(ReferencePersonList.map(async (rp) => {
+                const familyPhotoId = rp.familyPhoto.toString();
+                const familyPhoto = await userControle.getPersonReferencePhoto(familyPhotoId);
+    
+                return {
+                    id: rp.id,
+                    fullName: rp.fullName,
+                    socialName: rp.socialName,
+                    motherName: rp.motherName,
+                    cpf: rp.cpf,
+                    diagnosis: rp.diagnosis,
+                    birthDate: rp.birthDate,
+                    cep: rp.cep,
+                    adress: rp.adress,
+                    neighborhood: rp.neighborhood,
+                    adressNumber: rp.adressNumber,
+                    adressComplement: rp.adressComplement,
+                    phone: rp.phone,
+                    familyPhoto: typeof familyPhoto === 'string' ? familyPhoto : JSON.stringify(familyPhoto), // Garantindo que a foto seja uma string
+                    whoIsOpening: rp.whoIsOpeningId
+                };
+            }));
+            return finalResponse
+        }catch(e){
+            console.log(e)
+            throw e;
+        }
+    }
     async createReferencePersonObservation(observations: Observations, referencePersonId: string): Promise<Observations | Error> {
         try{
             const db = new DatabaseService();
@@ -178,6 +230,15 @@ export class UserController implements UserRepository{
     }
     delete(email: string): Promise<User | Error> {
         throw new Error("Method not implemented.");
+    }
+    async listAllUsers(): Promise<User[] | Error> {
+        try{
+            const databaseService = new DatabaseService()
+            const users = await databaseService.listAllUsers()
+            return users
+        }catch(err){
+            throw err
+        }
     }
 
 }

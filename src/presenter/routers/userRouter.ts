@@ -391,6 +391,14 @@ userRouter.get('/list/reference/person',async (req,res)=>{
         return res.status(500).json(err);
     }
 })
+userRouter.get('/list/reduced/reference/person',async (req,res)=>{
+    try {
+        const referencePerson = await userControle.listAllReducedReferencePerson();
+        return res.status(200).json(referencePerson);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
 
 userRouter.post('/create/reference/person/observation',async (req,res)=>{
     const {observation,whoIsObservingId,referencePersonId} = req.body;
@@ -539,7 +547,7 @@ userRouter.post('/create/reference/person',uploads.single('photo'),async (req,re
         }
 
         const birthDateFormatted = new Date(birthDate);
-        const newReferencePerson = new ReferencePerson(fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,fileBuffer,fileExtension,birthDateFormatted,whoIsObservingId);
+        const newReferencePerson = new ReferencePerson('0', fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,fileBuffer,fileExtension,birthDateFormatted,whoIsObservingId);
         const referencePerson = await userControle.createReferencePerson(newReferencePerson);
         return res.status(201).json(referencePerson);
        
