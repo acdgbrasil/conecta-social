@@ -158,7 +158,7 @@ export class UserController implements UserRepository{
             const ReferencePersonList = await db.listAllReferencePerson();
             const finalResponse = await Promise.all(ReferencePersonList.map(async (rp) => {
                 const familyPhotoId = rp.familyPhoto.toString();
-                const familyPhoto = await userControle.getPersonReferencePhoto(familyPhotoId);
+                const familyPhoto = `${process.env.BASE_URL}/photo/family/${familyPhotoId}`;
     
                 return {
                     id: rp.id,
@@ -174,7 +174,7 @@ export class UserController implements UserRepository{
                     adressNumber: rp.adressNumber,
                     adressComplement: rp.adressComplement,
                     phone: rp.phone,
-                    familyPhoto: typeof familyPhoto === 'string' ? familyPhoto : JSON.stringify(familyPhoto), // Garantindo que a foto seja uma string
+                    familyPhoto: familyPhoto, // Garantindo que a foto seja uma string
                     whoIsOpening: rp.whoIsOpeningId
                 };
             }));
