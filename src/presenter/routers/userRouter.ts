@@ -8,6 +8,7 @@ import { Observations } from '../../domain/entity/observations';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { Documents, FamilyCompositionPerson } from '../../domain/entity/familyComposition';
 import { HomeConditions } from '../../domain/entity/homeConditions';
+import { getFamilyComposition } from '../../infra/database/mongodb/mongoDtos/familyCompositionDto';
 const uploads = multer();
 
 const userRouter = Router();
@@ -391,6 +392,15 @@ userRouter.get('/list/reference/person',async (req,res)=>{
         return res.status(500).json(err);
     }
 })
+userRouter.get('/list/family/:id',async (req,res)=>{
+    try {
+        //aqui
+        const referencePerson = await userControle.listFamilyMembers(req.params.id);
+        return res.status(200).json(referencePerson);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+})
 userRouter.get('/list/reduced/reference/person',async (req,res)=>{
     try {
         const referencePerson = await userControle.listAllReducedReferencePerson();
@@ -614,5 +624,6 @@ userRouter.post('/create/user',async (req,res)=>{
         return res.status(500).json(e);
     }
 });
+
 
 export default userRouter;

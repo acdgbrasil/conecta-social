@@ -151,6 +151,31 @@ export class UserController implements UserRepository{
             throw e;
         }
     }
+    async listFamilyMembers(familyCompositionId: string): Promise<FamilyCompositionPerson[]> {
+        try {
+            const db = new DatabaseService();
+    
+            const familyComposition = await db.getFamilyComposition(familyCompositionId);
+    
+            if (familyComposition instanceof Error) {
+                throw new Error('Erro ao buscar a composição familiar');
+            }
+    
+            if (!familyComposition || !familyComposition.familyCompositionPerson) {
+                throw new Error('familyComposition ou familyCompositionPerson não encontrado');
+            }
+    
+            const familyMembers = familyComposition.familyCompositionPerson;
+    
+            console.log(familyMembers); 
+    
+            return familyMembers;
+        } catch (e) {
+            console.error('Erro ao buscar membros da família:', e);
+            throw e;
+        }
+    }
+    
     async listAllReducedReferencePerson(): Promise<ShortReferencePerson[]> {
         try{
             const userControle = new UserController();

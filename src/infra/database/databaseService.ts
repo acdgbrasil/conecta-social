@@ -11,7 +11,7 @@ import { createReferencePerson, createReferencePersonObservation, getByIdReferen
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 import { FamilyCompositionPerson, FamilyComposition, Documents } from '../../domain/entity/familyComposition';
-import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyPerson, createSocialEspecifications } from './mongodb/mongoDtos/familyCompositionDto';
+import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyPerson, createSocialEspecifications, getFamilyComposition } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
@@ -226,6 +226,15 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
 
     delete(email: string): Promise<User | Error> {
         throw new Error('Method not implemented.');
+    }
+    async getFamilyComposition(id: string): Promise<FamilyComposition | Error> {
+
+        try{
+            const familyComposition = await getFamilyComposition(id);
+            return familyComposition;
+        }catch(e){
+            throw e;
+        }
     }
 
 }
