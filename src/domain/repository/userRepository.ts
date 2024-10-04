@@ -30,4 +30,5 @@ export interface UserRepository {
     createHomeConditions(homeConditions:HomeConditions,homeConditionsId:string): Promise<HomeConditions | Error>;
     createHomeConditionsObservation(observation:Observations,homeConditionsId:string): Promise<HomeConditions | Error>;
     getPersonReferencePhoto(photoId:string): Promise<PhotoResponse>;
+    getFamilyComposition(id: string): Promise<FamilyComposition | Error>;
 }

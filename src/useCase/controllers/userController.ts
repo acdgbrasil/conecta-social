@@ -167,11 +167,10 @@ export class UserController implements UserRepository{
     
             const familyMembers = familyComposition.familyCompositionPerson;
     
-            console.log(familyMembers); 
     
             return familyMembers;
         } catch (e) {
-            console.error('Erro ao buscar membros da família:', e);
+            
             throw e;
         }
     }
@@ -205,7 +204,6 @@ export class UserController implements UserRepository{
             }));
             return finalResponse
         }catch(e){
-            console.log(e)
             throw e;
         }
     }
