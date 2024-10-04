@@ -7,6 +7,7 @@ import { familyPhotoModel } from "../models/familyPhotoModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
 import { homeConditionsModel } from "../models/homeConditionsModel";
 import { referencePersonModel } from "../models/referencePersonModel";
+import { WorkConditionModel } from "../models/workConditionModel";
 
 
 export const getByIdReferencePerson = async (id:string) => {
@@ -64,6 +65,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
 
         const fistEntryInUnity = await firstEntryInUnityModel.create({})
         const homeCondition = await homeConditionsModel.create({})
+        const workCondition = await WorkConditionModel.create({})
 
         const referencePerson = await referencePersonModel.create({
             fullName:rp.fullName,
@@ -89,7 +91,8 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             familyCompositionId:familyComposition.id,
             birthDate:rp.birthDate,
             biologicalGender:rp.biologicalGender,
-            homeConditionsId:homeCondition.id
+            homeConditionsId:homeCondition.id,
+            workConditionId:workCondition.id,
         })
         
         return referencePerson

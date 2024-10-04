@@ -1,9 +1,10 @@
-import { Documents, FamilyComposition, FamilyCompositionPerson } from "../entity/familyComposition";
+import { Documents, FamilyComposition, FamilyCompositionPerson, WorkConditionPerson } from "../entity/familyComposition";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
 import { HomeConditions } from "../entity/homeConditions";
 import { Observations } from "../entity/observations";
 import { ReferencePerson } from "../entity/referencePerson";
 import { User } from "../entity/user";
+import { WorkCondition } from "../entity/workCondition";
 
 export type PhotoResponse = {
     fileBuffer:Buffer;

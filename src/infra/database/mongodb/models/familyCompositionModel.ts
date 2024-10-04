@@ -66,7 +66,7 @@ const educationConditionPerson = new mongoose.Schema<EducationConditionPerson>({
     isInUse:{
         type:Boolean,
     },
-    knowHowToRead:{
+    literate:{
         type:Boolean,
     },
     schoolShip:{

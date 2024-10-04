@@ -6,6 +6,9 @@ import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClient
 import { verifyToken } from './infra/jwt/jwtToken';
 import admRouter from './presenter/routers/admRouter';
 import photoRouter from './presenter/routers/photoRouter';
+import { WorkCondition } from './domain/entity/workCondition';
+import { createWorkConditionPersonDto } from './infra/database/mongodb/mongoDtos/workConditionDto';
+import { WorkConditionPerson } from './domain/entity/familyComposition';
 
 
 const PORT = process.env.PORT || 3000;
@@ -22,8 +25,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(router);
 router.use('/api',authRouter);
-router.use('/api/ping',(_,res) => {
-    res.send("PONG!!!");
+router.use('/api/ping',async (_,res) => {
+    res.send('pong');
 });
 router.use(verifyToken);
 router.use('/api',photoRouter);

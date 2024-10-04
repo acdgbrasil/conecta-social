@@ -58,14 +58,14 @@ export class OcurruncyBolsaFamilia{
 
 export class EducationConditionPerson{
     isInUse: boolean;
-    knowHowToRead: boolean;
+    literate: boolean;
     schoolShip: string;
     isStudying:boolean;
     ocorruncyBolsaFamilia:OcurruncyBolsaFamilia;
 
-    constructor(isInUse:boolean, knowHowToRead:boolean, schoolShip:string, isStudying:boolean, ocorruncyBolsaFamilia:OcurruncyBolsaFamilia){
+    constructor(isInUse:boolean, literate:boolean, schoolShip:string, isStudying:boolean, ocorruncyBolsaFamilia:OcurruncyBolsaFamilia){
         this.isInUse = isInUse;
-        this.knowHowToRead = knowHowToRead;
+        this.literate = literate;
         this.schoolShip = schoolShip;
         this.isStudying = isStudying;
         this.ocorruncyBolsaFamilia = ocorruncyBolsaFamilia;

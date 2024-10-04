@@ -6,14 +6,29 @@ import { ReferencePerson } from '../../domain/entity/referencePerson';
 import multer from 'multer';
 import { Observations } from '../../domain/entity/observations';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
-import { Documents, FamilyCompositionPerson } from '../../domain/entity/familyComposition';
+import { Documents, FamilyCompositionPerson, WorkConditionPerson } from '../../domain/entity/familyComposition';
 import { HomeConditions } from '../../domain/entity/homeConditions';
+import { WorkCondition } from '../../domain/entity/workCondition';
 const uploads = multer();
 
 const userRouter = Router();
 const userControle = new UserController();
 
-
+userRouter.post('/create/work/condition',async (req,res)=>{
+    try{
+        const {hasSocialIncome,perCapitaIncome,bolsaFamiliaValue,bpcValue,petiValue,othersValue,bcpBenefitPerson,hasRetiredPerson,totalFamilyIncome,totalPerCapitaIncome,workConditionBody,hasWorkCard,workQualification,workValue,familyCompositionID,personId,workConditionId} = req.body;
+        const workCondition = new WorkCondition(hasSocialIncome,perCapitaIncome,hasSocialIncome,bolsaFamiliaValue,bpcValue,petiValue,othersValue,bcpBenefitPerson,hasRetiredPerson,totalFamilyIncome,totalPerCapitaIncome)
+        const workConditionPerson = new WorkConditionPerson(true,workConditionBody,hasWorkCard,workQualification,workValue)
+        const workConditionResult = await userControle.createWorkConditionPerson(workCondition,workConditionPerson,familyCompositionID,personId,workConditionId)
+        return res.status(201).json(workConditionResult);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 
 userRouter.post('/create/home/conditions/observation',async (req,res)=>{
     try{
