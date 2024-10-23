@@ -62,9 +62,9 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
             throw e;
         }
     }
-    async createDocuments(documents: Documents, familyCompositionID: string, kinship: number): Promise<FamilyComposition | Error> {
+    async createDocuments(documents: Documents, familyCompositionID: string, id: string): Promise<FamilyComposition | Error> {
         try{
-            const familyComposition = await createDocuments(documents, familyCompositionID, kinship);
+            const familyComposition = await createDocuments(documents, familyCompositionID, id);
             return familyComposition;
         }catch(e){
             throw e;

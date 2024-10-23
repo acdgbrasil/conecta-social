@@ -77,10 +77,10 @@ export class UserController implements UserRepository{
         }
     }
 
-    async createDocuments(documents: Documents, familyCompositionID: string, kinship: number): Promise<FamilyComposition | Error> {
+    async createDocuments(documents: Documents, familyCompositionID: string, id: string): Promise<FamilyComposition | Error> {
         try{
             const db = new DatabaseService();
-            return await db.createDocuments(documents,familyCompositionID,kinship);
+            return await db.createDocuments(documents,familyCompositionID,id);
         }catch(e){
             throw e;
         }

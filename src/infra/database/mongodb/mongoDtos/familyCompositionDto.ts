@@ -29,11 +29,11 @@ export const createEtnicalEspecifications = async (etnicalEspecifications:string
     }
 }
 
-export const createDocuments = async (documents:Documents,familyCompositionID:string,kinship:number) => {
+export const createDocuments = async (documents:Documents,familyCompositionID:string,id:string) => {
     try {
         const familyComposition = await familyCompositionModel.findById(familyCompositionID)
         if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
-        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person) => person.kinship == kinship)
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
         if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
         familyCompositionPerson.documents = documents
         familyComposition.isInUse = true

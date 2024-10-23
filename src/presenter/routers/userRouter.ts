@@ -60,63 +60,64 @@ userRouter.post('/create/home/conditions/observation',async (req,res)=>{
 userRouter.post('/create/home/conditions',async (req,res)=>{
     try{
         const {typeResidence,materialOfExternalWalls,hasAcessEnergy,waterSupply,sewageDisposal,garbageCollection,hasWasteCollection,homeConditionIsInRiskArea,difficultyToAccessHome,hasHomeInsurance,hasHomeInsuranceValue,numberOfRooms,numberOfBedrooms,numberOfPeapleInBedrooms,homeConditionsId} = req.body;
-        if(!typeResidence){
+        if(typeResidence == "" || typeResidence == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Type Residence is required');
             return res.status(400).json(error.toJson('Type Residence is required'));
         }
-        if(!materialOfExternalWalls){
+        if(materialOfExternalWalls == "" || materialOfExternalWalls == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Material Of External Walls is required');
             return res.status(400).json(error.toJson('Material Of External Walls is required'));
         }
-        if(!hasAcessEnergy){
+        if(hasAcessEnergy == "" || hasAcessEnergy == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Has Acess Energy is required');
             return res.status(400).json(error.toJson('Has Acess Energy is required'));
         }
-        if(!waterSupply){
+        if(waterSupply == "" || waterSupply == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Water Supply is required');
             return res.status(400).json(error.toJson('Water Supply is required'));
         }
-        if(!sewageDisposal){
+        if(sewageDisposal == "" || sewageDisposal == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Sewage Disposal is required');
             return res.status(400).json(error.toJson('Sewage Disposal is required'));
         }
-        if(!garbageCollection){
+        if(garbageCollection == "" || garbageCollection == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Garbage Collection is required');
             return res.status(400).json(error.toJson('Garbage Collection is required'));
         }
-        if(!hasWasteCollection){
+        
+        if(!(typeof hasWasteCollection == "boolean") || hasWasteCollection == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Has Waste Collection is required');
             return res.status(400).json(error.toJson('Has Waste Collection is required'));
         }
-        if(!homeConditionIsInRiskArea){
+        if(!(typeof homeConditionIsInRiskArea == "boolean") || homeConditionIsInRiskArea == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Home Condition Is In Risk Area is required');
             return res.status(400).json(error.toJson('Home Condition Is In Risk Area is required'));
         }
-        if(!difficultyToAccessHome){
+        if(!(typeof difficultyToAccessHome == "boolean") || difficultyToAccessHome == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Difficulty To Access Home is required');
             return res.status(400).json(error.toJson('Difficulty To Access Home is required'));
         }
-        if(!hasHomeInsurance){
+        if(!(typeof hasHomeInsurance == "boolean") || hasHomeInsurance == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Has Home Insurance is required');
             return res.status(400).json(error.toJson('Has Home Insurance is required'));
         }
-        if(!hasHomeInsuranceValue){
+        if(hasHomeInsuranceValue == "" || hasHomeInsuranceValue == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Has Home Insurance Value is required');
             return res.status(400).json(error.toJson('Has Home Insurance Value is required'));
         }
-        if(!numberOfRooms){
+        if(numberOfRooms == "" || numberOfRooms == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Number Of Rooms is required');
             return res.status(400).json(error.toJson('Number Of Rooms is required'));
         }
-        if(!numberOfBedrooms){
+        if(numberOfBedrooms == "" || numberOfBedrooms == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Number Of Bedrooms is required');
             return res.status(400).json(error.toJson('Number Of Bedrooms is required'));
         }
-        if(!numberOfPeapleInBedrooms){
+        if(numberOfPeapleInBedrooms == "" || numberOfPeapleInBedrooms == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Number Of Peaple In Bedrooms is required');
             return res.status(400).json(error.toJson('Number Of Peaple In Bedrooms is required'));
         }
-        if(!homeConditionsId){
+        if(homeConditionsId == "" || homeConditionsId == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Home Conditions Id is required');
             return res.status(400).json(error.toJson('Home Conditions Id is required'));
         }
@@ -179,14 +180,14 @@ userRouter.post('/create/family/composition/observation',async (req,res)=>{
 
 userRouter.post('/create/etinical/documents',async (req,res)=>{ 
     try{
-        let {document,familyCompositionID,kinship} = req.body;
+        let {document,familyCompositionID,personId} = req.body;
         
         if(!familyCompositionID){
             const error = new CustomError('Bad Request',400,'Bad Request','Family Composition ID is required');
             return res.status(400).json(error.toJson('Family Composition ID is required'));
         }
 
-        if(!kinship){
+        if(!personId){
             const error = new CustomError('Bad Request',400,'Bad Request','Kinship is required');
             return res.status(400).json(error.toJson('Kinship is required'));
         }
@@ -194,7 +195,7 @@ userRouter.post('/create/etinical/documents',async (req,res)=>{
 
         const documents = new Documents(document[0],document[1],document[2],document[3],document[4]);
 
-        const familyComposition = await userControle.createDocuments(documents,familyCompositionID,kinship);
+        const familyComposition = await userControle.createDocuments(documents,familyCompositionID,personId);
         return res.status(201).json(familyComposition);
     }catch(e){
         if(e instanceof CustomError){
@@ -261,7 +262,8 @@ userRouter.post('/create/family/person',async (req,res)=>{
         }
 
         const documents = new Documents(false,false,false,false,false);
-        const date = new Date(birthDate);
+        const dateArray = birthDate.split('/');
+        const date = new Date(dateArray[2],dateArray[1],dateArray[0]);
         const familyCompositionPerson = new FamilyCompositionPerson(fullname,date,biologicalGender,personWithDisabilities,documents,kinship);
         const familyPerson = await userControle.createFamilyPerson(familyCompositionPerson,familyPersonId);
         return res.status(201).json(familyPerson);

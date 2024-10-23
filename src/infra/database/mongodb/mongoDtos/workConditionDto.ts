@@ -25,7 +25,6 @@ export const createWorkConditionPersonDto = async (workCondition: WorkCondition,
     await resultWorkCondition.save()
     resultWorkCondition.isInUse = true
     familyComposition.isInUse = true
-    await familyComposition.save()
     const result = new WorkCondition(resultWorkCondition.familyIncome,resultWorkCondition.perCapitaIncome,resultWorkCondition.hasSocialIncome,resultWorkCondition.bolsaFamiliaValue,resultWorkCondition.bpcValue,resultWorkCondition.petiValue,resultWorkCondition.othersValue,resultWorkCondition.bcpBenefitPerson,resultWorkCondition.hasRetiredPerson,resultWorkCondition.totalFamilyIncome,resultWorkCondition.totalPerCapitaIncome)
     return result
 }
