@@ -10,12 +10,24 @@ import { Observations } from '../../domain/entity/observations';
 import { createReferencePerson, createReferencePersonObservation, getByIdReferencePerson, listAllReferencePerson } from './mongodb/mongoDtos/personReferenceDTO';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
-import { FamilyCompositionPerson, FamilyComposition, Documents } from '../../domain/entity/familyComposition';
+import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson } from '../../domain/entity/familyComposition';
 import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyPerson, createSocialEspecifications } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
+import { WorkCondition } from '../../domain/entity/workCondition';
+import { createWorkConditionPersonDto } from './mongodb/mongoDtos/workConditionDto';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    
+    async createWorkConditionPerson(workCondition: WorkCondition,workConditionPerson:WorkConditionPerson,familyCompositionID: string,personId:String,workConditionId:string): Promise<WorkCondition> {
+        try{
+            const workConditionResult = await createWorkConditionPersonDto(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId);
+            return workConditionResult;
+        }catch(e){
+            throw e;
+        }
+    }
+    
     getPersonReferencePhoto(photoId: string): Promise<PhotoResponse> {
         try{
             const photo = getPersonReferencePhotoDto(photoId);
@@ -50,9 +62,9 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
             throw e;
         }
     }
-    async createDocuments(documents: Documents, familyCompositionID: string, kinship: number): Promise<FamilyComposition | Error> {
+    async createDocuments(documents: Documents, familyCompositionID: string, id: string): Promise<FamilyComposition | Error> {
         try{
-            const familyComposition = await createDocuments(documents, familyCompositionID, kinship);
+            const familyComposition = await createDocuments(documents, familyCompositionID, id);
             return familyComposition;
         }catch(e){
             throw e;

@@ -1,9 +1,10 @@
-import { Documents, FamilyComposition, FamilyCompositionPerson } from "../entity/familyComposition";
+import { Documents, FamilyComposition, FamilyCompositionPerson, WorkConditionPerson } from "../entity/familyComposition";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
 import { HomeConditions } from "../entity/homeConditions";
 import { Observations } from "../entity/observations";
 import { ReferencePerson } from "../entity/referencePerson";
 import { User } from "../entity/user";
+import { WorkCondition } from "../entity/workCondition";
 
 export type PhotoResponse = {
     fileBuffer:Buffer;
@@ -24,7 +25,7 @@ export interface UserRepository {
     createFirstEntryInUnityObservation(firstEntryInUnityId:string,observation:Observations): Promise<FirstEntryInUnity | Error>;
     createFamilyPerson(familyCompositionPerson:FamilyCompositionPerson,familyCompositionID:string): Promise<FamilyComposition | Error>;
     createEtnicalEspecifications(etnicalEspecifications:string,familyCompositionID:string): Promise<FamilyComposition | Error>;
-    createDocuments(documents:Documents,familyCompositionID:string,kinship:number): Promise<FamilyComposition | Error>;
+    createDocuments(documents:Documents,familyCompositionID:string,id:string): Promise<FamilyComposition | Error>;
     createSocialEspecifications(socialEspecifications:string,familyCompositionID:string): Promise<FamilyComposition | Error>;
     createFamilyCompositionObservation(observation:Observations,familyCompositionID:string): Promise<FamilyComposition | Error>;
     createHomeConditions(homeConditions:HomeConditions,homeConditionsId:string): Promise<HomeConditions | Error>;

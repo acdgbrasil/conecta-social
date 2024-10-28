@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Documents, FamilyComposition, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
+import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, OcurruncyBolsaFamilia, ParticipationAndSocialServices, Pregnant, WorkConditionPerson } from "../../../../domain/entity/familyComposition";
 import { observation } from "./observationModel";
 
 const documents = new mongoose.Schema<Documents>({
@@ -20,6 +20,84 @@ const documents = new mongoose.Schema<Documents>({
     }
 });
 
+const participationAndSocialServices = new mongoose.Schema<ParticipationAndSocialServices>({
+    isInUser:{
+        type:Boolean,
+    },
+    serviceProgramOrProject:{
+        type:String,
+    },
+    unityRealization:{
+        type:String,
+    },
+    dateRealization:{
+        type:Date,
+    },
+    dateConclusion:{
+        type:Date,
+    },
+});
+
+const pregnant = new mongoose.Schema<Pregnant>({
+    pregnancyMonths:{
+        type:Number,
+    },
+    hasPreNatal:{
+        type:Boolean,
+    },
+    isInUse:{
+        type:Boolean,
+    },
+});
+
+const ocurruncyBolsaFamilia = new mongoose.Schema<OcurruncyBolsaFamilia>({
+    ocurruncyDate:{
+        type:Date,
+    },
+    efect:{
+        type:Number,
+    },
+    suspensionSolicitation:{
+        type:Boolean,
+    },
+});
+
+const educationConditionPerson = new mongoose.Schema<EducationConditionPerson>({
+    isInUse:{
+        type:Boolean,
+    },
+    literate:{
+        type:Boolean,
+    },
+    schoolShip:{
+        type:String,
+    },
+    isStudying:{
+        type:Boolean,
+    },
+    ocorruncyBolsaFamilia:{
+        type:ocurruncyBolsaFamilia
+    }
+});
+
+const workConditionPerson = new mongoose.Schema<WorkConditionPerson>({
+    isInUse:{
+        type:Boolean,
+    },
+    hasWorkCard:{
+        type:Boolean,
+    },
+    workCondition:{
+        type:String,
+    },
+    workQualification:{
+        type:String,
+    },
+    workValue:{
+        type:Number,
+    }
+})
+
 const familyCompositionPerson = new mongoose.Schema<FamilyCompositionPerson>({
     fullName:{
         type:String,
@@ -38,7 +116,20 @@ const familyCompositionPerson = new mongoose.Schema<FamilyCompositionPerson>({
     },
     kinship:{
         type:Number,
+    },
+    educationConditionPerson:{
+        type:educationConditionPerson
+    },
+    workConditionPerson:{
+        type:workConditionPerson
+    },
+    participationAndSocialServices:{
+        type:participationAndSocialServices
+    },
+    pregnant:{
+        type:pregnant
     }
+
 });
 
 const familyComposition = new mongoose.Schema<FamilyComposition>({

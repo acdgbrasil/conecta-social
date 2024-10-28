@@ -1,9 +1,10 @@
-import { FamilyCompositionPerson, FamilyComposition, Documents } from "../../domain/entity/familyComposition";
+import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson } from "../../domain/entity/familyComposition";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
 import { HomeConditions } from "../../domain/entity/homeConditions";
 import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
+import { WorkCondition } from "../../domain/entity/workCondition";
 import { PhotoResponse, UserRepository } from "../../domain/repository/userRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
 import { CryptoService } from "../../infra/encrypt/encryptService";
@@ -30,6 +31,17 @@ type ShortReferencePerson = {
 
 
 export class UserController implements UserRepository{
+    
+    async createWorkConditionPerson(workCondition: WorkCondition,workConditionPerson:WorkConditionPerson,familyCompositionID: string,personId:String,workConditionId:string): Promise<WorkCondition> {
+        try{
+            const db = new DatabaseService();
+            const workConditionResult = await db.createWorkConditionPerson(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId);
+            return workConditionResult;
+        }catch(e){
+            throw e;
+        }
+    }
+
     async getPersonReferencePhoto(photoId: string): Promise<PhotoResponse> {
         try{
             const db = new DatabaseService();
@@ -65,10 +77,10 @@ export class UserController implements UserRepository{
         }
     }
 
-    async createDocuments(documents: Documents, familyCompositionID: string, kinship: number): Promise<FamilyComposition | Error> {
+    async createDocuments(documents: Documents, familyCompositionID: string, id: string): Promise<FamilyComposition | Error> {
         try{
             const db = new DatabaseService();
-            return await db.createDocuments(documents,familyCompositionID,kinship);
+            return await db.createDocuments(documents,familyCompositionID,id);
         }catch(e){
             throw e;
         }
