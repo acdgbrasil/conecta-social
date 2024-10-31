@@ -256,9 +256,9 @@ userRouter.post('/create/family/person',async (req,res)=>{
             return res.status(400).json(error.toJson('Family Person Id is required'));
         }
 
-        if(!personWithDisabilities){
+        if(!(typeof personWithDisabilities == "boolean") || personWithDisabilities == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Person With Disabilities is required');
-            return res.status(400).json(error.toJson('Person With Disabilities is required'));
+           return res.status(400).json(error.toJson('Person With Disabilities is required'));
         }
 
         const documents = new Documents(false,false,false,false,false);
