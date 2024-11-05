@@ -6,10 +6,6 @@ import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClient
 import { verifyToken } from './infra/jwt/jwtToken';
 import admRouter from './presenter/routers/admRouter';
 import photoRouter from './presenter/routers/photoRouter';
-import { WorkCondition } from './domain/entity/workCondition';
-import { createWorkConditionPersonDto } from './infra/database/mongodb/mongoDtos/workConditionDto';
-import { WorkConditionPerson } from './domain/entity/familyComposition';
-
 
 const PORT = process.env.PORT || 3000;
 function startDatabase() {
@@ -32,7 +28,6 @@ router.use(verifyToken);
 router.use('/api',photoRouter);
 router.use('/api',userRouter);
 router.use('/api',admRouter);
-
 
 
 
