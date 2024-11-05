@@ -1,4 +1,5 @@
 import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson } from "../../domain/entity/familyComposition";
+import { FamilySituationViolation } from "../../domain/entity/familySituationViolation";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
 import { HomeConditions } from "../../domain/entity/homeConditions";
 import { Observations } from "../../domain/entity/observations";
@@ -31,6 +32,15 @@ type ShortReferencePerson = {
 
 
 export class UserController implements UserRepository{
+    createSituationViolation(situationViolation: FamilySituationViolation, familySituationId: string): Promise<FamilySituationViolation> {
+        try{
+            const db = new DatabaseService();
+            return db.createSituationViolation(situationViolation,familySituationId);
+        }catch(e){
+            console.log(e)
+            throw e;
+        }
+    }
     
     async createWorkConditionPerson(workCondition: WorkCondition,workConditionPerson:WorkConditionPerson,familyCompositionID: string,personId:String,workConditionId:string): Promise<WorkCondition> {
         try{

@@ -9,10 +9,190 @@ import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { Documents, FamilyCompositionPerson, WorkConditionPerson } from '../../domain/entity/familyComposition';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { WorkCondition } from '../../domain/entity/workCondition';
+import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation';
 const uploads = multer();
 
 const userRouter = Router();
 const userControle = new UserController();
+
+userRouter.post('/create/violence/situation',async (req,res)=>{
+    try{
+        const {childLabel,childLabelOcurrentNow,sexualExploitation,sexualExploitationOcurrentNow,sexualAbuse,sexualAbuseNow,physicalAbuse,physicalAbuseNow,psychologicalAbuse,psychologicalAbuseNow,elderNeglect,elderNeglectNow,childNeglect,childNeglectNow,pcdNeglect,pcdNeglectNow,homelessSituation,homelessSituationNow,humanTrafficking,humanTraffickingNow,violenceWithElderOrPcd,violenceWithElderOrPcdNow,otherName,otherNow,otherBool,violenceId} = req.body;
+        
+        if(!violenceId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Violence Id is required');
+            return res.status(400).json(error.toJson('Violence Id is required'));
+        }
+        
+        if(!(typeof childLabel == "boolean") || childLabel == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Child Label is required');
+            return res.status(400).json(error.toJson('Child Label is required'));
+        }
+
+        if(!(typeof childLabelOcurrentNow == "boolean") || childLabelOcurrentNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Child Label Ocurrent Now is required');
+            return res.status(400).json(error.toJson('Child Label Ocurrent Now is required'));
+        }
+
+        if(!(typeof sexualExploitation == "boolean") || sexualExploitation == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Sexual Exploitation is required');
+            return res.status(400).json(error.toJson('Sexual Exploitation is required'));
+        }
+
+        if(!(typeof sexualExploitationOcurrentNow == "boolean") || sexualExploitationOcurrentNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Sexual Exploitation Ocurrent Now is required');
+            return res.status(400).json(error.toJson('Sexual Exploitation Ocurrent Now is required'));
+        }
+
+        if(!(typeof sexualAbuse == "boolean") || sexualAbuse == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Sexual Abuse is required');
+            return res.status(400).json(error.toJson('Sexual Abuse is required'));
+        }
+
+        if(!(typeof sexualAbuseNow == "boolean") || sexualAbuseNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Sexual Abuse Now is required');
+            return res.status(400).json(error.toJson('Sexual Abuse Now is required'));
+        }
+
+        if(!(typeof physicalAbuse == "boolean") || physicalAbuse == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Physical Abuse is required');
+            return res.status(400).json(error.toJson('Physical Abuse is required'));
+        }
+
+        if(!(typeof physicalAbuseNow == "boolean") || physicalAbuseNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Physical Abuse Now is required');
+            return res.status(400).json(error.toJson('Physical Abuse Now is required'));
+        }
+
+        if(!(typeof psychologicalAbuse == "boolean") || psychologicalAbuse == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Psychological Abuse is required');
+            return res.status(400).json(error.toJson('Psychological Abuse is required'));
+        }
+
+        if(!(typeof psychologicalAbuseNow == "boolean") || psychologicalAbuseNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Psychological Abuse Now is required');
+            return res.status(400).json(error.toJson('Psychological Abuse Now is required'));
+        }
+
+        if(!(typeof elderNeglect == "boolean") || elderNeglect == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Elder Neglect is required');
+            return res.status(400).json(error.toJson('Elder Neglect is required'));
+        }
+
+        if(!(typeof elderNeglectNow == "boolean") || elderNeglectNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Elder Neglect Now is required');
+            return res.status(400).json(error.toJson('Elder Neglect Now is required'));
+        }
+
+        if(!(typeof childNeglect == "boolean") || childNeglect == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Child Neglect is required');
+            return res.status(400).json(error.toJson('Child Neglect is required'));
+        }
+
+        if(!(typeof childNeglectNow == "boolean") || childNeglectNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Child Neglect Now is required');
+            return res.status(400).json(error.toJson('Child Neglect Now is required'));
+        }
+
+        if(!(typeof pcdNeglect == "boolean") || pcdNeglect == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Pcd Neglect is required');
+            return res.status(400).json(error.toJson('Pcd Neglect is required'));
+        }
+
+        if(!(typeof pcdNeglectNow == "boolean") || pcdNeglectNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Pcd Neglect Now is required');
+            return res.status(400).json(error.toJson('Pcd Neglect Now is required'));
+        }
+
+
+        if(!(typeof homelessSituation == "boolean") || homelessSituation == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Homeless Situation is required');
+            return res.status(400).json(error.toJson('Homeless Situation is required'));
+        }
+
+
+        if(!(typeof homelessSituationNow == "boolean") || homelessSituationNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Homeless Situation Now is required');
+            return res.status(400).json(error.toJson('Homeless Situation Now is required'));
+        }
+
+        if(!(typeof humanTrafficking == "boolean") || humanTrafficking == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Human Trafficking is required');
+            return res.status(400).json(error.toJson('Human Trafficking is required'));
+        }
+
+
+        if(!(typeof humanTraffickingNow == "boolean") || humanTraffickingNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Human Trafficking Now is required');
+            return res.status(400).json(error.toJson('Human Trafficking Now is required'));
+        }
+
+        if(!(typeof violenceWithElderOrPcd == "boolean") || violenceWithElderOrPcd == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Violence With Elder Or Pcd is required');
+            return res.status(400).json(error.toJson('Violence With Elder Or Pcd is required'));
+        }
+
+        if(!(typeof violenceWithElderOrPcdNow == "boolean") || violenceWithElderOrPcdNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Violence With Elder Or Pcd Now is required');
+            return res.status(400).json(error.toJson('Violence With Elder Or Pcd Now is required'));
+        }
+
+        if(!(typeof otherName == "string") || otherName == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Other Name is required');
+            return res.status(400).json(error.toJson('Other Name is required'));
+        }
+
+        if(!(typeof otherNow == "boolean") || otherNow == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Other Now is required');
+            return res.status(400).json(error.toJson('Other Now is required'));
+        }
+        
+        if(!(typeof otherBool == "boolean") || otherBool == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Other Bool is required');
+            return res.status(400).json(error.toJson('Other Bool is required'));
+        }
+
+        const childStruct = new FamilySituationViolationStruct(childLabel,childLabelOcurrentNow);
+        const sexualExploitationStruct = new FamilySituationViolationStruct(sexualExploitation,sexualExploitationOcurrentNow);
+        const sexualAbuseStruct = new FamilySituationViolationStruct(sexualAbuse,sexualAbuseNow);
+        const physicalAbuseStruct = new FamilySituationViolationStruct(physicalAbuse,physicalAbuseNow);
+        const psychologicalAbuseStruct = new FamilySituationViolationStruct(psychologicalAbuse,psychologicalAbuseNow);
+        const elderNeglectStruct = new FamilySituationViolationStruct(elderNeglect,elderNeglectNow);
+        const childNeglectStruct = new FamilySituationViolationStruct(childNeglect,childNeglectNow);
+        const pcdNeglectStruct = new FamilySituationViolationStruct(pcdNeglect,pcdNeglectNow);
+        const homelessSituationStruct = new FamilySituationViolationStruct(homelessSituation,homelessSituationNow);
+        const humanTraffickingStruct = new FamilySituationViolationStruct(humanTrafficking,humanTraffickingNow);
+        const violenceWithElderOrPcdStruct = new FamilySituationViolationStruct(violenceWithElderOrPcd,violenceWithElderOrPcdNow);
+        const otherStruct = new FamilySituationViolationStructOther(otherBool,otherNow,otherName);
+        
+
+        const familySituation = new FamilySituationViolation(
+            childStruct,
+            sexualExploitationStruct,
+            sexualAbuseStruct,
+            physicalAbuseStruct,
+            psychologicalAbuseStruct,
+            elderNeglectStruct,
+            childNeglectStruct,
+            pcdNeglectStruct,
+            homelessSituationStruct,
+            humanTraffickingStruct,
+            violenceWithElderOrPcdStruct,
+            otherStruct,true);
+
+        
+        
+        const familySituationCreated = await userControle.createSituationViolation(familySituation,violenceId);
+        return res.status(201).json(familySituationCreated);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            console.log(e)
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 
 userRouter.post('/create/work/condition',async (req,res)=>{
     try{

@@ -1,9 +1,11 @@
 import { Documents, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
+import { FamilySituationViolation } from "../../../../domain/entity/familySituationViolation";
 import { Observations } from "../../../../domain/entity/observations";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
 import { CustomError } from "../../../error/error";
 import { familyCompositionModel } from "../models/familyCompositionModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
+import { familySituationViolenceModel } from "../models/familySituationViolenceModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
 import { homeConditionsModel } from "../models/homeConditionsModel";
 import { referencePersonModel } from "../models/referencePersonModel";
@@ -56,7 +58,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             fileBuffer:rp.familyPhoto.fileBuffer,
             fileExtension:rp.familyPhoto.fileExtension
         })
-        
+
         const familyComposition = await familyCompositionModel.create({})
         const documents = new Documents(false,false,false,false,false)
         const familyCompositionReferencePerson = new FamilyCompositionPerson(rp.fullName,rp.birthDate,rp.biologicalGender,true,documents,1)
@@ -66,6 +68,23 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
         const fistEntryInUnity = await firstEntryInUnityModel.create({})
         const homeCondition = await homeConditionsModel.create({})
         const workCondition = await WorkConditionModel.create({})
+
+        const childLabel = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const sexualExploitation = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const sexualAbuse = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const physicalAbuse = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const psychologicalAbuse = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const elderNeglect = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const childNeglect = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const pcdNeglect = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const homelessSituation = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const humanTrafficking = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const violenceWithElderOrPcd = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
+        const other = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false,nameOfSituation:''}
+
+        const familyViolation = new FamilySituationViolation(childLabel,sexualExploitation,sexualAbuse,physicalAbuse,psychologicalAbuse,elderNeglect,childNeglect,pcdNeglect,homelessSituation,humanTrafficking,violenceWithElderOrPcd,other,false)
+        const familySituationViolation = await familySituationViolenceModel.create(familyViolation)
+        
 
         const referencePerson = await referencePersonModel.create({
             fullName:rp.fullName,
@@ -93,6 +112,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             biologicalGender:rp.biologicalGender,
             homeConditionsId:homeCondition.id,
             workConditionId:workCondition.id,
+            familySituationViolationId:familySituationViolation.id
         })
         
         return referencePerson

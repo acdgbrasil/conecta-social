@@ -1,4 +1,5 @@
 import { Documents, FamilyComposition, FamilyCompositionPerson, WorkConditionPerson } from "../entity/familyComposition";
+import { FamilySituationViolation } from "../entity/familySituationViolation";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
 import { HomeConditions } from "../entity/homeConditions";
 import { Observations } from "../entity/observations";
@@ -31,4 +32,5 @@ export interface UserRepository {
     createHomeConditions(homeConditions:HomeConditions,homeConditionsId:string): Promise<HomeConditions | Error>;
     createHomeConditionsObservation(observation:Observations,homeConditionsId:string): Promise<HomeConditions | Error>;
     getPersonReferencePhoto(photoId:string): Promise<PhotoResponse>;
+    createSituationViolation(situationViolation:FamilySituationViolation,familySituationId:string): Promise<FamilySituationViolation>;
 }

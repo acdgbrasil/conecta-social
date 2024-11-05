@@ -17,7 +17,18 @@ import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mon
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
 import { WorkCondition } from '../../domain/entity/workCondition';
 import { createWorkConditionPersonDto } from './mongodb/mongoDtos/workConditionDto';
+import { FamilySituationViolation } from '../../domain/entity/familySituationViolation';
+import { familySituationViolenceDTO } from './mongodb/mongoDtos/familySituationViolenceDTO';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    createSituationViolation(situationViolation: FamilySituationViolation, familySituationId: string): Promise<FamilySituationViolation> {
+        try{
+            const familySituation = familySituationViolenceDTO(familySituationId, situationViolation);
+            return familySituation;
+        }catch(e){
+            throw e;
+        }
+    }
+    
     
     async createWorkConditionPerson(workCondition: WorkCondition,workConditionPerson:WorkConditionPerson,familyCompositionID: string,personId:String,workConditionId:string): Promise<WorkCondition> {
         try{
