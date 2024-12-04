@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, OcurruncyBolsaFamilia, ParticipationAndSocialServices, Pregnant, WorkConditionPerson } from "../../../../domain/entity/familyComposition";
 import { observation } from "./observationModel";
+import { HelphyConditionFamily } from "../../../../domain/entity/familyHelphyCondition";
 
 const documents = new mongoose.Schema<Documents>({
     cn:{
@@ -98,6 +99,22 @@ const workConditionPerson = new mongoose.Schema<WorkConditionPerson>({
     }
 })
 
+const HelphyConditionFamilyPerson = new mongoose.Schema<HelphyConditionFamily>({
+  helphyNeeds:{
+        type:Boolean,
+    },
+    typeOfDeficiency:{
+        type:String,
+    },
+
+    whoIsResponsibleForHelp:{
+        type:String,
+    },
+    isInUse:{
+        type:Boolean,
+    }
+})
+
 const familyCompositionPerson = new mongoose.Schema<FamilyCompositionPerson>({
     fullName:{
         type:String,
@@ -128,6 +145,9 @@ const familyCompositionPerson = new mongoose.Schema<FamilyCompositionPerson>({
     },
     pregnant:{
         type:pregnant
+    },
+    helphyConditionFamily:{
+        type:HelphyConditionFamilyPerson
     }
 
 });

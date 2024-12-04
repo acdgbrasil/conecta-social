@@ -1,3 +1,4 @@
+import { HelphyConditionFamily } from "./familyHelphyCondition";
 import { Observations } from "./observations";
 
 export class Documents{
@@ -101,6 +102,7 @@ export class FamilyCompositionPerson{
     workConditionPerson?: WorkConditionPerson;
     pregnant?:Pregnant;
     participationAndSocialServices?:ParticipationAndSocialServices;
+    helphyConditionFamily?:HelphyConditionFamily;
     
     constructor(fullName:string, birthDate:Date, biologicalGender:string, personWithDisability:boolean, documents:Documents, kinship:number){
         this.fullName = fullName;
