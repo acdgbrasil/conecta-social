@@ -16,6 +16,28 @@ const encryptService_1 = require("../../infra/encrypt/encryptService");
 const error_1 = require("../../infra/error/error");
 const smtpService_1 = require("../../infra/smtp/smtpService");
 class UserController {
+    createSituationViolation(situationViolation, familySituationId) {
+        try {
+            const db = new databaseService_1.DatabaseService();
+            return db.createSituationViolation(situationViolation, familySituationId);
+        }
+        catch (e) {
+            console.log(e);
+            throw e;
+        }
+    }
+    createWorkConditionPerson(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const db = new databaseService_1.DatabaseService();
+                const workConditionResult = yield db.createWorkConditionPerson(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId);
+                return workConditionResult;
+            }
+            catch (e) {
+                throw e;
+            }
+        });
+    }
     getPersonReferencePhoto(photoId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -56,11 +78,11 @@ class UserController {
             }
         });
     }
-    createDocuments(documents, familyCompositionID, kinship) {
+    createDocuments(documents, familyCompositionID, id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const db = new databaseService_1.DatabaseService();
-                return yield db.createDocuments(documents, familyCompositionID, kinship);
+                return yield db.createDocuments(documents, familyCompositionID, id);
             }
             catch (e) {
                 throw e;
@@ -166,6 +188,41 @@ class UserController {
             }
         });
     }
+    listAllReducedReferencePerson() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userControle = new UserController();
+                const db = new databaseService_1.DatabaseService();
+                const ReferencePersonList = yield db.listAllReferencePerson();
+                const finalResponse = yield Promise.all(ReferencePersonList.map((rp) => __awaiter(this, void 0, void 0, function* () {
+                    const familyPhotoId = rp.familyPhoto.toString();
+                    const familyPhoto = `${process.env.BASE_URL}/photo/family/${familyPhotoId}`;
+                    return {
+                        id: rp.id,
+                        fullName: rp.fullName,
+                        socialName: rp.socialName,
+                        motherName: rp.motherName,
+                        cpf: rp.cpf,
+                        diagnosis: rp.diagnosis,
+                        birthDate: rp.birthDate,
+                        cep: rp.cep,
+                        adress: rp.adress,
+                        neighborhood: rp.neighborhood,
+                        adressNumber: rp.adressNumber,
+                        adressComplement: rp.adressComplement,
+                        phone: rp.phone,
+                        familyPhoto: familyPhoto, // Garantindo que a foto seja uma string
+                        whoIsOpening: rp.whoIsOpeningId
+                    };
+                })));
+                return finalResponse;
+            }
+            catch (e) {
+                console.log(e);
+                throw e;
+            }
+        });
+    }
     createReferencePersonObservation(observations, referencePersonId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -224,6 +281,18 @@ class UserController {
     }
     delete(email) {
         throw new Error("Method not implemented.");
+    }
+    listAllUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const databaseService = new databaseService_1.DatabaseService();
+                const users = yield databaseService.listAllUsers();
+                return users;
+            }
+            catch (err) {
+                throw err;
+            }
+        });
     }
 }
 exports.UserController = UserController;

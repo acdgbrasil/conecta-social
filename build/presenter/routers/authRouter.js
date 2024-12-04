@@ -50,6 +50,7 @@ authRouter.post('/auth/forgot/password', (req, res) => __awaiter(void 0, void 0,
             res.status(e.statusCode).json(e.toJson(e.message));
         }
         else {
+            console.log(e);
             res.status(500).json({ error: 'Internal server error' });
         }
     }
@@ -63,11 +64,6 @@ authRouter.post('/auth/reset/password', (req, res) => __awaiter(void 0, void 0, 
             throw new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Code is required');
         if (!newPassword)
             throw new error_1.CustomError('Bad Request', 400, 'Bad Request', 'New password is required');
-        if (!id)
-            throw new error_1.CustomError('Bad Request', 400, 'Bad Request', 'id is required');
-        const user = yield userController.findByEmail(email);
-        if (user.id != id)
-            throw new error_1.CustomError('Bad Request', 400, 'Bad Request', 'The email that was requested for the change is different from the email that is in the body of the request');
         const response = yield authController.resetPassword(email, code, newPassword);
         return res.status(200).json(response);
     }

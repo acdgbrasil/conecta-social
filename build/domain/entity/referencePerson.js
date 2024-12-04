@@ -7,9 +7,10 @@ var LOCAL_LOCALIZATION;
     LOCAL_LOCALIZATION["rural"] = "RURAL";
 })(LOCAL_LOCALIZATION || (exports.LOCAL_LOCALIZATION = LOCAL_LOCALIZATION = {}));
 class ReferencePerson {
-    constructor(fullName, socialName, motherName, nis, cpf, diagnosis, rgNumber, biologicalGender, rgUf, rgIssuingBody, rgIssueDate, isShelter, localLocalization, cep, adress, neighborhood, adressNumber, adressComplement, state, city, phone, fileBuffer, fileExtension, birthDate, whoIsOpeningId, observations, familyCompositionId, fistEntryInUnityId, homeConditionsId) {
+    constructor(id, fullName, socialName, motherName, nis, cpf, diagnosis, rgNumber, biologicalGender, rgUf, rgIssuingBody, rgIssueDate, isShelter, localLocalization, cep, adress, neighborhood, adressNumber, adressComplement, state, city, phone, fileBuffer, fileExtension, birthDate, whoIsOpeningId, observations, familyCompositionId, fistEntryInUnityId, homeConditionsId) {
         const rg = new RG(rgNumber, rgUf, rgIssuingBody, rgIssueDate);
         const familyPhoto = new FamilyPhoto(fileBuffer, fileExtension);
+        this.id = id;
         this.familyPhoto = familyPhoto;
         this.rg = rg;
         this.adress = adress;

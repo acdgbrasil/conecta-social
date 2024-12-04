@@ -38,6 +38,7 @@ authRouter.post('/auth/forgot/password', async (req, res) => {
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
         }else{
+            console.log(e)
             res.status(500).json({error:'Internal server error'});
         }
     }

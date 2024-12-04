@@ -33,4 +33,7 @@ export interface UserRepository {
     createHomeConditionsObservation(observation:Observations,homeConditionsId:string): Promise<HomeConditions | Error>;
     getPersonReferencePhoto(photoId:string): Promise<PhotoResponse>;
     createSituationViolation(situationViolation:FamilySituationViolation,familySituationId:string): Promise<FamilySituationViolation>;
+    getFamilyCompositionById(familyCompositionId: String): Promise<FamilyComposition | Error>
+    getFamilyComposition(): Promise<FamilyComposition[] | Error>
+    updateFamilyCompositionPerson(familyCompositionID:string, familyCompositionPersonID:string, updateData:FamilyCompositionPerson): Promise<FamilyComposition | Error>
 }

@@ -114,7 +114,31 @@ export class UserController implements UserRepository{
             throw e;
         }
     }
-
+    async getFamilyCompositionById(familyCompositionId: string): Promise<FamilyComposition | Error> {
+        try{
+            const db = new DatabaseService()
+            return await db.getFamilyCompositionById(familyCompositionId)
+        }catch(e){
+            throw e;
+        }
+    }
+    async getFamilyComposition(): Promise<FamilyComposition[] | Error> {
+        try{
+            const db = new DatabaseService()
+            return await db.getFamilyComposition()
+        }catch(e){
+            throw e;
+        }
+    }
+    async getCompositionFamilyPersonById(familyCompositionPersonId: string): Promise<any> {
+        try{
+            const db = new DatabaseService()
+            return await db.getFamilyCompositionPersonById(familyCompositionPersonId)
+        }
+        catch(e){
+            throw e
+        }
+    }
     async createFamilyPerson(familyCompositionPerson: FamilyCompositionPerson, familyCompositionID: string): Promise<FamilyComposition | Error> {
         try{
             const db = new DatabaseService();
@@ -230,6 +254,16 @@ export class UserController implements UserRepository{
         }catch(e){
             throw e;
         }
+    }
+    async updateFamilyCompositionPerson(familyCompositionID: string, familyCompositionPersonID: string, updateData: FamilyCompositionPerson): Promise<FamilyComposition | Error> {
+        try{
+            const db = new DatabaseService();
+            return await db.updateFamilyCompositionPerson(familyCompositionID, familyCompositionPersonID, updateData);
+            
+        }catch(e){
+            throw e
+        }
+       
     }
     async create(user: User, isAdm: boolean): Promise<User | Error> {
         try{

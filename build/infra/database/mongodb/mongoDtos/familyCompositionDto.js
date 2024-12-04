@@ -42,12 +42,12 @@ const createEtnicalEspecifications = (etnicalEspecifications, familyCompositionI
     }
 });
 exports.createEtnicalEspecifications = createEtnicalEspecifications;
-const createDocuments = (documents, familyCompositionID, kinship) => __awaiter(void 0, void 0, void 0, function* () {
+const createDocuments = (documents, familyCompositionID, id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const familyComposition = yield familyCompositionModel_1.familyCompositionModel.findById(familyCompositionID);
         if (!familyComposition)
             throw new error_1.CustomError('FAMILY_COMPOSITION_NOT_FOUND', 404, 'FAMILY_COMPOSITION_NOT_FOUND', 'Family Composition not found');
-        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person) => person.kinship == kinship);
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person) => person._id == id);
         if (!familyCompositionPerson)
             throw new error_1.CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND', 404, 'FAMILY_COMPOSITION_PERSON_NOT_FOUND', 'Family Composition Person not found');
         familyCompositionPerson.documents = documents;

@@ -455,7 +455,52 @@ userRouter.post('/create/family/person',async (req,res)=>{
         }
     }
 });
-
+userRouter.get('/list/family/composition/:id', async (req,res)=> {
+    try{
+        const {id} = req.params
+        if(!id){
+            const error = new CustomError('Bad Request', 400, 'Bad Request', 'Family id is required')
+            return res.status(400).json(error.toJson('Family id is required'))
+        }
+        const familyComposition = await userControle.getFamilyCompositionById(id)
+        return res.status(200).json(familyComposition);
+        
+    }catch (e) {
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }}
+})
+userRouter.get('/list/family/composition', async (req,res)=> {
+    try{
+        const familyComposition = await userControle.getFamilyComposition()
+        return res.status(200).json(familyComposition);
+        
+    }catch (e) {
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }}
+})
+userRouter.get('/list/family/member/:id', async (req,res)=> {
+    try{
+        const {id} = req.params
+        if(!id){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family composition person id is required');
+            return res.status(400).json(error.toJson('Family composition person id is required'));
+        }
+        const familyCompositionPerson = await userControle.getCompositionFamilyPersonById(id)
+        return res.status(200).json(familyCompositionPerson)
+    }catch (e) {
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 userRouter.get('/list/first/entry/in/unity/:id',async (req,res)=>{
     try {
         const {id} = req.params;
@@ -474,6 +519,27 @@ userRouter.get('/list/first/entry/in/unity/:id',async (req,res)=>{
     }
 })
 
+userRouter.put('/update/family/person', async (req,res)=> {
+    try{
+    const {personId, familyId, data} = req.body
+    if(!personId){
+        const error = new CustomError('Bad Request',400,'Bad Request','First Entry In Unity Id is required');
+        return res.status(400).json(error.toJson('personId is required'));
+    }
+    if(!familyId){
+        const error = new CustomError('Bad Request',400,'Bad Request','First Entry In Unity Id is required');
+        return res.status(400).json(error.toJson('familyId is required'));
+    }
+    const updatedFamilyComposition = await userControle.updateFamilyCompositionPerson(familyId,personId, data)
+    return res.status(200).json(updatedFamilyComposition)
+}catch (e) {
+    if(e instanceof CustomError){
+        res.status(e.statusCode).json(e.toJson(e.message));
+    }else{
+        res.status(500).json({error:'Internal server error'});
+    }
+}
+})
 userRouter.post('/create/first/entry/observation',async (req,res)=>{
     try {
         const {observation,whoIsObservingId,firstEntryInUnityId} = req.body;

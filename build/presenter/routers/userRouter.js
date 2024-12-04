@@ -22,9 +22,161 @@ const observations_1 = require("../../domain/entity/observations");
 const firstEntryInUnity_1 = require("../../domain/entity/firstEntryInUnity");
 const familyComposition_1 = require("../../domain/entity/familyComposition");
 const homeConditions_1 = require("../../domain/entity/homeConditions");
+const workCondition_1 = require("../../domain/entity/workCondition");
+const familySituationViolation_1 = require("../../domain/entity/familySituationViolation");
 const uploads = (0, multer_1.default)();
 const userRouter = (0, express_1.Router)();
 const userControle = new userController_1.UserController();
+userRouter.post('/create/violence/situation', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { childLabel, childLabelOcurrentNow, sexualExploitation, sexualExploitationOcurrentNow, sexualAbuse, sexualAbuseNow, physicalAbuse, physicalAbuseNow, psychologicalAbuse, psychologicalAbuseNow, elderNeglect, elderNeglectNow, childNeglect, childNeglectNow, pcdNeglect, pcdNeglectNow, homelessSituation, homelessSituationNow, humanTrafficking, humanTraffickingNow, violenceWithElderOrPcd, violenceWithElderOrPcdNow, otherName, otherNow, otherBool, violenceId } = req.body;
+        if (!violenceId) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Violence Id is required');
+            return res.status(400).json(error.toJson('Violence Id is required'));
+        }
+        if (!(typeof childLabel == "boolean") || childLabel == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Child Label is required');
+            return res.status(400).json(error.toJson('Child Label is required'));
+        }
+        if (!(typeof childLabelOcurrentNow == "boolean") || childLabelOcurrentNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Child Label Ocurrent Now is required');
+            return res.status(400).json(error.toJson('Child Label Ocurrent Now is required'));
+        }
+        if (!(typeof sexualExploitation == "boolean") || sexualExploitation == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Sexual Exploitation is required');
+            return res.status(400).json(error.toJson('Sexual Exploitation is required'));
+        }
+        if (!(typeof sexualExploitationOcurrentNow == "boolean") || sexualExploitationOcurrentNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Sexual Exploitation Ocurrent Now is required');
+            return res.status(400).json(error.toJson('Sexual Exploitation Ocurrent Now is required'));
+        }
+        if (!(typeof sexualAbuse == "boolean") || sexualAbuse == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Sexual Abuse is required');
+            return res.status(400).json(error.toJson('Sexual Abuse is required'));
+        }
+        if (!(typeof sexualAbuseNow == "boolean") || sexualAbuseNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Sexual Abuse Now is required');
+            return res.status(400).json(error.toJson('Sexual Abuse Now is required'));
+        }
+        if (!(typeof physicalAbuse == "boolean") || physicalAbuse == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Physical Abuse is required');
+            return res.status(400).json(error.toJson('Physical Abuse is required'));
+        }
+        if (!(typeof physicalAbuseNow == "boolean") || physicalAbuseNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Physical Abuse Now is required');
+            return res.status(400).json(error.toJson('Physical Abuse Now is required'));
+        }
+        if (!(typeof psychologicalAbuse == "boolean") || psychologicalAbuse == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Psychological Abuse is required');
+            return res.status(400).json(error.toJson('Psychological Abuse is required'));
+        }
+        if (!(typeof psychologicalAbuseNow == "boolean") || psychologicalAbuseNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Psychological Abuse Now is required');
+            return res.status(400).json(error.toJson('Psychological Abuse Now is required'));
+        }
+        if (!(typeof elderNeglect == "boolean") || elderNeglect == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Elder Neglect is required');
+            return res.status(400).json(error.toJson('Elder Neglect is required'));
+        }
+        if (!(typeof elderNeglectNow == "boolean") || elderNeglectNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Elder Neglect Now is required');
+            return res.status(400).json(error.toJson('Elder Neglect Now is required'));
+        }
+        if (!(typeof childNeglect == "boolean") || childNeglect == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Child Neglect is required');
+            return res.status(400).json(error.toJson('Child Neglect is required'));
+        }
+        if (!(typeof childNeglectNow == "boolean") || childNeglectNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Child Neglect Now is required');
+            return res.status(400).json(error.toJson('Child Neglect Now is required'));
+        }
+        if (!(typeof pcdNeglect == "boolean") || pcdNeglect == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Pcd Neglect is required');
+            return res.status(400).json(error.toJson('Pcd Neglect is required'));
+        }
+        if (!(typeof pcdNeglectNow == "boolean") || pcdNeglectNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Pcd Neglect Now is required');
+            return res.status(400).json(error.toJson('Pcd Neglect Now is required'));
+        }
+        if (!(typeof homelessSituation == "boolean") || homelessSituation == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Homeless Situation is required');
+            return res.status(400).json(error.toJson('Homeless Situation is required'));
+        }
+        if (!(typeof homelessSituationNow == "boolean") || homelessSituationNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Homeless Situation Now is required');
+            return res.status(400).json(error.toJson('Homeless Situation Now is required'));
+        }
+        if (!(typeof humanTrafficking == "boolean") || humanTrafficking == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Human Trafficking is required');
+            return res.status(400).json(error.toJson('Human Trafficking is required'));
+        }
+        if (!(typeof humanTraffickingNow == "boolean") || humanTraffickingNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Human Trafficking Now is required');
+            return res.status(400).json(error.toJson('Human Trafficking Now is required'));
+        }
+        if (!(typeof violenceWithElderOrPcd == "boolean") || violenceWithElderOrPcd == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Violence With Elder Or Pcd is required');
+            return res.status(400).json(error.toJson('Violence With Elder Or Pcd is required'));
+        }
+        if (!(typeof violenceWithElderOrPcdNow == "boolean") || violenceWithElderOrPcdNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Violence With Elder Or Pcd Now is required');
+            return res.status(400).json(error.toJson('Violence With Elder Or Pcd Now is required'));
+        }
+        if (!(typeof otherName == "string") || otherName == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Other Name is required');
+            return res.status(400).json(error.toJson('Other Name is required'));
+        }
+        if (!(typeof otherNow == "boolean") || otherNow == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Other Now is required');
+            return res.status(400).json(error.toJson('Other Now is required'));
+        }
+        if (!(typeof otherBool == "boolean") || otherBool == null) {
+            const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Other Bool is required');
+            return res.status(400).json(error.toJson('Other Bool is required'));
+        }
+        const childStruct = new familySituationViolation_1.FamilySituationViolationStruct(childLabel, childLabelOcurrentNow);
+        const sexualExploitationStruct = new familySituationViolation_1.FamilySituationViolationStruct(sexualExploitation, sexualExploitationOcurrentNow);
+        const sexualAbuseStruct = new familySituationViolation_1.FamilySituationViolationStruct(sexualAbuse, sexualAbuseNow);
+        const physicalAbuseStruct = new familySituationViolation_1.FamilySituationViolationStruct(physicalAbuse, physicalAbuseNow);
+        const psychologicalAbuseStruct = new familySituationViolation_1.FamilySituationViolationStruct(psychologicalAbuse, psychologicalAbuseNow);
+        const elderNeglectStruct = new familySituationViolation_1.FamilySituationViolationStruct(elderNeglect, elderNeglectNow);
+        const childNeglectStruct = new familySituationViolation_1.FamilySituationViolationStruct(childNeglect, childNeglectNow);
+        const pcdNeglectStruct = new familySituationViolation_1.FamilySituationViolationStruct(pcdNeglect, pcdNeglectNow);
+        const homelessSituationStruct = new familySituationViolation_1.FamilySituationViolationStruct(homelessSituation, homelessSituationNow);
+        const humanTraffickingStruct = new familySituationViolation_1.FamilySituationViolationStruct(humanTrafficking, humanTraffickingNow);
+        const violenceWithElderOrPcdStruct = new familySituationViolation_1.FamilySituationViolationStruct(violenceWithElderOrPcd, violenceWithElderOrPcdNow);
+        const otherStruct = new familySituationViolation_1.FamilySituationViolationStructOther(otherBool, otherNow, otherName);
+        const familySituation = new familySituationViolation_1.FamilySituationViolation(childStruct, sexualExploitationStruct, sexualAbuseStruct, physicalAbuseStruct, psychologicalAbuseStruct, elderNeglectStruct, childNeglectStruct, pcdNeglectStruct, homelessSituationStruct, humanTraffickingStruct, violenceWithElderOrPcdStruct, otherStruct, true);
+        const familySituationCreated = yield userControle.createSituationViolation(familySituation, violenceId);
+        return res.status(201).json(familySituationCreated);
+    }
+    catch (e) {
+        if (e instanceof error_1.CustomError) {
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }
+        else {
+            console.log(e);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}));
+userRouter.post('/create/work/condition', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { hasSocialIncome, perCapitaIncome, bolsaFamiliaValue, bpcValue, petiValue, othersValue, bcpBenefitPerson, hasRetiredPerson, totalFamilyIncome, totalPerCapitaIncome, workConditionBody, hasWorkCard, workQualification, workValue, familyCompositionID, personId, workConditionId } = req.body;
+        const workCondition = new workCondition_1.WorkCondition(hasSocialIncome, perCapitaIncome, hasSocialIncome, bolsaFamiliaValue, bpcValue, petiValue, othersValue, bcpBenefitPerson, hasRetiredPerson, totalFamilyIncome, totalPerCapitaIncome);
+        const workConditionPerson = new familyComposition_1.WorkConditionPerson(true, workConditionBody, hasWorkCard, workQualification, workValue);
+        const workConditionResult = yield userControle.createWorkConditionPerson(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId);
+        return res.status(201).json(workConditionResult);
+    }
+    catch (e) {
+        if (e instanceof error_1.CustomError) {
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }
+        else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}));
 userRouter.post('/create/home/conditions/observation', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { observation, whoIsObservingId, homeConditionsId } = req.body;
@@ -56,63 +208,63 @@ userRouter.post('/create/home/conditions/observation', (req, res) => __awaiter(v
 userRouter.post('/create/home/conditions', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { typeResidence, materialOfExternalWalls, hasAcessEnergy, waterSupply, sewageDisposal, garbageCollection, hasWasteCollection, homeConditionIsInRiskArea, difficultyToAccessHome, hasHomeInsurance, hasHomeInsuranceValue, numberOfRooms, numberOfBedrooms, numberOfPeapleInBedrooms, homeConditionsId } = req.body;
-        if (!typeResidence) {
+        if (typeResidence == "" || typeResidence == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Type Residence is required');
             return res.status(400).json(error.toJson('Type Residence is required'));
         }
-        if (!materialOfExternalWalls) {
+        if (materialOfExternalWalls == "" || materialOfExternalWalls == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Material Of External Walls is required');
             return res.status(400).json(error.toJson('Material Of External Walls is required'));
         }
-        if (!hasAcessEnergy) {
+        if (hasAcessEnergy == "" || hasAcessEnergy == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Has Acess Energy is required');
             return res.status(400).json(error.toJson('Has Acess Energy is required'));
         }
-        if (!waterSupply) {
+        if (waterSupply == "" || waterSupply == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Water Supply is required');
             return res.status(400).json(error.toJson('Water Supply is required'));
         }
-        if (!sewageDisposal) {
+        if (sewageDisposal == "" || sewageDisposal == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Sewage Disposal is required');
             return res.status(400).json(error.toJson('Sewage Disposal is required'));
         }
-        if (!garbageCollection) {
+        if (garbageCollection == "" || garbageCollection == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Garbage Collection is required');
             return res.status(400).json(error.toJson('Garbage Collection is required'));
         }
-        if (!hasWasteCollection) {
+        if (!(typeof hasWasteCollection == "boolean") || hasWasteCollection == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Has Waste Collection is required');
             return res.status(400).json(error.toJson('Has Waste Collection is required'));
         }
-        if (!homeConditionIsInRiskArea) {
+        if (!(typeof homeConditionIsInRiskArea == "boolean") || homeConditionIsInRiskArea == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Home Condition Is In Risk Area is required');
             return res.status(400).json(error.toJson('Home Condition Is In Risk Area is required'));
         }
-        if (!difficultyToAccessHome) {
+        if (!(typeof difficultyToAccessHome == "boolean") || difficultyToAccessHome == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Difficulty To Access Home is required');
             return res.status(400).json(error.toJson('Difficulty To Access Home is required'));
         }
-        if (!hasHomeInsurance) {
+        if (!(typeof hasHomeInsurance == "boolean") || hasHomeInsurance == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Has Home Insurance is required');
             return res.status(400).json(error.toJson('Has Home Insurance is required'));
         }
-        if (!hasHomeInsuranceValue) {
+        if (hasHomeInsuranceValue == "" || hasHomeInsuranceValue == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Has Home Insurance Value is required');
             return res.status(400).json(error.toJson('Has Home Insurance Value is required'));
         }
-        if (!numberOfRooms) {
+        if (numberOfRooms == "" || numberOfRooms == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Number Of Rooms is required');
             return res.status(400).json(error.toJson('Number Of Rooms is required'));
         }
-        if (!numberOfBedrooms) {
+        if (numberOfBedrooms == "" || numberOfBedrooms == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Number Of Bedrooms is required');
             return res.status(400).json(error.toJson('Number Of Bedrooms is required'));
         }
-        if (!numberOfPeapleInBedrooms) {
+        if (numberOfPeapleInBedrooms == "" || numberOfPeapleInBedrooms == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Number Of Peaple In Bedrooms is required');
             return res.status(400).json(error.toJson('Number Of Peaple In Bedrooms is required'));
         }
-        if (!homeConditionsId) {
+        if (homeConditionsId == "" || homeConditionsId == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Home Conditions Id is required');
             return res.status(400).json(error.toJson('Home Conditions Id is required'));
         }
@@ -160,17 +312,17 @@ userRouter.post('/create/family/composition/observation', (req, res) => __awaite
 }));
 userRouter.post('/create/etinical/documents', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let { document, familyCompositionID, kinship } = req.body;
+        let { document, familyCompositionID, personId } = req.body;
         if (!familyCompositionID) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Family Composition ID is required');
             return res.status(400).json(error.toJson('Family Composition ID is required'));
         }
-        if (!kinship) {
+        if (!personId) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Kinship is required');
             return res.status(400).json(error.toJson('Kinship is required'));
         }
         const documents = new familyComposition_1.Documents(document[0], document[1], document[2], document[3], document[4]);
-        const familyComposition = yield userControle.createDocuments(documents, familyCompositionID, kinship);
+        const familyComposition = yield userControle.createDocuments(documents, familyCompositionID, personId);
         return res.status(201).json(familyComposition);
     }
     catch (e) {
@@ -228,12 +380,13 @@ userRouter.post('/create/family/person', (req, res) => __awaiter(void 0, void 0,
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Family Person Id is required');
             return res.status(400).json(error.toJson('Family Person Id is required'));
         }
-        if (!personWithDisabilities) {
+        if (!(typeof personWithDisabilities == "boolean") || personWithDisabilities == null) {
             const error = new error_1.CustomError('Bad Request', 400, 'Bad Request', 'Person With Disabilities is required');
             return res.status(400).json(error.toJson('Person With Disabilities is required'));
         }
         const documents = new familyComposition_1.Documents(false, false, false, false, false);
-        const date = new Date(birthDate);
+        const dateArray = birthDate.split('/');
+        const date = new Date(dateArray[2], dateArray[1], dateArray[0]);
         const familyCompositionPerson = new familyComposition_1.FamilyCompositionPerson(fullname, date, biologicalGender, personWithDisabilities, documents, kinship);
         const familyPerson = yield userControle.createFamilyPerson(familyCompositionPerson, familyPersonId);
         return res.status(201).json(familyPerson);
@@ -367,6 +520,15 @@ userRouter.get('/list/reference/person', (req, res) => __awaiter(void 0, void 0,
         return res.status(500).json(err);
     }
 }));
+userRouter.get('/list/reduced/reference/person', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const referencePerson = yield userControle.listAllReducedReferencePerson();
+        return res.status(200).json(referencePerson);
+    }
+    catch (err) {
+        return res.status(500).json(err);
+    }
+}));
 userRouter.post('/create/reference/person/observation', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { observation, whoIsObservingId, referencePersonId } = req.body;
     try {
@@ -489,7 +651,7 @@ userRouter.post('/create/reference/person', uploads.single('photo'), (req, res) 
             return res.status(400).json(error.toJson('File Extension is required'));
         }
         const birthDateFormatted = new Date(birthDate);
-        const newReferencePerson = new referencePerson_1.ReferencePerson(fullName, socialName, motherName, nis, cpf, diagnosis, rgNumber, biologicalGender, rgUf, rgIssue, rgDateIssue, isShelter, localLocalization, cep, adress, neighborhood, adressNumber, adressComplement, state, city, phone, fileBuffer, fileExtension, birthDateFormatted, whoIsObservingId);
+        const newReferencePerson = new referencePerson_1.ReferencePerson('0', fullName, socialName, motherName, nis, cpf, diagnosis, rgNumber, biologicalGender, rgUf, rgIssue, rgDateIssue, isShelter, localLocalization, cep, adress, neighborhood, adressNumber, adressComplement, state, city, phone, fileBuffer, fileExtension, birthDateFormatted, whoIsObservingId);
         const referencePerson = yield userControle.createReferencePerson(newReferencePerson);
         return res.status(201).json(referencePerson);
     }

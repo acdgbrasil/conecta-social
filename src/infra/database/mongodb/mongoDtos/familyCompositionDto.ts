@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Documents, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
 import { Observations } from "../../../../domain/entity/observations";
 import { CustomError } from "../../../error/error";
@@ -70,7 +71,7 @@ export const createFamilyCompositionObservation = async (observation:Observation
     }
 }
 
-export const getFamilyComposition = async (familyCompositionID:string) => {
+export const getFamilyCompositionById = async (familyCompositionID:string) => {
     try {
         const familyComposition = await familyCompositionModel.findById(familyCompositionID)
         if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
@@ -79,7 +80,63 @@ export const getFamilyComposition = async (familyCompositionID:string) => {
         throw err 
     }
 }
+export const updateFamilyMemberById = async (
+    familyCompositionID: string,
+    familyCompositionPersonID: string,
+    updateData: Partial<FamilyCompositionPerson> 
+) => {
+    try {
 
+        const familyComposition = await familyCompositionModel.findOne({_id: familyCompositionID})
+        console.log(familyComposition)
+        if (!familyComposition) {
+            throw new CustomError(
+                'FAMILY_COMPOSITION_OR_MEMBER_NOT_FOUND',
+                404,
+                'FAMILY_COMPOSITION_OR_MEMBER_NOT_FOUND',
+                'Family Composition or Member not found'
+            );
+        }
+        //const members = familyComposition.familyCompositionPerson
+       // let memberIndex  = 
+        //memberIndex = -1
+        //memberIndex = members.map((e:any, i)=> {
+        //    if(e._id === familyCompositionPersonID){
+       //         return i
+       //     }
+            
+       // })
+        //if(memberIndex === undefined){
+        //    memberIndex = -1
+       // }
+        //familyComposition.familyCompositionPerson[memberIndex] = {
+        //    ...familyComposition.familyCompositionPerson[memberIndex],
+        //    ...updateData
+        //  };
+        
+        //return familyComposition;
+    } catch (err) {
+        console.log(err)
+        throw err;
+    }
+};
+
+export const getFamilyCompositionPersonById = async (familyCompositionPersonID:string) => {
+    
+    try{
+        const familyComposition = await familyCompositionModel.find()
+        const familyCompositionPersonList = familyComposition.map((e)=>{
+            return e.familyCompositionPerson
+        })
+        const flatArray = familyCompositionPersonList.flat()
+        const familyCompositionPerson = flatArray.filter((element:any) => {
+            return element._id.toString() === familyCompositionPersonID})
+        return familyCompositionPerson
+    }
+    catch(err){
+        throw err
+    }
+}
 export const getAllFamilyComposition = async () => {
     try {
         const familyComposition = await familyCompositionModel.find()

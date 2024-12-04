@@ -116,6 +116,14 @@ const referencePerson = new mongoose_1.default.Schema({
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'homeConditions'
     },
+    workConditionId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'workCondition'
+    },
+    familySituationViolationId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'familySituationViolence'
+    },
     observations: [{
             type: observationModel_1.observation
         }],

@@ -11,12 +11,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createReferencePerson = exports.createReferencePersonObservation = exports.listAllReferencePerson = exports.getByIdReferencePerson = void 0;
 const familyComposition_1 = require("../../../../domain/entity/familyComposition");
+const familySituationViolation_1 = require("../../../../domain/entity/familySituationViolation");
 const error_1 = require("../../../error/error");
 const familyCompositionModel_1 = require("../models/familyCompositionModel");
 const familyPhotoModel_1 = require("../models/familyPhotoModel");
+const familySituationViolenceModel_1 = require("../models/familySituationViolenceModel");
 const firstEntryInUnityModel_1 = require("../models/firstEntryInUnityModel");
 const homeConditionsModel_1 = require("../models/homeConditionsModel");
 const referencePersonModel_1 = require("../models/referencePersonModel");
+const workConditionModel_1 = require("../models/workConditionModel");
 const getByIdReferencePerson = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const referencePerson = yield referencePersonModel_1.referencePersonModel.findById(id);
@@ -70,6 +73,21 @@ const createReferencePerson = (rp) => __awaiter(void 0, void 0, void 0, function
         familyComposition.save();
         const fistEntryInUnity = yield firstEntryInUnityModel_1.firstEntryInUnityModel.create({});
         const homeCondition = yield homeConditionsModel_1.homeConditionsModel.create({});
+        const workCondition = yield workConditionModel_1.WorkConditionModel.create({});
+        const childLabel = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const sexualExploitation = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const sexualAbuse = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const physicalAbuse = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const psychologicalAbuse = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const elderNeglect = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const childNeglect = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const pcdNeglect = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const homelessSituation = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const humanTrafficking = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const violenceWithElderOrPcd = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false };
+        const other = { thisSituationOcurrent: false, thisSituationsOcurrentNow: false, nameOfSituation: '' };
+        const familyViolation = new familySituationViolation_1.FamilySituationViolation(childLabel, sexualExploitation, sexualAbuse, physicalAbuse, psychologicalAbuse, elderNeglect, childNeglect, pcdNeglect, homelessSituation, humanTrafficking, violenceWithElderOrPcd, other, false);
+        const familySituationViolation = yield familySituationViolenceModel_1.familySituationViolenceModel.create(familyViolation);
         const referencePerson = yield referencePersonModel_1.referencePersonModel.create({
             fullName: rp.fullName,
             socialName: rp.socialName,
@@ -94,7 +112,9 @@ const createReferencePerson = (rp) => __awaiter(void 0, void 0, void 0, function
             familyCompositionId: familyComposition.id,
             birthDate: rp.birthDate,
             biologicalGender: rp.biologicalGender,
-            homeConditionsId: homeCondition.id
+            homeConditionsId: homeCondition.id,
+            workConditionId: workCondition.id,
+            familySituationViolationId: familySituationViolation.id
         });
         return referencePerson;
     }

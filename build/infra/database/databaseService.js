@@ -18,7 +18,29 @@ const firstEntryInUnityDTO_1 = require("./mongodb/mongoDtos/firstEntryInUnityDTO
 const familyCompositionDto_1 = require("./mongodb/mongoDtos/familyCompositionDto");
 const homeConditionsModelDTO_1 = require("./mongodb/mongoDtos/homeConditionsModelDTO");
 const photoFamilyDto_1 = require("./mongodb/mongoDtos/photoFamilyDto");
+const workConditionDto_1 = require("./mongodb/mongoDtos/workConditionDto");
+const familySituationViolenceDTO_1 = require("./mongodb/mongoDtos/familySituationViolenceDTO");
 class DatabaseService {
+    createSituationViolation(situationViolation, familySituationId) {
+        try {
+            const familySituation = (0, familySituationViolenceDTO_1.familySituationViolenceDTO)(familySituationId, situationViolation);
+            return familySituation;
+        }
+        catch (e) {
+            throw e;
+        }
+    }
+    createWorkConditionPerson(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const workConditionResult = yield (0, workConditionDto_1.createWorkConditionPersonDto)(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId);
+                return workConditionResult;
+            }
+            catch (e) {
+                throw e;
+            }
+        });
+    }
     getPersonReferencePhoto(photoId) {
         try {
             const photo = (0, photoFamilyDto_1.getPersonReferencePhotoDto)(photoId);
@@ -59,10 +81,10 @@ class DatabaseService {
             }
         });
     }
-    createDocuments(documents, familyCompositionID, kinship) {
+    createDocuments(documents, familyCompositionID, id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const familyComposition = yield (0, familyCompositionDto_1.createDocuments)(documents, familyCompositionID, kinship);
+                const familyComposition = yield (0, familyCompositionDto_1.createDocuments)(documents, familyCompositionID, id);
                 return familyComposition;
             }
             catch (e) {
