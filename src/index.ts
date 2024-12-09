@@ -7,6 +7,7 @@ import { verifyToken } from './infra/jwt/jwtToken';
 import admRouter from './presenter/routers/admRouter';
 import photoRouter from './presenter/routers/photoRouter';
 
+const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 function startDatabase() {
     connectionMongose().then((client) => {
@@ -15,7 +16,9 @@ function startDatabase() {
     });
 }
 
+
 const app = express();
+app.use(cors());
 const router = express.Router();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
