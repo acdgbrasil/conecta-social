@@ -175,32 +175,7 @@ export class UserController implements UserRepository{
     }
     async listAllReducedReferencePerson(): Promise<ShortReferencePerson[]> {
         try{
-            const userControle = new UserController();
-            const db = new DatabaseService();
-            const ReferencePersonList = await db.listAllReferencePerson();
-            const finalResponse = await Promise.all(ReferencePersonList.map(async (rp) => {
-                const familyPhotoId = rp.familyPhoto.toString();
-                const familyPhoto = `${process.env.BASE_URL}/photo/family/${familyPhotoId}`;
-    
-                return {
-                    id: rp.id,
-                    fullName: rp.fullName,
-                    socialName: rp.socialName,
-                    motherName: rp.motherName,
-                    cpf: rp.cpf,
-                    diagnosis: rp.diagnosis,
-                    birthDate: rp.birthDate,
-                    cep: rp.cep,
-                    adress: rp.adress,
-                    neighborhood: rp.neighborhood,
-                    adressNumber: rp.adressNumber,
-                    adressComplement: rp.adressComplement,
-                    phone: rp.phone,
-                    familyPhoto: familyPhoto, // Garantindo que a foto seja uma string
-                    whoIsOpening: rp.whoIsOpeningId
-                };
-            }));
-            return finalResponse
+            throw new Error('Method not implemented');
         }catch(e){
             console.log(e)
             throw e;

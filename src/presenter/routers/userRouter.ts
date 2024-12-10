@@ -624,14 +624,7 @@ userRouter.post('/create/reference/person',uploads.single('photo'),async (req,re
     try {
         const {fullName,socialName,motherName,cpf,nis,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,whoIsObservingId,birthDate,biologicalGender} = req.body
         
-        const fileBuffer = req.file?.buffer;    
-        const fileExtension = req.file?.mimetype.split('/')[1];
-
-        if(!fileBuffer){
-            const error = new CustomError('Bad Request',400,'Bad Request','Photo is required');
-            return res.status(400).json(error.toJson('Photo is required'));
-        }
-
+  
         if(!birthDate){
             const error = new CustomError('Bad Request',400,'Bad Request','Birth Date is required');
             return res.status(400).json(error.toJson('Birth Date is required'));
@@ -738,13 +731,10 @@ userRouter.post('/create/reference/person',uploads.single('photo'),async (req,re
             return res.status(400).json(error.toJson('Phone is required'));
         }
 
-        if(!fileExtension){
-            const error = new CustomError('Bad Request',400,'Bad Request','File Extension is required');
-            return res.status(400).json(error.toJson('File Extension is required'));
-        }
+        
 
         const birthDateFormatted = new Date(birthDate);
-        const newReferencePerson = new ReferencePerson('0', fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,fileBuffer,fileExtension,birthDateFormatted,whoIsObservingId);
+        const newReferencePerson = new ReferencePerson('0', fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,birthDateFormatted,whoIsObservingId);
         const referencePerson = await userControle.createReferencePerson(newReferencePerson);
         return res.status(201).json(referencePerson);
        

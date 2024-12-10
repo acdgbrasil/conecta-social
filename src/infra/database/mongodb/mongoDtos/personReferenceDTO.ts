@@ -54,10 +54,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             throw new CustomError('CPF_ALREADY_EXISTS',400,'CPF_ALREADY_EXISTS','CPF already exists');
         }
         
-        const familyPhoto = await familyPhotoModel.create({
-            fileBuffer:rp.familyPhoto.fileBuffer,
-            fileExtension:rp.familyPhoto.fileExtension
-        })
+       
 
         const familyComposition = await familyCompositionModel.create({})
         const documents = new Documents(false,false,false,false,false)
@@ -96,7 +93,6 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             city:rp.city,
             cpf:rp.cpf,
             diagnosis:rp.diagnosis,
-            familyPhoto:familyPhoto.id,
             isShelter:rp.isShelter,
             localLocalization:rp.localLocalization,
             motherName:rp.motherName,
