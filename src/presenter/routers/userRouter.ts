@@ -620,7 +620,7 @@ userRouter.post('/create/reference/person/observation',async (req,res)=>{
     }
 })
 
-userRouter.post('/create/reference/person',uploads.single('photo'),async (req,res)=>{
+userRouter.post('/create/reference/person',async (req,res)=>{
     try {
         const {fullName,socialName,motherName,cpf,nis,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,whoIsObservingId,birthDate,biologicalGender} = req.body
         
