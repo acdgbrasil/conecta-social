@@ -71,11 +71,6 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
         required:true,
         type:String
     },
-    familyPhoto:{
-        type:Schema.Types.ObjectId,
-        require:true,
-        ref:'familyPhoto'
-    },
     whoIsOpeningId:{
         type:String,
         required:true
