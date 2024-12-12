@@ -3,14 +3,12 @@ import {UserController} from '../../useCase/controllers/userController';
 import { User } from '../../domain/entity/user';
 import { CustomError } from '../../infra/error/error';
 import { ReferencePerson } from '../../domain/entity/referencePerson';
-import multer from 'multer';
 import { Observations } from '../../domain/entity/observations';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { Documents, FamilyCompositionPerson, WorkConditionPerson } from '../../domain/entity/familyComposition';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { WorkCondition } from '../../domain/entity/workCondition';
 import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation';
-const uploads = multer();
 
 const userRouter = Router();
 const userControle = new UserController();
@@ -588,13 +586,9 @@ userRouter.get('/list/reference/person',async (req,res)=>{
         return res.status(500).json(err);
     }
 })
+
 userRouter.get('/list/reduced/reference/person',async (req,res)=>{
-    try {
-        const referencePerson = await userControle.listAllReducedReferencePerson();
-        return res.status(200).json(referencePerson);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
+    throw new Error('Not Implemented');
 })
 
 userRouter.post('/create/reference/person/observation',async (req,res)=>{
@@ -620,17 +614,9 @@ userRouter.post('/create/reference/person/observation',async (req,res)=>{
     }
 })
 
-userRouter.post('/create/reference/person',uploads.single('photo'),async (req,res)=>{
+userRouter.post('/create/reference/person',async (req,res)=>{
     try {
-        const {fullName,socialName,motherName,cpf,nis,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,whoIsObservingId,birthDate,biologicalGender} = req.body
-        
-        const fileBuffer = req.file?.buffer;    
-        const fileExtension = req.file?.mimetype.split('/')[1];
-
-        if(!fileBuffer){
-            const error = new CustomError('Bad Request',400,'Bad Request','Photo is required');
-            return res.status(400).json(error.toJson('Photo is required'));
-        }
+        const {fullName,socialName,motherName,cpf,nis,diagnosis,rgNumber,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,whoIsObservingId,birthDate,biologicalGender} = req.body;
 
         if(!birthDate){
             const error = new CustomError('Bad Request',400,'Bad Request','Birth Date is required');
@@ -692,7 +678,7 @@ userRouter.post('/create/reference/person',uploads.single('photo'),async (req,re
             return res.status(400).json(error.toJson('Rg Date Issue is required'));
         }
 
-        if(!isShelter){
+        if(!(typeof isShelter == "boolean") || isShelter == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Is Shelter is required');
             return res.status(400).json(error.toJson('Is Shelter is required'));
         }
@@ -738,13 +724,8 @@ userRouter.post('/create/reference/person',uploads.single('photo'),async (req,re
             return res.status(400).json(error.toJson('Phone is required'));
         }
 
-        if(!fileExtension){
-            const error = new CustomError('Bad Request',400,'Bad Request','File Extension is required');
-            return res.status(400).json(error.toJson('File Extension is required'));
-        }
-
         const birthDateFormatted = new Date(birthDate);
-        const newReferencePerson = new ReferencePerson('0', fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,fileBuffer,fileExtension,birthDateFormatted,whoIsObservingId);
+        const newReferencePerson = new ReferencePerson('0', fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,birthDateFormatted,whoIsObservingId);
         const referencePerson = await userControle.createReferencePerson(newReferencePerson);
         return res.status(201).json(referencePerson);
        
