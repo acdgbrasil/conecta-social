@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, OcurruncyBolsaFamilia, ParticipationAndSocialServices, Pregnant, WorkConditionPerson } from "../../../../domain/entity/familyComposition";
 import { observation } from "./observationModel";
 import { HelphyConditionFamily } from "../../../../domain/entity/familyHelphyCondition";
+import { FamilyComunitaryConvivation } from "../../../../domain/entity/familyComunitaryConvivation";
+import { FamilyHistorySocioEducation } from "../../../../domain/entity/familyHistorySocioEducation";
+import { FamilyInstitucionalHistory } from "../../../../domain/entity/familyInstitucionalHistory";
 
 const documents = new mongoose.Schema<Documents>({
     cn:{
@@ -115,6 +118,57 @@ const HelphyConditionFamilyPerson = new mongoose.Schema<HelphyConditionFamily>({
     }
 })
 
+const familyComunitaryConvivationPerson = new mongoose.Schema<FamilyComunitaryConvivation>({
+    isInUse:{
+        type:Boolean,
+    },
+    dateOfInit:{
+        type:Date,
+    },
+    dateOfFinish:{
+        type:Date,
+    },
+    unity:{
+        type:Number,
+    },
+    serviceType:{
+        type:Number,
+    }
+})
+
+const familyHistorySocioEducationPerson = new mongoose.Schema<FamilyHistorySocioEducation>({
+    dateInit:{
+        type:Date,
+    },
+    dateFinish:{
+        type:Date,
+    },
+    numberOfProcess:{
+        type:String,
+    },
+    type:{
+        type:Number,
+    },
+    inInUse:{
+        type:Boolean,
+    }
+})
+
+const familyInstitucionalHistoryPerson = new mongoose.Schema<FamilyInstitucionalHistory>({
+    dateInit:{
+        type:Date,
+    },
+    dateFinish:{
+        type:Date,
+    },
+    reason:{
+        type:String,
+    },
+    inInUse:{
+        type:Boolean,
+    }
+})
+
 const familyCompositionPerson = new mongoose.Schema<FamilyCompositionPerson>({
     fullName:{
         type:String,
@@ -148,8 +202,16 @@ const familyCompositionPerson = new mongoose.Schema<FamilyCompositionPerson>({
     },
     helphyConditionFamily:{
         type:HelphyConditionFamilyPerson
+    },
+    familyComunitaryConvivation:{
+        type:familyComunitaryConvivationPerson
+    },
+    familyHistorySocioEducation:{
+        type:familyHistorySocioEducationPerson
+    },
+    familyInstitutionalHistory:{
+        type:familyInstitucionalHistoryPerson
     }
-
 });
 
 const familyComposition = new mongoose.Schema<FamilyComposition>({

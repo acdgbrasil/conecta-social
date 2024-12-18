@@ -1,4 +1,4 @@
-import { Documents, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
+import { Documents, EducationConditionPerson, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
 import { Observations } from "../../../../domain/entity/observations";
 import { CustomError } from "../../../error/error";
 import { familyCompositionModel } from "../models/familyCompositionModel";
@@ -9,6 +9,126 @@ export const createFamilyPerson = async (familyCompositionPerson:FamilyCompositi
         if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
         familyComposition.familyCompositionPerson.push(familyCompositionPerson)
         familyComposition.isInUse = true 
+        familyComposition.save()
+        return familyComposition
+    } catch (err) {
+        throw err 
+    }
+}
+
+export const createFamilyEducationCondition = async (educationCondition:EducationConditionPerson,familyCompositionID:string,id:string) => {
+    try {
+        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+        familyCompositionPerson.educationConditionPerson = educationCondition
+        familyComposition.isInUse = true
+        familyComposition.save()
+        return familyComposition
+    } catch (err) {
+        throw err 
+    }
+}
+
+export const familyHelphyCondition = async (familyHelphyCondition:any,familyCompositionID:string,id:string) => {
+    try {
+        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+        familyCompositionPerson.helphyConditionFamily = familyHelphyCondition
+        familyComposition.isInUse = true
+        familyComposition.save()
+        return familyComposition
+    } catch (err) {
+        throw err 
+    }
+}
+
+export const familyComunitaryConvivation = async (familyComunitaryConvivation:any,familyCompositionID:string,id:string) => {
+    try {
+        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+        familyCompositionPerson.familyComunitaryConvivation = familyComunitaryConvivation
+        familyComposition.isInUse = true
+        familyComposition.save()
+        return familyComposition
+    } catch (err) {
+        throw err 
+    }
+}
+
+export const createParticipationAndSocialServices = async (participationAndSocialServices:any,familyCompositionID:string,id:string) => {
+    try {
+        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+        familyCompositionPerson.participationAndSocialServices = participationAndSocialServices
+        familyComposition.isInUse = true
+        familyComposition.save()
+        return familyComposition
+    } catch (err) {
+        throw err 
+    }
+}
+
+export const createPregnant = async (pregnant:any,familyCompositionID:string,id:string) => {
+    try {
+        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+        familyCompositionPerson.pregnant = pregnant
+        familyComposition.isInUse = true
+        familyComposition.save()
+        return familyComposition
+    } catch (err) {
+        throw err 
+    }
+}
+
+export const createWorkCondition = async (workCondition:any,familyCompositionID:string,id:string) => {
+    try {
+        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+        familyCompositionPerson.workConditionPerson = workCondition
+        familyComposition.isInUse = true
+        familyComposition.save()
+        return familyComposition
+    } catch (err) {
+        throw err 
+    }
+}
+
+export const createFamilyHistorySocioEducation = async (familyHistorySocioEducation:any,familyCompositionID:string,id:string) => {
+    try {
+        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+        familyCompositionPerson.familyHistorySocioEducation = familyHistorySocioEducation
+        familyComposition.isInUse = true
+        familyComposition.save()
+        return familyComposition
+    } catch (err) {
+        throw err 
+    }
+}
+
+export const createFamilyInstitutionalHistory = async (familyInstitutionalHistory:any,familyCompositionID:string,id:string) => {
+    try {
+        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+        familyCompositionPerson.familyInstitutionalHistory = familyInstitutionalHistory
+        familyComposition.isInUse = true
         familyComposition.save()
         return familyComposition
     } catch (err) {

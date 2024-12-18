@@ -1,4 +1,7 @@
+import { FamilyComunitaryConvivation } from "./familyComunitaryConvivation";
 import { HelphyConditionFamily } from "./familyHelphyCondition";
+import { FamilyHistorySocioEducation } from "./familyHistorySocioEducation";
+import { FamilyInstitucionalHistory } from "./familyInstitucionalHistory";
 import { Observations } from "./observations";
 
 export class Documents{
@@ -103,6 +106,9 @@ export class FamilyCompositionPerson{
     pregnant?:Pregnant;
     participationAndSocialServices?:ParticipationAndSocialServices;
     helphyConditionFamily?:HelphyConditionFamily;
+    familyComunitaryConvivation?:FamilyComunitaryConvivation;
+    familyHistorySocioEducation?:FamilyHistorySocioEducation;
+    familyInstitutionalHistory?:FamilyInstitucionalHistory;
     
     constructor(fullName:string, birthDate:Date, biologicalGender:string, personWithDisability:boolean, documents:Documents, kinship:number){
         this.fullName = fullName;
