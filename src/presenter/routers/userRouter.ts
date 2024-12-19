@@ -5,13 +5,95 @@ import { CustomError } from '../../infra/error/error';
 import { ReferencePerson } from '../../domain/entity/referencePerson';
 import { Observations } from '../../domain/entity/observations';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
-import { Documents, FamilyCompositionPerson, WorkConditionPerson } from '../../domain/entity/familyComposition';
+import { Documents, EducationConditionPerson, FamilyCompositionPerson, OcurruncyBolsaFamilia, WorkConditionPerson } from '../../domain/entity/familyComposition';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { WorkCondition } from '../../domain/entity/workCondition';
 import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation';
 
 const userRouter = Router();
 const userControle = new UserController();
+
+
+userRouter.get('/list/reference/person/:familyCompositionId',async (req,res)=>{
+    try{
+
+        const familyCompositionId = req.params['familyCompositionId'];
+
+        if(!familyCompositionId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Composition Id is required');
+            return res.status(400).json(error.toJson('Family Composition Id is required'));
+        }
+
+        const referencePerson = await userControle.getFamilyCompositonPersons(familyCompositionId);
+        return res.status(200).json(referencePerson);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.post('/create/educational/especifications',async (req,res)=>{
+    try{
+        const {literaty,schoolShip,isStudying,occurentDate,efect,suspensionSolicitation,familyCompositionID,personId} = req.body;
+        
+        if(!(typeof literaty == "boolean") || literaty == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Literaty is required');
+            return res.status(400).json(error.toJson('Literaty is required'));
+        }
+
+        if(!schoolShip){
+            const error = new CustomError('Bad Request',400,'Bad Request','School Ship is required');
+            return res.status(400).json(error.toJson('School Ship is required'));
+        }
+
+        if(!(typeof isStudying == "boolean") || isStudying == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Is Studying is required');
+            return res.status(400).json(error.toJson('Is Studying is required'));
+        }
+
+        if(!occurentDate){
+            const error = new CustomError('Bad Request',400,'Bad Request','Occurent Date is required');
+            return res.status(400).json(error.toJson('Occurent Date is required'));
+        }
+
+        if(!efect){
+            const error = new CustomError('Bad Request',400,'Bad Request','efect is required');
+            return res.status(400).json(error.toJson('Educational Esp is required'));
+        }
+
+        if(!(typeof suspensionSolicitation == "boolean") || suspensionSolicitation == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Suspension Solicitation is required');
+            return res.status(400).json(error.toJson('Suspension Solicitation is required'));
+        }
+
+        if(!familyCompositionID){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Situation Id is required');
+            return res.status(400).json(error.toJson('Family Situation Id is required'));
+        }
+        if(!personId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Person Id is required');
+            return res.status(400).json(error.toJson('Person Id is required'));
+        }
+
+        const occurentDateDate = new Date(occurentDate);
+
+        const bolsaFamiliaEspecification = new OcurruncyBolsaFamilia(occurentDateDate,efect,suspensionSolicitation);
+        const educationalEspecifications = new EducationConditionPerson(true,literaty,schoolShip,isStudying,bolsaFamiliaEspecification);
+
+
+        const familyComposition = await userControle.createEducationalEspecifications(educationalEspecifications,familyCompositionID,personId);
+        return res.status(201).json(familyComposition);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 
 userRouter.post('/create/violence/situation',async (req,res)=>{
     try{

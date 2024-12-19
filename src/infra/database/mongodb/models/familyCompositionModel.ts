@@ -74,7 +74,7 @@ const educationConditionPerson = new mongoose.Schema<EducationConditionPerson>({
         type:Boolean,
     },
     schoolShip:{
-        type:String,
+        type:Number
     },
     isStudying:{
         type:Boolean,

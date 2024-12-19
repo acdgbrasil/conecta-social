@@ -3,6 +3,17 @@ import { Observations } from "../../../../domain/entity/observations";
 import { CustomError } from "../../../error/error";
 import { familyCompositionModel } from "../models/familyCompositionModel";
 
+export const getFamilyCompositonPersonsDto = async (familyCompositionId:string) => {
+    try {
+        const referencePerson = await familyCompositionModel.findById(familyCompositionId)
+        console.log(referencePerson)
+        if(!referencePerson) throw new CustomError('REFERENCE_PERSON_NOT_FOUND',404,'REFERENCE_PERSON_NOT_FOUND','Reference Person not found')
+        return referencePerson.familyCompositionPerson
+    } catch (err) {
+        throw err 
+    }
+}
+
 export const createFamilyPerson = async (familyCompositionPerson:FamilyCompositionPerson,familyCompositionID:string) => {
     try {
         const familyComposition = await familyCompositionModel.findById(familyCompositionID)

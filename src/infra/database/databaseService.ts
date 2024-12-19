@@ -10,8 +10,8 @@ import { Observations } from '../../domain/entity/observations';
 import { createReferencePerson, createReferencePersonObservation, getByIdReferencePerson, listAllReferencePerson } from './mongodb/mongoDtos/personReferenceDTO';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
-import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson } from '../../domain/entity/familyComposition';
-import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyPerson, createSocialEspecifications } from './mongodb/mongoDtos/familyCompositionDto';
+import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson } from '../../domain/entity/familyComposition';
+import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyEducationCondition, createFamilyPerson, createSocialEspecifications, getFamilyCompositonPersonsDto } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
@@ -20,6 +20,23 @@ import { createWorkConditionPersonDto } from './mongodb/mongoDtos/workConditionD
 import { FamilySituationViolation } from '../../domain/entity/familySituationViolation';
 import { familySituationViolenceDTO } from './mongodb/mongoDtos/familySituationViolenceDTO';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    async getFamilyCompositonPersons(familyCompositionId: string): Promise<FamilyCompositionPerson[]> {
+        try{
+            const familyCompositionPersons = await getFamilyCompositonPersonsDto(familyCompositionId);
+            return familyCompositionPersons;
+        }catch(e){
+            throw e;
+        }
+    }
+
+    async createEducationalEspecifications(educationalEspecifications: EducationConditionPerson, familySituationId: string,personId:string): Promise<FamilyComposition> {
+        try{
+            const familySituation = await createFamilyEducationCondition(educationalEspecifications,familySituationId,personId);
+            return familySituation;
+        }catch(e){
+            throw e;
+        }
+    }
     createSituationViolation(situationViolation: FamilySituationViolation, familySituationId: string): Promise<FamilySituationViolation> {
         try{
             const familySituation = familySituationViolenceDTO(familySituationId, situationViolation);

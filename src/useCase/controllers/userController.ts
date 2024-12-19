@@ -1,4 +1,4 @@
-import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson } from "../../domain/entity/familyComposition";
+import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson } from "../../domain/entity/familyComposition";
 import { FamilySituationViolation } from "../../domain/entity/familySituationViolation";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
 import { HomeConditions } from "../../domain/entity/homeConditions";
@@ -12,26 +12,23 @@ import { CryptoService } from "../../infra/encrypt/encryptService";
 import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
-type ShortReferencePerson = {
-    id: string
-    fullName: string
-    socialName: string
-    motherName: string
-    cpf: string
-    diagnosis: string
-    birthDate:Date
-    cep?: string
-    adress: string
-    neighborhood: string
-    adressNumber: string
-    adressComplement: string
-    phone: string
-    familyPhoto: string
-    whoIsOpening: string
-}
-
-
 export class UserController implements UserRepository{
+    getFamilyCompositonPersons(familyCompositionId: string): Promise<FamilyCompositionPerson[]> {
+        try{
+            const db = new DatabaseService();
+            return db.getFamilyCompositonPersons(familyCompositionId);
+        }catch(e){
+            throw e;
+        }
+    }
+    createEducationalEspecifications(educationalEspecifications: EducationConditionPerson, familySituationId: string, personId: string): Promise<FamilyComposition> {
+       try{
+            const db = new DatabaseService();
+            return db.createEducationalEspecifications(educationalEspecifications,familySituationId,personId);
+       }catch(e){
+           throw e;
+       }
+    }
     createSituationViolation(situationViolation: FamilySituationViolation, familySituationId: string): Promise<FamilySituationViolation> {
         try{
             const db = new DatabaseService();

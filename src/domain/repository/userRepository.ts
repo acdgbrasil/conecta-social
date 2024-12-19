@@ -1,4 +1,4 @@
-import { Documents, FamilyComposition, FamilyCompositionPerson, WorkConditionPerson } from "../entity/familyComposition";
+import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, WorkConditionPerson } from "../entity/familyComposition";
 import { FamilySituationViolation } from "../entity/familySituationViolation";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
 import { HomeConditions } from "../entity/homeConditions";
@@ -33,4 +33,6 @@ export interface UserRepository {
     createHomeConditionsObservation(observation:Observations,homeConditionsId:string): Promise<HomeConditions | Error>;
     getPersonReferencePhoto(photoId:string): Promise<PhotoResponse>;
     createSituationViolation(situationViolation:FamilySituationViolation,familySituationId:string): Promise<FamilySituationViolation>;
+    createEducationalEspecifications(educationalEspecifications:EducationConditionPerson,familySituationId:string,personId:string): Promise<FamilyComposition>;
+    getFamilyCompositonPersons(familyCompositionId:string): Promise<FamilyCompositionPerson[]>;
 }
