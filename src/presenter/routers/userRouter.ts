@@ -9,10 +9,27 @@ import { Documents, EducationConditionPerson, FamilyCompositionPerson, Ocurruncy
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { WorkCondition } from '../../domain/entity/workCondition';
 import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation';
+import { getInformationOfPersonAndAgeAreInSchool } from '../../infra/database/mongodb/mongoDtos/familyCompositionDto';
 
 const userRouter = Router();
 const userControle = new UserController();
 
+userRouter.get('/list/composition/family/information/litery/:familyCompositionId/:familyCompositionPersonId',async (req,res)=>{
+    try{
+
+        const familyCompositionId = req.params['familyCompositionId'];
+        const familyCompositionPersonId = req.params['familyCompositionPersonId'];
+
+        const informationOfAgeAndFrequencyOfSchool = await userControle.getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
+        return res.status(200).json(informationOfAgeAndFrequencyOfSchool);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 
 userRouter.get('/list/reference/person/:familyCompositionId',async (req,res)=>{
     try{

@@ -6,13 +6,21 @@ import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
 import { WorkCondition } from "../../domain/entity/workCondition";
-import { PhotoResponse, UserRepository } from "../../domain/repository/userRepository";
+import { informationEducationCondition, PhotoResponse, UserRepository } from "../../domain/repository/userRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
 import { CryptoService } from "../../infra/encrypt/encryptService";
 import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<informationEducationCondition> {
+        try{
+            const db = new DatabaseService();
+            return db.getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
+        }catch(e){
+            throw e;
+        }
+    }
     getFamilyCompositonPersons(familyCompositionId: string): Promise<FamilyCompositionPerson[]> {
         try{
             const db = new DatabaseService();

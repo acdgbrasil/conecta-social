@@ -1,3 +1,4 @@
+import { get } from "http";
 import { Documents, EducationConditionPerson, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
 import { Observations } from "../../../../domain/entity/observations";
 import { CustomError } from "../../../error/error";
@@ -6,9 +7,25 @@ import { familyCompositionModel } from "../models/familyCompositionModel";
 export const getFamilyCompositonPersonsDto = async (familyCompositionId:string) => {
     try {
         const referencePerson = await familyCompositionModel.findById(familyCompositionId)
-        console.log(referencePerson)
         if(!referencePerson) throw new CustomError('REFERENCE_PERSON_NOT_FOUND',404,'REFERENCE_PERSON_NOT_FOUND','Reference Person not found')
         return referencePerson.familyCompositionPerson
+    } catch (err) {
+        throw err 
+    }
+}
+
+ export const getInformationOfPersonAndAgeAreInSchool = async (familyCompositionID:string) => {
+    try {
+        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const informationEducationCondition = familyComposition.familyCompositionPerson.map((person) => {
+            const birthDate = person.birthDate
+            const age = new Date().getFullYear() - new Date(birthDate).getFullYear()
+            const educationCondition = person.educationConditionPerson?.isStudying
+            return {age,educationCondition}
+        })
+        
+        return informationEducationCondition
     } catch (err) {
         throw err 
     }

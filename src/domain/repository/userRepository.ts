@@ -12,6 +12,11 @@ export type PhotoResponse = {
     fileExtension:string;
 }
 
+export type informationEducationCondition = {
+    age: number;
+    educationCondition: boolean | undefined;
+}[]
+
 export interface UserRepository {
     findByEmail(email:string):Promise<any>;
     create(user:User,isAdm:boolean): Promise<User | Error>;
@@ -35,4 +40,5 @@ export interface UserRepository {
     createSituationViolation(situationViolation:FamilySituationViolation,familySituationId:string): Promise<FamilySituationViolation>;
     createEducationalEspecifications(educationalEspecifications:EducationConditionPerson,familySituationId:string,personId:string): Promise<FamilyComposition>;
     getFamilyCompositonPersons(familyCompositionId:string): Promise<FamilyCompositionPerson[]>;
+    getInformationOfPersonAndAgeAreInSchool(familyCompositionId:string): Promise<informationEducationCondition>;
 }

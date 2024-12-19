@@ -1,5 +1,5 @@
 import { User } from '../../domain/entity/user';
-import {PhotoResponse, UserRepository} from '../../domain/repository/userRepository';
+import {informationEducationCondition, PhotoResponse, UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
@@ -11,7 +11,7 @@ import { createReferencePerson, createReferencePersonObservation, getByIdReferen
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson } from '../../domain/entity/familyComposition';
-import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyEducationCondition, createFamilyPerson, createSocialEspecifications, getFamilyCompositonPersonsDto } from './mongodb/mongoDtos/familyCompositionDto';
+import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyEducationCondition, createFamilyPerson, createSocialEspecifications, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
@@ -20,6 +20,15 @@ import { createWorkConditionPersonDto } from './mongodb/mongoDtos/workConditionD
 import { FamilySituationViolation } from '../../domain/entity/familySituationViolation';
 import { familySituationViolenceDTO } from './mongodb/mongoDtos/familySituationViolenceDTO';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<informationEducationCondition> {
+        try{
+            const information = getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
+            return information;
+        }catch(e){
+            throw e;
+        }
+    }
+    
     async getFamilyCompositonPersons(familyCompositionId: string): Promise<FamilyCompositionPerson[]> {
         try{
             const familyCompositionPersons = await getFamilyCompositonPersonsDto(familyCompositionId);
