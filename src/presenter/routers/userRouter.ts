@@ -14,12 +14,11 @@ import { getInformationOfPersonAndAgeAreInSchool } from '../../infra/database/mo
 const userRouter = Router();
 const userControle = new UserController();
 
-userRouter.get('/list/composition/family/information/litery/:familyCompositionId/:familyCompositionPersonId',async (req,res)=>{
+userRouter.get('/list/composition/family/information/litery/:familyCompositionId',async (req,res)=>{
     try{
 
         const familyCompositionId = req.params['familyCompositionId'];
-        const familyCompositionPersonId = req.params['familyCompositionPersonId'];
-
+        
         const informationOfAgeAndFrequencyOfSchool = await userControle.getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
         return res.status(200).json(informationOfAgeAndFrequencyOfSchool);
     }catch(e){
