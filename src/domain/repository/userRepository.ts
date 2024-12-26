@@ -41,4 +41,5 @@ export interface UserRepository {
     createEducationalEspecifications(educationalEspecifications:EducationConditionPerson,familySituationId:string,personId:string): Promise<FamilyComposition>;
     getFamilyCompositonPersons(familyCompositionId:string): Promise<FamilyCompositionPerson[]>;
     getInformationOfPersonAndAgeAreInSchool(familyCompositionId:string): Promise<informationEducationCondition>;
+    createWorkConditionObservation(workConditionId:string,observation:string): Promise<WorkCondition>;
 }

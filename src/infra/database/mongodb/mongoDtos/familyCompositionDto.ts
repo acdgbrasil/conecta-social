@@ -1,8 +1,9 @@
 import { get } from "http";
-import { Documents, EducationConditionPerson, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
+import { Documents, EducationConditionPerson, FamilyCompositionPerson, WorkConditionPerson } from "../../../../domain/entity/familyComposition";
 import { Observations } from "../../../../domain/entity/observations";
 import { CustomError } from "../../../error/error";
 import { familyCompositionModel } from "../models/familyCompositionModel";
+import { WorkCondition } from "../../../../domain/entity/workCondition";
 
 export const getFamilyCompositonPersonsDto = async (familyCompositionId:string) => {
     try {
@@ -111,21 +112,6 @@ export const createPregnant = async (pregnant:any,familyCompositionID:string,id:
         const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
         if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
         familyCompositionPerson.pregnant = pregnant
-        familyComposition.isInUse = true
-        familyComposition.save()
-        return familyComposition
-    } catch (err) {
-        throw err 
-    }
-}
-
-export const createWorkCondition = async (workCondition:any,familyCompositionID:string,id:string) => {
-    try {
-        const familyComposition = await familyCompositionModel.findById(familyCompositionID)
-        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
-        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
-        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
-        familyCompositionPerson.workConditionPerson = workCondition
         familyComposition.isInUse = true
         familyComposition.save()
         return familyComposition

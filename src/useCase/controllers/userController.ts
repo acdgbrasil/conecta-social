@@ -13,6 +13,14 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createWorkConditionObservation(workConditionId: string, observation: string): Promise<WorkCondition> {
+        try{
+            const db = new DatabaseService();
+            return db.createWorkConditionObservation(workConditionId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
     getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<informationEducationCondition> {
         try{
             const db = new DatabaseService();

@@ -9,10 +9,31 @@ import { Documents, EducationConditionPerson, FamilyCompositionPerson, Ocurruncy
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { WorkCondition } from '../../domain/entity/workCondition';
 import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation';
-import { getInformationOfPersonAndAgeAreInSchool } from '../../infra/database/mongodb/mongoDtos/familyCompositionDto';
 
 const userRouter = Router();
 const userControle = new UserController();
+
+userRouter.post('/create/work/condition/observation',async (req,res)=>{
+    try{
+        const {observation,workConditionId} = req.body;
+        if(!observation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
+            return res.status(400).json(error.toJson('Observation is required'));
+        }
+        if(!workConditionId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Work Condition Id is required');
+            return res.status(400).json(error.toJson('Work Condition Id is required'));
+        }
+        const observationCreated = await userControle.createWorkConditionObservation(workConditionId,observation);
+        return res.status(201).json(observationCreated);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 
 userRouter.get('/list/composition/family/information/litery/:familyCompositionId',async (req,res)=>{
     try{

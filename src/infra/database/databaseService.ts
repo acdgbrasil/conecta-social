@@ -16,10 +16,18 @@ import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
 import { WorkCondition } from '../../domain/entity/workCondition';
-import { createWorkConditionPersonDto } from './mongodb/mongoDtos/workConditionDto';
+import { createWorkConditionPersonDto, workConditionObservation } from './mongodb/mongoDtos/workConditionDto';
 import { FamilySituationViolation } from '../../domain/entity/familySituationViolation';
 import { familySituationViolenceDTO } from './mongodb/mongoDtos/familySituationViolenceDTO';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    createWorkConditionObservation(workConditionId: string, observation: string): Promise<WorkCondition> {
+        try{
+            const workCondition = workConditionObservation(workConditionId, observation);
+            return workCondition;
+        }catch(e){
+            throw e;
+        }
+    }
     getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<informationEducationCondition> {
         try{
             const information = getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
