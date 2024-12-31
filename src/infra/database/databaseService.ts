@@ -11,7 +11,7 @@ import { createReferencePerson, createReferencePersonObservation, getByIdReferen
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson } from '../../domain/entity/familyComposition';
-import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyEducationCondition, createFamilyPerson, createSocialEspecifications, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool } from './mongodb/mongoDtos/familyCompositionDto';
+import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyEducationCondition, createFamilyPerson, createSocialEspecifications, familyHelphyConditionDto, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
@@ -19,7 +19,19 @@ import { WorkCondition } from '../../domain/entity/workCondition';
 import { createWorkConditionPersonDto, workConditionObservation } from './mongodb/mongoDtos/workConditionDto';
 import { FamilySituationViolation } from '../../domain/entity/familySituationViolation';
 import { familySituationViolenceDTO } from './mongodb/mongoDtos/familySituationViolenceDTO';
+import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
+import { HelphyCondition } from '../../domain/entity/healthCondition';
+import { createHelphyConditionDto } from './mongodb/mongoDtos/helphConditionDto';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    async createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string): Promise<HelphyCondition> {
+        try{
+            const helphyCondition = await createHelphyConditionDto(HelphyCondition,helphyConditionId);
+            const _ = await familyHelphyConditionDto(familyHelphyCondition, familyCompositionID, personId);
+            return helphyCondition;
+        }catch(e){
+            throw e;
+        }
+    }
     createWorkConditionObservation(workConditionId: string, observation: string): Promise<WorkCondition> {
         try{
             const workCondition = workConditionObservation(workConditionId, observation);

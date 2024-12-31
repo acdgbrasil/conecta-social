@@ -4,6 +4,7 @@ import { Observations } from "../../../../domain/entity/observations";
 import { CustomError } from "../../../error/error";
 import { familyCompositionModel } from "../models/familyCompositionModel";
 import { WorkCondition } from "../../../../domain/entity/workCondition";
+import { HelphyConditionFamily } from "../../../../domain/entity/familyHelphyCondition";
 
 export const getFamilyCompositonPersonsDto = async (familyCompositionId:string) => {
     try {
@@ -60,7 +61,7 @@ export const createFamilyEducationCondition = async (educationCondition:Educatio
     }
 }
 
-export const familyHelphyCondition = async (familyHelphyCondition:any,familyCompositionID:string,id:string) => {
+export const familyHelphyConditionDto = async (familyHelphyCondition:HelphyConditionFamily,familyCompositionID:string,id:string) => {
     try {
         const familyComposition = await familyCompositionModel.findById(familyCompositionID)
         if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')

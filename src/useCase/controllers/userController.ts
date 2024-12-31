@@ -1,6 +1,8 @@
 import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson } from "../../domain/entity/familyComposition";
+import { HelphyConditionFamily } from "../../domain/entity/familyHelphyCondition";
 import { FamilySituationViolation } from "../../domain/entity/familySituationViolation";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
+import { HelphyCondition } from "../../domain/entity/healthCondition";
 import { HomeConditions } from "../../domain/entity/homeConditions";
 import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
@@ -13,6 +15,14 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string): Promise<HelphyCondition> {
+        try{
+            const db = new DatabaseService();
+            return db.createHelphyCondition(HelphyCondition,helphyConditionId,familyHelphyCondition,familyCompositionID,personId);
+        }catch(e){
+            throw e;
+        }
+    }
     createWorkConditionObservation(workConditionId: string, observation: string): Promise<WorkCondition> {
         try{
             const db = new DatabaseService();

@@ -1,6 +1,8 @@
 import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, WorkConditionPerson } from "../entity/familyComposition";
+import { HelphyConditionFamily } from "../entity/familyHelphyCondition";
 import { FamilySituationViolation } from "../entity/familySituationViolation";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
+import { HelphyCondition } from "../entity/healthCondition";
 import { HomeConditions } from "../entity/homeConditions";
 import { Observations } from "../entity/observations";
 import { ReferencePerson } from "../entity/referencePerson";
@@ -42,4 +44,5 @@ export interface UserRepository {
     getFamilyCompositonPersons(familyCompositionId:string): Promise<FamilyCompositionPerson[]>;
     getInformationOfPersonAndAgeAreInSchool(familyCompositionId:string): Promise<informationEducationCondition>;
     createWorkConditionObservation(workConditionId:string,observation:string): Promise<WorkCondition>;
+    createHelphyCondition(HelphyCondition:HelphyCondition,helphyConditionId:string,familyHelphyCondition:HelphyConditionFamily,familyCompositionID:string,personId:string): Promise<HelphyCondition>;
 }

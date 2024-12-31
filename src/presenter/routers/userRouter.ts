@@ -9,9 +9,51 @@ import { Documents, EducationConditionPerson, FamilyCompositionPerson, Ocurruncy
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { WorkCondition } from '../../domain/entity/workCondition';
 import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation';
+import { HelphyCondition, HelphyConditionStruct } from '../../domain/entity/healthCondition';
 
 const userRouter = Router();
 const userControle = new UserController();
+
+userRouter.post('/create/helphy/condition',async (req,res)=>{
+
+    try{
+        const {hasFamilyMemberNeedsConstantCare,hasFamilyMemberNeedsConstantCareList} = req.body;
+        
+
+        const hasFamilyConstantCareList = new HelphyConditionStruct(hasFamilyConstantCareListName,hasFamilyConstantCareListComplement);
+        
+
+        const helphyCondition = new HelphyCondition(
+            hasFamilyMemberNeedsConstantCare,
+            hasFamilyConstantCareList
+            hasFamilyIndicatesFoodInsecurity,
+            hasSevereIllness,
+            hasSevereIllnessList,
+            hasFamilyMemberUsesControlledMedication,
+            hasFamilyMemberUsesControlledMedicationList,
+            hasFamilyMemberAbusesAlcohol,
+            hasFamilyMemberAbusesAlcoholList,
+            hasFamilyMemberAbusesDrugs,
+            hasFamilyMemberAbusesDrugsList,
+
+            Date.now(),
+            Date.now()
+        );
+
+        const helphyConditionCreated = await userControle.createHelphyCondition(helphyCondition,helphyConditionId);
+
+        
+
+
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+
+})
 
 userRouter.post('/create/work/condition/observation',async (req,res)=>{
     try{
