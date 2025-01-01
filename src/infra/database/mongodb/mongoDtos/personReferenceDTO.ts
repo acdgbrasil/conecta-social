@@ -7,6 +7,7 @@ import { familyCompositionModel } from "../models/familyCompositionModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
 import { familySituationViolenceModel } from "../models/familySituationViolenceModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
+import { helphyConditionModel } from "../models/helphyConditionModel";
 import { homeConditionsModel } from "../models/homeConditionsModel";
 import { referencePersonModel } from "../models/referencePersonModel";
 import { WorkConditionModel } from "../models/workConditionModel";
@@ -63,6 +64,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
         const fistEntryInUnity = await firstEntryInUnityModel.create({})
         const homeCondition = await homeConditionsModel.create({})
         const workCondition = await WorkConditionModel.create({})
+        const helphyCondition = await helphyConditionModel.create({})
 
         const childLabel = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
         const sexualExploitation = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
@@ -106,7 +108,8 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             biologicalGender:rp.biologicalGender,
             homeConditionsId:homeCondition.id,
             workConditionId:workCondition.id,
-            familySituationViolationId:familySituationViolation.id
+            familySituationViolationId:familySituationViolation.id,
+            helphyConditionId:helphyCondition.id
         })
         
         return referencePerson

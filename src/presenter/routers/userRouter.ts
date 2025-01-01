@@ -18,7 +18,7 @@ const userControle = new UserController();
 userRouter.post('/create/helphy/condition',async (req,res)=>{
 
     try{
-        const {hasFamilyMemberNeedsConstantCare,hasFamilyMemberNeedsConstantCareList,hasFamilyMemberHasAlimentarInsecure,hasFamilyMemberUsesControlledMedication,hasFamilyMemberUsesControlledMedicationList,hasFamilyMemberAbusesAlcohol,hasFamilyMemberAbusesAlcoholList,hasFamilyMemberAbusesDrugs,hasFamilyMemberAbusesDrugsList,hasFamilyMemberSevereIllness,hasFamilyMemberSevereIllnessList,helphyConditionId,typeOfDeficiency,hasHelphyNeeds,whoIsResponsibleForHelp} = req.body;
+        const {hasFamilyMemberNeedsConstantCare,hasFamilyMemberNeedsConstantCareList,hasFamilyMemberHasAlimentarInsecure,hasFamilyMemberUsesControlledMedication,hasFamilyMemberUsesControlledMedicationList,hasFamilyMemberAbusesAlcohol,hasFamilyMemberAbusesAlcoholList,hasFamilyMemberAbusesDrugs,hasFamilyMemberAbusesDrugsList,hasFamilyMemberSevereIllness,hasFamilyMemberSevereIllnessList,helphyConditionId,typeOfDeficiency,hasHelphyNeeds,whoIsResponsibleForHelp,pregnancyMonths,hasPreNatal,familyCompositionID,personId} = req.body;
 
         if(!(typeof hasFamilyMemberNeedsConstantCare == "boolean") || hasFamilyMemberNeedsConstantCare == null){
             const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Needs Constant Care is required');
@@ -95,12 +95,25 @@ userRouter.post('/create/helphy/condition',async (req,res)=>{
             return res.status(400).json(error.toJson('Who Is Responsible For Help is required'));
         }
 
+        if(!pregnancyMonths){
+            const error = new CustomError('Bad Request',400,'Bad Request','Pregnancy Months is required');
+            return res.status(400).json(error.toJson('Pregnancy Months is required'));
+        }
 
+        if(!(typeof hasPreNatal == "boolean") || hasPreNatal == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Pre Natal is required');
+            return res.status(400).json(error.toJson('Has Pre Natal is required'));
+        }
 
+        if(!familyCompositionID){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Composition Id is required');
+            return res.status(400).json(error.toJson('Family Composition Id is required'));
+        }
 
-
-
-        
+        if(!personId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Person Id is required');
+            return res.status(400).json(error.toJson('Person Id is required'));
+        }
 
 
         const hasFamilyMemberAbusesAlcoholListStruct:HelphyConditionStruct[] = [];
@@ -136,9 +149,11 @@ userRouter.post('/create/helphy/condition',async (req,res)=>{
 
         const helphyCondition = new HelphyCondition(hasFamilyMemberNeedsConstantCare,hasFamilyMemberNeedsConstantCareListStruct,hasFamilyMemberHasAlimentarInsecure,hasFamilyMemberSevereIllness,hasFamilyMemberSevereIllnessListStruct,hasFamilyMemberUsesControlledMedication,hasFamilyMemberUsesControlledMedicationListStruct,hasFamilyMemberAbusesAlcohol,hasFamilyMemberAbusesAlcoholListStruct,hasFamilyMemberAbusesDrugs,hasFamilyMemberAbusesDrugsListStruct,new Date(),new Date());
         const HelphyConditionFamilyStruct = new HelphyConditionFamily(typeOfDeficiency,hasHelphyNeeds,whoIsResponsibleForHelp);
-        
+        const helphyConditionPrengnant = new Pregnant(pregnancyMonths,hasPreNatal,true);
 
-        return res.status(200).json({ok:helphyCondition});
+        const helphyConditionCreated = await userControle.createHelphyCondition(helphyCondition,helphyConditionId,HelphyConditionFamilyStruct,familyCompositionID,personId,helphyConditionPrengnant);
+
+        return res.status(200).json(helphyConditionCreated);
     }catch(e){
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));

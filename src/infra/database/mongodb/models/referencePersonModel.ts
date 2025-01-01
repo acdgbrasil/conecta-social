@@ -95,6 +95,10 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
         type:Schema.Types.ObjectId,
         ref:'familySituationViolence'
     },
+    helphyConditionId:{
+        type:Schema.Types.ObjectId,
+        ref:'helphyCondition'
+    },
     observations:[{
         type:observation
     }],
