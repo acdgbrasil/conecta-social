@@ -5,11 +5,12 @@ import { CustomError } from '../../infra/error/error';
 import { ReferencePerson } from '../../domain/entity/referencePerson';
 import { Observations } from '../../domain/entity/observations';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
-import { Documents, EducationConditionPerson, FamilyCompositionPerson, OcurruncyBolsaFamilia, WorkConditionPerson } from '../../domain/entity/familyComposition';
+import { Documents, EducationConditionPerson, FamilyCompositionPerson, OcurruncyBolsaFamilia, Pregnant, WorkConditionPerson } from '../../domain/entity/familyComposition';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { WorkCondition } from '../../domain/entity/workCondition';
 import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation';
 import { HelphyCondition, HelphyConditionStruct } from '../../domain/entity/healthCondition';
+import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
 
 const userRouter = Router();
 const userControle = new UserController();
@@ -17,34 +18,127 @@ const userControle = new UserController();
 userRouter.post('/create/helphy/condition',async (req,res)=>{
 
     try{
-        const {hasFamilyMemberNeedsConstantCare,hasFamilyMemberNeedsConstantCareList} = req.body;
+        const {hasFamilyMemberNeedsConstantCare,hasFamilyMemberNeedsConstantCareList,hasFamilyMemberHasAlimentarInsecure,hasFamilyMemberUsesControlledMedication,hasFamilyMemberUsesControlledMedicationList,hasFamilyMemberAbusesAlcohol,hasFamilyMemberAbusesAlcoholList,hasFamilyMemberAbusesDrugs,hasFamilyMemberAbusesDrugsList,hasFamilyMemberSevereIllness,hasFamilyMemberSevereIllnessList,helphyConditionId,typeOfDeficiency,hasHelphyNeeds,whoIsResponsibleForHelp} = req.body;
+
+        if(!(typeof hasFamilyMemberNeedsConstantCare == "boolean") || hasFamilyMemberNeedsConstantCare == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Needs Constant Care is required');
+            return res.status(400).json(error.toJson('Has Family Member Needs Constant Care is required'));
+        }
+
+        if(!hasFamilyMemberNeedsConstantCareList){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Needs Constant Care List is required');
+            return res.status(400).json(error.toJson('Has Family Member Needs Constant Care List is required'));
+        }
+
+        if(!(typeof hasFamilyMemberHasAlimentarInsecure == "boolean") || hasFamilyMemberHasAlimentarInsecure == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Has Alimentar Insecure is required');
+            return res.status(400).json(error.toJson('Has Family Member Has Alimentar Insecure is required'));
+        }
+
+        if(!(typeof hasFamilyMemberUsesControlledMedication == "boolean") || hasFamilyMemberUsesControlledMedication == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Uses Controlled Medication is required');
+            return res.status(400).json(error.toJson('Has Family Member Uses Controlled Medication is required'));
+        }
+
+        if(!hasFamilyMemberUsesControlledMedicationList){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Uses Controlled Medication List is required');
+            return res.status(400).json(error.toJson('Has Family Member Uses Controlled Medication List is required'));
+        }
+
+        if(!(typeof hasFamilyMemberAbusesAlcohol == "boolean") || hasFamilyMemberAbusesAlcohol == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Abuses Alcohol is required');
+            return res.status(400).json(error.toJson('Has Family Member Abuses Alcohol is required'));
+        }
+
+        if(!hasFamilyMemberAbusesAlcoholList){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Abuses Alcohol List is required');
+            return res.status(400).json(error.toJson('Has Family Member Abuses Alcohol List is required'));
+        }
+
+        if(!(typeof hasFamilyMemberAbusesDrugs == "boolean") || hasFamilyMemberAbusesDrugs == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Abuses Drugs is required');
+            return res.status(400).json(error.toJson('Has Family Member Abuses Drugs is required'));
+        }
+
+        if(!hasFamilyMemberAbusesDrugsList){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Abuses Drugs List is required');
+            return res.status(400).json(error.toJson('Has Family Member Abuses Drugs List is required'));
+        }
+
+        if(!(typeof hasFamilyMemberSevereIllness == "boolean") || hasFamilyMemberSevereIllness == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Severe Illness is required');
+            return res.status(400).json(error.toJson('Has Family Member Severe Illness is required'));
+        }
+
+        if(!hasFamilyMemberSevereIllnessList){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Family Member Severe Illness List is required');
+            return res.status(400).json(error.toJson('Has Family Member Severe Illness List is required'));
+        }
+
+        if(!helphyConditionId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Helphy Condition Id is required');
+            return res.status(400).json(error.toJson('Helphy Condition Id is required'));
+        }
+
+        if(!typeOfDeficiency){
+            const error = new CustomError('Bad Request',400,'Bad Request','Type Of Deficiency is required');
+            return res.status(400).json(error.toJson('Type Of Deficiency is required'));
+        }
+
+        if(!(typeof hasHelphyNeeds == "boolean") || hasHelphyNeeds == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Helphy Needs is required');
+            return res.status(400).json(error.toJson('Has Helphy Needs is required'));
+        }
+
+        if(!whoIsResponsibleForHelp){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Responsible For Help is required');
+            return res.status(400).json(error.toJson('Who Is Responsible For Help is required'));
+        }
+
+
+
+
+
+
         
 
-        const hasFamilyConstantCareList = new HelphyConditionStruct(hasFamilyConstantCareListName,hasFamilyConstantCareListComplement);
+
+        const hasFamilyMemberAbusesAlcoholListStruct:HelphyConditionStruct[] = [];
+        const hasFamilyMemberUsesControlledMedicationListStruct:HelphyConditionStruct[] = [];        
+        const hasFamilyMemberNeedsConstantCareListStruct:HelphyConditionStruct[] = [];
+        const hasFamilyMemberAbusesDrugsListStruct:HelphyConditionStruct[] = [];    
+        const hasFamilyMemberSevereIllnessListStruct:HelphyConditionStruct[] = [];
+
+        for(let familyMemberneedsConstantCarePerson of hasFamilyMemberNeedsConstantCareList){
+           const HelphyConditionStructM =  new HelphyConditionStruct(familyMemberneedsConstantCarePerson['name'],familyMemberneedsConstantCarePerson['complement']);
+           hasFamilyMemberNeedsConstantCareListStruct.push(HelphyConditionStructM);
+        }
+
+        for(let familyMemberUsesControlledMedicationPerson of hasFamilyMemberUsesControlledMedicationList){
+            const HelphyConditionStructM =  new HelphyConditionStruct(familyMemberUsesControlledMedicationPerson['name'],"");
+            hasFamilyMemberUsesControlledMedicationListStruct.push(HelphyConditionStructM);
+        }
+
+        for(let familyMemberAbusesAlcoholPerson of hasFamilyMemberAbusesAlcoholList){
+            const HelphyConditionStructM =  new HelphyConditionStruct(familyMemberAbusesAlcoholPerson['name'],"");
+            hasFamilyMemberAbusesAlcoholListStruct.push(HelphyConditionStructM);
+        }
+
+        for(let familyMemberAbusesDrugsPerson of hasFamilyMemberAbusesDrugsList){
+            const HelphyConditionStructM =  new HelphyConditionStruct(familyMemberAbusesDrugsPerson['name'],familyMemberAbusesDrugsPerson['complement']);
+            hasFamilyMemberAbusesDrugsListStruct.push(HelphyConditionStructM);
+        }
+
+        for(let familyMemberSevereIllnessPerson of hasFamilyMemberSevereIllnessList){
+            const HelphyConditionStructM =  new HelphyConditionStruct(familyMemberSevereIllnessPerson['name'],"");
+            hasFamilyMemberSevereIllnessListStruct.push(HelphyConditionStructM);
+        }
+
+        const helphyCondition = new HelphyCondition(hasFamilyMemberNeedsConstantCare,hasFamilyMemberNeedsConstantCareListStruct,hasFamilyMemberHasAlimentarInsecure,hasFamilyMemberSevereIllness,hasFamilyMemberSevereIllnessListStruct,hasFamilyMemberUsesControlledMedication,hasFamilyMemberUsesControlledMedicationListStruct,hasFamilyMemberAbusesAlcohol,hasFamilyMemberAbusesAlcoholListStruct,hasFamilyMemberAbusesDrugs,hasFamilyMemberAbusesDrugsListStruct,new Date(),new Date());
+        const HelphyConditionFamilyStruct = new HelphyConditionFamily(typeOfDeficiency,hasHelphyNeeds,whoIsResponsibleForHelp);
         
 
-        const helphyCondition = new HelphyCondition(
-            hasFamilyMemberNeedsConstantCare,
-            hasFamilyConstantCareList
-            hasFamilyIndicatesFoodInsecurity,
-            hasSevereIllness,
-            hasSevereIllnessList,
-            hasFamilyMemberUsesControlledMedication,
-            hasFamilyMemberUsesControlledMedicationList,
-            hasFamilyMemberAbusesAlcohol,
-            hasFamilyMemberAbusesAlcoholList,
-            hasFamilyMemberAbusesDrugs,
-            hasFamilyMemberAbusesDrugsList,
-
-            Date.now(),
-            Date.now()
-        );
-
-        const helphyConditionCreated = await userControle.createHelphyCondition(helphyCondition,helphyConditionId);
-
-        
-
-
+        return res.status(200).json({ok:helphyCondition});
     }catch(e){
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));

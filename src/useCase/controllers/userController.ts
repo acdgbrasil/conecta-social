@@ -1,4 +1,4 @@
-import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson } from "../../domain/entity/familyComposition";
+import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from "../../domain/entity/familyComposition";
 import { HelphyConditionFamily } from "../../domain/entity/familyHelphyCondition";
 import { FamilySituationViolation } from "../../domain/entity/familySituationViolation";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
@@ -15,10 +15,10 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
-    createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string): Promise<HelphyCondition> {
+    createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition> {
         try{
             const db = new DatabaseService();
-            return db.createHelphyCondition(HelphyCondition,helphyConditionId,familyHelphyCondition,familyCompositionID,personId);
+            return db.createHelphyCondition(HelphyCondition,helphyConditionId,familyHelphyCondition,familyCompositionID,personId,pregnant);
         }catch(e){
             throw e;
         }
