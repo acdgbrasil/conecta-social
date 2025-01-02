@@ -15,6 +15,41 @@ import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition
 const userRouter = Router();
 const userControle = new UserController();
 
+userRouter.post('/create/evently/benefits',async (req,res)=>{
+    //TODO: Implementar
+})
+
+userRouter.post('/create/helphy/condition/observation',async (req,res)=>{
+    try{
+        const {helphyConditionId,bodyObservation,whoIsObservingId} = req.body;
+        if(!helphyConditionId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Helphy Condition Id is required');
+            return res.status(400).json(error.toJson('Helphy Condition Id is required'));
+        }
+        if(!bodyObservation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
+            return res.status(400).json(error.toJson('Observation is required'));
+        }
+
+        if(!whoIsObservingId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
+            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
+        }
+
+        const observation = new Observations(bodyObservation,whoIsObservingId);
+
+        const observationCreated = await userControle.createHelphyConditionObservation(helphyConditionId,observation);
+        return res.status(201).json(observationCreated);
+
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
 userRouter.post('/create/violence/situation/observation',async (req,res)=>{
     try{
         const {familySituationViolationId,observationText,whoIsObservingId} = req.body;

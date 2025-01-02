@@ -99,6 +99,10 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
         type:Schema.Types.ObjectId,
         ref:'helphyCondition'
     },
+    eventlyBenefitId:{
+        type:Schema.Types.ObjectId,
+        ref:'eventlyBenefit'
+    },
     observations:[{
         type:observation
     }],

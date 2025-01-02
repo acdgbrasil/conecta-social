@@ -1,4 +1,5 @@
 import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from "../../domain/entity/familyComposition";
+import { FamilyEventlyBenefits } from "../../domain/entity/familyEnvetlyBenefits";
 import { HelphyConditionFamily } from "../../domain/entity/familyHelphyCondition";
 import { FamilySituationViolation } from "../../domain/entity/familySituationViolation";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
@@ -15,6 +16,14 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createFamilyEventlyBenefits(familyEventlyBenefits: FamilyEventlyBenefits, familyEventlyBenefitsId: string): Promise<FamilyEventlyBenefits> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyEventlyBenefits(familyEventlyBenefits,familyEventlyBenefitsId);
+        }catch(e){
+            throw e;
+        }
+    }
     createSituationViolationObservation(situationViolationId: string, observation: Observations): Promise<FamilySituationViolation> {
         try{
             const db = new DatabaseService();
@@ -24,7 +33,12 @@ export class UserController implements UserRepository{
         }
     }
     createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition> {
-        throw new Error("Method not implemented.");
+        try{
+            const db = new DatabaseService();
+            return db.createHelphyConditionObservation(helphyConditionId,observation);
+        }catch(e){
+            throw e;
+        }
     }
     createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition> {
         try{

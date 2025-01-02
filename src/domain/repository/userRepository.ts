@@ -1,4 +1,5 @@
 import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, Pregnant, WorkConditionPerson } from "../entity/familyComposition";
+import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits";
 import { HelphyConditionFamily } from "../entity/familyHelphyCondition";
 import { FamilySituationViolation } from "../entity/familySituationViolation";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
@@ -47,5 +48,5 @@ export interface UserRepository {
     createWorkConditionObservation(workConditionId:string,observation:string): Promise<WorkCondition>;
     createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition>;
     createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition>;
-
+    createFamilyEventlyBenefits(familyEventlyBenefits:FamilyEventlyBenefits,familyEventlyBenefitsId:string): Promise<FamilyEventlyBenefits>;
 }

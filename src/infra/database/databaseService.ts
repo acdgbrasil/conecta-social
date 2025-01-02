@@ -21,8 +21,18 @@ import { FamilySituationViolation } from '../../domain/entity/familySituationVio
 import { familySituationViolenceDTO, familySituationViolenceObservation } from './mongodb/mongoDtos/familySituationViolenceDTO';
 import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
 import { HelphyCondition } from '../../domain/entity/healthCondition';
-import { createHelphyConditionDto } from './mongodb/mongoDtos/helphConditionDto';
+import { createHelphyConditionDto, createHelphyConditionObsertionDto } from './mongodb/mongoDtos/helphConditionDto';
+import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
+import { createFamilyEventlyBenefitsDto } from './mongodb/mongoDtos/familyEventlyBenefitsDto';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    createFamilyEventlyBenefits(familyEventlyBenefits: FamilyEventlyBenefits, familyEventlyBenefitsId: string): Promise<FamilyEventlyBenefits> {
+        try{  
+            const familyBenefits = createFamilyEventlyBenefitsDto(familyEventlyBenefits, familyEventlyBenefitsId);
+            return familyBenefits;
+        }catch(e){
+            throw e;
+        }
+    }
     createSituationViolationObservation(situationViolationId: string, observation: Observations): Promise<FamilySituationViolation> {
         try{
             const familySituation = familySituationViolenceObservation(situationViolationId, observation);
@@ -32,7 +42,12 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
         }
     }
     createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition> {
-        throw new Error('Method not implemented.');
+        try{
+            const helphyCondition = createHelphyConditionObsertionDto(helphyConditionId, observation);
+            return helphyCondition;
+        }catch(e){
+            throw e;
+        }
     }
     async createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition> {
         try{

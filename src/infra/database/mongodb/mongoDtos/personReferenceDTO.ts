@@ -4,6 +4,7 @@ import { Observations } from "../../../../domain/entity/observations";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
 import { CustomError } from "../../../error/error";
 import { familyCompositionModel } from "../models/familyCompositionModel";
+import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
 import { familySituationViolenceModel } from "../models/familySituationViolenceModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
@@ -55,16 +56,29 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             throw new CustomError('CPF_ALREADY_EXISTS',400,'CPF_ALREADY_EXISTS','CPF already exists');
         }
         
-        const familyComposition = await familyCompositionModel.create({})
+        const familyComposition = await familyCompositionModel.create({
+            isInUse:false,
+        })
         const documents = new Documents(false,false,false,false,false)
         const familyCompositionReferencePerson = new FamilyCompositionPerson(rp.fullName,rp.birthDate,rp.biologicalGender,true,documents,1)
         familyComposition.familyCompositionPerson.push(familyCompositionReferencePerson)
         familyComposition.save()
 
-        const fistEntryInUnity = await firstEntryInUnityModel.create({})
-        const homeCondition = await homeConditionsModel.create({})
-        const workCondition = await WorkConditionModel.create({})
-        const helphyCondition = await helphyConditionModel.create({})
+        const fistEntryInUnity = await firstEntryInUnityModel.create({
+            inInUse:false,
+        })
+        const homeCondition = await homeConditionsModel.create({
+            inInUse:false,
+        })
+        const workCondition = await WorkConditionModel.create({
+            inInUse:false,
+        })
+        const helphyCondition = await helphyConditionModel.create({
+            inInUse:false,
+        })
+        const eventlyBenefit = await familyEventlyBenefitsModel.create({
+            inInUse:false,
+        })
 
         const childLabel = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
         const sexualExploitation = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
@@ -109,7 +123,8 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             homeConditionsId:homeCondition.id,
             workConditionId:workCondition.id,
             familySituationViolationId:familySituationViolation.id,
-            helphyConditionId:helphyCondition.id
+            helphyConditionId:helphyCondition.id,
+            eventlyBenefitId:eventlyBenefit.id,
         })
         
         return referencePerson

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { HelphyCondition, HelphyConditionStruct } from "../../../../domain/entity/healthCondition";
+import { observation } from "./observationModel";
 
 const helphyConditionStructSchema = new mongoose.Schema<HelphyConditionStruct>({
     fullName:{
@@ -68,11 +69,7 @@ const helpyConditionSchema = new mongoose.Schema<HelphyCondition>({
         }
     ],
     observations:[
-        {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'observation',
-           
-        }
+        {type:observation}
     ],
     updatedAt:{
         type:Date,
