@@ -18,11 +18,22 @@ import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
 import { WorkCondition } from '../../domain/entity/workCondition';
 import { createWorkConditionPersonDto, workConditionObservation } from './mongodb/mongoDtos/workConditionDto';
 import { FamilySituationViolation } from '../../domain/entity/familySituationViolation';
-import { familySituationViolenceDTO } from './mongodb/mongoDtos/familySituationViolenceDTO';
+import { familySituationViolenceDTO, familySituationViolenceObservation } from './mongodb/mongoDtos/familySituationViolenceDTO';
 import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
 import { HelphyCondition } from '../../domain/entity/healthCondition';
 import { createHelphyConditionDto } from './mongodb/mongoDtos/helphConditionDto';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    createSituationViolationObservation(situationViolationId: string, observation: Observations): Promise<FamilySituationViolation> {
+        try{
+            const familySituation = familySituationViolenceObservation(situationViolationId, observation);
+            return familySituation;
+        }catch(e){
+            throw e;
+        }
+    }
+    createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition> {
+        throw new Error('Method not implemented.');
+    }
     async createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition> {
         try{
             const helphyCondition = await createHelphyConditionDto(HelphyCondition,helphyConditionId);

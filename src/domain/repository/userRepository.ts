@@ -40,9 +40,12 @@ export interface UserRepository {
     createHomeConditionsObservation(observation:Observations,homeConditionsId:string): Promise<HomeConditions | Error>;
     getPersonReferencePhoto(photoId:string): Promise<PhotoResponse>;
     createSituationViolation(situationViolation:FamilySituationViolation,familySituationId:string): Promise<FamilySituationViolation>;
+    createSituationViolationObservation(situationViolationId:string,observation:Observations): Promise<FamilySituationViolation>;
     createEducationalEspecifications(educationalEspecifications:EducationConditionPerson,familySituationId:string,personId:string): Promise<FamilyComposition>;
     getFamilyCompositonPersons(familyCompositionId:string): Promise<FamilyCompositionPerson[]>;
     getInformationOfPersonAndAgeAreInSchool(familyCompositionId:string): Promise<informationEducationCondition>;
     createWorkConditionObservation(workConditionId:string,observation:string): Promise<WorkCondition>;
     createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition>;
+    createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition>;
+
 }

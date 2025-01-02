@@ -15,6 +15,17 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createSituationViolationObservation(situationViolationId: string, observation: Observations): Promise<FamilySituationViolation> {
+        try{
+            const db = new DatabaseService();
+            return db.createSituationViolationObservation(situationViolationId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
+    createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition> {
+        throw new Error("Method not implemented.");
+    }
     createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition> {
         try{
             const db = new DatabaseService();

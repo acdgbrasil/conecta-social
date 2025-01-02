@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from "../../../../domain/entity/familySituationViolation";
+import { observation } from "./observationModel";
 
 const familySituationViolationStruct = new mongoose.Schema<FamilySituationViolationStruct>({
     thisSituationOcurrent: {
@@ -37,7 +38,12 @@ const familySituationViolation = new mongoose.Schema<FamilySituationViolation>({
     other: familySituationViolationStructOther,
     isInUse: {
         type: Boolean,
-    }
+    },
+    observations: [
+        {
+            type: observation
+        }
+    ]
 })
 
 export const familySituationViolenceModel = mongoose.model('FamilySituationViolence', familySituationViolation);
