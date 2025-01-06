@@ -3,6 +3,7 @@ import { FamilySituationViolation } from "../../../../domain/entity/familySituat
 import { Observations } from "../../../../domain/entity/observations";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
 import { CustomError } from "../../../error/error";
+import { familyAndCommunityModel } from "../models/familyAndCommunityModel";
 import { familyCompositionModel } from "../models/familyCompositionModel";
 import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
@@ -80,6 +81,10 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             inInUse:false,
         })
 
+        const familyAndCommunity = await familyAndCommunityModel.create({
+            inInUse:false,
+        })
+
         const childLabel = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
         const sexualExploitation = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
         const sexualAbuse = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
@@ -125,6 +130,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             familySituationViolationId:familySituationViolation.id,
             helphyConditionId:helphyCondition.id,
             eventlyBenefitId:eventlyBenefit.id,
+            familyAndCommunityId:familyAndCommunity.id,
         })
         
         return referencePerson

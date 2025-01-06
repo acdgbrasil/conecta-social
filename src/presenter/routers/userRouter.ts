@@ -12,9 +12,170 @@ import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituati
 import { HelphyCondition, HelphyConditionStruct } from '../../domain/entity/healthCondition';
 import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
 import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
+import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity';
 
 const userRouter = Router();
 const userControle = new UserController();
+
+userRouter.post('/create/family/community/observation',async (req,res)=>{
+    try{
+        const {observation,whoIsObservingId,familyAndCommunityId} = req.body;
+        if(!observation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
+            return res.status(400).json(error.toJson('Observation is required'));
+        }
+        if(!whoIsObservingId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
+            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
+        }
+        if(!familyAndCommunityId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family And Community Id is required');
+            return res.status(400).json(error.toJson('Family And Community Id is required'));
+        }
+        const observationSchema = new Observations(observation,whoIsObservingId);
+        const observationCreated = await userControle.createFamilyAndCommunityObservation(familyAndCommunityId,observationSchema);
+        return res.status(201).json(observationCreated);
+
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.post('/create/family/community',async (req,res)=>{
+    try{
+      const {
+        yearsInState,
+        awaysLivingInState,
+        yearsInDistrict,
+        awaysLivingInDistrict,
+        yearsInNeighborhood,
+        awaysLivingInNeighborhood,
+        hasVictimOfThreatsOrDiscrimination,
+        hasNearbySupportNetwork,
+        hasNeighborSupportNetwork,
+        hasParticipatesInSupportGroups,
+        hasParticipatesInSocialMovements,
+        hasNoAccessToLeisureActivities,
+        hasElderWithoutLeisureOrSocialInteraction,
+        hasDependentsLeftAloneAtHome,
+        relationshipEvaluationByTechnician,
+        parentChildRelationshipEvaluation,
+        siblingRelationshipEvaluation,
+        conflictWithOtherResidents,
+        familyAndCommunityId
+      } = req.body;
+
+        if(!yearsInState){
+            const error = new CustomError('Bad Request',400,'Bad Request','Years In State is required');
+            return res.status(400).json(error.toJson('Years In State is required'));
+        }
+
+        if(!(typeof awaysLivingInState == "boolean") || awaysLivingInState == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Aways Living In State is required');
+            return res.status(400).json(error.toJson('Aways Living In State is required'));
+        }
+
+        if(!yearsInDistrict){
+            const error = new CustomError('Bad Request',400,'Bad Request','Years In District is required');
+            return res.status(400).json(error.toJson('Years In District is required'));
+        }
+
+        if(!(typeof awaysLivingInDistrict == "boolean") || awaysLivingInDistrict == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Aways Living In District is required');
+            return res.status(400).json(error.toJson('Aways Living In District is required'));
+        }
+
+        if(!yearsInNeighborhood){
+            const error = new CustomError('Bad Request',400,'Bad Request','Years In Neighborhood is required');
+            return res.status(400).json(error.toJson('Years In Neighborhood is required'));
+        }
+
+        if(!(typeof awaysLivingInNeighborhood == "boolean") || awaysLivingInNeighborhood == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Aways Living In Neighborhood is required');
+            return res.status(400).json(error.toJson('Aways Living In Neighborhood is required'));
+        }
+
+        if(!(typeof hasVictimOfThreatsOrDiscrimination == "boolean") || hasVictimOfThreatsOrDiscrimination == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Victim Of Threats Or Discrimination is required');
+            return res.status(400).json(error.toJson('Has Victim Of Threats Or Discrimination is required'));
+        }
+
+        if(!(typeof hasNearbySupportNetwork == "boolean") || hasNearbySupportNetwork == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Nearby Support Network is required');
+            return res.status(400).json(error.toJson('Has Nearby Support Network is required'));
+        }
+
+        if(!(typeof hasNeighborSupportNetwork == "boolean") || hasNeighborSupportNetwork == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Neighbor Support Network is required');
+            return res.status(400).json(error.toJson('Has Neighbor Support Network is required'));
+        }
+
+        if(!(typeof hasParticipatesInSupportGroups == "boolean") || hasParticipatesInSupportGroups == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Participates In Support Groups is required');
+            return res.status(400).json(error.toJson('Has Participates In Support Groups is required'));
+        }
+
+        if(!(typeof hasParticipatesInSocialMovements == "boolean") || hasParticipatesInSocialMovements == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Participates In Social Movements is required');
+            return res.status(400).json(error.toJson('Has Participates In Social Movements is required'));
+        }
+
+        if(!(typeof hasNoAccessToLeisureActivities == "boolean") || hasNoAccessToLeisureActivities == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has No Access To Leisure Activities is required');
+            return res.status(400).json(error.toJson('Has No Access To Leisure Activities is required'));
+        }
+
+        if(!(typeof hasElderWithoutLeisureOrSocialInteraction == "boolean") || hasElderWithoutLeisureOrSocialInteraction == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Elder Without Leisure Or Social Interaction is required');
+            return res.status(400).json(error.toJson('Has Elder Without Leisure Or Social Interaction is required'));
+        }
+
+        if(!(typeof hasDependentsLeftAloneAtHome == "boolean") || hasDependentsLeftAloneAtHome == null){
+            const error = new CustomError('Bad Request',400,'Bad Request','Has Dependents Left Alone At Home is required');
+            return res.status(400).json(error.toJson('Has Dependents Left Alone At Home is required'));
+        }
+
+        if(!relationshipEvaluationByTechnician){
+            const error = new CustomError('Bad Request',400,'Bad Request','Relationship Evaluation By Technician is required');
+            return res.status(400).json(error.toJson('Relationship Evaluation By Technician is required'));
+        }
+
+        if(!parentChildRelationshipEvaluation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Parent Child Relationship Evaluation is required');
+            return res.status(400).json(error.toJson('Parent Child Relationship Evaluation is required'));
+        }
+
+        if(!siblingRelationshipEvaluation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Sibling Relationship Evaluation is required');
+            return res.status(400).json(error.toJson('Sibling Relationship Evaluation is required'));
+        }
+
+        if(!conflictWithOtherResidents){
+            const error = new CustomError('Bad Request',400,'Bad Request','Conflict With Other Residents is required');
+            return res.status(400).json(error.toJson('Conflict With Other Residents is required'));
+        }
+
+        if(!familyAndCommunityId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family And Community Id is required');
+            return res.status(400).json(error.toJson('Family And Community Id is required'));
+        }
+
+        const familyCommunity = new FamilyAndCommunity(yearsInState,awaysLivingInState,yearsInDistrict,awaysLivingInDistrict,yearsInNeighborhood,awaysLivingInNeighborhood,hasVictimOfThreatsOrDiscrimination,hasNearbySupportNetwork,hasNeighborSupportNetwork,hasParticipatesInSupportGroups,hasParticipatesInSocialMovements,hasNoAccessToLeisureActivities,hasElderWithoutLeisureOrSocialInteraction,hasDependentsLeftAloneAtHome,relationshipEvaluationByTechnician,parentChildRelationshipEvaluation,siblingRelationshipEvaluation,conflictWithOtherResidents,true);
+        const familyCommunityCreated = await userControle.createFamilyAndCommunity(familyCommunity,familyAndCommunityId);
+        return res.status(201).json(familyCommunityCreated);
+        
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 
 userRouter.post('/create/evently/benefits/observation',async (req,res)=>{
     try{

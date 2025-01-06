@@ -24,7 +24,27 @@ import { HelphyCondition } from '../../domain/entity/healthCondition';
 import { createHelphyConditionDto, createHelphyConditionObsertionDto } from './mongodb/mongoDtos/helphConditionDto';
 import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
 import { createFamilyEventlyBenefitsDto, createFamilyEventlyBenefitsObservationDto } from './mongodb/mongoDtos/familyEventlyBenefitsDto';
+import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity';
+import { createFamilyAndCommunityDto, createFamilyAndCommunityObservationDto } from './mongodb/mongoDtos/familyAndCommunityDto';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+
+    createFamilyAndCommunity(familyAndCommunity: FamilyAndCommunity, familyAndCommunityId: string): Promise<FamilyAndCommunity> {
+        try{
+            const familyAndCommunityResult = createFamilyAndCommunityDto(familyAndCommunity, familyAndCommunityId);
+            return familyAndCommunityResult;
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyAndCommunityObservation(familyAndCommunityId: string, observation: Observations): Promise<FamilyAndCommunity> {
+        try{
+            const familyAndCommunity = createFamilyAndCommunityObservationDto(familyAndCommunityId, observation);
+            return familyAndCommunity;
+        }catch(e){
+            throw e;
+        }
+    }
+
     createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId: string, observation: Observations): Promise<FamilyEventlyBenefits> {
         try{
             const familyBenefits = createFamilyEventlyBenefitsObservationDto(familyEventlyBenefitsId, observation);

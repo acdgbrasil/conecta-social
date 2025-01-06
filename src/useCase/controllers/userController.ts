@@ -1,3 +1,4 @@
+import { FamilyAndCommunity } from "../../domain/entity/familyAndCommunity";
 import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from "../../domain/entity/familyComposition";
 import { FamilyEventlyBenefits } from "../../domain/entity/familyEnvetlyBenefits";
 import { HelphyConditionFamily } from "../../domain/entity/familyHelphyCondition";
@@ -16,6 +17,23 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createFamilyAndCommunity(familyAndCommunity: FamilyAndCommunity, familyAndCommunityId: string): Promise<FamilyAndCommunity> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyAndCommunity(familyAndCommunity,familyAndCommunityId);
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyAndCommunityObservation(familyAndCommunityId: string, observation: Observations): Promise<FamilyAndCommunity> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyAndCommunityObservation(familyAndCommunityId,observation);
+        }catch(e){
+            throw e;
+        }
+        
+    }
     createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId: string, observation: Observations): Promise<FamilyEventlyBenefits> {
         try{
             const db = new DatabaseService();

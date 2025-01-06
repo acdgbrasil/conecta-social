@@ -1,3 +1,4 @@
+import { FamilyAndCommunity } from "../entity/familyAndCommunity";
 import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, Pregnant, WorkConditionPerson } from "../entity/familyComposition";
 import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits";
 import { HelphyConditionFamily } from "../entity/familyHelphyCondition";
@@ -50,4 +51,6 @@ export interface UserRepository {
     createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition>;
     createFamilyEventlyBenefits(familyEventlyBenefits:FamilyEventlyBenefits,familyEventlyBenefitsId:string): Promise<FamilyEventlyBenefits>;
     createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId:string,observation:Observations): Promise<FamilyEventlyBenefits>;
+    createFamilyAndCommunity(familyAndCommunity:FamilyAndCommunity,familyAndCommunityId:string): Promise<FamilyAndCommunity>;
+    createFamilyAndCommunityObservation(familyAndCommunityId:string,observation:Observations): Promise<FamilyAndCommunity>;
 }
