@@ -49,4 +49,5 @@ export interface UserRepository {
     createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition>;
     createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition>;
     createFamilyEventlyBenefits(familyEventlyBenefits:FamilyEventlyBenefits,familyEventlyBenefitsId:string): Promise<FamilyEventlyBenefits>;
+    createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId:string,observation:Observations): Promise<FamilyEventlyBenefits>;
 }

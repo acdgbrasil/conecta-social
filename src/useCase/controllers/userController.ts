@@ -16,6 +16,14 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId: string, observation: Observations): Promise<FamilyEventlyBenefits> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
     createFamilyEventlyBenefits(familyEventlyBenefits: FamilyEventlyBenefits, familyEventlyBenefitsId: string): Promise<FamilyEventlyBenefits> {
         try{
             const db = new DatabaseService();

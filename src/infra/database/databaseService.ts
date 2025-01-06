@@ -23,8 +23,16 @@ import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition
 import { HelphyCondition } from '../../domain/entity/healthCondition';
 import { createHelphyConditionDto, createHelphyConditionObsertionDto } from './mongodb/mongoDtos/helphConditionDto';
 import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
-import { createFamilyEventlyBenefitsDto } from './mongodb/mongoDtos/familyEventlyBenefitsDto';
+import { createFamilyEventlyBenefitsDto, createFamilyEventlyBenefitsObservationDto } from './mongodb/mongoDtos/familyEventlyBenefitsDto';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId: string, observation: Observations): Promise<FamilyEventlyBenefits> {
+        try{
+            const familyBenefits = createFamilyEventlyBenefitsObservationDto(familyEventlyBenefitsId, observation);
+            return familyBenefits;
+        }catch(e){
+            throw e;
+        }
+    }
     createFamilyEventlyBenefits(familyEventlyBenefits: FamilyEventlyBenefits, familyEventlyBenefitsId: string): Promise<FamilyEventlyBenefits> {
         try{  
             const familyBenefits = createFamilyEventlyBenefitsDto(familyEventlyBenefits, familyEventlyBenefitsId);

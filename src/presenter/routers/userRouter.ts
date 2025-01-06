@@ -11,12 +11,81 @@ import { WorkCondition } from '../../domain/entity/workCondition';
 import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation';
 import { HelphyCondition, HelphyConditionStruct } from '../../domain/entity/healthCondition';
 import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
+import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
 
 const userRouter = Router();
 const userControle = new UserController();
 
+userRouter.post('/create/evently/benefits/observation',async (req,res)=>{
+    try{
+        const {observation,whoIsObservingId,familyEventlyBenefitsId} = req.body;
+        if(!observation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
+            return res.status(400).json(error.toJson('Observation is required'));
+        }
+        if(!whoIsObservingId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
+            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
+        }
+        if(!familyEventlyBenefitsId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Evently Benefits Id is required');
+            return res.status(400).json(error.toJson('Family Evently Benefits Id is required'));
+        }
+        const observationSchema = new Observations(observation,whoIsObservingId);
+        const observationCreated = await userControle.createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId,observationSchema);
+        return res.status(201).json(observationCreated);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
 userRouter.post('/create/evently/benefits',async (req,res)=>{
-    //TODO: Implementar
+    try{
+        const { date,typeOfBenefit,nBirthDate,nCpf,familyEventlyBenefitsId } = req.body;
+
+        if(!date){
+            const error = new CustomError('Bad Request',400,'Bad Request','Date is required');
+            return res.status(400).json(error.toJson('Date is required'));
+        }
+    
+        if(!typeOfBenefit){
+            const error = new CustomError('Bad Request',400,'Bad Request','Type Of Benefit is required');
+            return res.status(400).json(error.toJson('Type Of Benefit is required'));
+        }
+    
+        if(!nBirthDate){
+            const error = new CustomError('Bad Request',400,'Bad Request','Birth Date is required');
+            return res.status(400).json(error.toJson('Birth Date is required'));
+        }
+    
+        if(!nCpf){
+            const error = new CustomError('Bad Request',400,'Bad Request','Cpf is required');
+            return res.status(400).json(error.toJson('Cpf is required'));
+        }
+    
+        if(!familyEventlyBenefitsId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Evently Benefits Id is required');
+            return res.status(400).json(error.toJson('Family Evently Benefits Id is required'));
+        }
+    
+        const dateFormater = new Date(date);
+    
+        const eventlyBenefit = new FamilyEventlyBenefits(dateFormater,typeOfBenefit,nBirthDate,nCpf,true);
+    
+        const eventlyBenefitCreated = await userControle.createFamilyEventlyBenefits(eventlyBenefit,familyEventlyBenefitsId);
+    
+        return res.status(201).json(eventlyBenefitCreated);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
 })
 
 userRouter.post('/create/helphy/condition/observation',async (req,res)=>{
