@@ -13,9 +13,55 @@ import { HelphyCondition, HelphyConditionStruct } from '../../domain/entity/heal
 import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
 import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
 import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity';
+import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitaryConvivation';
 
 const userRouter = Router();
 const userControle = new UserController();
+
+
+userRouter.post('/create/family/comunitary/convivation/person',async (req,res)=>{
+    try{
+        const {dateOfInitJson,dateOfFinishJson,unity,serviceType,familyCompositionID,personId} = req.body;
+        
+        if(!dateOfInitJson){
+            const error = new CustomError('Bad Request',400,'Bad Request','Date Of Init is required');
+            return res.status(400).json(error.toJson('Date Of Init is required'));
+        }
+        if(!dateOfFinishJson){
+            const error = new CustomError('Bad Request',400,'Bad Request','Date Of Finish is required');
+            return res.status(400).json(error.toJson('Date Of Finish is required'));
+        }
+        if(!unity){
+            const error = new CustomError('Bad Request',400,'Bad Request','Unity is required');
+            return res.status(400).json(error.toJson('Unity is required'));
+        }
+        if(!serviceType){
+            const error = new CustomError('Bad Request',400,'Bad Request','Service Type is required');
+            return res.status(400).json(error.toJson('Service Type is required'));
+        }
+        if(!familyCompositionID){
+            const error = new CustomError('Bad Request',400,'Bad Request','Family Composition Id is required');
+            return res.status(400).json(error.toJson('Family Composition Id is required'));
+        }
+        if(!personId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Person Id is required');
+            return res.status(400).json(error.toJson('Person Id is required'));
+        }
+
+        
+        const dateOfInit = new Date(dateOfInitJson);
+        const dateOfFinish = new Date(dateOfFinishJson);
+        const familyComunitaryConvivation = new FamilyComunitaryConvivation(dateOfInit,dateOfFinish,unity,serviceType);
+        const createFamilyComunitaryConvivationPerson = await userControle.createFamilyComunitaryConvivationPerson(familyComunitaryConvivation,familyCompositionID,personId);
+        return res.status(201).json(createFamilyComunitaryConvivationPerson);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
 
 userRouter.post('/create/family/community/observation',async (req,res)=>{
     try{
