@@ -11,7 +11,7 @@ import { createReferencePerson, createReferencePersonObservation, getByIdReferen
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from '../../domain/entity/familyComposition';
-import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyComunitaryConvivationPersonDTO, createFamilyEducationCondition, createFamilyPerson, createPregnant, createSocialEspecifications, familyHelphyConditionDto, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool } from './mongodb/mongoDtos/familyCompositionDto';
+import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyComunitaryConvivationPersonDTO, createFamilyEducationCondition, createFamilyHistorySocioEducationPersonDto, createFamilyPerson, createPregnant, createSocialEspecifications, familyHelphyConditionDto, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool, insertLaOrPSCInformationDto } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
@@ -27,7 +27,27 @@ import { createFamilyEventlyBenefitsDto, createFamilyEventlyBenefitsObservationD
 import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity';
 import { createFamilyAndCommunityDto, createFamilyAndCommunityObservationDto } from './mongodb/mongoDtos/familyAndCommunityDto';
 import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitaryConvivation';
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from '../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures';
+import { createAnotationsOfPersons, createFamilyHistoryOfComplianseSocioEducationalMensureObservation,  } from './mongodb/mongoDtos/familyHistoryOfComplianseSocioEducationalMensureDto';
+import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySocioEducation';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+
+    createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId: string, observation: Observations): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
+        try{
+            const familyHistory = createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId, observation);
+            return familyHistory;
+        }catch(e){throw e}
+    }
+    
+    createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation:boolean, createFamilyHistoryOfComplianseSocioEducationalMensureId: string, familyHistorySocioEducation: FamilyHistorySocioEducation, familyCompositionId: string, personId: string, anotationsOfPersons: string): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
+        try{
+            const _ = createFamilyHistorySocioEducationPersonDto(familyHistorySocioEducation, familyCompositionId, personId);
+            const familyHistory = createAnotationsOfPersons(anotationsOfPersons, createFamilyHistoryOfComplianseSocioEducationalMensureId);
+            const __ = insertLaOrPSCInformationDto(familyCompositionId,personId,laOrPSCInfomation);
+            return familyHistory;
+        }catch(e){throw e}
+    }
+   
     createFamilyComunitaryConvivationPerson(familyComunitaryConvivation: FamilyComunitaryConvivation, familyCompositionID: string, id: string): Promise<FamilyComposition> {
         try{
             const familyComposition = createFamilyComunitaryConvivationPersonDTO(familyComunitaryConvivation, familyCompositionID, id);

@@ -3,6 +3,8 @@ import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPer
 import { FamilyComunitaryConvivation } from "../../domain/entity/familyComunitaryConvivation";
 import { FamilyEventlyBenefits } from "../../domain/entity/familyEnvetlyBenefits";
 import { HelphyConditionFamily } from "../../domain/entity/familyHelphyCondition";
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures";
+import { FamilyHistorySocioEducation } from "../../domain/entity/familyHistorySocioEducation";
 import { FamilySituationViolation } from "../../domain/entity/familySituationViolation";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
 import { HelphyCondition } from "../../domain/entity/healthCondition";
@@ -18,6 +20,23 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation: boolean, createFamilyHistoryOfComplianseSocioEducationalMensureId: string, familyHistorySocioEducation: FamilyHistorySocioEducation, familyCompositionId: string, personId: string, anotationsOfPersons: string): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation,createFamilyHistoryOfComplianseSocioEducationalMensureId,familyHistorySocioEducation,familyCompositionId,personId,anotationsOfPersons);
+        }catch(e){
+            throw e;
+        }
+    }
+  
+    createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId: string, observation: Observations): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
     createFamilyComunitaryConvivationPerson(familyComunitaryConvivation: FamilyComunitaryConvivation, familyCompositionID: string, id: string): Promise<FamilyComposition> {
         try{
             const db = new DatabaseService();

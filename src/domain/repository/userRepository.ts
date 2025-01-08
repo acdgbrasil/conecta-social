@@ -3,6 +3,8 @@ import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositi
 import { FamilyComunitaryConvivation } from "../entity/familyComunitaryConvivation";
 import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits";
 import { HelphyConditionFamily } from "../entity/familyHelphyCondition";
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../entity/familyHistoryOfComplianceSocioEducationalMeasures";
+import { FamilyHistorySocioEducation } from "../entity/familyHistorySocioEducation";
 import { FamilySituationViolation } from "../entity/familySituationViolation";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
 import { HelphyCondition } from "../entity/healthCondition";
@@ -55,4 +57,6 @@ export interface UserRepository {
     createFamilyAndCommunity(familyAndCommunity:FamilyAndCommunity,familyAndCommunityId:string): Promise<FamilyAndCommunity>;
     createFamilyAndCommunityObservation(familyAndCommunityId:string,observation:Observations): Promise<FamilyAndCommunity>;
     createFamilyComunitaryConvivationPerson(familyComunitaryConvivation:FamilyComunitaryConvivation,familyCompositionID:string,id:string): Promise<FamilyComposition>;
+    createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation:boolean, createFamilyHistoryOfComplianseSocioEducationalMensureId: string, familyHistorySocioEducation: FamilyHistorySocioEducation, familyCompositionId: string, personId: string, anotationsOfPersons: string): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures>;
+    createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId:string,observation:Observations): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures>;
 }

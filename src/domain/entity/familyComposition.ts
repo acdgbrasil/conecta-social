@@ -109,6 +109,7 @@ export class FamilyCompositionPerson{
     familyComunitaryConvivation?:FamilyComunitaryConvivation;
     familyHistorySocioEducation?:FamilyHistorySocioEducation;
     familyInstitutionalHistory?:FamilyInstitucionalHistory;
+    historySocialLaOrPSC?:Boolean;
     
     constructor(fullName:string, birthDate:Date, biologicalGender:string, personWithDisability:boolean, documents:Documents, kinship:number){
         this.fullName = fullName;

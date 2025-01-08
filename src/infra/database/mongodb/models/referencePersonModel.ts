@@ -107,6 +107,10 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
         type:Schema.Types.ObjectId,
         ref:'familyAndCommunity'
     },
+    familyHistoryOfComplianceSocialEducationalMensuresId:{
+        type:Schema.Types.ObjectId,
+        ref:'familyHistoryOfComplianceSocialEducationalMensures'
+    },
     observations:[{
         type:observation
     }],

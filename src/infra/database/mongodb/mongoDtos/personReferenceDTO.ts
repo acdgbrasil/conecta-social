@@ -6,6 +6,7 @@ import { CustomError } from "../../../error/error";
 import { familyAndCommunityModel } from "../models/familyAndCommunityModel";
 import { familyCompositionModel } from "../models/familyCompositionModel";
 import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel";
+import { familyHistoryOfComplianceSocioEducationalMeasuresModel } from "../models/familyHistoryOfComplianceSocioEducationalMeasuresModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
 import { familySituationViolenceModel } from "../models/familySituationViolenceModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
@@ -27,6 +28,7 @@ export const getByIdReferencePerson = async (id:string) => {
 export const listAllReferencePerson = async () => {
     try {
         const referencePerson = await referencePersonModel.find();
+        console.log(referencePerson.map((rp)=>rp.familyHistoryOfComplianceSocialEducationalMensuresId))
         return referencePerson;
     } catch (error) {
         throw error
@@ -85,6 +87,10 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             inInUse:false,
         })
 
+        const familyHistoryOfComplienceSocialEducational = await familyHistoryOfComplianceSocioEducationalMeasuresModel.create({
+            inInUse:false,
+        })
+        
         const childLabel = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
         const sexualExploitation = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
         const sexualAbuse = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
@@ -131,6 +137,7 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             helphyConditionId:helphyCondition.id,
             eventlyBenefitId:eventlyBenefit.id,
             familyAndCommunityId:familyAndCommunity.id,
+            familyHistoryOfComplianceSocialEducationalMensuresId:familyHistoryOfComplienceSocialEducational.id
         })
         
         return referencePerson

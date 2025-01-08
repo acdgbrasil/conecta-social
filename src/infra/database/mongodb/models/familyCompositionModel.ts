@@ -188,6 +188,9 @@ const familyCompositionPerson = new mongoose.Schema<FamilyCompositionPerson>({
     kinship:{
         type:Number,
     },
+    historySocialLaOrPSC:{
+        type:Boolean,
+    },  
     educationConditionPerson:{
         type:educationConditionPerson
     },
