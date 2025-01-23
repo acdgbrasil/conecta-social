@@ -319,33 +319,6 @@ userRouter.post('/create/family/community',async (req,res)=>{
     }
 })
 
-userRouter.post('/create/evently/benefits/observation',async (req,res)=>{
-    try{
-        const {observation,whoIsObservingId,familyEventlyBenefitsId} = req.body;
-        if(!observation){
-            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
-            return res.status(400).json(error.toJson('Observation is required'));
-        }
-        if(!whoIsObservingId){
-            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
-            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
-        }
-        if(!familyEventlyBenefitsId){
-            const error = new CustomError('Bad Request',400,'Bad Request','Family Evently Benefits Id is required');
-            return res.status(400).json(error.toJson('Family Evently Benefits Id is required'));
-        }
-        const observationSchema = new Observations(observation,whoIsObservingId);
-        const observationCreated = await userControle.createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId,observationSchema);
-        return res.status(201).json(observationCreated);
-    }catch(e){
-        if(e instanceof CustomError){
-            res.status(e.statusCode).json(e.toJson(e.message));
-        }else{
-            res.status(500).json({error:'Internal server error'});
-        }
-    }
-})
-
 userRouter.post('/create/evently/benefits',async (req,res)=>{
     try{
         const { date,typeOfBenefit,nBirthDate,nCpf,familyEventlyBenefitsId } = req.body;
@@ -391,7 +364,7 @@ userRouter.post('/create/evently/benefits',async (req,res)=>{
     }
 })
 
-userRouter.post('/create/helphy/condition/observation',async (req,res)=>{
+userRouter.post('/create/health/condition/observation',async (req,res)=>{
     try{
         const {helphyConditionId,bodyObservation,whoIsObservingId} = req.body;
         if(!helphyConditionId){
@@ -452,7 +425,35 @@ userRouter.post('/create/violence/situation/observation',async (req,res)=>{
     }
 })
 
-userRouter.post('/create/helphy/condition',async (req,res)=>{
+userRouter.post('/create/health/condition/observation',async (req,res)=>{
+    try{
+        const {helphyConditionId,observation,whoIsObservingId} = req.body;
+        if(!helphyConditionId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Helphy Condition Id is required');
+            return res.status(400).json(error.toJson('Helphy Condition Id is required'));
+        }
+        if(!observation){
+            const error = new CustomError('Bad Request',400,'Bad Request','Observation is required');
+            return res.status(400).json(error.toJson('Observation is required'));
+        }
+        if(!whoIsObservingId){
+            const error = new CustomError('Bad Request',400,'Bad Request','Who Is Observing Id is required');
+            return res.status(400).json(error.toJson('Who Is Observing Id is required'));
+        }
+        const observationSchema = new Observations(observation,whoIsObservingId);
+        const observationCreated = await userControle.createHelphyConditionObservation(helphyConditionId,observationSchema);
+        return res.status(201).json(observationCreated);
+
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+})
+
+userRouter.post('/create/health/condition',async (req,res)=>{
 
     try{
         const {hasFamilyMemberNeedsConstantCare,hasFamilyMemberNeedsConstantCareList,hasFamilyMemberHasAlimentarInsecure,hasFamilyMemberUsesControlledMedication,hasFamilyMemberUsesControlledMedicationList,hasFamilyMemberAbusesAlcohol,hasFamilyMemberAbusesAlcoholList,hasFamilyMemberAbusesDrugs,hasFamilyMemberAbusesDrugsList,hasFamilyMemberSevereIllness,hasFamilyMemberSevereIllnessList,helphyConditionId,typeOfDeficiency,hasHelphyNeeds,whoIsResponsibleForHelp,pregnancyMonths,hasPreNatal,familyCompositionID,personId} = req.body;
