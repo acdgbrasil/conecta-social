@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../../../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures";
-import { Observations } from "../../../../domain/entity/observations";
 import { observation } from "./observationModel";
 
 const familyHistoryOfComplianceSocioEducationalMeasuresSchema = new mongoose.Schema<FamilyHistoryOfComplianceSocioEducationalMeasures>({

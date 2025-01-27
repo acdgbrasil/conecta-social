@@ -14,7 +14,6 @@ import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition
 import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
 import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity';
 import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitaryConvivation';
-import { FamilyHistoryOfComplianceSocioEducationalMeasures } from '../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures';
 import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySocioEducation';
 import { FamilyHistoryInstitutionalComplet, otherFamilySeparationSituationsStruct } from '../../domain/entity/familyHistoryInstitutionalComplet';
 import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory';
@@ -694,7 +693,7 @@ userRouter.post('/create/health/condition',async (req,res)=>{
 
         const helphyConditionCreated = await userControle.createHelphyCondition(helphyCondition,helphyConditionId,HelphyConditionFamilyStruct,familyCompositionID,personId,helphyConditionPrengnant);
 
-        return res.status(200).json(helphyConditionCreated);
+        return res.status(201).json(helphyConditionCreated);
     }catch(e){
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
