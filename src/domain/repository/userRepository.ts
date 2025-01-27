@@ -3,8 +3,10 @@ import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositi
 import { FamilyComunitaryConvivation } from "../entity/familyComunitaryConvivation";
 import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits";
 import { HelphyConditionFamily } from "../entity/familyHelphyCondition";
+import { FamilyHistoryInstitutionalComplet } from "../entity/familyHistoryInstitutionalComplet";
 import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../entity/familyHistoryOfComplianceSocioEducationalMeasures";
 import { FamilyHistorySocioEducation } from "../entity/familyHistorySocioEducation";
+import { FamilyInstitucionalHistory } from "../entity/familyInstitucionalHistory";
 import { FamilySituationViolation } from "../entity/familySituationViolation";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
 import { HelphyCondition } from "../entity/healthCondition";
@@ -59,4 +61,6 @@ export interface UserRepository {
     createFamilyComunitaryConvivationPerson(familyComunitaryConvivation:FamilyComunitaryConvivation,familyCompositionID:string,id:string): Promise<FamilyComposition>;
     createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation:boolean, createFamilyHistoryOfComplianseSocioEducationalMensureId: string, familyHistorySocioEducation: FamilyHistorySocioEducation, familyCompositionId: string, personId: string, anotationsOfPersons: string): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures>;
     createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId:string,observation:Observations): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures>;
+    createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet:FamilyHistoryInstitutionalComplet,familyHistoryInstitutionalCompletId:string,familuInstitucionalHistoryPerson:FamilyInstitucionalHistory,familyCompositionId:string,personId:string): Promise<FamilyHistoryInstitutionalComplet>;
+    createFamilyHistoryInstitutionalCompletObservation(familyHistoryInstitutionalCompletId:string,observation:Observations): Promise<FamilyHistoryInstitutionalComplet>;
 }

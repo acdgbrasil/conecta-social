@@ -39,6 +39,7 @@ export class ReferencePerson {
     workConditionId?: string
     familyAndCommunityId?: string
     familyHistoryOfComplianceSocialEducationalMensuresId?: string
+    familyHistoryInstitutionalCompletId?: string
     whoIsOpeningId: string
 
 

@@ -3,8 +3,10 @@ import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPer
 import { FamilyComunitaryConvivation } from "../../domain/entity/familyComunitaryConvivation";
 import { FamilyEventlyBenefits } from "../../domain/entity/familyEnvetlyBenefits";
 import { HelphyConditionFamily } from "../../domain/entity/familyHelphyCondition";
+import { FamilyHistoryInstitutionalComplet } from "../../domain/entity/familyHistoryInstitutionalComplet";
 import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures";
 import { FamilyHistorySocioEducation } from "../../domain/entity/familyHistorySocioEducation";
+import { FamilyInstitucionalHistory } from "../../domain/entity/familyInstitucionalHistory";
 import { FamilySituationViolation } from "../../domain/entity/familySituationViolation";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
 import { HelphyCondition } from "../../domain/entity/healthCondition";
@@ -20,6 +22,22 @@ import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
 export class UserController implements UserRepository{
+    createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet: FamilyHistoryInstitutionalComplet, familyHistoryInstitutionalCompletId: string, familuInstitucionalHistoryPerson: FamilyInstitucionalHistory, familyCompositionId: string, personId: string): Promise<FamilyHistoryInstitutionalComplet> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet,familyHistoryInstitutionalCompletId,familuInstitucionalHistoryPerson,familyCompositionId,personId);
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyHistoryInstitutionalCompletObservation(familyHistoryInstitutionalCompletId: string, observation: Observations): Promise<FamilyHistoryInstitutionalComplet> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyHistoryInstitutionalCompletObservation(familyHistoryInstitutionalCompletId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
     createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation: boolean, createFamilyHistoryOfComplianseSocioEducationalMensureId: string, familyHistorySocioEducation: FamilyHistorySocioEducation, familyCompositionId: string, personId: string, anotationsOfPersons: string): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
         try{
             const db = new DatabaseService();

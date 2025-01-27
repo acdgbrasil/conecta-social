@@ -6,6 +6,7 @@ import { CustomError } from "../../../error/error";
 import { familyAndCommunityModel } from "../models/familyAndCommunityModel";
 import { familyCompositionModel } from "../models/familyCompositionModel";
 import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel";
+import { FamilyHistoryInstitutionalCompletModel } from "../models/familyHistoryInstutionalCompletModel";
 import { familyHistoryOfComplianceSocioEducationalMeasuresModel } from "../models/familyHistoryOfComplianceSocioEducationalMeasuresModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
 import { familySituationViolenceModel } from "../models/familySituationViolenceModel";
@@ -28,7 +29,6 @@ export const getByIdReferencePerson = async (id:string) => {
 export const listAllReferencePerson = async () => {
     try {
         const referencePerson = await referencePersonModel.find();
-        console.log(referencePerson.map((rp)=>rp.familyHistoryOfComplianceSocialEducationalMensuresId))
         return referencePerson;
     } catch (error) {
         throw error
@@ -90,6 +90,10 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
         const familyHistoryOfComplienceSocialEducational = await familyHistoryOfComplianceSocioEducationalMeasuresModel.create({
             inInUse:false,
         })
+
+        const FamilyHistoryInstitutionalComplet = await FamilyHistoryInstitutionalCompletModel.create({
+            isInUse:false,
+        })
         
         const childLabel = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
         const sexualExploitation = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
@@ -137,7 +141,8 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             helphyConditionId:helphyCondition.id,
             eventlyBenefitId:eventlyBenefit.id,
             familyAndCommunityId:familyAndCommunity.id,
-            familyHistoryOfComplianceSocialEducationalMensuresId:familyHistoryOfComplienceSocialEducational.id
+            familyHistoryOfComplianceSocialEducationalMensuresId:familyHistoryOfComplienceSocialEducational.id,
+            familyHistoryInstitutionalCompletId:FamilyHistoryInstitutionalComplet.id
         })
         
         return referencePerson

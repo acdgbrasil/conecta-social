@@ -11,7 +11,7 @@ import { createReferencePerson, createReferencePersonObservation, getByIdReferen
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
 import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from '../../domain/entity/familyComposition';
-import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyComunitaryConvivationPersonDTO, createFamilyEducationCondition, createFamilyHistorySocioEducationPersonDto, createFamilyPerson, createPregnant, createSocialEspecifications, familyHelphyConditionDto, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool, insertLaOrPSCInformationDto } from './mongodb/mongoDtos/familyCompositionDto';
+import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyComunitaryConvivationPersonDTO, createFamilyEducationCondition, createFamilyHistorySocioEducationPersonDto, createFamilyPerson, createPregnant, createSocialEspecifications, familyHelphyConditionDto, familyHistoryIntitutionalPersonDto, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool, insertLaOrPSCInformationDto } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
@@ -30,7 +30,24 @@ import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitar
 import { FamilyHistoryOfComplianceSocioEducationalMeasures } from '../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures';
 import { createAnotationsOfPersons, createFamilyHistoryOfComplianseSocioEducationalMensureObservation,  } from './mongodb/mongoDtos/familyHistoryOfComplianseSocioEducationalMensureDto';
 import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySocioEducation';
+import { FamilyHistoryInstitutionalComplet } from '../../domain/entity/familyHistoryInstitutionalComplet';
+import { familyHistoryIntitutionalCompletDto, familyHistoryIntitutionalCompletObservationDto } from './mongodb/mongoDtos/familyHistoryInstitutionalCompletDTO';
+import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet: FamilyHistoryInstitutionalComplet, familyHistoryInstitutionalCompletId: string, familuInstitucionalHistoryPerson: FamilyInstitucionalHistory, familyCompositionId: string, personId: string): Promise<FamilyHistoryInstitutionalComplet> {
+        try{
+            const familyHistory = familyHistoryIntitutionalCompletDto(familyHistoryInstitutionalComplet, familyHistoryInstitutionalCompletId);
+            const __ = familyHistoryIntitutionalPersonDto(familuInstitucionalHistoryPerson, familyCompositionId, personId);
+            return familyHistory;
+        }catch(e){throw e}
+    }
+ 
+    createFamilyHistoryInstitutionalCompletObservation(familyHistoryInstitutionalCompletId: string, observation: Observations): Promise<FamilyHistoryInstitutionalComplet> {
+        try{
+            const familyHistory = familyHistoryIntitutionalCompletObservationDto(observation, familyHistoryInstitutionalCompletId);
+            return familyHistory;
+        }catch(e){throw e}
+    }
 
     createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId: string, observation: Observations): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
         try{
@@ -321,7 +338,6 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
         try{
         const hasCode = await findCode(code);
-        console.log(hasCode)
         if(!hasCode){
             throw new CustomError('CODE_NOT_FOUND', 404,'CODE_NOT_FOUND', 'Code not found');
         }

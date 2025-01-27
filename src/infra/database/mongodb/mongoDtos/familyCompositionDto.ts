@@ -7,6 +7,7 @@ import { WorkCondition } from "../../../../domain/entity/workCondition";
 import { HelphyConditionFamily } from "../../../../domain/entity/familyHelphyCondition";
 import { FamilyComunitaryConvivation } from "../../../../domain/entity/familyComunitaryConvivation";
 import { FamilyHistorySocioEducation } from "../../../../domain/entity/familyHistorySocioEducation";
+import { FamilyInstitucionalHistory } from "../../../../domain/entity/familyInstitucionalHistory";
 
 export const getFamilyCompositonPersonsDto = async (familyCompositionId:string) => {
     try {
@@ -271,5 +272,21 @@ export const insertLaOrPSCInformationDto = async (familyCompositionID:string,per
         return familyComposition
     } catch (err) {
         throw err 
+    }
+}
+
+export const familyHistoryIntitutionalPersonDto = async (familuInstitucionalHistoryPerson:FamilyInstitucionalHistory,familyCompositionId:string,personId:string) => {
+    try{
+        const familyComposition = await familyCompositionModel.findById(familyCompositionId)
+        if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
+        const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == personId)
+        if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
+
+        familyCompositionPerson.familyInstitutionalHistory = familuInstitucionalHistoryPerson
+        familyComposition.isInUse = true
+        familyComposition.save()
+        return familyComposition
+    }catch(e){
+        throw e
     }
 }
