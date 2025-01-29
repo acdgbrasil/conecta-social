@@ -1,5 +1,5 @@
 import { User } from '../../domain/entity/user';
-import {PhotoResponse, UserRepository} from '../../domain/repository/userRepository';
+import {informationEducationCondition, PhotoResponse, UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
@@ -10,16 +10,163 @@ import { Observations } from '../../domain/entity/observations';
 import { createReferencePerson, createReferencePersonObservation, getByIdReferencePerson, listAllReferencePerson } from './mongodb/mongoDtos/personReferenceDTO';
 import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
 import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
-import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson } from '../../domain/entity/familyComposition';
-import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyPerson, createSocialEspecifications } from './mongodb/mongoDtos/familyCompositionDto';
+import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from '../../domain/entity/familyComposition';
+import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyComunitaryConvivationPersonDTO, createFamilyEducationCondition, createFamilyHistorySocioEducationPersonDto, createFamilyPerson, createPregnant, createSocialEspecifications, familyHelphyConditionDto, familyHistoryIntitutionalPersonDto, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool, insertLaOrPSCInformationDto } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
 import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
 import { WorkCondition } from '../../domain/entity/workCondition';
-import { createWorkConditionPersonDto } from './mongodb/mongoDtos/workConditionDto';
+import { createWorkConditionPersonDto, workConditionObservation } from './mongodb/mongoDtos/workConditionDto';
 import { FamilySituationViolation } from '../../domain/entity/familySituationViolation';
-import { familySituationViolenceDTO } from './mongodb/mongoDtos/familySituationViolenceDTO';
+import { familySituationViolenceDTO, familySituationViolenceObservation } from './mongodb/mongoDtos/familySituationViolenceDTO';
+import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
+import { HelphyCondition } from '../../domain/entity/healthCondition';
+import { createHelphyConditionDto, createHelphyConditionObsertionDto } from './mongodb/mongoDtos/helphConditionDto';
+import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
+import { createFamilyEventlyBenefitsDto, createFamilyEventlyBenefitsObservationDto } from './mongodb/mongoDtos/familyEventlyBenefitsDto';
+import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity';
+import { createFamilyAndCommunityDto, createFamilyAndCommunityObservationDto } from './mongodb/mongoDtos/familyAndCommunityDto';
+import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitaryConvivation';
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from '../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures';
+import { createAnotationsOfPersons, createFamilyHistoryOfComplianseSocioEducationalMensureObservation,  } from './mongodb/mongoDtos/familyHistoryOfComplianseSocioEducationalMensureDto';
+import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySocioEducation';
+import { FamilyHistoryInstitutionalComplet } from '../../domain/entity/familyHistoryInstitutionalComplet';
+import { familyHistoryIntitutionalCompletDto, familyHistoryIntitutionalCompletObservationDto } from './mongodb/mongoDtos/familyHistoryInstitutionalCompletDTO';
+import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
+    createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet: FamilyHistoryInstitutionalComplet, familyHistoryInstitutionalCompletId: string, familuInstitucionalHistoryPerson: FamilyInstitucionalHistory, familyCompositionId: string, personId: string): Promise<FamilyHistoryInstitutionalComplet> {
+        try{
+            const familyHistory = familyHistoryIntitutionalCompletDto(familyHistoryInstitutionalComplet, familyHistoryInstitutionalCompletId);
+            const __ = familyHistoryIntitutionalPersonDto(familuInstitucionalHistoryPerson, familyCompositionId, personId);
+            return familyHistory;
+        }catch(e){throw e}
+    }
+ 
+    createFamilyHistoryInstitutionalCompletObservation(familyHistoryInstitutionalCompletId: string, observation: Observations): Promise<FamilyHistoryInstitutionalComplet> {
+        try{
+            const familyHistory = familyHistoryIntitutionalCompletObservationDto(observation, familyHistoryInstitutionalCompletId);
+            return familyHistory;
+        }catch(e){throw e}
+    }
+
+    createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId: string, observation: Observations): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
+        try{
+            const familyHistory = createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId, observation);
+            return familyHistory;
+        }catch(e){throw e}
+    }
+    
+    createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation:boolean, createFamilyHistoryOfComplianseSocioEducationalMensureId: string, familyHistorySocioEducation: FamilyHistorySocioEducation, familyCompositionId: string, personId: string, anotationsOfPersons: string): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
+        try{
+            const _ = createFamilyHistorySocioEducationPersonDto(familyHistorySocioEducation, familyCompositionId, personId);
+            const familyHistory = createAnotationsOfPersons(anotationsOfPersons, createFamilyHistoryOfComplianseSocioEducationalMensureId);
+            const __ = insertLaOrPSCInformationDto(familyCompositionId,personId,laOrPSCInfomation);
+            return familyHistory;
+        }catch(e){throw e}
+    }
+   
+    createFamilyComunitaryConvivationPerson(familyComunitaryConvivation: FamilyComunitaryConvivation, familyCompositionID: string, id: string): Promise<FamilyComposition> {
+        try{
+            const familyComposition = createFamilyComunitaryConvivationPersonDTO(familyComunitaryConvivation, familyCompositionID, id);
+            return familyComposition;
+        }catch(e){
+            throw e;
+        }
+    }
+
+    createFamilyAndCommunity(familyAndCommunity: FamilyAndCommunity, familyAndCommunityId: string): Promise<FamilyAndCommunity> {
+        try{
+            const familyAndCommunityResult = createFamilyAndCommunityDto(familyAndCommunity, familyAndCommunityId);
+            return familyAndCommunityResult;
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyAndCommunityObservation(familyAndCommunityId: string, observation: Observations): Promise<FamilyAndCommunity> {
+        try{
+            const familyAndCommunity = createFamilyAndCommunityObservationDto(familyAndCommunityId, observation);
+            return familyAndCommunity;
+        }catch(e){
+            throw e;
+        }
+    }
+
+    createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId: string, observation: Observations): Promise<FamilyEventlyBenefits> {
+        try{
+            const familyBenefits = createFamilyEventlyBenefitsObservationDto(familyEventlyBenefitsId, observation);
+            return familyBenefits;
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyEventlyBenefits(familyEventlyBenefits: FamilyEventlyBenefits, familyEventlyBenefitsId: string): Promise<FamilyEventlyBenefits> {
+        try{  
+            const familyBenefits = createFamilyEventlyBenefitsDto(familyEventlyBenefits, familyEventlyBenefitsId);
+            return familyBenefits;
+        }catch(e){
+            throw e;
+        }
+    }
+    createSituationViolationObservation(situationViolationId: string, observation: Observations): Promise<FamilySituationViolation> {
+        try{
+            const familySituation = familySituationViolenceObservation(situationViolationId, observation);
+            return familySituation;
+        }catch(e){
+            throw e;
+        }
+    }
+    createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition> {
+        try{
+            const helphyCondition = createHelphyConditionObsertionDto(helphyConditionId, observation);
+            return helphyCondition;
+        }catch(e){
+            throw e;
+        }
+    }
+    async createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition> {
+        try{
+            const helphyCondition = await createHelphyConditionDto(HelphyCondition,helphyConditionId);
+            const _ = await familyHelphyConditionDto(familyHelphyCondition, familyCompositionID, personId);
+            const __ = await createPregnant(pregnant,familyCompositionID,personId);
+            return helphyCondition;
+        }catch(e){
+            throw e;
+        }
+    }
+    createWorkConditionObservation(workConditionId: string, observation: string): Promise<WorkCondition> {
+        try{
+            const workCondition = workConditionObservation(workConditionId, observation);
+            return workCondition;
+        }catch(e){
+            throw e;
+        }
+    }
+    getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<informationEducationCondition> {
+        try{
+            const information = getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
+            return information;
+        }catch(e){
+            throw e;
+        }
+    }
+    
+    async getFamilyCompositonPersons(familyCompositionId: string): Promise<FamilyCompositionPerson[]> {
+        try{
+            const familyCompositionPersons = await getFamilyCompositonPersonsDto(familyCompositionId);
+            return familyCompositionPersons;
+        }catch(e){
+            throw e;
+        }
+    }
+
+    async createEducationalEspecifications(educationalEspecifications: EducationConditionPerson, familySituationId: string,personId:string): Promise<FamilyComposition> {
+        try{
+            const familySituation = await createFamilyEducationCondition(educationalEspecifications,familySituationId,personId);
+            return familySituation;
+        }catch(e){
+            throw e;
+        }
+    }
     createSituationViolation(situationViolation: FamilySituationViolation, familySituationId: string): Promise<FamilySituationViolation> {
         try{
             const familySituation = familySituationViolenceDTO(familySituationId, situationViolation);
@@ -191,7 +338,6 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
         try{
         const hasCode = await findCode(code);
-        console.log(hasCode)
         if(!hasCode){
             throw new CustomError('CODE_NOT_FOUND', 404,'CODE_NOT_FOUND', 'Code not found');
         }

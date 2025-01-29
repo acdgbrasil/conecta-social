@@ -3,10 +3,15 @@ import { FamilySituationViolation } from "../../../../domain/entity/familySituat
 import { Observations } from "../../../../domain/entity/observations";
 import { ReferencePerson } from "../../../../domain/entity/referencePerson";
 import { CustomError } from "../../../error/error";
+import { familyAndCommunityModel } from "../models/familyAndCommunityModel";
 import { familyCompositionModel } from "../models/familyCompositionModel";
+import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel";
+import { FamilyHistoryInstitutionalCompletModel } from "../models/familyHistoryInstutionalCompletModel";
+import { familyHistoryOfComplianceSocioEducationalMeasuresModel } from "../models/familyHistoryOfComplianceSocioEducationalMeasuresModel";
 import { familyPhotoModel } from "../models/familyPhotoModel";
 import { familySituationViolenceModel } from "../models/familySituationViolenceModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
+import { helphyConditionModel } from "../models/helphyConditionModel";
 import { homeConditionsModel } from "../models/homeConditionsModel";
 import { referencePersonModel } from "../models/referencePersonModel";
 import { WorkConditionModel } from "../models/workConditionModel";
@@ -54,16 +59,42 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             throw new CustomError('CPF_ALREADY_EXISTS',400,'CPF_ALREADY_EXISTS','CPF already exists');
         }
         
-        const familyComposition = await familyCompositionModel.create({})
+        const familyComposition = await familyCompositionModel.create({
+            isInUse:false,
+        })
         const documents = new Documents(false,false,false,false,false)
         const familyCompositionReferencePerson = new FamilyCompositionPerson(rp.fullName,rp.birthDate,rp.biologicalGender,true,documents,1)
         familyComposition.familyCompositionPerson.push(familyCompositionReferencePerson)
         familyComposition.save()
 
-        const fistEntryInUnity = await firstEntryInUnityModel.create({})
-        const homeCondition = await homeConditionsModel.create({})
-        const workCondition = await WorkConditionModel.create({})
+        const fistEntryInUnity = await firstEntryInUnityModel.create({
+            inInUse:false,
+        })
+        const homeCondition = await homeConditionsModel.create({
+            inInUse:false,
+        })
+        const workCondition = await WorkConditionModel.create({
+            inInUse:false,
+        })
+        const helphyCondition = await helphyConditionModel.create({
+            inInUse:false,
+        })
+        const eventlyBenefit = await familyEventlyBenefitsModel.create({
+            inInUse:false,
+        })
 
+        const familyAndCommunity = await familyAndCommunityModel.create({
+            inInUse:false,
+        })
+
+        const familyHistoryOfComplienceSocialEducational = await familyHistoryOfComplianceSocioEducationalMeasuresModel.create({
+            inInUse:false,
+        })
+
+        const FamilyHistoryInstitutionalComplet = await FamilyHistoryInstitutionalCompletModel.create({
+            isInUse:false,
+        })
+        
         const childLabel = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
         const sexualExploitation = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
         const sexualAbuse = {thisSituationOcurrent:false,thisSituationsOcurrentNow:false}
@@ -106,7 +137,12 @@ export const createReferencePerson = async (rp:ReferencePerson)=>{
             biologicalGender:rp.biologicalGender,
             homeConditionsId:homeCondition.id,
             workConditionId:workCondition.id,
-            familySituationViolationId:familySituationViolation.id
+            familySituationViolationId:familySituationViolation.id,
+            helphyConditionId:helphyCondition.id,
+            eventlyBenefitId:eventlyBenefit.id,
+            familyAndCommunityId:familyAndCommunity.id,
+            familyHistoryOfComplianceSocialEducationalMensuresId:familyHistoryOfComplienceSocialEducational.id,
+            familyHistoryInstitutionalCompletId:FamilyHistoryInstitutionalComplet.id
         })
         
         return referencePerson

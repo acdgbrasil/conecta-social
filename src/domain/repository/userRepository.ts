@@ -1,6 +1,15 @@
-import { Documents, FamilyComposition, FamilyCompositionPerson, WorkConditionPerson } from "../entity/familyComposition";
+import { FamilyAndCommunity } from "../entity/familyAndCommunity";
+import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, Pregnant, WorkConditionPerson } from "../entity/familyComposition";
+import { FamilyComunitaryConvivation } from "../entity/familyComunitaryConvivation";
+import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits";
+import { HelphyConditionFamily } from "../entity/familyHelphyCondition";
+import { FamilyHistoryInstitutionalComplet } from "../entity/familyHistoryInstitutionalComplet";
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../entity/familyHistoryOfComplianceSocioEducationalMeasures";
+import { FamilyHistorySocioEducation } from "../entity/familyHistorySocioEducation";
+import { FamilyInstitucionalHistory } from "../entity/familyInstitucionalHistory";
 import { FamilySituationViolation } from "../entity/familySituationViolation";
 import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
+import { HelphyCondition } from "../entity/healthCondition";
 import { HomeConditions } from "../entity/homeConditions";
 import { Observations } from "../entity/observations";
 import { ReferencePerson } from "../entity/referencePerson";
@@ -11,6 +20,11 @@ export type PhotoResponse = {
     fileBuffer:Buffer;
     fileExtension:string;
 }
+
+export type informationEducationCondition = {
+    age: number;
+    educationCondition: boolean | undefined;
+}[]
 
 export interface UserRepository {
     findByEmail(email:string):Promise<any>;
@@ -33,4 +47,20 @@ export interface UserRepository {
     createHomeConditionsObservation(observation:Observations,homeConditionsId:string): Promise<HomeConditions | Error>;
     getPersonReferencePhoto(photoId:string): Promise<PhotoResponse>;
     createSituationViolation(situationViolation:FamilySituationViolation,familySituationId:string): Promise<FamilySituationViolation>;
+    createSituationViolationObservation(situationViolationId:string,observation:Observations): Promise<FamilySituationViolation>;
+    createEducationalEspecifications(educationalEspecifications:EducationConditionPerson,familySituationId:string,personId:string): Promise<FamilyComposition>;
+    getFamilyCompositonPersons(familyCompositionId:string): Promise<FamilyCompositionPerson[]>;
+    getInformationOfPersonAndAgeAreInSchool(familyCompositionId:string): Promise<informationEducationCondition>;
+    createWorkConditionObservation(workConditionId:string,observation:string): Promise<WorkCondition>;
+    createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition>;
+    createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition>;
+    createFamilyEventlyBenefits(familyEventlyBenefits:FamilyEventlyBenefits,familyEventlyBenefitsId:string): Promise<FamilyEventlyBenefits>;
+    createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId:string,observation:Observations): Promise<FamilyEventlyBenefits>;
+    createFamilyAndCommunity(familyAndCommunity:FamilyAndCommunity,familyAndCommunityId:string): Promise<FamilyAndCommunity>;
+    createFamilyAndCommunityObservation(familyAndCommunityId:string,observation:Observations): Promise<FamilyAndCommunity>;
+    createFamilyComunitaryConvivationPerson(familyComunitaryConvivation:FamilyComunitaryConvivation,familyCompositionID:string,id:string): Promise<FamilyComposition>;
+    createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation:boolean, createFamilyHistoryOfComplianseSocioEducationalMensureId: string, familyHistorySocioEducation: FamilyHistorySocioEducation, familyCompositionId: string, personId: string, anotationsOfPersons: string): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures>;
+    createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId:string,observation:Observations): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures>;
+    createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet:FamilyHistoryInstitutionalComplet,familyHistoryInstitutionalCompletId:string,familuInstitucionalHistoryPerson:FamilyInstitucionalHistory,familyCompositionId:string,personId:string): Promise<FamilyHistoryInstitutionalComplet>;
+    createFamilyHistoryInstitutionalCompletObservation(familyHistoryInstitutionalCompletId:string,observation:Observations): Promise<FamilyHistoryInstitutionalComplet>;
 }

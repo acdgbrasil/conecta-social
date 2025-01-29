@@ -1,3 +1,7 @@
+import { FamilyComunitaryConvivation } from "./familyComunitaryConvivation";
+import { HelphyConditionFamily } from "./familyHelphyCondition";
+import { FamilyHistorySocioEducation } from "./familyHistorySocioEducation";
+import { FamilyInstitucionalHistory } from "./familyInstitucionalHistory";
 import { Observations } from "./observations";
 
 export class Documents{
@@ -59,11 +63,11 @@ export class OcurruncyBolsaFamilia{
 export class EducationConditionPerson{
     isInUse: boolean;
     literate: boolean;
-    schoolShip: string;
+    schoolShip: number;
     isStudying:boolean;
     ocorruncyBolsaFamilia:OcurruncyBolsaFamilia;
 
-    constructor(isInUse:boolean, literate:boolean, schoolShip:string, isStudying:boolean, ocorruncyBolsaFamilia:OcurruncyBolsaFamilia){
+    constructor(isInUse:boolean, literate:boolean, schoolShip:number, isStudying:boolean, ocorruncyBolsaFamilia:OcurruncyBolsaFamilia){
         this.isInUse = isInUse;
         this.literate = literate;
         this.schoolShip = schoolShip;
@@ -101,6 +105,11 @@ export class FamilyCompositionPerson{
     workConditionPerson?: WorkConditionPerson;
     pregnant?:Pregnant;
     participationAndSocialServices?:ParticipationAndSocialServices;
+    helphyConditionFamily?:HelphyConditionFamily;
+    familyComunitaryConvivation?:FamilyComunitaryConvivation;
+    familyHistorySocioEducation?:FamilyHistorySocioEducation;
+    familyInstitutionalHistory?:FamilyInstitucionalHistory;
+    historySocialLaOrPSC?:Boolean;
     
     constructor(fullName:string, birthDate:Date, biologicalGender:string, personWithDisability:boolean, documents:Documents, kinship:number){
         this.fullName = fullName;

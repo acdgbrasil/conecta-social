@@ -1,5 +1,6 @@
 
 import { FamilySituationViolation } from "../../../../domain/entity/familySituationViolation"
+import { Observations } from "../../../../domain/entity/observations"
 import { CustomError } from "../../../error/error"
 import { familySituationViolenceModel } from "../models/familySituationViolenceModel"
 
@@ -33,4 +34,16 @@ export const familySituationViolenceDTO = async (familySituationViolationId:stri
     familySituationViolence.other.nameOfSituation = familySituationViolation.other.nameOfSituation
     await familySituationViolence.save()
     return familySituationViolence
+}
+
+export const familySituationViolenceObservation = async (familySituationViolationId: string,observation: Observations):Promise<FamilySituationViolation> => {
+    try{
+        const familySituationViolence = await familySituationViolenceModel.findById(familySituationViolationId)
+        if(!familySituationViolence) throw new CustomError("FAMILY_SITUATION_NOT_FOUND",404,"Family Situation Violation not found","Family Situation Violation not found")
+        familySituationViolence.observations?.push(observation)
+        await familySituationViolence.save()
+        return familySituationViolence
+    }catch(e){
+        throw e;
+    }
 }

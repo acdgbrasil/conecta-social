@@ -95,6 +95,26 @@ const referencePerson = new mongoose.Schema<ReferencePerson>({
         type:Schema.Types.ObjectId,
         ref:'familySituationViolence'
     },
+    helphyConditionId:{
+        type:Schema.Types.ObjectId,
+        ref:'helphyCondition'
+    },
+    eventlyBenefitId:{
+        type:Schema.Types.ObjectId,
+        ref:'eventlyBenefit'
+    },
+    familyAndCommunityId:{
+        type:Schema.Types.ObjectId,
+        ref:'familyAndCommunity'
+    },
+    familyHistoryOfComplianceSocialEducationalMensuresId:{
+        type:Schema.Types.ObjectId,
+        ref:'familyHistoryOfComplianceSocialEducationalMensures'
+    },
+    familyHistoryInstitutionalCompletId:{
+        type:Schema.Types.ObjectId,
+        ref:'familyHistoryInstitutionalComplet'
+    },
     observations:[{
         type:observation
     }],

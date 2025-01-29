@@ -28,3 +28,15 @@ export const createWorkConditionPersonDto = async (workCondition: WorkCondition,
     const result = new WorkCondition(resultWorkCondition.familyIncome,resultWorkCondition.perCapitaIncome,resultWorkCondition.hasSocialIncome,resultWorkCondition.bolsaFamiliaValue,resultWorkCondition.bpcValue,resultWorkCondition.petiValue,resultWorkCondition.othersValue,resultWorkCondition.bcpBenefitPerson,resultWorkCondition.hasRetiredPerson,resultWorkCondition.totalFamilyIncome,resultWorkCondition.totalPerCapitaIncome)
     return result
 }
+
+export const workConditionObservation = async (workConditionId: string,observation: string):Promise<WorkCondition> => {
+    try{
+        const workCondition = await WorkConditionModel.findById(workConditionId)
+        if(!workCondition) throw new CustomError('WORK_CONDITION_NOT_FOUND',404,'WORK_CONDITION_NOT_FOUND','Work Condition not found')
+        workCondition.observations?.push(observation)
+        await workCondition.save()
+        return workCondition
+    }catch(e){
+        throw e;
+    }
+}

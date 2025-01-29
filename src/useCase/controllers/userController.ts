@@ -1,37 +1,157 @@
-import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson } from "../../domain/entity/familyComposition";
+import { FamilyAndCommunity } from "../../domain/entity/familyAndCommunity";
+import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from "../../domain/entity/familyComposition";
+import { FamilyComunitaryConvivation } from "../../domain/entity/familyComunitaryConvivation";
+import { FamilyEventlyBenefits } from "../../domain/entity/familyEnvetlyBenefits";
+import { HelphyConditionFamily } from "../../domain/entity/familyHelphyCondition";
+import { FamilyHistoryInstitutionalComplet } from "../../domain/entity/familyHistoryInstitutionalComplet";
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures";
+import { FamilyHistorySocioEducation } from "../../domain/entity/familyHistorySocioEducation";
+import { FamilyInstitucionalHistory } from "../../domain/entity/familyInstitucionalHistory";
 import { FamilySituationViolation } from "../../domain/entity/familySituationViolation";
 import { FirstEntryInUnity } from "../../domain/entity/firstEntryInUnity";
+import { HelphyCondition } from "../../domain/entity/healthCondition";
 import { HomeConditions } from "../../domain/entity/homeConditions";
 import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
 import { WorkCondition } from "../../domain/entity/workCondition";
-import { PhotoResponse, UserRepository } from "../../domain/repository/userRepository";
+import { informationEducationCondition, PhotoResponse, UserRepository } from "../../domain/repository/userRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
 import { CryptoService } from "../../infra/encrypt/encryptService";
 import { CustomError } from "../../infra/error/error";
 import { SmtpService } from "../../infra/smtp/smtpService";
 
-type ShortReferencePerson = {
-    id: string
-    fullName: string
-    socialName: string
-    motherName: string
-    cpf: string
-    diagnosis: string
-    birthDate:Date
-    cep?: string
-    adress: string
-    neighborhood: string
-    adressNumber: string
-    adressComplement: string
-    phone: string
-    familyPhoto: string
-    whoIsOpening: string
-}
-
-
 export class UserController implements UserRepository{
+    createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet: FamilyHistoryInstitutionalComplet, familyHistoryInstitutionalCompletId: string, familuInstitucionalHistoryPerson: FamilyInstitucionalHistory, familyCompositionId: string, personId: string): Promise<FamilyHistoryInstitutionalComplet> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet,familyHistoryInstitutionalCompletId,familuInstitucionalHistoryPerson,familyCompositionId,personId);
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyHistoryInstitutionalCompletObservation(familyHistoryInstitutionalCompletId: string, observation: Observations): Promise<FamilyHistoryInstitutionalComplet> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyHistoryInstitutionalCompletObservation(familyHistoryInstitutionalCompletId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation: boolean, createFamilyHistoryOfComplianseSocioEducationalMensureId: string, familyHistorySocioEducation: FamilyHistorySocioEducation, familyCompositionId: string, personId: string, anotationsOfPersons: string): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyHistoryOfComplianseSocioEducationalMensure(laOrPSCInfomation,createFamilyHistoryOfComplianseSocioEducationalMensureId,familyHistorySocioEducation,familyCompositionId,personId,anotationsOfPersons);
+        }catch(e){
+            throw e;
+        }
+    }
+  
+    createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId: string, observation: Observations): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyHistoryOfComplianseSocioEducationalMensureObservation(familyHistoryOfComplianseSocioEducationalMensureId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyComunitaryConvivationPerson(familyComunitaryConvivation: FamilyComunitaryConvivation, familyCompositionID: string, id: string): Promise<FamilyComposition> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyComunitaryConvivationPerson(familyComunitaryConvivation,familyCompositionID,id);
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyAndCommunity(familyAndCommunity: FamilyAndCommunity, familyAndCommunityId: string): Promise<FamilyAndCommunity> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyAndCommunity(familyAndCommunity,familyAndCommunityId);
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyAndCommunityObservation(familyAndCommunityId: string, observation: Observations): Promise<FamilyAndCommunity> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyAndCommunityObservation(familyAndCommunityId,observation);
+        }catch(e){
+            throw e;
+        }
+        
+    }
+    createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId: string, observation: Observations): Promise<FamilyEventlyBenefits> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyEventlyBenefitsObservation(familyEventlyBenefitsId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
+    createFamilyEventlyBenefits(familyEventlyBenefits: FamilyEventlyBenefits, familyEventlyBenefitsId: string): Promise<FamilyEventlyBenefits> {
+        try{
+            const db = new DatabaseService();
+            return db.createFamilyEventlyBenefits(familyEventlyBenefits,familyEventlyBenefitsId);
+        }catch(e){
+            throw e;
+        }
+    }
+    createSituationViolationObservation(situationViolationId: string, observation: Observations): Promise<FamilySituationViolation> {
+        try{
+            const db = new DatabaseService();
+            return db.createSituationViolationObservation(situationViolationId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
+    createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition> {
+        try{
+            const db = new DatabaseService();
+            return db.createHelphyConditionObservation(helphyConditionId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
+    createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition> {
+        try{
+            const db = new DatabaseService();
+            return db.createHelphyCondition(HelphyCondition,helphyConditionId,familyHelphyCondition,familyCompositionID,personId,pregnant);
+        }catch(e){
+            throw e;
+        }
+    }
+    createWorkConditionObservation(workConditionId: string, observation: string): Promise<WorkCondition> {
+        try{
+            const db = new DatabaseService();
+            return db.createWorkConditionObservation(workConditionId,observation);
+        }catch(e){
+            throw e;
+        }
+    }
+    getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<informationEducationCondition> {
+        try{
+            const db = new DatabaseService();
+            return db.getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
+        }catch(e){
+            throw e;
+        }
+    }
+    getFamilyCompositonPersons(familyCompositionId: string): Promise<FamilyCompositionPerson[]> {
+        try{
+            const db = new DatabaseService();
+            return db.getFamilyCompositonPersons(familyCompositionId);
+        }catch(e){
+            throw e;
+        }
+    }
+    createEducationalEspecifications(educationalEspecifications: EducationConditionPerson, familySituationId: string, personId: string): Promise<FamilyComposition> {
+       try{
+            const db = new DatabaseService();
+            return db.createEducationalEspecifications(educationalEspecifications,familySituationId,personId);
+       }catch(e){
+           throw e;
+       }
+    }
     createSituationViolation(situationViolation: FamilySituationViolation, familySituationId: string): Promise<FamilySituationViolation> {
         try{
             const db = new DatabaseService();

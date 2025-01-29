@@ -33,8 +33,13 @@ export class ReferencePerson {
     familyCompositionId?: string
     homeConditionsId?: string
     fistEntryInUnityId?: FirstEntryInUnity
+    helphyConditionId?: string
+    eventlyBenefitId?: string
     familySituationViolationId?: string
     workConditionId?: string
+    familyAndCommunityId?: string
+    familyHistoryOfComplianceSocialEducationalMensuresId?: string
+    familyHistoryInstitutionalCompletId?: string
     whoIsOpeningId: string
 
 

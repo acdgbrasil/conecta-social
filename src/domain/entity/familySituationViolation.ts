@@ -1,3 +1,4 @@
+import { Observations } from "./observations";
 
 export class FamilySituationViolationStruct{
     thisSituationOcurrent: boolean;
@@ -33,6 +34,7 @@ export class FamilySituationViolation {
     violenceWithElderOrPcd: FamilySituationViolationStruct;
     other: FamilySituationViolationStructOther;
     isInUse: boolean;
+    observations?: Observations[];
 
     constructor(childLabel: FamilySituationViolationStruct, sexualExploitation: FamilySituationViolationStruct, sexualAbuse: FamilySituationViolationStruct, physicalAbuse: FamilySituationViolationStruct, psychologicalAbuse: FamilySituationViolationStruct, elderNeglect: FamilySituationViolationStruct, childNeglect: FamilySituationViolationStruct, pcdNeglect: FamilySituationViolationStruct, homelessSituation: FamilySituationViolationStruct, humanTrafficking: FamilySituationViolationStruct, violenceWithElderOrPcd: FamilySituationViolationStruct, other: FamilySituationViolationStructOther, isInUse: boolean){
         this.childLabel = childLabel;
