@@ -115,11 +115,7 @@ export const createPregnant = async (pregnant:any,familyCompositionID:string,id:
         if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
         const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
         if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
-        if(familyCompositionPerson.biologicalGender == "Masculino") {
-            familyCompositionPerson.pregnant = undefined
-        }else{
-            familyCompositionPerson.pregnant = pregnant
-        }
+        familyCompositionPerson.biologicalGender == "Masculino" ? familyCompositionPerson.pregnant = undefined : familyCompositionPerson.pregnant = pregnant
         familyComposition.isInUse = true
         familyComposition.save()
         return familyComposition
