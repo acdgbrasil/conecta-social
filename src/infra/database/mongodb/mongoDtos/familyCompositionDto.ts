@@ -116,6 +116,7 @@ export const createPregnant = async (pregnant:any,familyCompositionID:string,id:
         const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
         if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
         familyCompositionPerson.biologicalGender == "Masculino" ? familyCompositionPerson.pregnant = undefined : familyCompositionPerson.pregnant = pregnant
+        if(pregnant.pregnancyMonths > 17) throw new CustomError('INVALID_PREGNANCY_MONTHS',400,'INVALID_PREGNANCY_MONTHS','Pregnancy months must be less than 17')
         familyComposition.isInUse = true
         familyComposition.save()
         return familyComposition
