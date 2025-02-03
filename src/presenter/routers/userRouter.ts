@@ -635,7 +635,7 @@ userRouter.post('/create/health/condition',async (req,res)=>{
             return res.status(400).json(error.toJson('Who Is Responsible For Help is required'));
         }
 
-        if(!pregnancyMonths){
+        if(pregnancyMonths === null || pregnancyMonths === undefined || pregnancyMonths === ''){
             const error = new CustomError('Bad Request',400,'Bad Request','Pregnancy Months is required');
             return res.status(400).json(error.toJson('Pregnancy Months is required'));
         }

@@ -1,5 +1,5 @@
 import { get } from "http";
-import { Documents, EducationConditionPerson, FamilyCompositionPerson, WorkConditionPerson } from "../../../../domain/entity/familyComposition";
+import { Documents, EducationConditionPerson, FamilyCompositionPerson, Pregnant, WorkConditionPerson } from "../../../../domain/entity/familyComposition";
 import { Observations } from "../../../../domain/entity/observations";
 import { CustomError } from "../../../error/error";
 import { familyCompositionModel } from "../models/familyCompositionModel";
@@ -115,7 +115,8 @@ export const createPregnant = async (pregnant:any,familyCompositionID:string,id:
         if(!familyComposition) throw new CustomError('FAMILY_COMPOSITION_NOT_FOUND',404,'FAMILY_COMPOSITION_NOT_FOUND','Family Composition not found')
         const familyCompositionPerson = familyComposition.familyCompositionPerson.find((person:any) => person._id == id)
         if(!familyCompositionPerson) throw new CustomError('FAMILY_COMPOSITION_PERSON_NOT_FOUND',404,'FAMILY_COMPOSITION_PERSON_NOT_FOUND','Family Composition Person not found')
-        familyCompositionPerson.pregnant = pregnant
+        familyCompositionPerson.biologicalGender == "Masculino" ? familyCompositionPerson.pregnant = undefined : familyCompositionPerson.pregnant = pregnant
+        if(pregnant.pregnancyMonths > 17) throw new CustomError('INVALID_PREGNANCY_MONTHS',400,'INVALID_PREGNANCY_MONTHS','Pregnancy months must be less than 17')
         familyComposition.isInUse = true
         familyComposition.save()
         return familyComposition
