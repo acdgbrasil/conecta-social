@@ -1,6 +1,5 @@
 import { PrismaClient, user, UserRole } from '@prisma/client';
 import { User } from '../../../domain/entity/user';
-import { CustomError } from '../../error/error';
 const prisma = new PrismaClient();
 
 export async function createADM(user: User): Promise<User | Error> {
