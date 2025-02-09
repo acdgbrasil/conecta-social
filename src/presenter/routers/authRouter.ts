@@ -9,6 +9,25 @@ const authRouter = Router();
 const authController = new AuthController();
 const userController = new UserController();
 
+authRouter.post('/auth/register', async (req, res) => {
+    try{
+        const {name,email,pass} = req.body;
+        if(!name) throw new CustomError('Bad Request',400,'Bad Request','Name is required');
+        if(!email) throw new CustomError('Bad Request',400,'Bad Request','Email is required');
+        if(!pass) throw new CustomError('Bad Request',400,'Bad Request','Password is required');
+        const user = new User(0,"Gabriel Vieiera Soriano Aderaldo","gaderaldo10@gmail.com","tomate98",null,"admin",new Date,new Date(),true);
+        const response = await userController.create(user,true);
+        return res.status(200).json(response);
+    }catch(e){
+        if(e instanceof CustomError){
+            res.status(e.statusCode).json(e.toJson(e.message));
+        }else{
+            console.log(e);
+            res.status(500).json({error:'Internal server error'});
+        }
+    }
+});
+
 authRouter.post('/auth/login', async (req, res) => {
     try{
         const {email,pass} = req.body;
