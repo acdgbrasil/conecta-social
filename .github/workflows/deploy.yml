@@ -14,19 +14,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Configura o SSH manualmente
+    # Configura o SSH corretamente (usando Ed25519)
     - name: Setup SSH
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
         eval $(ssh-agent -s)
-        ssh-add ~/.ssh/id_rsa
+        ssh-add ~/.ssh/id_ed25519
 
-    # Testa a conexão SSH para garantir que está funcionando
+    # Testa a conexão SSH para garantir que o GitHub Actions pode acessar a VPS
     - name: Test SSH Connection
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.VPS_IP }} "echo 'SSH funcionando corretamente!'"
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.VPS_IP }} "echo '✅ SSH funcionando corretamente!'"
 
     # Copia os arquivos para a VPS
     - name: Copy files to VPS
