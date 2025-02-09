@@ -1,0 +1,39 @@
+name: CI/CD Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - dev  # Monitora as branches "main" e "dev"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.8.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Copy files to VPS
+      run: |
+        scp -r docker-compose.yml ubuntu@${{ secrets.VPS_IP }}:/home/ubuntu/app/
+        scp -r .env ubuntu@${{ secrets.VPS_IP }}:/home/ubuntu/app/
+
+    - name: Deploy Docker Compose
+      run: |
+        ssh ubuntu@${{ secrets.VPS_IP }} << 'EOF'
+        if [ "${{ github.ref_name }}" == "main" ]; then
+          cd /home/ubuntu/app/
+          docker-compose -f docker-compose.prod.yml down
+          docker-compose -f docker-compose.prod.yml up -d --build
+        elif [ "${{ github.ref_name }}" == "dev" ]; then
+          cd /home/ubuntu/app-dev/
+          docker-compose -f docker-compose.dev.yml down
+          docker-compose -f docker-compose.dev.yml up -d --build
+        fi
+        EOF

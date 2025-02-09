@@ -74,15 +74,6 @@ export class ReferencePerson {
     }
 }
 
-export class FamilyPhoto{
-    fileBuffer:Buffer
-    fileExtension:string
-    constructor(fileBufer:Buffer,fileExtension:string){
-        this.fileBuffer = fileBufer
-        this.fileExtension = fileExtension
-    }
-}
-
 export class RG {
     number: string
     uf: string
