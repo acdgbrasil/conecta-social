@@ -14,19 +14,30 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # Configura o SSH manualmente
     - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        eval $(ssh-agent -s)
+        ssh-add ~/.ssh/id_rsa
 
+    # Testa a conexão SSH para garantir que está funcionando
+    - name: Test SSH Connection
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.VPS_IP }} "echo 'SSH funcionando corretamente!'"
+
+    # Copia os arquivos para a VPS
     - name: Copy files to VPS
       run: |
-        scp -r docker-compose.yml ubuntu@${{ secrets.VPS_IP }}:/home/ubuntu/app/
-        scp -r .env ubuntu@${{ secrets.VPS_IP }}:/home/ubuntu/app/
+        scp -o StrictHostKeyChecking=no -r docker-compose.yml ubuntu@${{ secrets.VPS_IP }}:/home/ubuntu/app/
+        scp -o StrictHostKeyChecking=no -r .env ubuntu@${{ secrets.VPS_IP }}:/home/ubuntu/app/
 
+    # Conecta na VPS e faz o deploy do Docker Compose
     - name: Deploy Docker Compose
       run: |
-        ssh ubuntu@${{ secrets.VPS_IP }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.VPS_IP }} << 'EOF'
         if [ "${{ github.ref_name }}" == "main" ]; then
           cd /home/ubuntu/app/
           docker-compose -f docker-compose.prod.yml down
