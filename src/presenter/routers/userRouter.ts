@@ -17,6 +17,7 @@ import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitar
 import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySocioEducation';
 import { FamilyHistoryInstitutionalComplet, otherFamilySeparationSituationsStruct } from '../../domain/entity/familyHistoryInstitutionalComplet';
 import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory';
+import { converterDataStringParaIsoUtc } from '../../utils/dateFormater';
 
 const userRouter = Router();
 const userControle = new UserController();
@@ -1533,14 +1534,15 @@ userRouter.post('/create/reference/person',async (req,res)=>{
             const error = new CustomError('Bad Request',400,'Bad Request','Phone is required');
             return res.status(400).json(error.toJson('Phone is required'));
         }
-
-        const birthDateFormatted = new Date(birthDate);
+        
+        const convertCorrectFormat = converterDataStringParaIsoUtc(birthDate);
+        const birthDateFormatted = new Date(convertCorrectFormat);
         const newReferencePerson = new ReferencePerson('0', fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,birthDateFormatted,whoIsObservingId);
         const referencePerson = await userControle.createReferencePerson(newReferencePerson);
         return res.status(201).json(referencePerson);
        
-    } catch (err) {
-        return res.status(500).json(err);
+    } catch (err:any) {
+        return res.status(err.statusCode || 500).json({error: err.message || 'Internal server error'});
     }
 })
 
