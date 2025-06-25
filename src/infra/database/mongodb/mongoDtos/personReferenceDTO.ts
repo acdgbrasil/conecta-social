@@ -8,7 +8,6 @@ import { familyCompositionModel } from "../models/familyCompositionModel";
 import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel";
 import { FamilyHistoryInstitutionalCompletModel } from "../models/familyHistoryInstutionalCompletModel";
 import { familyHistoryOfComplianceSocioEducationalMeasuresModel } from "../models/familyHistoryOfComplianceSocioEducationalMeasuresModel";
-import { familyPhotoModel } from "../models/familyPhotoModel";
 import { familySituationViolenceModel } from "../models/familySituationViolenceModel";
 import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
 import { helphyConditionModel } from "../models/helphyConditionModel";

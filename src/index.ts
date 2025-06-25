@@ -5,11 +5,12 @@ import { connectionMongose, testConnection } from './infra/database/mongodb/mong
 import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClientSingleton';
 import { verifyToken } from './infra/jwt/jwtToken';
 import admRouter from './presenter/routers/admRouter';
-import photoRouter from './presenter/routers/photoRouter';
 import { deleteUser } from './infra/database/postgress/postgressDTO';
+import cors from 'cors';
+import {config} from 'dotenv'
 
-const cors = require('cors');
-require('dotenv').config();
+config({});
+
 const PORT = process.env.PORT || 3000;
 function startDatabase() {
     connectionMongose().then((client) => {
@@ -47,7 +48,6 @@ router.use('/api/ping',async (_,res) => {
     res.send('pong');
 });
 router.use(verifyToken);
-router.use('/api',photoRouter);
 router.use('/api',userRouter);
 router.use('/api',admRouter);
 

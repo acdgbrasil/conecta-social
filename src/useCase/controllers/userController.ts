@@ -15,7 +15,7 @@ import { Observations } from "../../domain/entity/observations";
 import { ReferencePerson } from "../../domain/entity/referencePerson";
 import { User } from "../../domain/entity/user";
 import { WorkCondition } from "../../domain/entity/workCondition";
-import { informationEducationCondition, PhotoResponse, UserRepository } from "../../domain/repository/userRepository";
+import { informationEducationCondition, UserRepository } from "../../domain/repository/userRepository";
 import { DatabaseService } from "../../infra/database/databaseService";
 import { CryptoService } from "../../infra/encrypt/encryptService";
 import { CustomError } from "../../infra/error/error";
@@ -157,7 +157,6 @@ export class UserController implements UserRepository{
             const db = new DatabaseService();
             return db.createSituationViolation(situationViolation,familySituationId);
         }catch(e){
-            console.log(e)
             throw e;
         }
     }
@@ -167,15 +166,6 @@ export class UserController implements UserRepository{
             const db = new DatabaseService();
             const workConditionResult = await db.createWorkConditionPerson(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId);
             return workConditionResult;
-        }catch(e){
-            throw e;
-        }
-    }
-
-    async getPersonReferencePhoto(photoId: string): Promise<PhotoResponse> {
-        try{
-            const db = new DatabaseService();
-            return await db.getPersonReferencePhoto(photoId);
         }catch(e){
             throw e;
         }

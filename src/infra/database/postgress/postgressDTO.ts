@@ -1,5 +1,6 @@
-import { PrismaClient, user, UserRole } from '@prisma/client';
-import { User } from '../../../domain/entity/user';
+import { PrismaClient } from '@prisma/client';
+import { User, UserRole } from '../../../domain/entity/user';
+import { CustomError } from '../../error/error';
 const prisma = new PrismaClient();
 
 export async function createADM(user: User): Promise<User | Error> {
@@ -10,7 +11,7 @@ export async function createADM(user: User): Promise<User | Error> {
                 email: user.email,
                 password: user.password,
                 crm: user.crm,
-                role: UserRole.admin,
+                role: UserRole.admin.toString(),
             }
         });
         return new User(newUser.id,newUser.fullName,newUser.email,newUser.password,newUser.crm,newUser.role.valueOf(),newUser.createdAt,newUser.updatedAt,true);

@@ -1,5 +1,5 @@
 import { User } from '../../domain/entity/user';
-import {informationEducationCondition, PhotoResponse, UserRepository} from '../../domain/repository/userRepository';
+import {informationEducationCondition,  UserRepository} from '../../domain/repository/userRepository';
 import { CustomError } from '../error/error';
 import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
 import { AuthRepository } from '../../domain/repository/authRepository';
@@ -14,7 +14,6 @@ import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPer
 import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyComunitaryConvivationPersonDTO, createFamilyEducationCondition, createFamilyHistorySocioEducationPersonDto, createFamilyPerson, createPregnant, createSocialEspecifications, familyHelphyConditionDto, familyHistoryIntitutionalPersonDto, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool, insertLaOrPSCInformationDto } from './mongodb/mongoDtos/familyCompositionDto';
 import { HomeConditions } from '../../domain/entity/homeConditions';
 import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
-import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
 import { WorkCondition } from '../../domain/entity/workCondition';
 import { createWorkConditionPersonDto, workConditionObservation } from './mongodb/mongoDtos/workConditionDto';
 import { FamilySituationViolation } from '../../domain/entity/familySituationViolation';
@@ -181,15 +180,6 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
         try{
             const workConditionResult = await createWorkConditionPersonDto(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId);
             return workConditionResult;
-        }catch(e){
-            throw e;
-        }
-    }
-    
-    getPersonReferencePhoto(photoId: string): Promise<PhotoResponse> {
-        try{
-            const photo = getPersonReferencePhotoDto(photoId);
-            return photo;
         }catch(e){
             throw e;
         }

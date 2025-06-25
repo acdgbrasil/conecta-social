@@ -1,5 +1,5 @@
 import { FamilyAndCommunity } from "../entity/familyAndCommunity";
-import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, Pregnant, WorkConditionPerson } from "../entity/familyComposition";
+import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, Pregnant } from "../entity/familyComposition";
 import { FamilyComunitaryConvivation } from "../entity/familyComunitaryConvivation";
 import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits";
 import { HelphyConditionFamily } from "../entity/familyHelphyCondition";
@@ -15,11 +15,6 @@ import { Observations } from "../entity/observations";
 import { ReferencePerson } from "../entity/referencePerson";
 import { User } from "../entity/user";
 import { WorkCondition } from "../entity/workCondition";
-
-export type PhotoResponse = {
-    fileBuffer:Buffer;
-    fileExtension:string;
-}
 
 export type informationEducationCondition = {
     age: number;
@@ -45,7 +40,6 @@ export interface UserRepository {
     createFamilyCompositionObservation(observation:Observations,familyCompositionID:string): Promise<FamilyComposition | Error>;
     createHomeConditions(homeConditions:HomeConditions,homeConditionsId:string): Promise<HomeConditions | Error>;
     createHomeConditionsObservation(observation:Observations,homeConditionsId:string): Promise<HomeConditions | Error>;
-    getPersonReferencePhoto(photoId:string): Promise<PhotoResponse>;
     createSituationViolation(situationViolation:FamilySituationViolation,familySituationId:string): Promise<FamilySituationViolation>;
     createSituationViolationObservation(situationViolationId:string,observation:Observations): Promise<FamilySituationViolation>;
     createEducationalEspecifications(educationalEspecifications:EducationConditionPerson,familySituationId:string,personId:string): Promise<FamilyComposition>;
