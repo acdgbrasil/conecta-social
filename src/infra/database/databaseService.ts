@@ -310,8 +310,8 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     
     async deactivateUser(email: string): Promise<Boolean | Error> {
         try{
-            const users = await deactivateUser(email)
-            return !users.isActive
+            const result = await deactivateUser(email)
+            return result
         }catch(err){
             throw err
         }
@@ -344,7 +344,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     async forgotPassword(email: string): Promise<string> {
         try{
             const user = await findByEmail(email);
-            if(user === false){
+            if(!user){
                 throw new CustomError('USER_NOT_FOUND', 404,'USER_NOT_FOUND', 'User not found');
             }
             const code = Math.random().toString(36).substring(2, 7);
@@ -357,7 +357,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     async create(user: User, isAdm: boolean): Promise<User | Error> {
         try{
             const hasUser = await findByEmail(user.email);
-            if(hasUser !== false){
+            if(hasUser){
                 throw new CustomError('USER_ALREADY_EXISTS', 409,'USER_ALREADY_EXISTS', 'User already exists');
             }
             if(isAdm){
@@ -374,7 +374,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     async findByEmail(email: string): Promise<any> {
         try{
             const user = await findByEmail(email);
-            if(user === false){
+            if(!user){
                 throw new CustomError('USER_NOT_FOUND', 404,'USER_NOT_FOUND', 'User not found');
             }
             return user;

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { AuthController } from "../../useCase/controllers/authController";
 import { CustomError } from "../../infra/error/error";
 import { UserController } from "../../useCase/controllers/userController";
-import { User } from "../../domain/entity/user";
+import { User, UserRole } from "../../domain/entity/user";
 
 
 const authRouter = Router();
@@ -15,7 +15,7 @@ authRouter.post('/auth/register', async (req, res) => {
         if(!name) throw new CustomError('Bad Request',400,'Bad Request','Name is required');
         if(!email) throw new CustomError('Bad Request',400,'Bad Request','Email is required');
         if(!pass) throw new CustomError('Bad Request',400,'Bad Request','Password is required');
-        const user = new User(0,"Gabriel Vieiera Soriano Aderaldo","gaderaldo10@gmail.com","tomate98",null,"admin",new Date,new Date(),true);
+        const user = new User(0,"Gabriel Vieiera Soriano Aderaldo","gaderaldo10@gmail.com","tomate98",null,UserRole.admin.toString(),new Date,new Date(),true);
         const response = await userController.create(user,true);
         return res.status(200).json(response);
     }catch(e){

@@ -8,11 +8,26 @@ import admRouter from './presenter/routers/admRouter';
 import { deleteUser } from './infra/database/postgress/postgressDTO';
 import cors from 'cors';
 import {config} from 'dotenv'
+import { pool } from './infra/database/postgress/postgres';
+import { migration_25_05_2025 } from './infra/database/postgress/migrations/postMigrations';
 
 config({});
 
+const verifyPostGress = (isConnected:boolean, pgClient:any) => {
+    if(!isConnected) {
+        console.log('Postgress is not connected');
+        return;
+    }
+    migration_25_05_2025(pgClient).then((value) => {
+        console.log('Migration completed successfully');
+    }).catch((error) => {
+        console.error('Error during migration:', error);
+    })
+}
+
 const PORT = process.env.PORT || 3000;
 function startDatabase() {
+    pool(10).then(({isConnected, pgClient}) => verifyPostGress(isConnected, pgClient));
     connectionMongose().then((client) => {
         MongooseClientSingleton.setInstance(client);
         testConnection();
@@ -47,8 +62,9 @@ router.use('/api',authRouter);
 router.use('/api/ping',async (_,res) => {
     res.send('pong');
 });
-router.use(verifyToken);
 router.use('/api',userRouter);
+router.use(verifyToken);
+
 router.use('/api',admRouter);
 
 
@@ -57,5 +73,4 @@ app.listen(PORT,function(){
     console.log('SERVER RUNNING ON PORT: '+PORT);
     console.log(verifyGetEnviroments());
     startDatabase();
-    //a();
 })
