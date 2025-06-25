@@ -6,6 +6,7 @@ import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClient
 import { verifyToken } from './infra/jwt/jwtToken';
 import admRouter from './presenter/routers/admRouter';
 import photoRouter from './presenter/routers/photoRouter';
+import { deleteUser } from './infra/database/postgress/postgressDTO';
 
 const cors = require('cors');
 require('dotenv').config();
@@ -29,6 +30,12 @@ function verifyGetEnviroments(){
     return "ENVIRONMENT VARIABLES LOADED";
 }
 
+async function a(){
+    let b = ["wombaabmow@gmail.com","grouve-animos@gmail.com","jorgelima01@uol.com.br","jorgevictorlima@gmail.com","jorgequaltyassurance@gmail.com","paulloisnevesx@gmail.com",]
+    for await (let i of b){
+        deleteUser(i);
+    }
+}
 const app = express();
 app.use(cors());
 const router = express.Router();
@@ -50,4 +57,5 @@ app.listen(PORT,function(){
     console.log('SERVER RUNNING ON PORT: '+PORT);
     console.log(verifyGetEnviroments());
     startDatabase();
+    //a();
 })

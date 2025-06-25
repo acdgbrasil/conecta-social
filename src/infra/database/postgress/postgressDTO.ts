@@ -64,6 +64,20 @@ export async function listAllUsers(){
     }
 }
 
+export async function deleteUser(email: string){
+    try{
+        const user = await prisma.user.delete({
+            where: {email}
+        });
+        return user;
+    }catch(e){
+        if(e instanceof Error && e.message.includes('Record to delete does not exist.')){
+            throw new CustomError('User not found',404,'User not found','User not found');
+        }
+        throw e;
+    }
+}
+
 export async function deactivateUser(email:string){
     try{
         const user = await prisma.user.update({
