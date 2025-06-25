@@ -62,9 +62,9 @@ router.use('/api',authRouter);
 router.use('/api/ping',async (_,res) => {
     res.send('pong');
 });
-router.use('/api',userRouter);
-router.use(verifyToken);
 
+router.use(verifyToken);
+router.use('/api',userRouter);
 router.use('/api',admRouter);
 
 
