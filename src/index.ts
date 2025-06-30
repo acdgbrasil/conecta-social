@@ -23,10 +23,11 @@ const verifyPostGress = (isConnected:boolean, pgClient:any) => {
     }).catch((error) => {
         console.error('Error during migration:', error);
     })
+    console.log('Postgress is connected');
 }
 
 const PORT = process.env.PORT || 3000;
-console.log(process.env);
+
 function startDatabase() {
     pool(10).then(({isConnected, pgClient}) => verifyPostGress(isConnected, pgClient));
     connectionMongose().then((client) => {
