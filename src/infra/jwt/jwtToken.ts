@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { CustomError } from '../error/error';
+import { CustomError } from '../error/error.ts';
 
 /**
  * Creates a JWT token with the given payload and expiration time.

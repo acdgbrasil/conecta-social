@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { MongooseClientSingleton } from "../mongooseClientSingleton";
-import { CodeModel } from "../mongoModels";
+import { MongooseClientSingleton } from "../mongooseClientSingleton.ts";
+import { CodeModel } from "../mongoModels.ts";
 require('dotenv').config();
 
 export const connectionMongose = async () => {

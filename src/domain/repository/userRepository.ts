@@ -1,20 +1,20 @@
-import { FamilyAndCommunity } from "../entity/familyAndCommunity";
-import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, Pregnant } from "../entity/familyComposition";
-import { FamilyComunitaryConvivation } from "../entity/familyComunitaryConvivation";
-import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits";
-import { HelphyConditionFamily } from "../entity/familyHelphyCondition";
-import { FamilyHistoryInstitutionalComplet } from "../entity/familyHistoryInstitutionalComplet";
-import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../entity/familyHistoryOfComplianceSocioEducationalMeasures";
-import { FamilyHistorySocioEducation } from "../entity/familyHistorySocioEducation";
-import { FamilyInstitucionalHistory } from "../entity/familyInstitucionalHistory";
-import { FamilySituationViolation } from "../entity/familySituationViolation";
-import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
-import { HelphyCondition } from "../entity/healthCondition";
-import { HomeConditions } from "../entity/homeConditions";
-import { Observations } from "../entity/observations";
-import { ReferencePerson } from "../entity/referencePerson";
-import { User } from "../entity/user";
-import { WorkCondition } from "../entity/workCondition";
+import { FamilyAndCommunity } from "../entity/familyAndCommunity.ts";
+import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, Pregnant } from "../entity/familyComposition.ts";
+import { FamilyComunitaryConvivation } from "../entity/familyComunitaryConvivation.ts";
+import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits.ts";
+import { HelphyConditionFamily } from "../entity/familyHelphyCondition.ts";
+import { FamilyHistoryInstitutionalComplet } from "../entity/familyHistoryInstitutionalComplet.ts";
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../entity/familyHistoryOfComplianceSocioEducationalMeasures.ts";
+import { FamilyHistorySocioEducation } from "../entity/familyHistorySocioEducation.ts";
+import { FamilyInstitucionalHistory } from "../entity/familyInstitucionalHistory.ts";
+import { FamilySituationViolation } from "../entity/familySituationViolation.ts";
+import { FirstEntryInUnity } from "../entity/firstEntryInUnity.ts";
+import { HelphyCondition } from "../entity/healthCondition.ts";
+import { HomeConditions } from "../entity/homeConditions.ts";
+import { Observations } from "../entity/observations.ts";
+import { ReferencePerson } from "../entity/referencePerson.ts";
+import { User } from "../entity/user.ts";
+import { WorkCondition } from "../entity/workCondition.ts";
 
 export type informationEducationCondition = {
     age: number;

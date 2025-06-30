@@ -1,19 +1,19 @@
-import { Documents, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition";
-import { FamilySituationViolation } from "../../../../domain/entity/familySituationViolation";
-import { Observations } from "../../../../domain/entity/observations";
-import { ReferencePerson } from "../../../../domain/entity/referencePerson";
-import { CustomError } from "../../../error/error";
-import { familyAndCommunityModel } from "../models/familyAndCommunityModel";
-import { familyCompositionModel } from "../models/familyCompositionModel";
-import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel";
-import { FamilyHistoryInstitutionalCompletModel } from "../models/familyHistoryInstutionalCompletModel";
-import { familyHistoryOfComplianceSocioEducationalMeasuresModel } from "../models/familyHistoryOfComplianceSocioEducationalMeasuresModel";
-import { familySituationViolenceModel } from "../models/familySituationViolenceModel";
-import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
-import { helphyConditionModel } from "../models/helphyConditionModel";
-import { homeConditionsModel } from "../models/homeConditionsModel";
-import { referencePersonModel } from "../models/referencePersonModel";
-import { WorkConditionModel } from "../models/workConditionModel";
+import { Documents, FamilyCompositionPerson } from "../../../../domain/entity/familyComposition.ts";
+import { FamilySituationViolation } from "../../../../domain/entity/familySituationViolation.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { ReferencePerson } from "../../../../domain/entity/referencePerson.ts";
+import { CustomError } from "../../../error/error.ts";
+import { familyAndCommunityModel } from "../models/familyAndCommunityModel.ts";
+import { familyCompositionModel } from "../models/familyCompositionModel.ts";
+import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel.ts";
+import { FamilyHistoryInstitutionalCompletModel } from "../models/familyHistoryInstutionalCompletModel.ts";
+import { familyHistoryOfComplianceSocioEducationalMeasuresModel } from "../models/familyHistoryOfComplianceSocioEducationalMeasuresModel.ts";
+import { familySituationViolenceModel } from "../models/familySituationViolenceModel.ts";
+import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel.ts";
+import { helphyConditionModel } from "../models/helphyConditionModel.ts";
+import { homeConditionsModel } from "../models/homeConditionsModel.ts";
+import { referencePersonModel } from "../models/referencePersonModel.ts";
+import { WorkConditionModel } from "../models/workConditionModel.ts";
 
 
 export const getByIdReferencePerson = async (id:string) => {

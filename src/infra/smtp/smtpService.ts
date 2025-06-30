@@ -1,5 +1,5 @@
-import { SmtpRepository } from "./repository/smtpRepository";
-import { sendGenericEmail } from "./sendgrid/sendGridDto";
+import { SmtpRepository } from "./repository/smtpRepository.ts";
+import { sendGenericEmail } from "./sendgrid/sendGridDto.ts";
 
 /**
  * Service for sending generic emails using SMTP.

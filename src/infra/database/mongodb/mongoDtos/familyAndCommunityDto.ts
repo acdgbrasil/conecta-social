@@ -1,8 +1,8 @@
-import { FamilyAndCommunity } from "../../../../domain/entity/familyAndCommunity";
-import { Observations } from "../../../../domain/entity/observations";
-import { CustomError } from "../../../error/error";
-import { familyAndCommunityModel } from "../models/familyAndCommunityModel";
-import { observation } from "../models/observationModel";
+import { FamilyAndCommunity } from "../../../../domain/entity/familyAndCommunity.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { CustomError } from "../../../error/error.ts";
+import { familyAndCommunityModel } from "../models/familyAndCommunityModel.ts";
+import { observation } from "../models/observationModel.ts";
 
 export const createFamilyAndCommunityDto = async (familyAndCommunity: FamilyAndCommunity, familyAndCommunityId: string): Promise<FamilyAndCommunity> => {
     const fc = await familyAndCommunityModel.findById(familyAndCommunityId);

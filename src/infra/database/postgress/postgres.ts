@@ -1,9 +1,9 @@
-import {Pool, PoolClient} from 'pg';
-import { CustomError } from '../../error/error';
+import {Pool} from 'pg';
+import { CustomError } from '../../error/error.ts';
 
 export const pool = async (numberOfConnection:number = 10) => {
    const pool = new Pool({
-    user: process.env.POSGRES_USER,       
+    user: process.env.POSTGRES_USER,       
     host: process.env.POSTGRES_HOST,      
     database: process.env.POSTGRES_DB,   
     password: process.env.POSTGRES_PASSWORD,  

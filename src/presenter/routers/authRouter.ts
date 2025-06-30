@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { AuthController } from "../../useCase/controllers/authController";
-import { CustomError } from "../../infra/error/error";
-import { UserController } from "../../useCase/controllers/userController";
-import { User, UserRole } from "../../domain/entity/user";
+import { AuthController } from "../../useCase/controllers/authController.ts";
+import { CustomError } from "../../infra/error/error.ts";
+import { UserController } from "../../useCase/controllers/userController.ts";
+import { User, UserRole } from "../../domain/entity/user.ts";
 
 
 const authRouter = Router();

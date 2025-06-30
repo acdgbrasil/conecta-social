@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { FamilyHistoryInstitutionalComplet } from "../../../../domain/entity/familyHistoryInstitutionalComplet";
-import { observation } from "./observationModel";
+import { FamilyHistoryInstitutionalComplet } from "../../../../domain/entity/familyHistoryInstitutionalComplet.ts";
+import { observation } from "./observationModel.ts";
 
 export const FamilyHistoryInstitutionalCompletSchema = new mongoose.Schema<FamilyHistoryInstitutionalComplet>({
     childCustodyHistory: {

@@ -1,7 +1,7 @@
-import { FirstEntryInUnity } from "../../../../domain/entity/firstEntryInUnity";
-import { Observations } from "../../../../domain/entity/observations";
-import { CustomError } from "../../../error/error";
-import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel";
+import { FirstEntryInUnity } from "../../../../domain/entity/firstEntryInUnity.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { CustomError } from "../../../error/error.ts";
+import { firstEntryInUnityModel } from "../models/firstEntryInUnityModel.ts";
 
 export const createFirstEntryInUnity = async (firstEntry:FirstEntryInUnity,firstEntryInUnityId:string) => {
     try{

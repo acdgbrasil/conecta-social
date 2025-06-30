@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {  RG } from "../../../../domain/entity/referencePerson";
+import {  RG } from "../../../../domain/entity/referencePerson.ts";
 
 export const rg = new mongoose.Schema<RG>({
     issueDate:{

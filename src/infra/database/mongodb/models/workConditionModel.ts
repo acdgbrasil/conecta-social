@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { WorkCondition } from "../../../../domain/entity/workCondition";
+import { WorkCondition } from "../../../../domain/entity/workCondition.ts";
 
 const workConditionSchema = new mongoose.Schema<WorkCondition>({
     familyIncome:{

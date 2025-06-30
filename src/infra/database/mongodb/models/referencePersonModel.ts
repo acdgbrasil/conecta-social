@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { ReferencePerson } from "../../../../domain/entity/referencePerson";
-import { rg } from "./rgModel";
-import { observation } from "./observationModel";
+import { ReferencePerson } from "../../../../domain/entity/referencePerson.ts";
+import { rg } from "./rgModel.ts";
+import { observation } from "./observationModel.ts";
 
 const referencePerson = new mongoose.Schema<ReferencePerson>({
     fullName:{

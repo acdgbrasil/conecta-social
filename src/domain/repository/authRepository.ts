@@ -1,4 +1,4 @@
-import { User } from "../entity/user"
+import { User } from "../entity/user.ts"
 
 export interface AuthRepository {
     login(email: string, password: string): Promise<Object>

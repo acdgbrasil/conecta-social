@@ -1,6 +1,6 @@
-import { User } from "../../domain/entity/user";
-import { AdmRepository } from "../../domain/repository/admRepository";
-import { DatabaseService } from "../../infra/database/databaseService";
+import { User } from "../../domain/entity/user.ts";
+import { AdmRepository } from "../../domain/repository/admRepository.ts";
+import { DatabaseService } from "../../infra/database/databaseService.ts";
 
 export class AdmController implements AdmRepository{
    

@@ -1,4 +1,4 @@
-import { Observations } from "./observations";
+import { Observations } from "./observations.ts";
 
 enum FamilyAndCommunityEnum {
     CONFLICT_WITH_VIOLENCE,

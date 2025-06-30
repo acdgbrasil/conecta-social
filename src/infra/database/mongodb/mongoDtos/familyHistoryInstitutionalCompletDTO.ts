@@ -1,7 +1,7 @@
-import { FamilyHistoryInstitutionalComplet } from "../../../../domain/entity/familyHistoryInstitutionalComplet";
-import { Observations } from "../../../../domain/entity/observations";
-import { CustomError } from "../../../error/error";
-import { FamilyHistoryInstitutionalCompletModel } from "../models/familyHistoryInstutionalCompletModel";
+import { FamilyHistoryInstitutionalComplet } from "../../../../domain/entity/familyHistoryInstitutionalComplet.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { CustomError } from "../../../error/error.ts";
+import { FamilyHistoryInstitutionalCompletModel } from "../models/familyHistoryInstutionalCompletModel.ts";
 
 export const familyHistoryIntitutionalCompletDto = async (familyHistoryIntitutionalComplet:FamilyHistoryInstitutionalComplet,familuInstitucionalHistoryId:string) => {
     try{

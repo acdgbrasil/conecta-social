@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { HelphyCondition, HelphyConditionStruct } from "../../../../domain/entity/healthCondition";
-import { observation } from "./observationModel";
+import { HelphyCondition, HelphyConditionStruct } from "../../../../domain/entity/healthCondition.ts";
+import { observation } from "./observationModel.ts";
 
 const helphyConditionStructSchema = new mongoose.Schema<HelphyConditionStruct>({
     fullName:{

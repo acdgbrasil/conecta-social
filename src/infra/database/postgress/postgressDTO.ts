@@ -1,7 +1,7 @@
-import { User, UserRole } from '../../../domain/entity/user';
-import { CustomError } from '../../error/error';
-import { pool } from './postgres';
-import { CREATE_TABLE_USER, createNewUserAdmin } from './schema/userSchema';
+import { User, UserRole } from '../../../domain/entity/user.ts';
+import { CustomError } from '../../error/error.ts';
+import { pool } from './postgres.ts';
+import { CREATE_TABLE_USER, createNewUserAdmin } from './schema/userSchema.ts';
 
 
 

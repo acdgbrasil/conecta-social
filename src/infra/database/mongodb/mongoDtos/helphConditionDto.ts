@@ -1,7 +1,7 @@
-import { HelphyCondition } from "../../../../domain/entity/healthCondition";
-import { Observations } from "../../../../domain/entity/observations";
-import { CustomError } from "../../../error/error";
-import { helphyConditionModel } from "../models/helphyConditionModel";
+import { HelphyCondition } from "../../../../domain/entity/healthCondition.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { CustomError } from "../../../error/error.ts";
+import { helphyConditionModel } from "../models/helphyConditionModel.ts";
 
 export const createHelphyConditionDto = async (HelphyCondition:HelphyCondition,helphyConditionId:string) => {
     const hc = await helphyConditionModel.findById(helphyConditionId);
