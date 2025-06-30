@@ -1,7 +1,5 @@
-import { on } from 'events';
 import {Pool, PoolClient} from 'pg';
 import { CustomError } from '../../error/error';
-import { error } from 'console';
 
 export const pool = async (numberOfConnection:number = 10) => {
    const pool = new Pool({connectionString: process.env.DATABASE_URL,max: numberOfConnection});
