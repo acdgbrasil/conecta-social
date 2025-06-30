@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Observations } from "../../../../domain/entity/observations";
+import { Observations } from "../../../../domain/entity/observations.ts";
 
 export const observation = new mongoose.Schema<Observations>({
     observation:{

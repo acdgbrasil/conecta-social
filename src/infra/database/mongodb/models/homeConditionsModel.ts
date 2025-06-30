@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { HomeConditions } from "../../../../domain/entity/homeConditions";
-import { observation } from "./observationModel";
+import { HomeConditions } from "../../../../domain/entity/homeConditions.ts";
+import { observation } from "./observationModel.ts";
 
 const homeConditions = new mongoose.Schema<HomeConditions>({
     typeResidence:{

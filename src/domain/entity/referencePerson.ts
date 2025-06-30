@@ -1,5 +1,5 @@
-import { FirstEntryInUnity } from "./firstEntryInUnity"
-import { Observations } from "./observations"
+import { FirstEntryInUnity } from "./firstEntryInUnity.ts"
+import { Observations } from "./observations.ts"
 
 export enum LOCAL_LOCALIZATION {
     urban = "URBAN",

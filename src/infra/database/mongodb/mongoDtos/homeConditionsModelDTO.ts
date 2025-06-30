@@ -1,6 +1,6 @@
-import { HomeConditions } from "../../../../domain/entity/homeConditions";
-import { Observations } from "../../../../domain/entity/observations";
-import { homeConditionsModel } from "../models/homeConditionsModel";
+import { HomeConditions } from "../../../../domain/entity/homeConditions.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { homeConditionsModel } from "../models/homeConditionsModel.ts";
 
 export const createHomeConditionsdDTO = async (hc:HomeConditions,homeConditionsId:string) => {
     try{

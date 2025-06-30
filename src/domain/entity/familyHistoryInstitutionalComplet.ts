@@ -1,4 +1,4 @@
-import { Observations } from "./observations";
+import { Observations } from "./observations.ts";
 
 export class otherFamilySeparationSituationsStruct {
     hasMemberInPrision:boolean;
