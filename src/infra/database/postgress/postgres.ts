@@ -2,7 +2,13 @@ import {Pool, PoolClient} from 'pg';
 import { CustomError } from '../../error/error';
 
 export const pool = async (numberOfConnection:number = 10) => {
-   const pool = new Pool({connectionString: process.env.DATABASE_URL,max: numberOfConnection});
+   const pool = new Pool({
+    user: process.env.POSGRES_USER,       
+    host: process.env.POSTGRES_HOST,      
+    database: process.env.POSTGRES_DB,   
+    password: process.env.POSTGRES_PASSWORD,  
+    port: Number(process.env.POSTGRES_PORT),       
+   });
    const pgClient = await pool.connect();
    const queryResult = await pgClient.query('SELECT NOW()');
     if(queryResult.rowCount === 0) {

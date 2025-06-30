@@ -43,6 +43,26 @@ function verifyGetEnviroments(){
         return "FAIL TO LOAD SUPER_ADM_EMAIL";
     }
 
+    if(process.env.POSTGRES_USER == null || process.env.POSTGRES_USER == undefined || process.env.POSTGRES_USER == ''){
+        return "FAIL TO LOAD POSTGRES_USER";
+    }
+
+    if(process.env.POSTGRES_PASSWORD == null || process.env.POSTGRES_PASSWORD == undefined || process.env.POSTGRES_PASSWORD == ''){
+        return "FAIL TO LOAD POSTGRES_PASSWORD";
+    }
+
+    if(process.env.POSTGRES_HOST == null || process.env.POSTGRES_HOST == undefined || process.env.POSTGRES_HOST == ''){
+        return "FAIL TO LOAD POSTGRES_HOST";
+    }
+
+    if(process.env.POSTGRES_PORT == null || process.env.POSTGRES_PORT == undefined || process.env.POSTGRES_PORT == ''){
+        return "FAIL TO LOAD POSTGRES_PORT";
+    }
+
+    if(process.env.POSTGRES_DB == null || process.env.POSTGRES_DB == undefined || process.env.POSTGRES_DB == ''){
+        return "FAIL TO LOAD POSTGRES_DB";
+    }
+
     return "ENVIRONMENT VARIABLES LOADED";
 }
 
