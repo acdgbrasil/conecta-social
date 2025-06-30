@@ -35,10 +35,6 @@ function startDatabase() {
 }
 
 function verifyGetEnviroments(){
-    if(process.env.DATABASE_URL == null || process.env.DATABASE_URL == undefined || process.env.DATABASE_URL == ''){
-        return "FAIL TO LOAD DATABASE_URL";
-    }
-
     if(process.env.SUPER_ADM_EMAIL == null || process.env.SUPER_ADM_EMAIL == undefined || process.env.SUPER_ADM_EMAIL == ''){
         return "FAIL TO LOAD SUPER_ADM_EMAIL";
     }
