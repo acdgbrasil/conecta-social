@@ -1,13 +1,13 @@
 import { get } from "http";
-import { Documents, EducationConditionPerson, FamilyCompositionPerson, Pregnant, WorkConditionPerson } from "../../../../domain/entity/familyComposition";
-import { Observations } from "../../../../domain/entity/observations";
-import { CustomError } from "../../../error/error";
-import { familyCompositionModel } from "../models/familyCompositionModel";
-import { WorkCondition } from "../../../../domain/entity/workCondition";
-import { HelphyConditionFamily } from "../../../../domain/entity/familyHelphyCondition";
-import { FamilyComunitaryConvivation } from "../../../../domain/entity/familyComunitaryConvivation";
-import { FamilyHistorySocioEducation } from "../../../../domain/entity/familyHistorySocioEducation";
-import { FamilyInstitucionalHistory } from "../../../../domain/entity/familyInstitucionalHistory";
+import { Documents, EducationConditionPerson, FamilyCompositionPerson, Pregnant, WorkConditionPerson } from "../../../../domain/entity/familyComposition.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { CustomError } from "../../../error/error.ts";
+import { familyCompositionModel } from "../models/familyCompositionModel.ts";
+import { WorkCondition } from "../../../../domain/entity/workCondition.ts";
+import { HelphyConditionFamily } from "../../../../domain/entity/familyHelphyCondition.ts";
+import { FamilyComunitaryConvivation } from "../../../../domain/entity/familyComunitaryConvivation.ts";
+import { FamilyHistorySocioEducation } from "../../../../domain/entity/familyHistorySocioEducation.ts";
+import { FamilyInstitucionalHistory } from "../../../../domain/entity/familyInstitucionalHistory.ts";
 
 export const getFamilyCompositonPersonsDto = async (familyCompositionId:string) => {
     try {

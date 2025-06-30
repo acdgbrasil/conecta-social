@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { MongooseClientSingleton } from "./mongooseClientSingleton";
+import { MongooseClientSingleton } from "./mongooseClientSingleton.ts";
 
 //const client:mongoose.Mongoose = MongooseClientSingleton.getInstance;
 const FIVE_MINUTES = (60 * 15)*5;

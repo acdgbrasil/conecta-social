@@ -1,11 +1,11 @@
-import { User } from "../../domain/entity/user";
-import { AuthRepository } from "../../domain/repository/authRepository";
-import { DatabaseService } from "../../infra/database/databaseService";
-import { verifyPass } from "../../infra/encrypt/bcrypt/bcryptDto";
-import { CryptoService } from "../../infra/encrypt/encryptService";
-import { CustomError } from "../../infra/error/error";
-import { createToken } from "../../infra/jwt/jwtToken";
-import { SmtpService } from "../../infra/smtp/smtpService";
+import { User } from "../../domain/entity/user.ts";
+import { AuthRepository } from "../../domain/repository/authRepository.ts";
+import { DatabaseService } from "../../infra/database/databaseService.ts";
+import { verifyPass } from "../../infra/encrypt/bcrypt/bcryptDto.ts";
+import { CryptoService } from "../../infra/encrypt/encryptService.ts";
+import { CustomError } from "../../infra/error/error.ts";
+import { createToken } from "../../infra/jwt/jwtToken.ts";
+import { SmtpService } from "../../infra/smtp/smtpService.ts";
 
 const ONE_MOUTH = 60 * 60 * 24 * 30;
 

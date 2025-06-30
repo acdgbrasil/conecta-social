@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from "../../../../domain/entity/familySituationViolation";
-import { observation } from "./observationModel";
+import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from "../../../../domain/entity/familySituationViolation.ts";
+import { observation } from "./observationModel.ts";
 
 const familySituationViolationStruct = new mongoose.Schema<FamilySituationViolationStruct>({
     thisSituationOcurrent: {

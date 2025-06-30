@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { FamilyAndCommunity } from "../../../../domain/entity/familyAndCommunity";
-import { observation } from "./observationModel";
+import { FamilyAndCommunity } from "../../../../domain/entity/familyAndCommunity.ts";
+import { observation } from "./observationModel.ts";
 
 const familyAndCommunityModelScheam = new mongoose.Schema<FamilyAndCommunity>({
     yearsInState:{

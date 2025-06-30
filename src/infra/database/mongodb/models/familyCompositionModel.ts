@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, OcurruncyBolsaFamilia, ParticipationAndSocialServices, Pregnant, WorkConditionPerson } from "../../../../domain/entity/familyComposition";
-import { observation } from "./observationModel";
-import { HelphyConditionFamily } from "../../../../domain/entity/familyHelphyCondition";
-import { FamilyComunitaryConvivation } from "../../../../domain/entity/familyComunitaryConvivation";
-import { FamilyHistorySocioEducation } from "../../../../domain/entity/familyHistorySocioEducation";
-import { FamilyInstitucionalHistory } from "../../../../domain/entity/familyInstitucionalHistory";
+import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, OcurruncyBolsaFamilia, ParticipationAndSocialServices, Pregnant, WorkConditionPerson } from "../../../../domain/entity/familyComposition.ts";
+import { observation } from "./observationModel.ts";
+import { HelphyConditionFamily } from "../../../../domain/entity/familyHelphyCondition.ts";
+import { FamilyComunitaryConvivation } from "../../../../domain/entity/familyComunitaryConvivation.ts";
+import { FamilyHistorySocioEducation } from "../../../../domain/entity/familyHistorySocioEducation.ts";
+import { FamilyInstitucionalHistory } from "../../../../domain/entity/familyInstitucionalHistory.ts";
 
 const documents = new mongoose.Schema<Documents>({
     cn:{

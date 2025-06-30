@@ -1,15 +1,15 @@
 import express from 'express';
-import userRouter from './presenter/routers/userRouter';
-import authRouter from './presenter/routers/authRouter';
-import { connectionMongose, testConnection } from './infra/database/mongodb/mongoDtos/mongodbDto';
-import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClientSingleton';
-import { verifyToken } from './infra/jwt/jwtToken';
-import admRouter from './presenter/routers/admRouter';
-import { deleteUser } from './infra/database/postgress/postgressDTO';
+import userRouter from './presenter/routers/userRouter.ts';
+import authRouter from './presenter/routers/authRouter.ts';
+import { connectionMongose, testConnection } from './infra/database/mongodb/mongoDtos/mongodbDto.ts';
+import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClientSingleton.ts';
+import { verifyToken } from './infra/jwt/jwtToken.ts';
+import admRouter from './presenter/routers/admRouter.ts';
+import { deleteUser } from './infra/database/postgress/postgressDTO.ts';
 import cors from 'cors';
 import {config} from 'dotenv'
-import { pool } from './infra/database/postgress/postgres';
-import { migration_25_05_2025 } from './infra/database/postgress/migrations/postMigrations';
+import { pool } from './infra/database/postgress/postgres.ts';
+import { migration_25_05_2025 } from './infra/database/postgress/migrations/postMigrations.ts';
 
 config({});
 

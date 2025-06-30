@@ -1,7 +1,7 @@
-import { FamilyEventlyBenefits } from "../../../../domain/entity/familyEnvetlyBenefits";
-import { Observations } from "../../../../domain/entity/observations";
-import { CustomError } from "../../../error/error";
-import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel";
+import { FamilyEventlyBenefits } from "../../../../domain/entity/familyEnvetlyBenefits.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { CustomError } from "../../../error/error.ts";
+import { familyEventlyBenefitsModel } from "../models/familyEventlyBenefitsModel.ts";
 
 export const createFamilyEventlyBenefitsDto = async (familyEventlyBenefits: FamilyEventlyBenefits,familyEventlyBenefitsId:string): Promise<FamilyEventlyBenefits> => {
     const familyBenefitsModel = await  familyEventlyBenefitsModel.findById(familyEventlyBenefitsId);

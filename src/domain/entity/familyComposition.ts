@@ -1,8 +1,8 @@
-import { FamilyComunitaryConvivation } from "./familyComunitaryConvivation";
-import { HelphyConditionFamily } from "./familyHelphyCondition";
-import { FamilyHistorySocioEducation } from "./familyHistorySocioEducation";
-import { FamilyInstitucionalHistory } from "./familyInstitucionalHistory";
-import { Observations } from "./observations";
+import { FamilyComunitaryConvivation } from "./familyComunitaryConvivation.ts";
+import { HelphyConditionFamily } from "./familyHelphyCondition.ts";
+import { FamilyHistorySocioEducation } from "./familyHistorySocioEducation.ts";
+import { FamilyInstitucionalHistory } from "./familyInstitucionalHistory.ts";
+import { Observations } from "./observations.ts";
 
 export class Documents{
     cn: boolean;

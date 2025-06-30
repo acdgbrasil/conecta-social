@@ -1,5 +1,5 @@
 import {Pool, PoolClient} from 'pg';
-import { CustomError } from '../../error/error';
+import { CustomError } from '../../error/error.ts';
 
 export const pool = async (numberOfConnection:number = 10) => {
    const pool = new Pool({

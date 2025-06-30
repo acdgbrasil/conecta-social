@@ -1,6 +1,6 @@
 import { response, Router } from "express";
-import { CustomError } from "../../infra/error/error";
-import { AdmController } from "../../useCase/controllers/admController";
+import { CustomError } from "../../infra/error/error.ts";
+import { AdmController } from "../../useCase/controllers/admController.ts";
 
 const admRouter = Router();
 
