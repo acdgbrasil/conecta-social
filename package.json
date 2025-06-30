@@ -14,12 +14,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@swc/cli": "^0.7.7",
+    "@swc/core": "^1.12.7",
     "@types/cors": "^2.8.19",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/mongoose": "^5.11.97",
     "@types/multer": "^1.4.11",
     "@types/node": "^20.8.8",
     "@types/pg": "^8.15.4",
+    "esbuild": "^0.25.5",
     "typescript": "^5.2.2"
   },
   "dependencies": {

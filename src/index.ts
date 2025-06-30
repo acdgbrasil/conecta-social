@@ -26,6 +26,7 @@ const verifyPostGress = (isConnected:boolean, pgClient:any) => {
 }
 
 const PORT = process.env.PORT || 3000;
+console.log(process.env);
 function startDatabase() {
     pool(10).then(({isConnected, pgClient}) => verifyPostGress(isConnected, pgClient));
     connectionMongose().then((client) => {
