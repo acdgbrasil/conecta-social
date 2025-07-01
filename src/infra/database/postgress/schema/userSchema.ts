@@ -15,5 +15,6 @@ CREATE TABLE IF NOT EXISTS users (
 export const createNewUserAdmin = `
 INSERT INTO users (full_name, email, password, crm, role, is_active, created_at, updated_at)
 VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+ON CONFLICT (email) DO NOTHING
 RETURNING *;
 `
