@@ -8,6 +8,7 @@
     "build": "npx swc src -d dist",
     "dev": "npx nodemon",
     "start": "node build/index.js",
+    "start_server_watch":"pm2 start npx --name conecta-raros-v1 -- ts-node src/index.ts",
     "docker_init": "npx prisma migrate deploy && npm run build && npx prisma generate && npm run start"
   },
   "keywords": [],
