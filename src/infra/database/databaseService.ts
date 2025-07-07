@@ -1,5 +1,5 @@
 import { User } from '../../domain/entity/user.ts';
-import {informationEducationCondition,  UserRepository} from '../../domain/repository/userRepository.ts';
+import {  UserRepository} from '../../domain/repository/userRepository.ts';
 import { CustomError } from '../error/error.ts';
 import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO.ts'
 import { AuthRepository } from '../../domain/repository/authRepository.ts';
@@ -140,7 +140,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
             throw e;
         }
     }
-    getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<informationEducationCondition> {
+    async getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<FamilyComposition> {
         try{
             const information = getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
             return information;

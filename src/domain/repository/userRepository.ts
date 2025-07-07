@@ -16,11 +16,6 @@ import { ReferencePerson } from "../entity/referencePerson.ts";
 import { User } from "../entity/user.ts";
 import { WorkCondition } from "../entity/workCondition.ts";
 
-export type informationEducationCondition = {
-    age: number;
-    educationCondition: boolean | undefined;
-}[]
-
 export interface UserRepository {
     findByEmail(email:string):Promise<any>;
     create(user:User,isAdm:boolean): Promise<User | Error>;
@@ -44,7 +39,7 @@ export interface UserRepository {
     createSituationViolationObservation(situationViolationId:string,observation:Observations): Promise<FamilySituationViolation>;
     createEducationalEspecifications(educationalEspecifications:EducationConditionPerson,familySituationId:string,personId:string): Promise<FamilyComposition>;
     getFamilyCompositonPersons(familyCompositionId:string): Promise<FamilyCompositionPerson[]>;
-    getInformationOfPersonAndAgeAreInSchool(familyCompositionId:string): Promise<informationEducationCondition>;
+    getInformationOfPersonAndAgeAreInSchool(familyCompositionId:string): Promise<FamilyComposition>;
     createWorkConditionObservation(workConditionId:string,observation:string): Promise<WorkCondition>;
     createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition>;
     createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition>;

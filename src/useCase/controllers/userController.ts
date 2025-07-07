@@ -15,7 +15,7 @@ import { Observations } from "../../domain/entity/observations.ts";
 import { ReferencePerson } from "../../domain/entity/referencePerson.ts";
 import { User } from "../../domain/entity/user.ts";
 import { WorkCondition } from "../../domain/entity/workCondition.ts";
-import { informationEducationCondition, UserRepository } from "../../domain/repository/userRepository.ts";
+import { UserRepository } from "../../domain/repository/userRepository.ts";
 import { DatabaseService } from "../../infra/database/databaseService.ts";
 import { CryptoService } from "../../infra/encrypt/encryptService.ts";
 import { CustomError } from "../../infra/error/error.ts";
