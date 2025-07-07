@@ -128,7 +128,7 @@ export class UserController implements UserRepository{
             throw e;
         }
     }
-    getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<informationEducationCondition> {
+    getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<FamilyComposition> {
         try{
             const db = new DatabaseService();
             return db.getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
