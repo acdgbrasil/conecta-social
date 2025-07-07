@@ -27,7 +27,7 @@ export const getFamilyCompositonPersonsDto = async (familyCompositionId:string) 
             const birthDate = person.birthDate
             const age = new Date().getFullYear() - new Date(birthDate).getFullYear()
             const educationCondition = person.educationConditionPerson?.isStudying
-            return {age,educationCondition}
+            return person
         })
         
         return informationEducationCondition
