@@ -14,6 +14,7 @@ export const migration_25_05_2025 = async (pgClient:PoolClient) =>{
         logPostgres('Migration completed successfully: '+result);
         logPostgres('User created successfully: '+userAdm);  
     }catch(error){
+        console.error('Error during migration: ', error);
         return;
     }
 }
