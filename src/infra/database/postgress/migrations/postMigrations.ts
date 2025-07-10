@@ -3,6 +3,7 @@ import { CREATE_TABLE_USER } from "../schema/userSchema.ts";
 import { createADM } from "../postgressDTO.ts";
 import { User, UserRole } from "../../../../domain/entity/user.ts";
 import { UserController } from "../../../../useCase/controllers/userController.ts";
+import { logPostgres } from "../../../../utils/fancy_console_log.ts";
 
 export const migration_25_05_2025 = async (pgClient:PoolClient) =>{
     try{
@@ -10,8 +11,8 @@ export const migration_25_05_2025 = async (pgClient:PoolClient) =>{
         const result = await pgClient.query(CREATE_TABLE_USER);
         const newUser = new User(0,process.env.SUPER_ADM_NAME!,process.env.SUPER_ADM_EMAIL!,process.env.SUPER_ADM_PASSWORD!,null,UserRole.admin.toString(),new Date(),new Date(),true);
         const userAdm = await controller.create(newUser, true);
-        console.log('Migration completed successfully', result);
-        console.log('User created successfully', userAdm);  
+        logPostgres('Migration completed successfully: '+result);
+        logPostgres('User created successfully: '+userAdm);  
     }catch(error){
         return;
     }

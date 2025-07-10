@@ -1,3 +1,5 @@
+import { logError } from "./fancy_console_log";
+
 /**
  * Converte uma string de data no formato "DD/MM/YYYY" para o formato "YYYY-MM-DDTHH:mm:ss+0000" (UTC).
  * A hora é definida como 00:00:00 UTC.
@@ -42,7 +44,7 @@ export function converterDataStringParaIsoUtc(dataString: string): string {
 const dataOriginal: string = "03/11/2020";
 try {
   const dataConvertida: string = converterDataStringParaIsoUtc(dataOriginal);
-  console.log(dataConvertida); // Saída esperada: "2020-11-03T00:00:00+0000"
+  logError(dataConvertida); // Saída esperada: "2020-11-03T00:00:00+0000"
 } catch (error: any) {
   console.error(error.message);
 }

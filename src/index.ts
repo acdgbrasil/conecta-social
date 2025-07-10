@@ -10,20 +10,21 @@ import cors from 'cors';
 import {config} from 'dotenv'
 import { pool } from './infra/database/postgress/postgres.ts';
 import { migration_25_05_2025 } from './infra/database/postgress/migrations/postMigrations.ts';
+import { logError, logPostgres } from './utils/fancy_console_log.ts';
 
 config({});
 
 const verifyPostGress = (isConnected:boolean, pgClient:any) => {
     if(!isConnected) {
-        console.log('Postgress is not connected');
+        logError('Postgress is not connected');
         return;
     }
     migration_25_05_2025(pgClient).then((value) => {
-        console.log('Migration completed successfully');
+        logPostgres('Migration completed successfully');
     }).catch((error) => {
-        console.error('Error during migration:', error);
+        logError('Error during migration: ' +error);
     })
-    console.log('Postgress is connected');
+    logPostgres('Postgress is connected');
 }
 
 const PORT = process.env.PORT || 4000;

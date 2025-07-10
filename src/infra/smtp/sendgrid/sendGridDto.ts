@@ -1,3 +1,4 @@
+import { logError } from "../../../utils/fancy_console_log.ts";
 import { sendGridConfig } from "./config/sendgrid.config.ts";
 import sendGrid from '@sendgrid/mail'
 
@@ -15,7 +16,7 @@ export function sendGenericEmail(from: string, to: string, subject: string,text?
                 return resolve(true)
             })
             .catch((err) => {
-                console.log('Error to send email',err)
+                logError('Error to send email'+err);
                 return reject(err)
             })
         })

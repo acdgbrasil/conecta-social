@@ -18,6 +18,7 @@ import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySo
 import { FamilyHistoryInstitutionalComplet, otherFamilySeparationSituationsStruct } from '../../domain/entity/familyHistoryInstitutionalComplet.ts';
 import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory.ts';
 import { converterDataStringParaIsoUtc } from '../../utils/dateFormater.ts';
+import { logError } from '../../utils/fancy_console_log.ts';
 
 const userRouter = Router();
 const userControle = new UserController();
@@ -212,7 +213,7 @@ userRouter.post('/create/history/socio/educational/measures',async (req,res)=>{
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
         }else{
-            console.log(e);
+            logError("ERROR: "+e);
             res.status(500).json({error:'Internal server error'});
         }
     }
@@ -522,7 +523,7 @@ userRouter.post('/create/violence/situation/observation',async (req,res)=>{
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
         }else{
-            console.log(e);
+            logError("ERROR: "+e);
             res.status(500).json({error:'Internal server error'});
         }
     }
@@ -997,7 +998,7 @@ userRouter.post('/create/violence/situation',async (req,res)=>{
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
         }else{
-            console.log(e)
+            logError("ERROR: "+e)
             res.status(500).json({error:'Internal server error'});
         }
     }
@@ -1131,7 +1132,7 @@ userRouter.post('/create/home/conditions',async (req,res)=>{
         const homeConditionsCreated = await userControle.createHomeConditions(homeConditions,homeConditionsId);
         return res.status(201).json(homeConditionsCreated);
     }catch(e){
-        console.log(e)
+        logError("ERROR: "+e)
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
         }else{

@@ -3,6 +3,7 @@ import { AuthController } from "../../useCase/controllers/authController.ts";
 import { CustomError } from "../../infra/error/error.ts";
 import { UserController } from "../../useCase/controllers/userController.ts";
 import { User, UserRole } from "../../domain/entity/user.ts";
+import { logError } from "../../utils/fancy_console_log.ts";
 
 
 const authRouter = Router();
@@ -22,7 +23,7 @@ authRouter.post('/auth/register', async (req, res) => {
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
         }else{
-            console.log(e);
+            logError("Error in authRouter: " + e);
             res.status(500).json({error:'Internal server error'});
         }
     }
@@ -40,7 +41,7 @@ authRouter.post('/auth/login', async (req, res) => {
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
         }else{
-            console.log(e);
+            logError("Error in authRouter: " + e);
             res.status(500).json({error:'Internal server error'});
         }
 
