@@ -26,7 +26,7 @@ const verifyPostGress = (isConnected:boolean, pgClient:any) => {
     console.log('Postgress is connected');
 }
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 function startDatabase() {
     pool(10).then(({isConnected, pgClient}) => verifyPostGress(isConnected, pgClient));
