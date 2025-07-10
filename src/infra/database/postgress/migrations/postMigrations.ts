@@ -9,8 +9,9 @@ export const migration_25_05_2025 = async (pgClient:PoolClient) =>{
         const controller = new UserController();
         const result = await pgClient.query(CREATE_TABLE_USER);
         const newUser = new User(0,process.env.SUPER_ADM_NAME!,process.env.SUPER_ADM_EMAIL!,process.env.SUPER_ADM_PASSWORD!,null,UserRole.admin.toString(),new Date(),new Date(),true);
-        const userAdm = await controller.create(newUser, true);  
-        console.log(userAdm);
+        const userAdm = await controller.create(newUser, true);
+        console.log('Migration completed successfully', result);
+        console.log('User created successfully', userAdm);  
     }catch(error){
         return;
     }

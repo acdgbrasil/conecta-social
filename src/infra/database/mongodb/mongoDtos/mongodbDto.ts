@@ -11,7 +11,12 @@ export const connectionMongose = async () => {
             throw new Error('FAIL TO LOAD MONGO_LOCAL_URL');
         }
 
-        const client = await mongoose.connect(process.env.MONGO_LOCAL_URL);
+        if(process.env.MONGO_LOCAL_URL_PROD == null || process.env.MONGO_LOCAL_URL_PROD == undefined || process.env.MONGO_LOCAL_URL_PROD == ''){
+            console.log('FAIL TO LOAD MONGO_LOCAL_URL');
+            throw new Error('FAIL TO LOAD MONGO_LOCAL_URL');
+        }
+
+        const client = await mongoose.connect(process.env.MONGO_LOCAL_URL_PROD);
         return client;
     } catch (error) {
         console.log('Error to connect MongoDB', error);

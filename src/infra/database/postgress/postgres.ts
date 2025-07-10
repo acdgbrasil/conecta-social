@@ -3,11 +3,11 @@ import { CustomError } from '../../error/error.ts';
 
 export const pool = async (numberOfConnection:number = 10) => {
    const pool = new Pool({
-    user: process.env.POSTGRES_USER,       
-    host: process.env.POSTGRES_HOST,      
-    database: process.env.POSTGRES_DB,   
-    password: process.env.POSTGRES_PASSWORD,  
-    port: Number(process.env.POSTGRES_PORT),       
+    user: process.env.POSTGRES_PROD_USER,       
+    host: process.env.POSTGRES_PROD_HOST,      
+    database: process.env.POSTGRES_PROD_DB,   
+    password: process.env.POSTGRES_PROD_PASSWORD,  
+    port: Number(process.env.POSTGRES_PROD_PORT),       
    });
    const pgClient = await pool.connect();
    const queryResult = await pgClient.query('SELECT NOW()');

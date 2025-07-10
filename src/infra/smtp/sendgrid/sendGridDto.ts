@@ -15,6 +15,7 @@ export function sendGenericEmail(from: string, to: string, subject: string,text?
                 return resolve(true)
             })
             .catch((err) => {
+                console.log('Error to send email',err)
                 return reject(err)
             })
         })
