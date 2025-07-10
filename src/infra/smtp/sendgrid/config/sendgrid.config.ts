@@ -1,7 +1,12 @@
 import sendGrid from '@sendgrid/mail'
+import { logError } from '../../../../utils/fancy_console_log';
 
 export const sendGridConfig = (to:string,from:string,subject:string,text?:string,html?:string) => {
-    sendGrid.setApiKey('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')
+    if (!process.env.SEND_GRID_API_KEY) {
+        logError('SEND_GRID_API_KEY is not defined in environment variables');
+        throw new Error('SEND_GRID_API_KEY is not defined');
+    }
+    sendGrid.setApiKey(process.env.SEND_GRID_API_KEY);
     const info = {
         to: to,
         from: from,
