@@ -17,6 +17,8 @@ export const connectionMongose = async () => {
             throw new Error('FAIL TO LOAD MONGO_LOCAL_URL');
         }
 
+        logMongo(process.env.MONGO_LOCAL_URL_PROD);
+
         const client = await mongoose.connect(process.env.MONGO_LOCAL_URL_PROD);
         return client;
     } catch (error) {

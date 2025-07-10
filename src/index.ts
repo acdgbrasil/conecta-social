@@ -15,7 +15,9 @@ import { pool } from "./infra/database/postgress/postgres.ts";
 import { migration_25_05_2025 } from "./infra/database/postgress/migrations/postMigrations.ts";
 import { logError, logPostgres } from "./utils/fancy_console_log.ts";
 
-config({});
+config({
+    path: "./.env",
+});
 
 const verifyPostGress = (isConnected: boolean, pgClient: any) => {
     if (!isConnected) {
