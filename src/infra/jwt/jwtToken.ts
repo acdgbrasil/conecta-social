@@ -28,7 +28,6 @@ export function _verifyPassEmailToken(token:string):Map<string,Error | boolean |
             result.set("value",decode)
         }
     })
-    console.log(result);
     return result
 }
 
