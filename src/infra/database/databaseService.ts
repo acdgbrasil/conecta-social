@@ -32,6 +32,9 @@ import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySo
 import { FamilyHistoryInstitutionalComplet } from '../../domain/entity/familyHistoryInstitutionalComplet.ts';
 import { familyHistoryIntitutionalCompletDto, familyHistoryIntitutionalCompletObservationDto } from './mongodb/mongoDtos/familyHistoryInstitutionalCompletDTO.ts';
 import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory.ts';
+import { CryptoService } from '../encrypt/encryptService.ts';
+import { _verifyPassEmailToken } from '../jwt/jwtToken.ts';
+import { JwtPayload } from 'jsonwebtoken';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
     createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet: FamilyHistoryInstitutionalComplet, familyHistoryInstitutionalCompletId: string, familuInstitucionalHistoryPerson: FamilyInstitucionalHistory, familyCompositionId: string, personId: string): Promise<FamilyHistoryInstitutionalComplet> {
         try{
@@ -325,12 +328,16 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
         }
     }
 
-    async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
+    async resetPassword(email: string, code: string, newPassword: string,emailToken:string): Promise<User> {
         try{
         const hasCode = await findCode(code);
-        if(!hasCode){
-            throw new CustomError('CODE_NOT_FOUND', 404,'CODE_NOT_FOUND', 'Code not found');
-        }
+        const isValidEmail = await findByEmail(email);
+        if(!isValidEmail) throw new CustomError('USER_NOT_FOUND', 404,'USER_NOT_FOUND', 'User not found');
+        const isTheCorrectEmail = _verifyPassEmailToken(emailToken);
+        if(isTheCorrectEmail.get('hasError')) throw new CustomError('INVALID_EMAIL_TOKEN', 400,'INVALID_EMAIL_TOKEN', `${isTheCorrectEmail.get('value')}`);
+        const value = isTheCorrectEmail.get('value')! as JwtPayload;
+        if(value.pay !== email) throw new CustomError('INVALID_EMAIL', 400,'INVALID_EMAIL', 'Invalid email');
+        if(!hasCode)  throw new CustomError('CODE_NOT_FOUND', 404,'CODE_NOT_FOUND', 'Code not found');
         const newUser = await changePassword(email, newPassword);
         await hasCode.deleteOne();
         return newUser;

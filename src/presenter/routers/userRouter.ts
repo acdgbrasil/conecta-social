@@ -1601,6 +1601,7 @@ userRouter.post('/create/user',async (req,res)=>{
         return res.status(201).json(user);
 
     }catch(e){
+        console.log(e);
         return res.status(500).json(e);
     }
 });

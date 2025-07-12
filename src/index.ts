@@ -3,7 +3,7 @@ import userRouter from './presenter/routers/userRouter.ts';
 import authRouter from './presenter/routers/authRouter.ts';
 import { connectionMongose, testConnection } from './infra/database/mongodb/mongoDtos/mongodbDto.ts';
 import { MongooseClientSingleton } from './infra/database/mongodb/mongooseClientSingleton.ts';
-import { verifyToken } from './infra/jwt/jwtToken.ts';
+import { _verifyPassEmailToken, createPassEmailToken, verifyToken } from './infra/jwt/jwtToken.ts';
 import admRouter from './presenter/routers/admRouter.ts';
 import { deleteUser } from './infra/database/postgress/postgressDTO.ts';
 import cors from 'cors';
@@ -27,7 +27,6 @@ const verifyPostGress = (isConnected:boolean, pgClient:any) => {
 }
 
 const PORT = process.env.PORT || 3000;
-
 function startDatabase() {
     pool(10).then(({isConnected, pgClient}) => verifyPostGress(isConnected, pgClient));
     connectionMongose().then((client) => {

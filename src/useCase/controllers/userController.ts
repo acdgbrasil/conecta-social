@@ -1,3 +1,4 @@
+import test from "node:test";
 import { FamilyAndCommunity } from "../../domain/entity/familyAndCommunity.ts";
 import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from "../../domain/entity/familyComposition.ts";
 import { FamilyComunitaryConvivation } from "../../domain/entity/familyComunitaryConvivation.ts";
@@ -20,6 +21,7 @@ import { DatabaseService } from "../../infra/database/databaseService.ts";
 import { CryptoService } from "../../infra/encrypt/encryptService.ts";
 import { CustomError } from "../../infra/error/error.ts";
 import { SmtpService } from "../../infra/smtp/smtpService.ts";
+import { templateNewUser } from "../../infra/smtp/resend/templates/template.ts";
 
 export class UserController implements UserRepository{
     createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet: FamilyHistoryInstitutionalComplet, familyHistoryInstitutionalCompletId: string, familuInstitucionalHistoryPerson: FamilyInstitucionalHistory, familyCompositionId: string, personId: string): Promise<FamilyHistoryInstitutionalComplet> {
@@ -318,7 +320,14 @@ export class UserController implements UserRepository{
             const userCreate = await db.create(newUser,isAdm);
             if(userCreate != null){
                 const smtp = new SmtpService();
-                const email = await smtp.sendGenericEmail('noreply@acdgbrasil.com.br',newUser.email,'Cadastro Realizando com sucesso','Cadastro Realizando com sucesso, a senha da sua conta é padrão. Por favor altere a senha: '+user.password);
+                //'noreply@acdgbrasil.com.br',newUser.email,'Cadastro Realizando com sucesso','Cadastro Realizando com sucesso, a senha da sua conta é padrão. Por favor altere a senha: '+user.password,undefined
+                const payload = {
+                    from: 'noreply@conectararos.com.br',
+                    to: newUser.email,
+                    subject: 'Cadastro Realizado com sucesso',
+                    html: templateNewUser(user.password),
+                }
+                const email = await smtp.sendGenericEmail(payload.from, payload.to, payload.subject, undefined, payload.html);
                 if(!email) throw new CustomError('Internal Server Error',500,'Internal Server Error','Error to send email')
                 return userCreate;
             }

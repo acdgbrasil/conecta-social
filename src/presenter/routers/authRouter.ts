@@ -3,6 +3,8 @@ import { AuthController } from "../../useCase/controllers/authController.ts";
 import { CustomError } from "../../infra/error/error.ts";
 import { UserController } from "../../useCase/controllers/userController.ts";
 import { User, UserRole } from "../../domain/entity/user.ts";
+import { createPassEmailToken, createToken } from "../../infra/jwt/jwtToken.ts";
+import { FIVE_MINUTES } from "../../infra/database/mongodb/mongoModels.ts";
 
 
 const authRouter = Router();
@@ -51,8 +53,8 @@ authRouter.post('/auth/forgot/password', async (req, res) => {
     try{
         const {email} = req.body;
         if(!email) throw new CustomError('Bad Request',400,'Bad Request','Email is required');
-        const response = await authController.forgotPassword(email);
-        return res.status(200).json({message:"Code sent to user email"});
+        const passToken = await authController.forgotPassword(email);
+        return res.status(200).json({message:"Code sent to user email",emailToken:passToken});
     }catch(e){
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
@@ -64,16 +66,18 @@ authRouter.post('/auth/forgot/password', async (req, res) => {
 
 authRouter.post('/auth/reset/password', async (req, res) => {
     try{
-        const {id,email,code,newPassword} = req.body;
+        const {email,code,newPassword,emailToken} = req.body;
         if(!email) throw new CustomError('Bad Request',400,'Bad Request','Email is required');
         if(!code) throw new CustomError('Bad Request',400,'Bad Request','Code is required');
         if(!newPassword) throw new CustomError('Bad Request',400,'Bad Request','New password is required');
-        const response = await authController.resetPassword(email,code,newPassword);
+        if(!emailToken) throw new CustomError('Bad Request',400,'Bad Request','Email token is required');
+        const response = await authController.resetPassword(email,code,newPassword,emailToken);
         return res.status(200).json(response);
     }catch(e){
         if(e instanceof CustomError){
             res.status(e.statusCode).json(e.toJson(e.message));
         }else{
+            console.log(e);
             res.status(500).json({error:'Internal server error'});
         }
     }

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { MongooseClientSingleton } from "./mongooseClientSingleton.ts";
 
 //const client:mongoose.Mongoose = MongooseClientSingleton.getInstance;
-const FIVE_MINUTES = (60 * 15)*5;
+export const FIVE_MINUTES = (60 * 15)*5;
 const codeSchema = new mongoose.Schema({
     code: {
         type: String,
