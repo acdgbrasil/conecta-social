@@ -78,7 +78,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(router);
 router.get('/',(req, res) => {
-    res.sendFile("/Users/gabrieladeraldo/Desktop/dev/envolve/conecta-social/src/presenter/html/templates/index.html");
+    res.sendFile(__filename.replace('index.ts', 'presenter/html/templates/index.html'));
 });
 router.get('/downloads',(req,res)=> res.download('app-windows_candidate-0.1.0-v3.msi',(e)=>console.log(e)));
 router.use('/api',authRouter);
