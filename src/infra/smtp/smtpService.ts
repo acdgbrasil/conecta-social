@@ -1,5 +1,6 @@
-import { SmtpRepository } from "./repository/smtpRepository";
-import { sendGenericEmail } from "./sendgrid/sendGridDto";
+import { SmtpRepository } from "./repository/smtpRepository.ts";
+import { resendGenericEmail } from "./resend/resendService.ts";
+import { sendGenericEmail } from "./sendgrid/sendGridDto.ts";
 
 /**
  * Service for sending generic emails using SMTP.
@@ -22,10 +23,10 @@ export class SmtpService implements SmtpRepository{
      * return res.status(200).send('Email sent');
      * ```
      */
-    async sendGenericEmail(from: string, to: string, subject: string, text?: string | undefined, html?: string | undefined): Promise<Boolean | Error> {
+    async sendGenericEmail(from: string, to: string, subject: string, text: string | undefined, html?: string | undefined): Promise<Boolean | Error> {
         try {
-            const sendEmailResult = await sendGenericEmail(from, to, subject, text, html);
-            return sendEmailResult;
+            if(html === undefined || html === null) throw new Error('HTML content is required for sending emails');
+            return await resendGenericEmail(from, to, subject,html!,undefined);
         } catch (e) {
             throw e;
         }

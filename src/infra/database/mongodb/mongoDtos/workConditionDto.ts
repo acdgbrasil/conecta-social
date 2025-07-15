@@ -1,8 +1,8 @@
-import { WorkConditionPerson } from "../../../../domain/entity/familyComposition";
-import { WorkCondition } from "../../../../domain/entity/workCondition";
-import { CustomError } from "../../../error/error";
-import { familyCompositionModel } from "../models/familyCompositionModel";
-import { WorkConditionModel } from "../models/workConditionModel";
+import { WorkConditionPerson } from "../../../../domain/entity/familyComposition.ts";
+import { WorkCondition } from "../../../../domain/entity/workCondition.ts";
+import { CustomError } from "../../../error/error.ts";
+import { familyCompositionModel } from "../models/familyCompositionModel.ts";
+import { WorkConditionModel } from "../models/workConditionModel.ts";
 
 export const createWorkConditionPersonDto = async (workCondition: WorkCondition,workConditionPerson:WorkConditionPerson,familyCompositionID: string,personId:String,workConditionId:string):Promise<WorkCondition> => {
     const familyComposition = await familyCompositionModel.findById(familyCompositionID)

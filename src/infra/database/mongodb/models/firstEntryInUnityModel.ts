@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { FirstEntryInUnity } from "../../../../domain/entity/firstEntryInUnity";
-import { Observations } from "../../../../domain/entity/observations";
-import { observation } from "./observationModel";
+import { FirstEntryInUnity } from "../../../../domain/entity/firstEntryInUnity.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { observation } from "./observationModel.ts";
 
 const firstEntryInUnity = new mongoose.Schema<FirstEntryInUnity>({
    firstEntryInUnity: {

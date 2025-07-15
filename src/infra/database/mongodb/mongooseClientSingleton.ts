@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 export class MongooseClientSingleton {
    private static instance:any | null = null;
 

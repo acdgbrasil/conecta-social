@@ -1,38 +1,40 @@
-import { User } from '../../domain/entity/user';
-import {informationEducationCondition, PhotoResponse, UserRepository} from '../../domain/repository/userRepository';
-import { CustomError } from '../error/error';
-import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO'
-import { AuthRepository } from '../../domain/repository/authRepository';
-import { createCode, findCode } from './mongodb/mongoDtos/mongodbDto';
-import { AdmRepository } from '../../domain/repository/admRepository';
-import { ReferencePerson } from '../../domain/entity/referencePerson';
-import { Observations } from '../../domain/entity/observations';
-import { createReferencePerson, createReferencePersonObservation, getByIdReferencePerson, listAllReferencePerson } from './mongodb/mongoDtos/personReferenceDTO';
-import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
-import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO';
-import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from '../../domain/entity/familyComposition';
-import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyComunitaryConvivationPersonDTO, createFamilyEducationCondition, createFamilyHistorySocioEducationPersonDto, createFamilyPerson, createPregnant, createSocialEspecifications, familyHelphyConditionDto, familyHistoryIntitutionalPersonDto, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool, insertLaOrPSCInformationDto } from './mongodb/mongoDtos/familyCompositionDto';
-import { HomeConditions } from '../../domain/entity/homeConditions';
-import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO';
-import { getPersonReferencePhotoDto } from './mongodb/mongoDtos/photoFamilyDto';
-import { WorkCondition } from '../../domain/entity/workCondition';
-import { createWorkConditionPersonDto, workConditionObservation } from './mongodb/mongoDtos/workConditionDto';
-import { FamilySituationViolation } from '../../domain/entity/familySituationViolation';
-import { familySituationViolenceDTO, familySituationViolenceObservation } from './mongodb/mongoDtos/familySituationViolenceDTO';
-import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
-import { HelphyCondition } from '../../domain/entity/healthCondition';
-import { createHelphyConditionDto, createHelphyConditionObsertionDto } from './mongodb/mongoDtos/helphConditionDto';
-import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
-import { createFamilyEventlyBenefitsDto, createFamilyEventlyBenefitsObservationDto } from './mongodb/mongoDtos/familyEventlyBenefitsDto';
-import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity';
-import { createFamilyAndCommunityDto, createFamilyAndCommunityObservationDto } from './mongodb/mongoDtos/familyAndCommunityDto';
-import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitaryConvivation';
-import { FamilyHistoryOfComplianceSocioEducationalMeasures } from '../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures';
-import { createAnotationsOfPersons, createFamilyHistoryOfComplianseSocioEducationalMensureObservation,  } from './mongodb/mongoDtos/familyHistoryOfComplianseSocioEducationalMensureDto';
-import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySocioEducation';
-import { FamilyHistoryInstitutionalComplet } from '../../domain/entity/familyHistoryInstitutionalComplet';
-import { familyHistoryIntitutionalCompletDto, familyHistoryIntitutionalCompletObservationDto } from './mongodb/mongoDtos/familyHistoryInstitutionalCompletDTO';
-import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory';
+import { User } from '../../domain/entity/user.ts';
+import {  UserRepository} from '../../domain/repository/userRepository.ts';
+import { CustomError } from '../error/error.ts';
+import {changePassword, create, createADM, deactivateUser, findByEmail, listAllUsers} from '../database/postgress/postgressDTO.ts'
+import { AuthRepository } from '../../domain/repository/authRepository.ts';
+import { createCode, findCode } from './mongodb/mongoDtos/mongodbDto.ts';
+import { AdmRepository } from '../../domain/repository/admRepository.ts';
+import { ReferencePerson } from '../../domain/entity/referencePerson.ts';
+import { Observations } from '../../domain/entity/observations.ts';
+import { createReferencePerson, createReferencePersonObservation, getByIdReferencePerson, listAllReferencePerson } from './mongodb/mongoDtos/personReferenceDTO.ts';
+import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity.ts';
+import { createFirstEntryInUnity, createFirstEntryInUnityObservation, getFirstEntryInUnity } from './mongodb/mongoDtos/firstEntryInUnityDTO.ts';
+import { FamilyCompositionPerson, FamilyComposition, Documents, WorkConditionPerson, EducationConditionPerson, Pregnant } from '../../domain/entity/familyComposition.ts';
+import { createDocuments, createEtnicalEspecifications, createFamilyCompositionObservation, createFamilyComunitaryConvivationPersonDTO, createFamilyEducationCondition, createFamilyHistorySocioEducationPersonDto, createFamilyPerson, createPregnant, createSocialEspecifications, familyHelphyConditionDto, familyHistoryIntitutionalPersonDto, getFamilyCompositonPersonsDto, getInformationOfPersonAndAgeAreInSchool, insertLaOrPSCInformationDto } from './mongodb/mongoDtos/familyCompositionDto.ts';
+import { HomeConditions } from '../../domain/entity/homeConditions.ts';
+import { createHomeConditionsdDTO, createHomeConditionsObservation } from './mongodb/mongoDtos/homeConditionsModelDTO.ts';
+import { WorkCondition } from '../../domain/entity/workCondition.ts';
+import { createWorkConditionPersonDto, workConditionObservation } from './mongodb/mongoDtos/workConditionDto.ts';
+import { FamilySituationViolation } from '../../domain/entity/familySituationViolation.ts';
+import { familySituationViolenceDTO, familySituationViolenceObservation } from './mongodb/mongoDtos/familySituationViolenceDTO.ts';
+import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition.ts';
+import { HelphyCondition } from '../../domain/entity/healthCondition.ts';
+import { createHelphyConditionDto, createHelphyConditionObsertionDto } from './mongodb/mongoDtos/helphConditionDto.ts';
+import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits.ts';
+import { createFamilyEventlyBenefitsDto, createFamilyEventlyBenefitsObservationDto } from './mongodb/mongoDtos/familyEventlyBenefitsDto.ts';
+import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity.ts';
+import { createFamilyAndCommunityDto, createFamilyAndCommunityObservationDto } from './mongodb/mongoDtos/familyAndCommunityDto.ts';
+import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitaryConvivation.ts';
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from '../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures.ts';
+import { createAnotationsOfPersons, createFamilyHistoryOfComplianseSocioEducationalMensureObservation,  } from './mongodb/mongoDtos/familyHistoryOfComplianseSocioEducationalMensureDto.ts';
+import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySocioEducation.ts';
+import { FamilyHistoryInstitutionalComplet } from '../../domain/entity/familyHistoryInstitutionalComplet.ts';
+import { familyHistoryIntitutionalCompletDto, familyHistoryIntitutionalCompletObservationDto } from './mongodb/mongoDtos/familyHistoryInstitutionalCompletDTO.ts';
+import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory.ts';
+import { CryptoService } from '../encrypt/encryptService.ts';
+import { _verifyPassEmailToken } from '../jwt/jwtToken.ts';
+import { JwtPayload } from 'jsonwebtoken';
 export class DatabaseService implements UserRepository, AuthRepository,AdmRepository{
     createFamilyHistoryInstitutionalComplets(familyHistoryInstitutionalComplet: FamilyHistoryInstitutionalComplet, familyHistoryInstitutionalCompletId: string, familuInstitucionalHistoryPerson: FamilyInstitucionalHistory, familyCompositionId: string, personId: string): Promise<FamilyHistoryInstitutionalComplet> {
         try{
@@ -141,7 +143,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
             throw e;
         }
     }
-    getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<informationEducationCondition> {
+    async getInformationOfPersonAndAgeAreInSchool(familyCompositionId: string): Promise<FamilyComposition> {
         try{
             const information = getInformationOfPersonAndAgeAreInSchool(familyCompositionId);
             return information;
@@ -181,15 +183,6 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
         try{
             const workConditionResult = await createWorkConditionPersonDto(workCondition, workConditionPerson, familyCompositionID, personId, workConditionId);
             return workConditionResult;
-        }catch(e){
-            throw e;
-        }
-    }
-    
-    getPersonReferencePhoto(photoId: string): Promise<PhotoResponse> {
-        try{
-            const photo = getPersonReferencePhotoDto(photoId);
-            return photo;
         }catch(e){
             throw e;
         }
@@ -320,8 +313,8 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     
     async deactivateUser(email: string): Promise<Boolean | Error> {
         try{
-            const users = await deactivateUser(email)
-            return !users.isActive
+            const result = await deactivateUser(email)
+            return result
         }catch(err){
             throw err
         }
@@ -335,12 +328,16 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
         }
     }
 
-    async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
+    async resetPassword(email: string, code: string, newPassword: string,emailToken:string): Promise<User> {
         try{
         const hasCode = await findCode(code);
-        if(!hasCode){
-            throw new CustomError('CODE_NOT_FOUND', 404,'CODE_NOT_FOUND', 'Code not found');
-        }
+        const isValidEmail = await findByEmail(email);
+        if(!isValidEmail) throw new CustomError('USER_NOT_FOUND', 404,'USER_NOT_FOUND', 'User not found');
+        const isTheCorrectEmail = _verifyPassEmailToken(emailToken);
+        if(isTheCorrectEmail.get('hasError')) throw new CustomError('INVALID_EMAIL_TOKEN', 400,'INVALID_EMAIL_TOKEN', `${isTheCorrectEmail.get('value')}`);
+        const value = isTheCorrectEmail.get('value')! as JwtPayload;
+        if(value.pay !== email) throw new CustomError('INVALID_EMAIL', 400,'INVALID_EMAIL', 'Invalid email');
+        if(!hasCode)  throw new CustomError('CODE_NOT_FOUND', 404,'CODE_NOT_FOUND', 'Code not found');
         const newUser = await changePassword(email, newPassword);
         await hasCode.deleteOne();
         return newUser;
@@ -354,7 +351,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     async forgotPassword(email: string): Promise<string> {
         try{
             const user = await findByEmail(email);
-            if(user === false){
+            if(!user){
                 throw new CustomError('USER_NOT_FOUND', 404,'USER_NOT_FOUND', 'User not found');
             }
             const code = Math.random().toString(36).substring(2, 7);
@@ -367,7 +364,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     async create(user: User, isAdm: boolean): Promise<User | Error> {
         try{
             const hasUser = await findByEmail(user.email);
-            if(hasUser !== false){
+            if(hasUser){
                 throw new CustomError('USER_ALREADY_EXISTS', 409,'USER_ALREADY_EXISTS', 'User already exists');
             }
             if(isAdm){
@@ -384,7 +381,7 @@ export class DatabaseService implements UserRepository, AuthRepository,AdmReposi
     async findByEmail(email: string): Promise<any> {
         try{
             const user = await findByEmail(email);
-            if(user === false){
+            if(!user){
                 throw new CustomError('USER_NOT_FOUND', 404,'USER_NOT_FOUND', 'User not found');
             }
             return user;

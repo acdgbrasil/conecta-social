@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { FamilyEventlyBenefits } from "../../../../domain/entity/familyEnvetlyBenefits";
-import { observation } from "./observationModel";
+import { FamilyEventlyBenefits } from "../../../../domain/entity/familyEnvetlyBenefits.ts";
+import { observation } from "./observationModel.ts";
 
 const familyEventlyBenefitsSchema = new mongoose.Schema<FamilyEventlyBenefits>({
     date:{

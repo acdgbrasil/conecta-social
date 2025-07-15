@@ -1,36 +1,50 @@
-import { PrismaClient, user, UserRole } from '@prisma/client';
-import { User } from '../../../domain/entity/user';
-const prisma = new PrismaClient();
+import { User, UserRole } from '../../../domain/entity/user.ts';
+import { CustomError } from '../../error/error.ts';
+import { pool } from './postgres.ts';
+import { CREATE_TABLE_USER, createNewUserAdmin } from './schema/userSchema.ts';
 
-export async function createADM(user: User): Promise<User | Error> {
+
+
+export async function createADM(user: User):Promise<User>{
     try{
-        const newUser = await prisma.user.create({
-            data: {
-                fullName: user.fullName,
-                email: user.email,
-                password: user.password,
-                crm: user.crm,
-                role: UserRole.admin,
-            }
-        });
-        return new User(newUser.id,newUser.fullName,newUser.email,newUser.password,newUser.crm,newUser.role.valueOf(),newUser.createdAt,newUser.updatedAt,true);
+        const {isConnected, pgClient } = await pool(10);
+        if(!isConnected) throw new CustomError('Database Error', 500, 'Database Error', 'Failed to connect to the database');
+        const {rows} = await pgClient.query(createNewUserAdmin,[user.fullName, user.email, user.password, user.crm, UserRole.admin.toString(), true]);
+        if(rows.length === 0) throw new CustomError('Database Error', 500, 'Database Error', 'Failed to create user');
+        return new User(
+            rows[0].id,
+            rows[0].full_name,
+            rows[0].email,
+            rows[0].password,
+            rows[0].crm,
+            rows[0].role,
+            rows[0].created_at,
+            rows[0].updated_at,
+            rows[0].is_active
+        );
     }catch(e){
         throw e;
     }
 }
 
-export async function create(user: User): Promise<User | Error> {
+export async function create(user: User): Promise<User> {
     try{
-        const newUser = await prisma.user.create({
-            data: {
-                fullName: user.fullName,
-                email: user.email,
-                password: user.password,
-                crm: user.crm,
-                role: UserRole.user,
-            }
-        });
-        return new User(newUser.id,newUser.fullName,newUser.email,newUser.password,newUser.crm,newUser.role.valueOf(),newUser.createdAt,newUser.updatedAt,newUser.isActive);
+        const {isConnected, pgClient } = await pool(10);
+        if(!isConnected) throw new CustomError('Database Error', 500, 'Database Error', 'Failed to connect to the database');
+        const {rows} = await pgClient.query(createNewUserAdmin,[user.fullName, user.email, user.password, user.crm, UserRole.user.toString(), true]);
+        if(rows.length === 0) throw new CustomError('Database Error', 500, 'Database Error', 'Failed to create user');
+        return new User(
+            rows[0].id,
+            rows[0].full_name,
+            rows[0].email,
+            rows[0].password,
+            rows[0].crm,
+            rows[0].role,
+            rows[0].created_at,
+            rows[0].updated_at,
+            rows[0].is_active
+        );
+
     }catch(e){
         throw e;
     }
@@ -38,12 +52,23 @@ export async function create(user: User): Promise<User | Error> {
 
 export async function findByEmail(email: string){
     try{
-        const user = await prisma.user.findUnique({where: {email}});
-        if(user === null){
-            return false;
-        }
-        const newUser: User = new User(user.id,user.fullName,user.email,user.password,user.crm,user.role.valueOf(),user.createdAt,user.updatedAt,user.isActive);
-        return newUser;
+        const {isConnected, pgClient } = await pool(10);
+        if(!isConnected) throw new CustomError('Database Error', 500, 'Database Error', 'Failed to connect to the database');
+
+        const {rows} = await pgClient.query('SELECT * FROM users WHERE email = $1', [email]);
+        if(rows.length === 0) return null; // No user found with the given email
+        return new User(
+            rows[0].id,
+            rows[0].full_name,
+            rows[0].email,
+            rows[0].password,
+            rows[0].crm,
+            rows[0].role,
+            rows[0].created_at,
+            rows[0].updated_at,
+            rows[0].is_active
+        );
+
     }catch(e){
         throw e;
     }
@@ -52,41 +77,76 @@ export async function findByEmail(email: string){
 
 export async function listAllUsers(){
     try{
-        const users = await prisma.user.findMany()
-        const usersTransition:User[] = []
-        for(var user of users){
-            const newUser = new User(user.id,user.fullName,user.email,user.password,user.crm,user.role,user.createdAt,user.updatedAt,user.isActive)
-            usersTransition.push(newUser)
-        }
-        return usersTransition
+       const {isConnected, pgClient } = await pool(10);
+        if(!isConnected) throw new CustomError('Database Error', 500, 'Database Error', 'Failed to connect to the database');
+
+        const {rows} = await pgClient.query('SELECT * FROM users');
+        if(rows.length === 0) throw new CustomError('No users found', 404, 'No users found', 'No users found');
+        return rows.map(row => new User(
+            row.id,
+            row.full_name,
+            row.email,
+            row.password,
+            row.crm,
+            row.role,
+            row.created_at,
+            row.updated_at,
+            row.is_active
+        ));
+
     }catch(e){
         throw e
     }
 }
 
+export async function deleteUser(email: string){
+    try{
+        const {isConnected, pgClient } = await pool(10);
+        if(!isConnected) throw new CustomError('Database Error', 500, 'Database Error', 'Failed to connect to the database');
+        const {rowCount} = await pgClient.query('DELETE FROM users WHERE email = $1', [email]);
+        if(rowCount === 0) throw new CustomError('User not found', 404, 'User not found', 'User not found');
+        return true;
+
+    }catch(e){
+        if(e instanceof Error && e.message.includes('Record to delete does not exist.')){
+            throw new CustomError('User not found',404,'User not found','User not found');
+        }
+        throw e;
+    }
+}
+
 export async function deactivateUser(email:string){
     try{
-        const user = await prisma.user.update({
-            where: {email},
-            data:{
-                isActive:false
-            }
-        })
-        return user
+        const {isConnected, pgClient } = await pool(10);
+        if(!isConnected) throw new CustomError('Database Error', 500, 'Database Error', 'Failed to connect to the database');
+        const {rowCount} = await pgClient.query('UPDATE users SET is_active = false WHERE email = $1', [email]);
+        if(rowCount === 0) throw new CustomError('User not found', 404, 'User not found', 'User not found');
+        return true;
+        
     }catch(err){
         throw err
     }
 }
 
-export async function changePassword(email: string, newPassword: string){
+export async function changePassword(email: string, newPassword: string):Promise<User>{
     try{
-        const user = await prisma.user.update({
-            where: {email},
-            data: {
-                password: newPassword
-            }
-        });
-        return user;
+       const {isConnected, pgClient } = await pool(10);
+        if(!isConnected) throw new CustomError('Database Error', 500, 'Database Error', 'Failed to connect to the database');
+
+        const {rows} = await pgClient.query('UPDATE users SET password = $1, updated_at = NOW() WHERE email = $2 RETURNING *', [newPassword, email]);
+        if(rows.length === 0) throw new CustomError('User not found', 404, 'User not found', 'User not found');
+        return new User(
+            rows[0].id,
+            rows[0].full_name,
+            rows[0].email,
+            rows[0].password,
+            rows[0].crm,
+            rows[0].role,
+            rows[0].created_at,
+            rows[0].updated_at,
+            rows[0].is_active
+        );
+
     }catch(e){
         throw e;
     }

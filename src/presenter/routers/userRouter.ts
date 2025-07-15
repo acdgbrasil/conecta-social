@@ -1,22 +1,23 @@
 import {Router} from 'express';
-import {UserController} from '../../useCase/controllers/userController';
-import { User } from '../../domain/entity/user';
-import { CustomError } from '../../infra/error/error';
-import { ReferencePerson } from '../../domain/entity/referencePerson';
-import { Observations } from '../../domain/entity/observations';
-import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity';
-import { Documents, EducationConditionPerson, FamilyCompositionPerson, OcurruncyBolsaFamilia, Pregnant, WorkConditionPerson } from '../../domain/entity/familyComposition';
-import { HomeConditions } from '../../domain/entity/homeConditions';
-import { WorkCondition } from '../../domain/entity/workCondition';
-import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation';
-import { HelphyCondition, HelphyConditionStruct } from '../../domain/entity/healthCondition';
-import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition';
-import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits';
-import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity';
-import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitaryConvivation';
-import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySocioEducation';
-import { FamilyHistoryInstitutionalComplet, otherFamilySeparationSituationsStruct } from '../../domain/entity/familyHistoryInstitutionalComplet';
-import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory';
+import {UserController} from '../../useCase/controllers/userController.ts';
+import { User, UserRole } from '../../domain/entity/user.ts';
+import { CustomError } from '../../infra/error/error.ts';
+import { ReferencePerson } from '../../domain/entity/referencePerson.ts';
+import { Observations } from '../../domain/entity/observations.ts';
+import { FirstEntryInUnity } from '../../domain/entity/firstEntryInUnity.ts';
+import { Documents, EducationConditionPerson, FamilyCompositionPerson, OcurruncyBolsaFamilia, Pregnant, WorkConditionPerson } from '../../domain/entity/familyComposition.ts';
+import { HomeConditions } from '../../domain/entity/homeConditions.ts';
+import { WorkCondition } from '../../domain/entity/workCondition.ts';
+import { FamilySituationViolation, FamilySituationViolationStruct, FamilySituationViolationStructOther } from '../../domain/entity/familySituationViolation.ts';
+import { HelphyCondition, HelphyConditionStruct } from '../../domain/entity/healthCondition.ts';
+import { HelphyConditionFamily } from '../../domain/entity/familyHelphyCondition.ts';
+import { FamilyEventlyBenefits } from '../../domain/entity/familyEnvetlyBenefits.ts';
+import { FamilyAndCommunity } from '../../domain/entity/familyAndCommunity.ts';
+import { FamilyComunitaryConvivation } from '../../domain/entity/familyComunitaryConvivation.ts';
+import { FamilyHistorySocioEducation } from '../../domain/entity/familyHistorySocioEducation.ts';
+import { FamilyHistoryInstitutionalComplet, otherFamilySeparationSituationsStruct } from '../../domain/entity/familyHistoryInstitutionalComplet.ts';
+import { FamilyInstitucionalHistory } from '../../domain/entity/familyInstitucionalHistory.ts';
+import { converterDataStringParaIsoUtc } from '../../utils/dateFormater.ts';
 
 const userRouter = Router();
 const userControle = new UserController();
@@ -1533,14 +1534,15 @@ userRouter.post('/create/reference/person',async (req,res)=>{
             const error = new CustomError('Bad Request',400,'Bad Request','Phone is required');
             return res.status(400).json(error.toJson('Phone is required'));
         }
-
-        const birthDateFormatted = new Date(birthDate);
+        
+        const convertCorrectFormat = converterDataStringParaIsoUtc(birthDate);
+        const birthDateFormatted = new Date(convertCorrectFormat);
         const newReferencePerson = new ReferencePerson('0', fullName,socialName,motherName,nis,cpf,diagnosis,rgNumber,biologicalGender,rgUf,rgIssue,rgDateIssue,isShelter,localLocalization,cep,adress,neighborhood,adressNumber,adressComplement,state,city,phone,birthDateFormatted,whoIsObservingId);
         const referencePerson = await userControle.createReferencePerson(newReferencePerson);
         return res.status(201).json(referencePerson);
        
-    } catch (err) {
-        return res.status(500).json(err);
+    } catch (err:any) {
+        return res.status(err.statusCode || 500).json({error: err.message || 'Internal server error'});
     }
 })
 
@@ -1563,7 +1565,7 @@ userRouter.post('/create/adm',async (req,res)=>{
             const error = new CustomError('Bad Request',400,'Bad Request','Full Name is required');
             return res.status(400).json(error.toJson('Full Name is required'));
         }
-        const newUser = new User(0,fullName,email,'Senh@123',null,'adm',new Date(),new Date(),true);
+        const newUser = new User(0,fullName,email,'Senh@123',null,UserRole.admin.toString(),new Date(),new Date(),true);
         const user = await userControle.create(newUser,true);
         return res.status(201).json(user);
 
@@ -1587,18 +1589,19 @@ userRouter.post('/create/user',async (req,res)=>{
             const error = new CustomError('Bad Request',400,'Bad Request','Crm is required');
             return res.status(400).json(error.toJson('Crm is required'));
         }
-        const isAdm = (await userControle.findByEmail(admEmail) as User).role === 'admin';
+        const isAdm = (await userControle.findByEmail(admEmail) as User).role === UserRole.admin.toString();
         
         if(!isAdm){
             const error = new CustomError('Bad Request',400,'Bad Request','You are not allowed to create a new user');
             return res.status(400).json(error.toJson('You are not allowed to create a new user'));
         }
 
-        const newUser = new User(0,fullName,email,'Senh@123',crm,'user',new Date(),new Date(),true);
+        const newUser = new User(0,fullName,email,'Senh@123',crm,UserRole.user.toString(),new Date(),new Date(),true);
         const user = await userControle.create(newUser,false);
         return res.status(201).json(user);
 
     }catch(e){
+        console.log(e);
         return res.status(500).json(e);
     }
 });

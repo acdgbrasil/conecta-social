@@ -1,7 +1,7 @@
-import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../../../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures";
-import { Observations } from "../../../../domain/entity/observations";
-import { CustomError } from "../../../error/error";
-import { familyHistoryOfComplianceSocioEducationalMeasuresModel } from "../models/familyHistoryOfComplianceSocioEducationalMeasuresModel";
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../../../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures.ts";
+import { Observations } from "../../../../domain/entity/observations.ts";
+import { CustomError } from "../../../error/error.ts";
+import { familyHistoryOfComplianceSocioEducationalMeasuresModel } from "../models/familyHistoryOfComplianceSocioEducationalMeasuresModel.ts";
 
 export const createAnotationsOfPersons = async (anotationsOfPersons:string,familyHistoryOfComplianseSocioEducationalMensureId:string): Promise<FamilyHistoryOfComplianceSocioEducationalMeasures> => {
     try{

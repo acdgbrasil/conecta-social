@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../../../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures";
-import { observation } from "./observationModel";
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../../../../domain/entity/familyHistoryOfComplianceSocioEducationalMeasures.ts";
+import { observation } from "./observationModel.ts";
 
 const familyHistoryOfComplianceSocioEducationalMeasuresSchema = new mongoose.Schema<FamilyHistoryOfComplianceSocioEducationalMeasures>({
     anotationsOfPersons:{

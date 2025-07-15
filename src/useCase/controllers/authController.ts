@@ -1,11 +1,13 @@
-import { User } from "../../domain/entity/user";
-import { AuthRepository } from "../../domain/repository/authRepository";
-import { DatabaseService } from "../../infra/database/databaseService";
-import { verifyPass } from "../../infra/encrypt/bcrypt/bcryptDto";
-import { CryptoService } from "../../infra/encrypt/encryptService";
-import { CustomError } from "../../infra/error/error";
-import { createToken } from "../../infra/jwt/jwtToken";
-import { SmtpService } from "../../infra/smtp/smtpService";
+import { User } from "../../domain/entity/user.ts";
+import { AuthRepository } from "../../domain/repository/authRepository.ts";
+import { DatabaseService } from "../../infra/database/databaseService.ts";
+import { FIVE_MINUTES } from "../../infra/database/mongodb/mongoModels.ts";
+import { verifyPass } from "../../infra/encrypt/bcrypt/bcryptDto.ts";
+import { CryptoService } from "../../infra/encrypt/encryptService.ts";
+import { CustomError } from "../../infra/error/error.ts";
+import { createPassEmailToken, createToken } from "../../infra/jwt/jwtToken.ts";
+import { templateResetPassword } from "../../infra/smtp/resend/templates/template.ts";
+import { SmtpService } from "../../infra/smtp/smtpService.ts";
 
 const ONE_MOUTH = 60 * 60 * 24 * 30;
 
@@ -30,22 +32,23 @@ export class AuthController implements AuthRepository{
             const databaseService = new DatabaseService();
             const hasUser = await databaseService.findByEmail(email);
             if(!hasUser) throw new CustomError('USER_NOT_FOUND', 404,'USER_NOT_FOUND', 'User not found');
+            const passToken = createPassEmailToken(email,FIVE_MINUTES);
             const expiredCode = await databaseService.forgotPassword(email);
             const smtp = new SmtpService();
-            const responseEmail = await smtp.sendGenericEmail('noreply@acdgbrasil.com.br',email,'Reset de Senha','Seu codigo, para resetar sua senha é: '+expiredCode);
+            const responseEmail = await smtp.sendGenericEmail('noreply@conectararos.com.br',email,'Reset de Senha',undefined,templateResetPassword(expiredCode));
             if(!responseEmail) throw new CustomError('Internal Server Error',500,'Internal Server Error','Error to send email')
-            return expiredCode;
+            return passToken;
         }catch(e){
             throw e;
         }
     }
 
-    async resetPassword(email: string, code: string, newPassword: string): Promise<User> {
+    async resetPassword(email: string, code: string, newPassword: string,emailToken:string): Promise<User> {
         try{
             const databaseService = new DatabaseService();
             const encrypt = new CryptoService();
             const hashPass = await encrypt.hashPass(newPassword);
-            const user = databaseService.resetPassword(email,code,hashPass);
+            const user = databaseService.resetPassword(email,code,hashPass,emailToken);
             return user;
         }catch(e){
             throw e;

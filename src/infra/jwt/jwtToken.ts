@@ -1,6 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { CustomError } from '../error/error';
+import { CustomError } from '../error/error.ts';
+import { JWT_EMAIL_KEY, JWT_PASS_KEY } from './config/jwtKeys.ts';
 
 /**
  * Creates a JWT token with the given payload and expiration time.
@@ -9,12 +10,30 @@ import { CustomError } from '../error/error';
  * @returns The generated JWT token.
  */
 export function createToken(payload:string,timer:number):string{
-    return jwt.sign({"pay":payload},'17f4059980d9b11280eed7f86ca84cbe',{expiresIn:timer})
+    return jwt.sign({"pay":payload},JWT_PASS_KEY,{expiresIn:timer})
 }
 
-function _verifyToken(token:string):any{
-    let result = new Map<string,any>()
-    jwt.verify(token,'17f4059980d9b11280eed7f86ca84cbe',function (err,decode){
+export function createPassEmailToken(payload:string,timer:number):string{
+    return jwt.sign({"pay":payload},JWT_EMAIL_KEY,{expiresIn:timer})
+}
+
+export function _verifyPassEmailToken(token:string):Map<string,Error | boolean | string | undefined | jwt.JwtPayload>{
+    let result = new Map<string,Error | boolean | string | undefined | jwt.JwtPayload>()
+    jwt.verify(token,JWT_EMAIL_KEY,function (err,decode){
+        if(err){
+            result.set("hasError",true)
+            result.set("value",err)
+        }else{
+            result.set("hasError",false)
+            result.set("value",decode)
+        }
+    })
+    return result
+}
+
+function _verifyToken(token:string):Map<string,Error | boolean | string | undefined | jwt.JwtPayload>{
+    let result = new Map<string,Error | boolean | string | undefined | jwt.JwtPayload>()
+    jwt.verify(token,JWT_PASS_KEY,function (err,decode){
         if(err){
             result.set("hasError",true)
             result.set("value",err)

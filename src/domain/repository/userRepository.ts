@@ -1,30 +1,20 @@
-import { FamilyAndCommunity } from "../entity/familyAndCommunity";
-import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, Pregnant, WorkConditionPerson } from "../entity/familyComposition";
-import { FamilyComunitaryConvivation } from "../entity/familyComunitaryConvivation";
-import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits";
-import { HelphyConditionFamily } from "../entity/familyHelphyCondition";
-import { FamilyHistoryInstitutionalComplet } from "../entity/familyHistoryInstitutionalComplet";
-import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../entity/familyHistoryOfComplianceSocioEducationalMeasures";
-import { FamilyHistorySocioEducation } from "../entity/familyHistorySocioEducation";
-import { FamilyInstitucionalHistory } from "../entity/familyInstitucionalHistory";
-import { FamilySituationViolation } from "../entity/familySituationViolation";
-import { FirstEntryInUnity } from "../entity/firstEntryInUnity";
-import { HelphyCondition } from "../entity/healthCondition";
-import { HomeConditions } from "../entity/homeConditions";
-import { Observations } from "../entity/observations";
-import { ReferencePerson } from "../entity/referencePerson";
-import { User } from "../entity/user";
-import { WorkCondition } from "../entity/workCondition";
-
-export type PhotoResponse = {
-    fileBuffer:Buffer;
-    fileExtension:string;
-}
-
-export type informationEducationCondition = {
-    age: number;
-    educationCondition: boolean | undefined;
-}[]
+import { FamilyAndCommunity } from "../entity/familyAndCommunity.ts";
+import { Documents, EducationConditionPerson, FamilyComposition, FamilyCompositionPerson, Pregnant } from "../entity/familyComposition.ts";
+import { FamilyComunitaryConvivation } from "../entity/familyComunitaryConvivation.ts";
+import { FamilyEventlyBenefits } from "../entity/familyEnvetlyBenefits.ts";
+import { HelphyConditionFamily } from "../entity/familyHelphyCondition.ts";
+import { FamilyHistoryInstitutionalComplet } from "../entity/familyHistoryInstitutionalComplet.ts";
+import { FamilyHistoryOfComplianceSocioEducationalMeasures } from "../entity/familyHistoryOfComplianceSocioEducationalMeasures.ts";
+import { FamilyHistorySocioEducation } from "../entity/familyHistorySocioEducation.ts";
+import { FamilyInstitucionalHistory } from "../entity/familyInstitucionalHistory.ts";
+import { FamilySituationViolation } from "../entity/familySituationViolation.ts";
+import { FirstEntryInUnity } from "../entity/firstEntryInUnity.ts";
+import { HelphyCondition } from "../entity/healthCondition.ts";
+import { HomeConditions } from "../entity/homeConditions.ts";
+import { Observations } from "../entity/observations.ts";
+import { ReferencePerson } from "../entity/referencePerson.ts";
+import { User } from "../entity/user.ts";
+import { WorkCondition } from "../entity/workCondition.ts";
 
 export interface UserRepository {
     findByEmail(email:string):Promise<any>;
@@ -45,12 +35,11 @@ export interface UserRepository {
     createFamilyCompositionObservation(observation:Observations,familyCompositionID:string): Promise<FamilyComposition | Error>;
     createHomeConditions(homeConditions:HomeConditions,homeConditionsId:string): Promise<HomeConditions | Error>;
     createHomeConditionsObservation(observation:Observations,homeConditionsId:string): Promise<HomeConditions | Error>;
-    getPersonReferencePhoto(photoId:string): Promise<PhotoResponse>;
     createSituationViolation(situationViolation:FamilySituationViolation,familySituationId:string): Promise<FamilySituationViolation>;
     createSituationViolationObservation(situationViolationId:string,observation:Observations): Promise<FamilySituationViolation>;
     createEducationalEspecifications(educationalEspecifications:EducationConditionPerson,familySituationId:string,personId:string): Promise<FamilyComposition>;
     getFamilyCompositonPersons(familyCompositionId:string): Promise<FamilyCompositionPerson[]>;
-    getInformationOfPersonAndAgeAreInSchool(familyCompositionId:string): Promise<informationEducationCondition>;
+    getInformationOfPersonAndAgeAreInSchool(familyCompositionId:string): Promise<FamilyComposition>;
     createWorkConditionObservation(workConditionId:string,observation:string): Promise<WorkCondition>;
     createHelphyCondition(HelphyCondition: HelphyCondition, helphyConditionId: string, familyHelphyCondition: HelphyConditionFamily, familyCompositionID: string, personId: string,pregnant:Pregnant): Promise<HelphyCondition>;
     createHelphyConditionObservation(helphyConditionId: string, observation: Observations): Promise<HelphyCondition>;

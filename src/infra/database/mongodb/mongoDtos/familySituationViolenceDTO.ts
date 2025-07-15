@@ -1,8 +1,8 @@
 
-import { FamilySituationViolation } from "../../../../domain/entity/familySituationViolation"
-import { Observations } from "../../../../domain/entity/observations"
-import { CustomError } from "../../../error/error"
-import { familySituationViolenceModel } from "../models/familySituationViolenceModel"
+import { FamilySituationViolation } from "../../../../domain/entity/familySituationViolation.ts"
+import { Observations } from "../../../../domain/entity/observations.ts"
+import { CustomError } from "../../../error/error.ts"
+import { familySituationViolenceModel } from "../models/familySituationViolenceModel.ts"
 
 export const familySituationViolenceDTO = async (familySituationViolationId:string,familySituationViolation:FamilySituationViolation) => {
     const familySituationViolence = await familySituationViolenceModel.findById(familySituationViolationId)
