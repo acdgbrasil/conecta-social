@@ -10,6 +10,8 @@ import cors from 'cors';
 import {config} from 'dotenv'
 import { pool } from './infra/database/postgress/postgres.ts';
 import { migration_25_05_2025 } from './infra/database/postgress/migrations/postMigrations.ts';
+import { downloadRouter } from './presenter/routers/downloadRouter.ts';
+import { fileURLToPath } from 'url';
 
 config({});
 
@@ -75,13 +77,18 @@ const router = express.Router();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(router);
+router.get('/',(req, res) => {
+    res.sendFile("/Users/gabrieladeraldo/Desktop/dev/envolve/conecta-social/src/presenter/html/templates/index.html");
+});
+router.get('/downloads',(req,res)=> res.download('app-windows_candidate-0.1.0-v3.msi',(e)=>console.log(e)));
 router.use('/api',authRouter);
 router.use('/api/ping',async (_,res) => {
     res.send('pong');
 });
 
+
 router.use(verifyToken);
-router.use('/api',userRouter);
+router.use(userRouter);
 router.use('/api',admRouter);
 
 
