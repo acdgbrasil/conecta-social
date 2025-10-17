@@ -1,0 +1,25 @@
+meta {
+  name: Create Evently Benefits
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseURL}}/create/evently/benefits
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "date": "2023-01-01T00:00:00.000Z",
+    "typeOfBenefit": "Some Benefit",
+    "nBirthDate": "01/01/2000",
+    "nCpf": "123.456.789-00",
+    "familyEventlyBenefitsId": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

@@ -1,0 +1,63 @@
+meta {
+  name: User Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseURL}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{userEmail}}",
+    "pass": "{{userPassword}}"
+  }
+}
+
+tests {
+  const Ajv = require('ajv');
+  const ajv = new Ajv();
+  const schema = {
+    type: 'object',
+    properties: {
+      token: { type: 'string' },
+      user: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer' },
+          name: { type: 'string' },
+          email: { type: 'string' },
+          role: { type: 'string' }
+        },
+        required: ['id', 'name', 'email', 'role']
+      }
+    },
+    required: ['token', 'user']
+  };
+
+  const validate = ajv.compile(schema);
+  const body = res.getBody();
+  if(typeof body === 'string') {
+    try {
+      const parsedBody = JSON.parse(body);
+      const valid = validate(parsedBody);
+      if (!valid) {
+        console.log(validate.errors);
+      }
+      expect(valid).to.be.true;
+    } catch (e) {
+      console.log('Failed to parse response body as JSON');
+      expect.fail('Response body is not valid JSON');
+    }
+  } else {
+    const valid = validate(body);
+    if (!valid) {
+      console.log(validate.errors);
+    }
+    expect(valid).to.be.true;
+  }
+  expect(res.getStatus()).to.equal(200);
+}

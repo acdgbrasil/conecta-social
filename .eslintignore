@@ -1,0 +1,4 @@
+legacy/**
+packages/legacy/**
+dist/**
+coverage/**

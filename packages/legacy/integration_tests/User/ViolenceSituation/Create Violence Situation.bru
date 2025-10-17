@@ -1,0 +1,46 @@
+meta {
+  name: Create Violence Situation
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseURL}}/create/violence/situation
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "childLabel": false,
+    "childLabelOcurrentNow": false,
+    "sexualExploitation": false,
+    "sexualExploitationOcurrentNow": false,
+    "sexualAbuse": false,
+    "sexualAbuseNow": false,
+    "physicalAbuse": false,
+    "physicalAbuseNow": false,
+    "psychologicalAbuse": false,
+    "psychologicalAbuseNow": false,
+    "elderNeglect": false,
+    "elderNeglectNow": false,
+    "childNeglect": false,
+    "childNeglectNow": false,
+    "pcdNeglect": false,
+    "pcdNeglectNow": false,
+    "homelessSituation": false,
+    "homelessSituationNow": false,
+    "humanTrafficking": false,
+    "humanTraffickingNow": false,
+    "violenceWithElderOrPcd": false,
+    "violenceWithElderOrPcdNow": false,
+    "otherName": "None",
+    "otherNow": false,
+    "otherBool": false,
+    "violenceId": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

@@ -1,0 +1,63 @@
+meta {
+  name: List All Users
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseURL}}/adm/list/all/{{superAdminEmail}}
+  body: none
+  auth: none
+}
+
+tests {
+  const Ajv = require('ajv');
+  const ajv = new Ajv();
+  const schema = {
+    type: 'object',
+    properties: {
+      response: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            name: { type: 'string' },
+            email: { type: 'string' },
+            pass: { type: 'string' },
+            crm: { type: ['string', 'null'] },
+            role: { type: 'string' },
+            created_at: { type: 'string' },
+            updated_at: { type: 'string' },
+            is_active: { type: 'boolean' }
+          },
+          required: ['id', 'name', 'email', 'pass', 'role', 'created_at', 'updated_at', 'is_active']
+        }
+      }
+    },
+    required: ['response']
+  };
+
+  const validate = ajv.compile(schema);
+  const body = res.getBody();
+  if(typeof body === 'string') {
+    try {
+      const parsedBody = JSON.parse(body);
+      const valid = validate(parsedBody);
+      if (!valid) {
+        console.log(validate.errors);
+      }
+      expect(valid).to.be.true;
+    } catch (e) {
+      console.log('Failed to parse response body as JSON');
+      expect.fail('Response body is not valid JSON');
+    }
+  } else {
+    const valid = validate(body);
+    if (!valid) {
+      console.log(validate.errors);
+    }
+    expect(valid).to.be.true;
+  }
+  expect(res.getStatus()).to.equal(200);
+}

@@ -1,0 +1,37 @@
+meta {
+  name: Create Work Condition
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseURL}}/create/work/condition
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "hasSocialIncome": false,
+    "perCapitaIncome": "0",
+    "bolsaFamiliaValue": "0",
+    "bpcValue": "0",
+    "petiValue": "0",
+    "othersValue": "0",
+    "bcpBenefitPerson": "None",
+    "hasRetiredPerson": false,
+    "totalFamilyIncome": "0",
+    "totalPerCapitaIncome": "0",
+    "workConditionBody": "Unemployed",
+    "hasWorkCard": false,
+    "workQualification": "None",
+    "workValue": "0",
+    "familyCompositionID": 1,
+    "personId": 1,
+    "workConditionId": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

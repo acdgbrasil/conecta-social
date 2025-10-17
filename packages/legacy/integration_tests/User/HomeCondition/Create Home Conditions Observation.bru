@@ -1,0 +1,23 @@
+meta {
+  name: Create Home Conditions Observation
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseURL}}/create/home/conditions/observation
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "observation": "Some observation text",
+    "whoIsObservingId": 1,
+    "homeConditionsId": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

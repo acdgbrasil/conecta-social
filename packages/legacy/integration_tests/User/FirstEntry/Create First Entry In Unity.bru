@@ -1,0 +1,27 @@
+meta {
+  name: Create First Entry In Unity
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseURL}}/create/first/entry/in/unity
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstEntryInUnity": "First entry text",
+    "motivationForFirstEntry": "Motivation text",
+    "nameOfUnityToSendFirstEntry": "Unity Name",
+    "ContactEmailOfUnityToSendFirstEntry": "unity@example.com",
+    "familyBenefits": "Benefits text",
+    "whoIsResponsibleForFirstEntryId": 1,
+    "firstEntryInUnityID": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

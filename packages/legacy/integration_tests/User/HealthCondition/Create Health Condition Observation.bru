@@ -1,0 +1,23 @@
+meta {
+  name: Create Health Condition Observation
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseURL}}/create/health/condition/observation
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "helphyConditionId": 1,
+    "whoIsObservingId": 1,
+    "observation": "Some observation text"
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

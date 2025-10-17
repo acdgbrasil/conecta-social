@@ -1,0 +1,28 @@
+meta {
+  name: Create Educational Especifications
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseURL}}/create/educational/especifications
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "literaty": true,
+    "schoolShip": "Some School Ship",
+    "isStudying": true,
+    "occurentDate": "2023-01-01T00:00:00.000Z",
+    "efect": "Some Effect",
+    "suspensionSolicitation": false,
+    "familyCompositionID": 1,
+    "personId": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Register User
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseURL}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Test User",
+    "email": "test_{{$timestamp}}@example.com",
+    "pass": "password123"
+  }
+}
+
+tests {
+  // The endpoint seems to have hardcoded user creation logic in the provided source.
+  // The test will be based on the assumption that it should return the created user.
+  // A schema validation is difficult without knowing the exact response structure.
+  expect(res.getStatus()).to.equal(200);
+}

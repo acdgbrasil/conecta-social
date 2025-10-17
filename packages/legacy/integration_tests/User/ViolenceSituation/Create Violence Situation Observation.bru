@@ -1,0 +1,23 @@
+meta {
+  name: Create Violence Situation Observation
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseURL}}/create/violence/situation/observation
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "familySituationViolationId": 1,
+    "observationText": "Some observation",
+    "whoIsObservingId": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

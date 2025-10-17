@@ -1,0 +1,263 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MongoDB Schema for Conecta Social",
+  "description": "JSON schema for the collections in the Conecta Social MongoDB database.",
+  "definitions": {
+    "observation": {
+      "type": "object",
+      "properties": {
+        "observation": { "type": "string" },
+        "whoIsObservingId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["observation", "whoIsObservingId"]
+    },
+    "rg": {
+      "type": "object",
+      "properties": {
+        "issueDate": { "type": "string" },
+        "issuingBody": { "type": "string" },
+        "number": { "type": "string" },
+        "uf": { "type": "string" }
+      },
+      "required": ["issueDate", "issuingBody", "number", "uf"]
+    }
+  },
+  "properties": {
+    "referencePerson": {
+      "type": "object",
+      "title": "Reference Person",
+      "properties": {
+        "fullName": { "type": "string" },
+        "socialName": { "type": "string" },
+        "motherName": { "type": "string" },
+        "nis": { "type": "string" },
+        "cpf": { "type": "string" },
+        "diagnosis": { "type": "string" },
+        "rg": { "$ref": "#/definitions/rg" },
+        "isShelter": { "type": "boolean" },
+        "localLocalization": { "type": "string", "enum": ["URBAN", "RURAL"] },
+        "cep": { "type": "string" },
+        "adress": { "type": "string" },
+        "neighborhood": { "type": "string" },
+        "adressComplement": { "type": "string" },
+        "adressNumber": { "type": "string" },
+        "city": { "type": "string" },
+        "phone": { "type": "string" },
+        "state": { "type": "string" },
+        "whoIsOpeningId": { "type": "string" },
+        "fistEntryInUnityId": { "type": "string", "description": "ObjectId referencing firstEntryInUnity" },
+        "familyCompositionId": { "type": "string", "description": "ObjectId referencing familyComposition" },
+        "homeConditionsId": { "type": "string", "description": "ObjectId referencing homeConditions" },
+        "workConditionId": { "type": "string", "description": "ObjectId referencing workCondition" },
+        "familySituationViolationId": { "type": "string", "description": "ObjectId referencing familySituationViolence" },
+        "helphyConditionId": { "type": "string", "description": "ObjectId referencing helphyCondition" },
+        "eventlyBenefitId": { "type": "string", "description": "ObjectId referencing eventlyBenefit" },
+        "familyAndCommunityId": { "type": "string", "description": "ObjectId referencing familyAndCommunity" },
+        "familyHistoryOfComplianceSocialEducationalMensuresId": { "type": "string", "description": "ObjectId referencing familyHistoryOfComplianceSocialEducationalMensures" },
+        "familyHistoryInstitutionalCompletId": { "type": "string", "description": "ObjectId referencing familyHistoryInstitutionalComplet" },
+        "observations": { "type": "array", "items": { "$ref": "#/definitions/observation" } },
+        "birthDate": { "type": "string", "format": "date-time" },
+        "biologicalGender": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["fullName", "socialName", "motherName", "cpf", "diagnosis", "rg", "isShelter", "localLocalization", "adress", "neighborhood", "adressComplement", "adressNumber", "city", "phone", "state", "whoIsOpeningId", "birthDate", "biologicalGender"]
+    },
+    "familyAndCommunity": {
+        "type": "object",
+        "title": "Family and Community",
+        "properties": {
+            "yearsInState": { "type": "number" },
+            "awaysLivingInState": { "type": "boolean" },
+            "yearsInDistrict": { "type": "number" },
+            "awaysLivingInDistrict": { "type": "boolean" },
+            "yearsInNeighborhood": { "type": "number" },
+            "awaysLivingInNeighborhood": { "type": "boolean" },
+            "hasVictimOfThreatsOrDiscrimination": { "type": "boolean" },
+            "hasNearbySupportNetwork": { "type": "boolean" },
+            "hasNeighborSupportNetwork": { "type": "boolean" },
+            "hasParticipatesInSupportGroups": { "type": "boolean" },
+            "hasParticipatesInSocialMovements": { "type": "boolean" },
+            "hasNoAccessToLeisureActivities": { "type": "boolean" },
+            "hasElderWithoutLeisureOrSocialInteraction": { "type": "boolean" },
+            "hasDependentsLeftAloneAtHome": { "type": "boolean" },
+            "relationshipEvaluationByTechnician": { "type": "string", "enum": ["CONFLICT_WITH_VIOLENCE", "CONFLICT_WITHOUT_VIOLENCE", "WITHOUT_CONFLICT"] },
+            "parentChildRelationshipEvaluation": { "type": "string", "enum": ["CONFLICT_WITH_VIOLENCE", "CONFLICT_WITHOUT_VIOLENCE", "WITHOUT_CONFLICT"] },
+            "siblingRelationshipEvaluation": { "type": "string", "enum": ["CONFLICT_WITH_VIOLENCE", "CONFLICT_WITHOUT_VIOLENCE", "WITHOUT_CONFLICT"] },
+            "conflictWithOtherResidents": { "type": "string", "enum": ["CONFLICT_WITH_VIOLENCE", "CONFLICT_WITHOUT_VIOLENCE", "WITHOUT_CONFLICT"] },
+            "observation": { "type": "array", "items": { "$ref": "#/definitions/observation" } },
+            "inInUse": { "type": "boolean" }
+        }
+    },
+    "familyComposition": {
+        "type": "object",
+        "title": "Family Composition",
+        "properties": {
+            "socialEspecification": { "type": "string" },
+            "espeficationEthnicity": { "type": "string" },
+            "familyCompositionPerson": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "fullName": { "type": "string" },
+                        "birthDate": { "type": "string", "format": "date-time" },
+                        "biologicalGender": { "type": "string" },
+                        "personWithDisability": { "type": "boolean" },
+                        "documents": {
+                            "type": "object",
+                            "properties": {
+                                "cn": { "type": "boolean" },
+                                "rg": { "type": "boolean" },
+                                "ctps": { "type": "boolean" },
+                                "cpf": { "type": "boolean" },
+                                "te": { "type": "boolean" }
+                            }
+                        },
+                        "kinship": { "type": "number" },
+                        "historySocialLaOrPSC": { "type": "boolean" }
+                    }
+                }
+            },
+            "observation": { "type": "array", "items": { "$ref": "#/definitions/observation" } },
+            "isInUse": { "type": "boolean" }
+        }
+    },
+    "familyEventlyBenefits": {
+        "type": "object",
+        "title": "Family Evently Benefits",
+        "properties": {
+            "date": { "type": "string", "format": "date-time" },
+            "numberOfBirthDateOfChildren": { "type": "string" },
+            "numberOfCpfDeadPerson": { "type": "string" },
+            "typeOfBenefit": { "type": "number" },
+            "inInUse": { "type": "boolean" },
+            "observation": { "type": "array", "items": { "$ref": "#/definitions/observation" } }
+        }
+    },
+    "familyHistoryInstitutionalComplet": {
+        "type": "object",
+        "title": "Family History Institutional Complet",
+        "properties": {
+            "childCustodyHistory": { "type": "string" },
+            "familyInstitutionalShelterHistory": { "type": "string" },
+            "isInUse": { "type": "boolean" },
+            "observation": { "type": "array", "items": { "$ref": "#/definitions/observation" } },
+            "otherFamilySeparationSituations": {
+                "type": "object",
+                "properties": {
+                    "hasMemberInPrision": { "type": "boolean" },
+                    "hasMemberInadolescentInSocioEducationalInternment": { "type": "boolean" }
+                }
+            }
+        }
+    },
+    "familyHistoryOfComplianceSocioEducationalMeasures": {
+        "type": "object",
+        "title": "Family History Of Compliance Socio Educational Measures",
+        "properties": {
+            "anotationsOfPersons": { "type": "array", "items": { "type": "string" } },
+            "isInUse": { "type": "boolean" },
+            "observations": { "type": "array", "items": { "$ref": "#/definitions/observation" } }
+        }
+    },
+    "familySituationViolence": {
+        "type": "object",
+        "title": "Family Situation Violence",
+        "properties": {
+            "childLabel": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "sexualExploitation": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "sexualAbuse": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "physicalAbuse": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "psychologicalAbuse": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "elderNeglect": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "childNeglect": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "pcdNeglect": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "homelessSituation": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "humanTrafficking": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "violenceWithElderOrPcd": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" } } },
+            "other": { "type": "object", "properties": { "thisSituationOcurrent": { "type": "boolean" }, "thisSituationsOcurrentNow": { "type": "boolean" }, "nameOfSituation": { "type": "string" } } },
+            "isInUse": { "type": "boolean" },
+            "observations": { "type": "array", "items": { "$ref": "#/definitions/observation" } }
+        }
+    },
+    "firstEntryInUnity": {
+        "type": "object",
+        "title": "First Entry In Unity",
+        "properties": {
+            "firstEntryInUnity": { "type": "string" },
+            "motivationForFirstEntry": { "type": "string" },
+            "nameOfUnityToSendFirstEntry": { "type": "string" },
+            "ContactEmailOfUnityToSendFirstEntry": { "type": "string" },
+            "familyBenefits": { "type": "string" },
+            "isInUse": { "type": "boolean" },
+            "createdAt": { "type": "string", "format": "date-time" },
+            "updatedAt": { "type": "string", "format": "date-time" },
+            "observations": { "type": "array", "items": { "$ref": "#/definitions/observation" } }
+        }
+    },
+    "helphyCondition": {
+        "type": "object",
+        "title": "Helphy Condition",
+        "properties": {
+            "familyMemberAbusesAlcoholList": { "type": "array", "items": { "type": "object", "properties": { "fullName": { "type": "string" }, "complement": { "type": "string" } } } },
+            "familyMemberAbusesDrugsList": { "type": "array", "items": { "type": "object", "properties": { "fullName": { "type": "string" }, "complement": { "type": "string" } } } },
+            "familyMemberNeedsConstantCareList": { "type": "array", "items": { "type": "object", "properties": { "fullName": { "type": "string" }, "complement": { "type": "string" } } } },
+            "familyMemberUsesControlledMedicationList": { "type": "array", "items": { "type": "object", "properties": { "fullName": { "type": "string" }, "complement": { "type": "string" } } } },
+            "hasFamilyIndicatesFoodInsecurity": { "type": "boolean" },
+            "hasFamilyMemberAbusesAlcohol": { "type": "boolean" },
+            "hasFamilyMemberAbusesDrugs": { "type": "boolean" },
+            "hasFamilyMemberNeedsConstantCare": { "type": "boolean" },
+            "hasFamilyMemberUsesControlledMedication": { "type": "boolean" },
+            "hasSevereIllness": { "type": "boolean" },
+            "severeIllnessList": { "type": "array", "items": { "type": "object", "properties": { "fullName": { "type": "string" }, "complement": { "type": "string" } } } },
+            "observations": { "type": "array", "items": { "$ref": "#/definitions/observation" } },
+            "updatedAt": { "type": "string", "format": "date-time" },
+            "createdAt": { "type": "string", "format": "date-time" }
+        }
+    },
+    "homeConditions": {
+        "type": "object",
+        "title": "Home Conditions",
+        "properties": {
+            "typeResidence": { "type": "string" },
+            "materialOfExternalWalls": { "type": "string" },
+            "hasAcessEnergy": { "type": "string" },
+            "waterSupply": { "type": "string" },
+            "sewageDisposal": { "type": "string" },
+            "garbageCollection": { "type": "string" },
+            "hasWasteCollection": { "type": "boolean" },
+            "homeConditionIsInRiskArea": { "type": "boolean" },
+            "difficultyToAccessHome": { "type": "boolean" },
+            "hasHomeInsurance": { "type": "boolean" },
+            "hasHomeInsuranceValue": { "type": "number" },
+            "numberOfRooms": { "type": "number" },
+            "numberOfBedrooms": { "type": "number" },
+            "numberOfPeapleInBedrooms": { "type": "number" },
+            "observations": { "type": "array", "items": { "$ref": "#/definitions/observation" } },
+            "isInUse": { "type": "boolean" }
+        }
+    },
+    "workCondition": {
+        "type": "object",
+        "title": "Work Condition",
+        "properties": {
+            "familyIncome": { "type": "number" },
+            "perCapitaIncome": { "type": "number" },
+            "hasSocialIncome": { "type": "boolean" },
+            "bolsaFamiliaValue": { "type": "number" },
+            "bpcValue": { "type": "number" },
+            "petiValue": { "type": "number" },
+            "othersValue": { "type": "number" },
+            "bcpBenefitPerson": { "type": "array", "items": { "type": "string" } },
+            "hasRetiredPerson": { "type": "array", "items": { "type": "string" } },
+            "totalFamilyIncome": { "type": "number" },
+            "totalPerCapitaIncome": { "type": "number" },
+            "isInUse": { "type": "boolean" },
+            "observations": { "type": "array", "items": { "type": "string" } }
+        }
+    }
+  }
+}

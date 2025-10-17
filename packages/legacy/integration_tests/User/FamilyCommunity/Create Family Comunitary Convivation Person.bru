@@ -1,0 +1,26 @@
+meta {
+  name: Create Family Comunitary Convivation Person
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseURL}}/create/family/comunitary/convivation/person
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "dateOfInitJson": "2023-01-01T00:00:00.000Z",
+    "dateOfFinishJson": "2024-01-01T00:00:00.000Z",
+    "unity": "Some Unity",
+    "serviceType": "Some Service",
+    "familyCompositionID": 1,
+    "personId": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

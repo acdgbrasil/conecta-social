@@ -1,0 +1,39 @@
+meta {
+  name: Create Family Community
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseURL}}/create/family/community
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "yearsInState": 5,
+    "awaysLivingInState": false,
+    "yearsInDistrict": 5,
+    "awaysLivingInDistrict": false,
+    "yearsInNeighborhood": 5,
+    "awaysLivingInNeighborhood": false,
+    "hasVictimOfThreatsOrDiscrimination": false,
+    "hasNearbySupportNetwork": true,
+    "hasNeighborSupportNetwork": true,
+    "hasParticipatesInSupportGroups": false,
+    "hasParticipatesInSocialMovements": false,
+    "hasNoAccessToLeisureActivities": true,
+    "hasElderWithoutLeisureOrSocialInteraction": false,
+    "hasDependentsLeftAloneAtHome": false,
+    "relationshipEvaluationByTechnician": "Good",
+    "parentChildRelationshipEvaluation": "Good",
+    "siblingRelationshipEvaluation": "Good",
+    "conflictWithOtherResidents": "None",
+    "familyAndCommunityId": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

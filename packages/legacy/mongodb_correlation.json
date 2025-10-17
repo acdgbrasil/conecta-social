@@ -1,0 +1,68 @@
+{
+  "correlation": {
+    "mainCollection": "referencePerson",
+    "description": "The referencePerson collection is the central document, linking to various other collections that store detailed information about the person and their family.",
+    "relationships": [
+      {
+        "from": "referencePerson",
+        "to": "firstEntryInUnity",
+        "on": "fistEntryInUnityId",
+        "description": "Details of the first entry of the person into a service unit."
+      },
+      {
+        "from": "referencePerson",
+        "to": "familyComposition",
+        "on": "familyCompositionId",
+        "description": "Composition of the person's family, including details about each member."
+      },
+      {
+        "from": "referencePerson",
+        "to": "homeConditions",
+        "on": "homeConditionsId",
+        "description": "Housing conditions of the person's family."
+      },
+      {
+        "from": "referencePerson",
+        "to": "workCondition",
+        "on": "workConditionId",
+        "description": "Work and income conditions of the family."
+      },
+      {
+        "from": "referencePerson",
+        "to": "familySituationViolence",
+        "on": "familySituationViolationId",
+        "description": "History and current situation of violence within the family."
+      },
+      {
+        "from": "referencePerson",
+        "to": "helphyCondition",
+        "on": "helphyConditionId",
+        "description": "Health conditions of the family members."
+      },
+      {
+        "from": "referencePerson",
+        "to": "familyEventlyBenefits",
+        "on": "eventlyBenefitId",
+        "description": "Eventual benefits received by the family."
+      },
+      {
+        "from": "referencePerson",
+        "to": "familyAndCommunity",
+        "on": "familyAndCommunityId",
+        "description": "Family and community relationship details."
+      },
+      {
+        "from": "referencePerson",
+        "to": "familyHistoryOfComplianceSocioEducationalMeasures",
+        "on": "familyHistoryOfComplianceSocialEducationalMensuresId",
+        "description": "History of compliance with socio-educational measures."
+      },
+      {
+        "from": "referencePerson",
+        "to": "FamilyHistoryInstitutionalComplet",
+        "on": "familyHistoryInstitutionalCompletId",
+        "description": "Complete institutional history of the family."
+      }
+    ]
+  }
+}

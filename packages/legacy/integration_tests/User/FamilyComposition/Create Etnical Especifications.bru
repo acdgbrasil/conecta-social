@@ -1,0 +1,22 @@
+meta {
+  name: Create Etnical Especifications
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseURL}}/create/etnical/especifications
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "etnicalEspecifications": "Some Especifications",
+    "familyCompositionID": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}

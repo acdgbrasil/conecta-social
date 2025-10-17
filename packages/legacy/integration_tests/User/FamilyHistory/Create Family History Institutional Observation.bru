@@ -1,0 +1,23 @@
+meta {
+  name: Create Family History Institutional Observation
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseURL}}/create/family/history/institutional/observation
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "familyHistoryInstitutionalCompletId": 1,
+    "observation": "Some observation text",
+    "whoIsObservingId": 1
+  }
+}
+
+tests {
+  expect(res.getStatus()).to.equal(201);
+}
