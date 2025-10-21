@@ -1,6 +1,7 @@
-import { DomainError } from "../../../shared/erros-pattern/DomainError";
-import { pipe } from "../../../shared/fn-pattern/fn-pattern";
-import { err, ok, Result } from "../../../shared/result-pattern/Result";
+import type { DomainError } from "@conecta/domain-error/DomainError";
+import { pipe } from "@conecta/fn/fundaments";
+import type { Result } from "@conecta/result";
+import { err, ok } from "@conecta/result";
 import { ICDError } from "../err/ICDCode.error";
 
 export type ICDCode = string & { readonly brand: unique symbol };
@@ -73,7 +74,7 @@ const createFromString = (
   } catch (cause) {
     return err( ICDError.InvalidCidNumber(stringCode,sanitize(stringCode),{ requireDot, autoDot },cause,),);
   }
-};
+}; 
 
 /**
  * Value object responsável por validar, normalizar e formatar códigos CID.

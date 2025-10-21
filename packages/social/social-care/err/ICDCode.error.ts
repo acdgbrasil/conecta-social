@@ -3,7 +3,7 @@ import {
   makeDomainErrorFactory,
   ObservabilitySeverity,
   Template,
-} from "../../../shared/erros-pattern/DomainError.composition";
+} from "@conecta/domain-error/DomainError.composition";
 
 const ICD_PATTERN_WITH_OPTIONAL_DOT = "^[A-TV-Z]\\d{2}(?:\\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$";
 const ICD_PATTERN_WITH_DOT = "^[A-TV-Z]\\d{2}\\.[A-Z0-9]{1,4}$";

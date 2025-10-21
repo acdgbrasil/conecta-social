@@ -1,5 +1,6 @@
-import { DomainError } from "../../../shared/erros-pattern/DomainError";
-import { err, ok, Result } from "../../../shared/result-pattern/Result";
+import type { DomainError } from "@conecta/domain-error/DomainError";
+import type { Result } from "@conecta/result";
+import { err, ok } from "@conecta/result";
 import { DE } from "../err/Diagnosis.error";
 import { ICDCode } from "../value-objects/icdCode.valueObject";
 

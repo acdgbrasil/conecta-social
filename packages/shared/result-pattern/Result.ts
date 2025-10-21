@@ -1,5 +1,5 @@
-import { DomainError } from "../erros-pattern/DomainError";
-import { DomainErrorFactory } from "../erros-pattern/DomainError.factory";
+import type { DomainError } from "@conecta/domain-error";
+import { DomainErrorFactory } from "@conecta/domain-error";
 
 type Ok<T> = {
     readonly isOk: true;
@@ -45,4 +45,3 @@ export const err = <E= DomainError>(error: E): Result<never,E> => ({
 
 export const isOk = <T, E>(result: Result<T, E>): result is Ok<T> => result.isOk;
 export const isErr = <T, E>(result: Result<T, E>): result is Err<E> => result.isErr;
-

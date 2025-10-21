@@ -2,6 +2,7 @@
   "name": "conecta-social",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "packages/*/*"
   ]
 }
