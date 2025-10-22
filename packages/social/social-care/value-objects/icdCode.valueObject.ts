@@ -8,15 +8,13 @@ export type ICDCode = string & { readonly brand: unique symbol };
 
 const ICD_EITHER_RE = /^[A-TV-Z]\d{2}(?:\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$/i;
 const ICD_DOTTED_RE = /^[A-TV-Z]\d{2}\.[A-Z0-9]{1,4}$/i;
-const ICD_PATTERN_WITH_OPTIONAL_DOT =
-  "^[A-TV-Z]\\d{2}(?:\\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$";
+const ICD_PATTERN_WITH_OPTIONAL_DOT = "^[A-TV-Z]\\d{2}(?:\\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$";
 const ICD_PATTERN_WITH_DOT = "^[A-TV-Z]\\d{2}\\.[A-Z0-9]{1,4}$";
 
 /** Normaliza entradas removendo espaços e forçando caixa alta. */
 const sanitize = (input: string) => input.trim().toUpperCase();
 /** Garante que o código possua ponto entre o prefixo e o sufixo. */
-const ensureDot = (input: string) =>
-  input.replace(/^([A-TV-Z]\d{2})([A-Z0-9]{1,4})$/, "$1.$2");
+const ensureDot = (input: string) => input.replace(/^([A-TV-Z]\d{2})([A-Z0-9]{1,4})$/, "$1.$2");
 /** Remove o ponto para fins de comparação/armazenamento. */
 const stripDot = (input: string) => input.replace(".", "");
 
