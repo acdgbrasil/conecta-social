@@ -9,11 +9,16 @@ export class Diagnosis {
 
     static create(id:string,date:Date, description:string): Result<Diagnosis,DomainError>  {
         const idResult = ICDCodeClass.createFromString(id);
-        if(idResult.isErr) err(idResult.error);
-        if (date.getTime() > new Date().getTime()) err(DE.DateInFuture(date, new Date()));
-        if (date.getFullYear() < date.getFullYear()) err(DE.DateBeforeYearZero(date.getFullYear()));
-        if (!description || description.trim().length === 0) err(DE.DescriptionEmpty(description));
-        
+        if(idResult.isErr) return err(idResult.error);
+
+        const now = new Date();
+        if (date.getTime() > now.getTime()) return err(DE.DateInFuture(date, now));
+
+        const year = date.getFullYear();
+        if (year < 0) return err(DE.DateBeforeYearZero(year));
+
+        if (!description || description.trim().length === 0) return err(DE.DescriptionEmpty(description));
+
         return ok(Object.freeze(new Diagnosis(idResult.unwrap(),date,description)));
     }
 }
