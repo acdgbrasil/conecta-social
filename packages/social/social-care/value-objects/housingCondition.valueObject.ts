@@ -1,74 +1,50 @@
 import { DomainError } from "@conecta/domain-error";
 import { ok, Result } from "@conecta/result";
+import { HousingConditionProps } from "./props/housingCondition.props";
 
-const HOUSING_CONDITION_TYPE = {
-    OWNED: "OWNED",
-    RENTED: "RENTED",
-    CEDED: "CEDED",
-    SQUATTED: "SQUATTED",
-} as const;
+export class HousingCondition implements HousingConditionProps {
+    readonly housingConditionType: HousingConditionProps['housingConditionType'];
+    readonly wallMaterial: HousingConditionProps['wallMaterial'];
+    readonly numberOfRooms: number;
+    readonly numberOfBathrooms: number;
+    readonly isInGeographicRiskArea: boolean;
+    readonly isInSocialConflictArea: boolean;
+    readonly electricityAccess: HousingConditionProps['electricityAccess'];
+    readonly sewerDisposalMethod: HousingConditionProps['sewerDisposalMethod'];
+    readonly wasteCollectionType: HousingConditionProps['wasteCollectionType'];
+    readonly accessibilityLevel: HousingConditionProps['accessibilityLevel'];
 
-const WALL_MATERIAL = {
-    MASONRY: "MASONRY",
-    FINISHED_WOOD: "FINISHED_WOOD",
-    MAKESHIFT_MATERIALS: "MAKESHIFT_MATERIALS",
-} as const; 
+    private constructor(props: HousingConditionProps) {
+        this.housingConditionType = props.housingConditionType;
+        this.wallMaterial = props.wallMaterial;
+        this.numberOfRooms = props.numberOfRooms;
+        this.numberOfBathrooms = props.numberOfBathrooms;
+        this.isInGeographicRiskArea = props.isInGeographicRiskArea;
+        this.isInSocialConflictArea = props.isInSocialConflictArea;
+        this.electricityAccess = props.electricityAccess;
+        this.sewerDisposalMethod = props.sewerDisposalMethod;
+        this.wasteCollectionType = props.wasteCollectionType;
+        this.accessibilityLevel = props.accessibilityLevel;
+        Object.freeze(this);
+    }
 
-const ELETRICITY_ACCESS = {
-    METERED_CONNECTION: "METERED_CONNECTION",
-    WELL_SPRING: "WELL_SPRING",
-    RAINWATER_HARVESTING: "RAINWATER_HARVESTING",
-    WATER_TRUCK: "WATER_TRUCK",
-} as const;
+    static create(props: HousingConditionProps): Result<HousingCondition, DomainError> {
+        // Validações podem ser adicionadas aqui (ex: numberOfRooms não pode ser negativo)
+        return ok(new HousingCondition(props));
+    }
 
-const  SEWAGE_DISPOSAL_METHOD = {
-    PUBLIC_SEWER: "PUBLIC_SEWER",
-    SEPTIC_TANK: "SEPTIC_TANK",
-    RUDIMENTARY_PIT: "RUDIMENTARY_PIT",
-    OPEN_SEWAGE: "OPEN_SEWAGE",
-} as const;
-
-const WASTE_COLLECTION_TYPE = {
-    DIRECT_COLLECTION: "DIRECT_COLLECTION",
-    INDIRECT_COLLECTION: "INDIRECT_COLLECTION",
-    NO_COLLECTION: "NO_COLLECTION",
-} as const;
-
-const ACCESSIBILITY_LEVEL = {
-    FULLY_ACCESSIBLE: "FULLY_ACCESSIBLE",
-    PARTIALLY_ACCESSIBLE: "PARTIALLY_ACCESSIBLE",
-    NOT_ACCESSIBLE: "NOT_ACCESSIBLE",
-} as const;
-
-
-
-export class HousingCondition {
-
-    private constructor(
-        readonly housingConditionType: typeof HOUSING_CONDITION_TYPE,
-        readonly wallMaterial: typeof WALL_MATERIAL,
-        readonly numberOfRooms: number,
-        readonly numberOfBathrooms: number,
-        readonly isInGeographicRiskArea: boolean,
-        readonly isInSocialConflictArea: boolean,
-        readonly electricityAccess: typeof ELETRICITY_ACCESS,
-        readonly sewerDisposalMethod: typeof SEWAGE_DISPOSAL_METHOD,
-        readonly wasteCollectionType: typeof WASTE_COLLECTION_TYPE,
-        readonly accessibilityLevel: typeof ACCESSIBILITY_LEVEL) {}
-
-    static create(): Result<HousingCondition, DomainError> {
-        
-        return ok(Object.freeze(new HousingCondition(
-            HOUSING_CONDITION_TYPE,
-            WALL_MATERIAL,
-            0,
-            0,
-            false,
-            false,
-            ELETRICITY_ACCESS,
-            SEWAGE_DISPOSAL_METHOD,
-            WASTE_COLLECTION_TYPE,
-            ACCESSIBILITY_LEVEL
-        )));
+    copyWith(props: Partial<HousingConditionProps>): Result<HousingCondition, DomainError> {
+        return HousingCondition.create({
+            housingConditionType: props.housingConditionType ?? this.housingConditionType,
+            wallMaterial: props.wallMaterial ?? this.wallMaterial,
+            numberOfRooms: props.numberOfRooms ?? this.numberOfRooms,
+            numberOfBathrooms: props.numberOfBathrooms ?? this.numberOfBathrooms,
+            isInGeographicRiskArea: props.isInGeographicRiskArea ?? this.isInGeographicRiskArea,
+            isInSocialConflictArea: props.isInSocialConflictArea ?? this.isInSocialConflictArea,
+            electricityAccess: props.electricityAccess ?? this.electricityAccess,
+            sewerDisposalMethod: props.sewerDisposalMethod ?? this.sewerDisposalMethod,
+            wasteCollectionType: props.wasteCollectionType ?? this.wasteCollectionType,
+            accessibilityLevel: props.accessibilityLevel ?? this.accessibilityLevel,
+        });
     }
 }

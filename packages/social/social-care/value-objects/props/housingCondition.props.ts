@@ -1,0 +1,19 @@
+export const HOUSING_CONDITION_TYPE = { OWNED: "OWNED", RENTED: "RENTED", CEDED: "CEDED", SQUATTED: "SQUATTED" } as const;
+export const WALL_MATERIAL = { MASONRY: "MASONRY", FINISHED_WOOD: "FINISHED_WOOD", MAKESHIFT_MATERIALS: "MAKESHIFT_MATERIALS" } as const;
+export const ELETRICITY_ACCESS = { METERED_CONNECTION: "METERED_CONNECTION", WELL_SPRING: "WELL_SPRING", RAINWATER_HARVESTING: "RAINWATER_HARVESTING", WATER_TRUCK: "WATER_TRUCK" } as const;
+export const SEWAGE_DISPOSAL_METHOD = { PUBLIC_SEWER: "PUBLIC_SEWER", SEPTIC_TANK: "SEPTIC_TANK", RUDIMENTARY_PIT: "RUDIMENTARY_PIT", OPEN_SEWAGE: "OPEN_SEWAGE" } as const;
+export const WASTE_COLLECTION_TYPE = { DIRECT_COLLECTION: "DIRECT_COLLECTION", INDIRECT_COLLECTION: "INDIRECT_COLLECTION", NO_COLLECTION: "NO_COLLECTION" } as const;
+export const ACCESSIBILITY_LEVEL = { FULLY_ACCESSIBLE: "FULLY_ACCESSIBLE", PARTIALLY_ACCESSIBLE: "PARTIALLY_ACCESSIBLE", NOT_ACCESSIBLE: "NOT_ACCESSIBLE" } as const;
+
+export type HousingConditionProps = {
+    housingConditionType: keyof typeof HOUSING_CONDITION_TYPE;
+    wallMaterial: keyof typeof WALL_MATERIAL;
+    numberOfRooms: number;
+    numberOfBathrooms: number;
+    isInGeographicRiskArea: boolean;
+    isInSocialConflictArea: boolean;
+    electricityAccess: keyof typeof ELETRICITY_ACCESS;
+    sewerDisposalMethod: keyof typeof SEWAGE_DISPOSAL_METHOD;
+    wasteCollectionType: keyof typeof WASTE_COLLECTION_TYPE;
+    accessibilityLevel: keyof typeof ACCESSIBILITY_LEVEL;
+};

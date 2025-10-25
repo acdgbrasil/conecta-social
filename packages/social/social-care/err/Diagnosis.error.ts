@@ -9,7 +9,8 @@ import { shortcuts } from "@conecta/domain-error/DomainError.shortcuts";
 type DiagnosisKind =
   | "DateInFuture"
   | "DateBeforeYearZero"
-  | "DescriptionEmpty";
+  | "DescriptionEmpty"
+  | "InvalidICDCode";
 
 // 2) Catálogo
 export const DiagnosisErrors = makeDomainErrorFactory<DiagnosisKind>({
@@ -21,8 +22,7 @@ export const DiagnosisErrors = makeDomainErrorFactory<DiagnosisKind>({
       code: "DIAG-001",
       http: 422,
       category: ErrorTaxonomy.DomainRuleViolation,
-      template: ({ date, now }) =>
-        `Data do diagnóstico (${new Date(date as any).toISOString()}) não pode estar no futuro (agora: ${new Date(now as any).toISOString()}).`,
+      template: ({ date, now }) => `Data do diagnóstico (${date}) não pode estar no futuro (agora: ${now}).`,
     },
     DateBeforeYearZero: {
       code: "DIAG-002",
@@ -38,6 +38,13 @@ export const DiagnosisErrors = makeDomainErrorFactory<DiagnosisKind>({
       template: () => "Descrição do diagnóstico não pode ser vazia.",
       redact: ["raw"], // se quiser ocultar a descrição crua
     },
+    InvalidICDCode: {
+      code: "DIAG-004",
+      http: 422,
+      category: ErrorTaxonomy.DomainRuleViolation,
+      template: ({ id }) => `O código CID '${id}' fornecido para o diagnóstico é inválido.`,
+      redact: ["id"],
+    },
   },
 });
 
@@ -45,4 +52,5 @@ export const DE = shortcuts(DiagnosisErrors, {
   DateInFuture: ["date", "now"] as const,
   DateBeforeYearZero: ["year"] as const,
   DescriptionEmpty: ["raw"] as const,
+  InvalidICDCode: ["id"] as const,
 });

@@ -1,27 +1,27 @@
 import { describe, expect, test } from "bun:test";
-import { ICDCodeClass } from "../icdCode.valueObject";
+import { ICDCode } from "../icdCode.valueObject";
 
 describe("ICDCode.valueObject", () => {
   test("normaliza código CID inserindo ponto e caixa alta quando necessário", () => {
-    const result = ICDCodeClass.createFromString("b201");
+    const result = ICDCode.create("b201");
 
     expect(result.isOk).toBe(true);
     if (!result.isOk) return;
 
-    expect(result.unwrap()).toBe("B20.1");
+    expect(result.unwrap().value).toBe("B20.1");
   });
 
   test("permite códigos válidos sem ponto quando não é obrigatório", () => {
-    const result = ICDCodeClass.createFromString("A00");
+    const result = ICDCode.create("A00");
 
     expect(result.isOk).toBe(true);
     if (!result.isOk) return;
 
-    expect(result.unwrap()).toBe("A00");
+    expect(result.unwrap().value).toBe("A00");
   });
 
   test("retorna erro descritivo para código vazio", () => {
-    const result = ICDCodeClass.createFromString("");
+    const result = ICDCode.create("");
 
     expect(result.isErr).toBe(true);
     if (!result.isErr) return;
@@ -30,7 +30,7 @@ describe("ICDCode.valueObject", () => {
   });
 
   test("retorna erro quando ponto é obrigatório e não pode ser inferido", () => {
-    const result = ICDCodeClass.createFromString("C509", {
+    const result = ICDCode.create("C509", {
       requireDot: true,
       autoDot: false,
     });
@@ -42,20 +42,20 @@ describe("ICDCode.valueObject", () => {
   });
 
   test("toDisplay formata a string para visualização humana", () => {
-    expect(ICDCodeClass.toDisplay("  c509 ")).toBe("C50.9");
+    expect(ICDCode.toDisplay("  c509 ")).toBe("C50.9");
   });
 
   test("toNormalized remove o ponto do código", () => {
-    const created = ICDCodeClass.createFromString("C50.9");
+    const created = ICDCode.create("C50.9");
 
     expect(created.isOk).toBe(true);
     if (!created.isOk) return;
 
-    expect(ICDCodeClass.toNormalized(created.unwrap())).toBe("C509");
+    expect(ICDCode.toNormalized(created.unwrap())).toBe("C509");
   });
 
   test("is identifica códigos válidos", () => {
-    expect(ICDCodeClass.is("C50.9")).toBe(true);
-    expect(ICDCodeClass.is("invalid")).toBe(false);
+    expect(ICDCode.is("C50.9")).toBe(true);
+    expect(ICDCode.is("invalid")).toBe(false);
   });
 });

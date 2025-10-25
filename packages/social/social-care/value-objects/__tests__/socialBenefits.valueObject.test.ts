@@ -1,11 +1,15 @@
 import { describe, expect, test } from "bun:test";
-import { SocialBenefit } from "../socialBenefits.valueObjects";
+import { SocialBenefit } from "../SocialBenefit.valueObject";
+import { Uuid } from "../../../../shared/uuid-pattern/uuid";
 
-const VALID_UUID = "123e4567-e89b-12d3-a456-426614174000";
+const VALID_UUID_RESULT = Uuid.create("123e4567-e89b-12d3-a456-426614174000");
+if (VALID_UUID_RESULT.isErr) throw new Error("UUID Válido de teste falhou ao criar");
+const VALID_UUID = VALID_UUID_RESULT.unwrap();
+
 
 describe("SocialBenefit.valueObject", () => {
   test("cria benefício social válido com dados corretos", () => {
-    const result = SocialBenefit.create("Benefício Família", 250, VALID_UUID);
+    const result = SocialBenefit.create({ benefitName: "Benefício Família", amount: 250, beneficiaryId: VALID_UUID });
 
     expect(result.isOk).toBe(true);
     if (!result.isOk) return;
@@ -13,12 +17,12 @@ describe("SocialBenefit.valueObject", () => {
     const benefit = result.unwrap();
     expect(benefit.benefitName).toBe("Benefício Família");
     expect(benefit.amount).toBe(250);
-    expect(benefit.beneficiaryId).toBe(VALID_UUID);
+    expect(benefit.beneficiaryId).toBe(VALID_UUID.toString());
     expect(Object.isFrozen(benefit)).toBe(true);
   });
 
   test("retorna erro quando nome está vazio", () => {
-    const result = SocialBenefit.create(" ", 250, VALID_UUID);
+    const result = SocialBenefit.create({ benefitName: " ", amount: 250, beneficiaryId: VALID_UUID });
 
     expect(result.isErr).toBe(true);
     if (!result.isErr) return;
@@ -27,7 +31,7 @@ describe("SocialBenefit.valueObject", () => {
   });
 
   test("retorna erro quando valor é menor ou igual a zero", () => {
-    const result = SocialBenefit.create("Benefício Família", 0, VALID_UUID);
+    const result = SocialBenefit.create({ benefitName: "Benefício Família", amount: 0, beneficiaryId: VALID_UUID });
 
     expect(result.isErr).toBe(true);
     if (!result.isErr) return;
@@ -36,11 +40,11 @@ describe("SocialBenefit.valueObject", () => {
   });
 
   test("retorna erro quando UUID do beneficiário é inválido", () => {
-    const result = SocialBenefit.create("Benefício Família", 250, "uuid-inválido");
+    const result = Uuid.create("uuid-inválido");
 
     expect(result.isErr).toBe(true);
     if (!result.isErr) return;
 
-    expect(result.error.code).toBe("BENEFIT-003");
+    expect(result.error.name).toBe("InvalidUuidError");
   });
 });
