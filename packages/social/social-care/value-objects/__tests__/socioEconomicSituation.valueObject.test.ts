@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { SocioEconomicSituation } from "../socioEconomicSituation.valueObject";
 import { SocialBenefit } from "../SocialBenefit.valueObject";
-import { Uuid } from "../../../../shared/uuid-pattern/uuid";
+import { Uuid } from "@conecta/uuid";
 import { SocialBenefitsCollection } from "../SocialBenefitsCollection.valueObject";
 
 const VALID_UUID = Uuid.create("123e4567-e89b-12d3-a456-426614174000").unwrap();

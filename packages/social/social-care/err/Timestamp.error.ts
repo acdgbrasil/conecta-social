@@ -1,8 +1,8 @@
 import {
   ErrorTaxonomy,
   makeDomainErrorFactory,
-} from "@conecta/domain-error/DomainError.composition";
-import { shortcuts } from "@conecta/domain-error/DomainError.shortcuts";
+  shortcuts,
+} from "@conecta/domain-error";
 
 // 1) Tipos
 type TimestampKind = "InvalidDate";

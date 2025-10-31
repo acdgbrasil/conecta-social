@@ -1,2 +1,2 @@
-export * from '../packages/legacy/src/index.ts';
-export { default } from '../packages/legacy/src/index.ts';
+export * from '../packages/shared/index.ts';
+export * from '../packages/social/social-care/index.ts';

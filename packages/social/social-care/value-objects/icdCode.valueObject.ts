@@ -1,5 +1,5 @@
-import type { DomainError } from "@conecta/domain-error/DomainError";
-import { pipe } from "@conecta/fn/fundaments";
+import type { DomainError } from "@conecta/domain-error";
+import { pipe } from "@conecta/fn";
 import type { Result } from "@conecta/result";
 import { err, ok } from "@conecta/result";
 import { ICDError } from "../err/ICDCode.error";

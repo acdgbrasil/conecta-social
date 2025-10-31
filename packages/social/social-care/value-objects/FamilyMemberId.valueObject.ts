@@ -2,7 +2,7 @@
 import { DomainError } from "@conecta/domain-error";
 import { FMIE } from "../err/FamilyMemberId.error";
 import { err, ok, Result } from "@conecta/result";
-import { Uuid } from "../../../shared/uuid-pattern/uuid";
+import { Uuid } from "@conecta/uuid";
 
 /**
  * Representa o identificador único de um membro da família.
@@ -23,7 +23,12 @@ export class FamilyMemberId {
    * @param value A string a ser validada.
    * @returns Um `Result` contendo a instância de `FamilyMemberId` ou um `DomainError`.
    */
-  public static create(value: string): Result<FamilyMemberId, DomainError> {
+  public static create(): Result<FamilyMemberId, DomainError>;
+  public static create(value: string): Result<FamilyMemberId, DomainError>;
+  public static create(value?: string): Result<FamilyMemberId, DomainError> {
+    if (typeof value === "undefined") {
+      return ok(new FamilyMemberId(Uuid.create().unwrap().toString()));
+    }
     if (!Uuid.isV7(value)) {
       return err(FMIE.InvalidFormat(value));
     }

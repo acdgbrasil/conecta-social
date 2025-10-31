@@ -1,7 +1,7 @@
 // entities/__tests__/Referral.entity.test.ts
 import { describe, expect, test } from "bun:test";
 import { Referral } from '../Referral.entity'; // Irá falhar
-import { Uuid } from '../../../shared/uuid-pattern/uuid';
+import { Uuid } from '@conecta/uuid';
 import { Timestamp } from '../../value-objects/timestamp.valueObject';
 
 const NOW = new Date();

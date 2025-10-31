@@ -1,16 +1,13 @@
-// entities/__tests__/FamilyMember.entity.test.ts
 import { describe, expect, test } from "bun:test";
-import { FamilyMember } from '../FamilyMember.entity'; // Vai falhar (ainda não existe)
-import { FamilyMemberId } from '../../value-objects/FamilyMemberId.valueObject'; // Suposição de caminho
-import { PersonId } from '../../../person/value-objects/PersonId.valueObject'; // Suposição de caminho
-// A custom Result type or a library like neverthrow is expected to be used.
-// The assertions will follow the pattern found in other tests (e.g., result.isOk).
+import { FamilyMember } from "../FamilyMember.entity"; // Irá falhar (ainda não existe)
+import { FamilyMemberId } from "../../value-objects/FamilyMemberId.valueObject";
+import { PersonId } from "../../value-objects/personId.valueObject";
 
 describe('FamilyMember.entity', () => {
   test('deve criar um FamilyMember válido com todas as propriedades necessárias', () => {
     // Arrange
     const props = {
-      id: FamilyMemberId.create().unwrap(), // Assumindo que VOs existem e podem ser criados
+      id: FamilyMemberId.create().unwrap(), 
       personId: PersonId.create().unwrap(),
       relationship: 'FATHER_MOTHER',
       isPrimaryCaregiver: false,

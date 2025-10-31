@@ -1,4 +1,4 @@
-import { ImutableList } from "@conecta/fn/imutable-list";
+import type { ImutableList } from "@conecta/fn";
 
 export type SocialHealthSummaryProps = {
     requiresConstantCare: boolean;

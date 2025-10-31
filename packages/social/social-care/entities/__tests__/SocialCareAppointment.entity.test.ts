@@ -1,7 +1,7 @@
 // entities/__tests__/SocialCareAppointment.entity.test.ts
 import { describe, expect, test } from "bun:test";
 import { SocialCareAppointment } from '../SocialCareAppointment.entity'; // Irá falhar
-import { Uuid } from '../../../shared/uuid-pattern/uuid'; // Supondo um VO de UUID
+import { Uuid } from '@conecta/uuid'; // Supondo um VO de UUID
 import { Timestamp } from '../../value-objects/timestamp.valueObject'; // Supondo um VO de Timestamp
 
 const NOW = new Date();

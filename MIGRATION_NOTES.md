@@ -1,30 +1,19 @@
 # Migration Notes
 
-## Estrutura (antes)
-- `src/`
-- `api/`
-- `integration_tests/`
-- `bin/`
-- `doc/`
-- `postgres_schema_v2/`
-- Arquivos de schema `mongodb_*.json` e `service_manifest.json`
+## Estrutura atual
+- `src/index.ts` reexporta os módulos disponibilizados em `packages/shared` e `packages/social/social-care`.
+- `packages/shared/` reúne os padrões reutilizáveis (`Result`, `Option`, `DomainError`, `Uuid`, utilitários funcionais).
+- `packages/social/social-care/` contém os Value Objects e catálogos de erro do domínio Social Care, organizados por `value-objects/` e `err/`.
+- Diretórios e artefatos anteriores ao corte 1.5 (`packages/legacy`, `integration_tests`, `postgres_schema_v2`, etc.) foram removidos.
 
-## Estrutura (depois)
-- `packages/legacy/` contém todo o código original e artefatos acima
-- `packages/your-service/` representa novos serviços seguindo o guia DDD/hex
-- `src/` mantém apenas shims de compatibilidade (sem serviços diretos)
-- `bin/` guarda scripts utilitários e entrypoints dos serviços
+## Tooling e aliases
+- `tsconfig.json` define os aliases `@conecta/*` apontando diretamente para os pacotes internos, eliminando a necessidade de `node_modules`.
+- `bunfig.toml` e o re-export de `packages/shared/index.ts` garantem que os imports internos funcionem tanto em tempo de compilação quanto de execução.
+- Tipagens mínimas do runner vivem em `types/bun-test.d.ts`, permitindo `bun test` sem depender de `bun-types`.
 
-## Shims criados
-- `src/index.ts` → reexporta `../packages/legacy/src/index.ts`
+## Como evoluir
+- Ao adicionar um novo pacote compartilhado, exponha-o via `packages/shared/index.ts` e atualize os aliases caso necessário.
+- Para domínio, centralize exports em `packages/social/social-care/index.ts` para manter `src/index.ts` estável.
+- Dependências externas devem ser importadas via URLs/git compatíveis com Bun.
 
-## Alias e tooling
-- `@legacy/*` segue resolvido em `packages/legacy/src/*` (`packages/legacy/tsconfig.json`)
-- ESLint ignora `packages/legacy/**` para evitar ruído do legado (`eslint.config.mjs` e `.eslintignore`)
-- Scripts de build/teste do legado vivem em `packages/legacy/package.json`
-
-## Como executar
-- **Legado**: usar `bin/legacy.sh` ou executar scripts (`bun run dev`, `bun run start`) dentro de `packages/legacy/`.
-- **Novos serviços**: cada pacote em `packages/*` possui seus próprios scripts (`bun run validate`, etc.).
-
-Documentos adicionais do processo estão em `refactor-report/`.
+Documentos adicionais do processo permanecem em `refactor-report/`.

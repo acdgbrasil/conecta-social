@@ -1,22 +1,27 @@
 import { describe, expect, test } from "bun:test";
 import { SocialHealthSummary } from "../socialHealthSummary.valueObject";
-import { ImutableListFactory } from "@conecta/fn/imutable-list";
+import { ImutableListFactory } from "@conecta/fn";
 
 describe("SocialHealthSummary.valueObject", () => {
-  test("retorna erro quando não há dependências funcionais registradas", () => {
+  test("deve criar com sucesso um resumo mesmo quando não há dependências funcionais registradas", () => {
+    // Arrange
     const result = SocialHealthSummary.create({
         requiresConstantCare: true,
         hasMobilityImpairment: false,
-        functionalDependencies: ImutableListFactory.fromArray([]),
+        functionalDependencies: ImutableListFactory.empty<string>(),
         hasRelevantDrugTheapy: true,
     });
 
-    expect(result.isErr).toBe(true);
-    if (!result.isErr) return;
-    expect(result.error.code).toBe("SHS-001");
+    // Assert
+    expect(result.isOk).toBe(true);
+    if (!result.isOk) return;
+
+    const summary = result.unwrap();
+    expect(summary.functionalDependencies.length).toBe(0);
   });
 
-  test("cria resumo com dependências únicas e imutabilidade", () => {
+  test("deve criar resumo com dependências únicas, removendo duplicatas", () => {
+    // Arrange
     const dependencies = ImutableListFactory.fromArray(["Alimentação", "Banho", "Alimentação"]);
     const result = SocialHealthSummary.create({
         requiresConstantCare: true,
@@ -25,6 +30,7 @@ describe("SocialHealthSummary.valueObject", () => {
         hasRelevantDrugTheapy: false,
     });
 
+    // Assert
     expect(result.isOk).toBe(true);
     if (!result.isOk) return;
 

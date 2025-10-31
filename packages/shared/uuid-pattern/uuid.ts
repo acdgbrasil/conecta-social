@@ -71,12 +71,29 @@ export class Uuid {
    * @param value A string a ser validada.
    * @returns Um `Result` contendo a instância de `Uuid` ou um `InvalidUuidError`.
    */
-  public static create(value: string): Result<Uuid, InvalidUuidError> {
+  public static create(): Result<Uuid, InvalidUuidError>;
+  public static create(value: string): Result<Uuid, InvalidUuidError>;
+  public static create(value?: string): Result<Uuid, InvalidUuidError> {
+    if (typeof value === 'undefined') {
+      if (!this.autoSeq) this.autoSeq = 0;
+      const { uuid, nextSeq } = Uuid.generateV7({
+        rng: Uuid.defaultRng,
+        seq: this.autoSeq,
+      });
+      this.autoSeq = nextSeq;
+      return ok(uuid);
+    }
     if (!Uuid.isSupported(value)) {
       return err(new InvalidUuidError(value));
     }
     return ok(new Uuid(value.toLowerCase()));
   }
+  private static autoSeq = 0;
+  private static readonly defaultRng: Rng = {
+    nextInt(maxExclusive: number) {
+      return Math.floor(Math.random() * maxExclusive);
+    },
+  };
 
   /** Retorna a representação canônica (lowercase) do UUID. */
   public toString(): string {

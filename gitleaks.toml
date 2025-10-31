@@ -8,6 +8,5 @@ paths = [
   "build",
   ".git",
   "reports",
-  "deployments",
-  "legacy"
+  "deployments"
 ]

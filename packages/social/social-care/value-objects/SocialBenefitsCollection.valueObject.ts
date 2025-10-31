@@ -1,5 +1,5 @@
 import { SocialBenefit } from "./SocialBenefit.valueObject";
-import { Result, ok } from "../../../shared/result-pattern";
+import { Result, ok } from "@conecta/result";
 import { DomainError } from "@conecta/domain-error";
 
 /**

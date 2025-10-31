@@ -1,7 +1,30 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./packages/legacy" },
-    { "path": "./packages/your-service" }
-  ]
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@conecta/result": ["packages/shared/result-pattern/index.ts"],
+      "@conecta/domain-error": ["packages/shared/erros-pattern/index.ts"],
+      "@conecta/fn": ["packages/shared/fn-pattern/index.ts"],
+      "@conecta/uuid": ["packages/shared/uuid-pattern/index.ts"],
+      "@conecta/option": ["packages/shared/option-pattern/index.ts"],
+      "@conecta/result/*": ["packages/shared/result-pattern/*"],
+      "@conecta/domain-error/*": ["packages/shared/erros-pattern/*"],
+      "@conecta/fn/*": ["packages/shared/fn-pattern/*"],
+      "@conecta/uuid/*": ["packages/shared/uuid-pattern/*"],
+      "@conecta/option/*": ["packages/shared/option-pattern/*"]
+    },
+    "types": ["./types/bun-test"]
+  },
+  "include": ["src", "packages", "types"]
 }

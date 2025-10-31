@@ -1,6 +1,6 @@
-import {ImutableList, ImutableListFactory} from "@conecta/fn/imutable-list";
-import {err, ok, Result} from "@conecta/result";
-import { DomainError } from "@conecta/domain-error/DomainError"
+import { ImutableListFactory } from "@conecta/fn";
+import { err, ok, Result } from "@conecta/result";
+import { DomainError } from "@conecta/domain-error";
 import { SHSDE } from "../err/SocialHealthSummary.error";
 import { SocialHealthSummaryProps } from "./props/socialHealthSummary.props";
 
@@ -24,7 +24,6 @@ export class SocialHealthSummary {
     }
 
     static create(props: SocialHealthSummaryProps): Result<SocialHealthSummary, DomainError> {
-        if(props.functionalDependencies.isEmpty()) return err(SHSDE.FunctionalDependenciesEmpty());
         
         return ok(new SocialHealthSummary({
             ...props,

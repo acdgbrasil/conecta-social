@@ -2,8 +2,8 @@ import {
   ErrorTaxonomy,
   makeDomainErrorFactory,
   ObservabilitySeverity,
-  Template,
-} from "@conecta/domain-error/DomainError.composition";
+} from "@conecta/domain-error";
+import { Template } from "@conecta/domain-error/DomainError.factory";
 
 const ICD_PATTERN_WITH_OPTIONAL_DOT = "^[A-TV-Z]\\d{2}(?:\\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$";
 const ICD_PATTERN_WITH_DOT = "^[A-TV-Z]\\d{2}\\.[A-Z0-9]{1,4}$";

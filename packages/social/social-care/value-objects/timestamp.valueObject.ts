@@ -18,11 +18,23 @@ export class Timestamp {
         return this.value.getTime() > other.value.getTime();
     }
 
+    isBefore(other: Timestamp): boolean {
+        return this.value.getTime() < other.value.getTime();
+    }
+
+    equals(other: Timestamp): boolean {
+        return this.value.getTime() === other.value.getTime();
+    }
+
     getFullYear(): number {
         return this.value.getFullYear();
     }
 
     toISOString(): string {
         return this.value.toISOString();
+    }
+
+    toDate(): Date {
+        return new Date(this.value.getTime());
     }
 }

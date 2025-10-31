@@ -1,5 +1,6 @@
-import { DomainError } from "@conecta/domain-error";
-import { ok, Result } from "@conecta/result";
+import type { DomainError } from "@conecta/domain-error";
+import { err, ok, Result } from "@conecta/result";
+import { HC } from "../err/HousingCondition.error";
 import { HousingConditionProps } from "./props/housingCondition.props";
 
 export class HousingCondition implements HousingConditionProps {
@@ -29,7 +30,10 @@ export class HousingCondition implements HousingConditionProps {
     }
 
     static create(props: HousingConditionProps): Result<HousingCondition, DomainError> {
-        // Validações podem ser adicionadas aqui (ex: numberOfRooms não pode ser negativo)
+        if (props.numberOfRooms < 0) return err(HC.NegativeRooms());
+        if (props.numberOfBathrooms < 0) return err(HC.NegativeBathrooms());
+        if (props.numberOfBathrooms > props.numberOfRooms) return err(HC.BathroomsExceedRooms());
+        
         return ok(new HousingCondition(props));
     }
 

@@ -1,9 +1,9 @@
-import type { DomainError } from "@conecta/domain-error/DomainError";
+import type { DomainError } from "@conecta/domain-error";
 import type { Result } from "@conecta/result";
 import { err, ok } from "@conecta/result";
 import { DE } from "../err/Diagnosis.error";
 import { ICDCode } from "./icdCode.valueObject";
-import { Timestamp } from "./Timestamp.valueObject";
+import { Timestamp } from "./timestamp.valueObject";
 
 import { DiagnosisProps } from "./props/diagnosis.props";
 

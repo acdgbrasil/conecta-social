@@ -1,5 +1,6 @@
 import { DomainError } from "@conecta/domain-error";
-import { ok, Result } from "@conecta/result";
+import { err, ok, Result } from "@conecta/result";
+import { CSN } from "../err/CommunitySupportNetwork.error";
 import { CommunitySupportNetworkProps } from "./props/communitySupportNetwork.props";
 
 export class CommunitySupportNetwork implements CommunitySupportNetworkProps {
@@ -23,7 +24,18 @@ export class CommunitySupportNetwork implements CommunitySupportNetworkProps {
     }
 
     static create(props: CommunitySupportNetworkProps): Result<CommunitySupportNetwork, DomainError> {
-        return ok(new CommunitySupportNetwork(props));
+        const rawConflicts = props.familyConflicts ?? "";
+        const trimmed = rawConflicts.trim();
+        if (rawConflicts !== "" && trimmed.length === 0) {
+            return err(CSN.FamilyConflictsWhitespace());
+        }
+
+        return ok(
+            new CommunitySupportNetwork({
+                ...props,
+                familyConflicts: rawConflicts === "" ? "" : trimmed,
+            }),
+        );
     }
 
     copyWith(props: Partial<CommunitySupportNetworkProps>): Result<CommunitySupportNetwork, DomainError> {

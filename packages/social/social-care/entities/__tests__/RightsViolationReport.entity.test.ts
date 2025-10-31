@@ -1,7 +1,7 @@
 // entities/__tests__/RightsViolationReport.entity.test.ts
 import { describe, expect, test } from "bun:test";
-import { RightsViolationReport } from '../RightsViolationReport.entity'; // Irá falhar
-import { Uuid } from '../../../shared/uuid-pattern/uuid';
+import { RightsViolationReport, ViolationType } from '../RightsViolationReport.entity'; // Irá falhar
+import { Uuid } from '@conecta/uuid';
 import { Timestamp } from '../../value-objects/timestamp.valueObject';
 
 const NOW = new Date();
@@ -16,7 +16,7 @@ describe('RightsViolationReport.entity', () => {
       reportDate: Timestamp.create({ value: YESTERDAY }).unwrap(),
       incidentDate: Timestamp.create({ value: TWO_DAYS_AGO }).unwrap(),
       victimId: Uuid.create().unwrap(),
-      violationType: 'NEGLECT',
+      violationType: ViolationType.NEGLECT,
       descriptionOfFact: 'Criança encontrada sozinha em casa por longos períodos.',
       actionsTaken: 'Conselho Tutelar foi notificado via ofício nº 123.',
     };
@@ -43,7 +43,7 @@ describe('RightsViolationReport.entity', () => {
       reportDate: Timestamp.create({ value: TOMORROW }).unwrap(),
       incidentDate: Timestamp.create({ value: YESTERDAY }).unwrap(),
       victimId: Uuid.create().unwrap(),
-      violationType: 'PHYSICAL_VIOLENCE',
+      violationType: ViolationType.PHYSICAL_VIOLENCE,
       descriptionOfFact: 'Relato de agressão.',
       actionsTaken: '',
     };
@@ -64,7 +64,7 @@ describe('RightsViolationReport.entity', () => {
       reportDate: Timestamp.create({ value: TWO_DAYS_AGO }).unwrap(),
       incidentDate: Timestamp.create({ value: YESTERDAY }).unwrap(), // Inconsistente
       victimId: Uuid.create().unwrap(),
-      violationType: 'FINANCIAL_EXPLOITATION',
+      violationType: ViolationType.FINANCIAL_EXPLOITATION,
       descriptionOfFact: 'Relato de apropriação de benefício.',
       actionsTaken: '',
     };
@@ -84,7 +84,7 @@ describe('RightsViolationReport.entity', () => {
       id: Uuid.create().unwrap(),
       reportDate: Timestamp.create({ value: YESTERDAY }).unwrap(),
       victimId: Uuid.create().unwrap(),
-      violationType: 'CHILD_LABOR',
+      violationType: ViolationType.CHILD_LABOR,
       descriptionOfFact: ' ', // Inválido
       actionsTaken: 'Visita domiciliar agendada.',
     };
@@ -104,7 +104,7 @@ describe('RightsViolationReport.entity', () => {
       id: Uuid.create().unwrap(),
       reportDate: Timestamp.create({ value: YESTERDAY }).unwrap(),
       victimId: Uuid.create().unwrap(),
-      violationType: 'PSYCHOLOGICAL_VIOLENCE',
+      violationType: ViolationType.PSYCHOLOGICAL_VIOLENCE,
       descriptionOfFact: 'Relato de ameaças constantes.',
       actionsTaken: 'Orientação inicial fornecida.',
     }, NOW).unwrap();
@@ -127,7 +127,7 @@ describe('RightsViolationReport.entity', () => {
       id,
       reportDate: Timestamp.create({ value: YESTERDAY }).unwrap(),
       victimId: Uuid.create().unwrap(),
-      violationType: 'NEGLECT',
+      violationType: ViolationType.NEGLECT,
       descriptionOfFact: 'Descrição inicial.',
       actionsTaken: 'Ação inicial.',
     }, NOW).unwrap();
