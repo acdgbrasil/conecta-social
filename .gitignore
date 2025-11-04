@@ -4,5 +4,6 @@ package-lock.json
 build/
 .DS_Store
 library/
+handbook/references/
 coverage/
 bun-test.xml
