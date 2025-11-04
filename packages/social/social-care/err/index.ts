@@ -12,3 +12,4 @@ export * from "./Timestamp.error";
 export * from "./SocialCareAppointment.error";
 export * from "./Referral.error";
 export * from "./RightsViolationReport.error";
+export * from "./Patient.error";

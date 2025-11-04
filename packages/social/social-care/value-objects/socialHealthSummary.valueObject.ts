@@ -25,9 +25,11 @@ export class SocialHealthSummary {
 
     static create(props: SocialHealthSummaryProps): Result<SocialHealthSummary, DomainError> {
         
+        const uniqueDependencies = props.functionalDependencies.setUnique().getAll();
+
         return ok(new SocialHealthSummary({
             ...props,
-            functionalDependencies: props.functionalDependencies.getUnique().getAll()
+            functionalDependencies: uniqueDependencies,
         }));
     }
 

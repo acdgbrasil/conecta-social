@@ -10,3 +10,4 @@ export type { FamilyMemberProps } from "./FamilyMember.entity";
 export type { SocialCareAppointmentProps } from "./SocialCareAppointment.entity";
 export type { ReferralProps } from "./Referral.entity";
 export type { RightsViolationReportProps } from "./RightsViolationReport.entity";
+export type { ReferralStatus } from "./Referral.entity";
