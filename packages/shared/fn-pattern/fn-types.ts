@@ -7,5 +7,5 @@ export type ImutableList<T> = {
   contains: (element: T) => boolean;
   empty: () => ImutableList<T>;
   castTolist: (list: ImutableList<T>) => ImutableList<T>;
-  getUnique: () => ImutableList<T>;
+  setUnique: () => ImutableList<T>;
 };

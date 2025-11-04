@@ -71,7 +71,7 @@ export class Referral {
 
   private transition(next: ReferralStatus): Result<Referral, DomainError> {
     if (this.status !== "PENDING") {
-      return err(RE.InvalidStatusTransition({ from: this.status, to: next }));
+      return err(RE.InvalidStatusTransition(this.status, next));
     }
 
     return ok(

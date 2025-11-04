@@ -68,6 +68,17 @@ export class FamilyMember {
     });
   }
 
+  revokePrimaryCaregiver(): FamilyMember {
+    if (!this.isPrimaryCaregiver) {
+      return this;
+    }
+
+    return new FamilyMember({
+      ...this.props,
+      isPrimaryCaregiver: false,
+    });
+  }
+
   equals(other: FamilyMember): boolean {
     return this.id.equals(other.id);
   }
