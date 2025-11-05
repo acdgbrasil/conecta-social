@@ -1,0 +1,25 @@
+name: Kodus Sync & Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types: [opened, synchronize, reopened]
+
+jobs:
+  kodus-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Kodus Review
+        env:
+          KODUS_TOKEN: ${{ secrets.KODUS_FGPAT }}
+        run: |
+          if [ -z "$KODUS_TOKEN" ]; then
+            echo "KODUS_TOKEN not set; please configure secrets.KODUS_FGPAT." >&2
+            exit 1
+          fi
+          bunx kodus-cli review --token "$KODUS_TOKEN" --config .kody/kodus-config.yml --rules-dir .kody/rules

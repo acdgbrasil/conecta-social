@@ -1,0 +1,22 @@
+{
+  "typescript.tsdk": "${env:BUN_INSTALL}/install/global/bun-types/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": false,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifierEnding": "minimal",
+  "debug.javascript.defaultRuntimeExecutable": {
+    "pwa-node": "bun"
+  },
+  "debug.javascript.console": "integratedTerminal",
+  "debug.javascript.autoAttachFilter": "onlyWithFlag",
+  "testing.defaultGutterClickAction": "run",
+  "testing.automaticallyOpenPeekView": "never",
+  "testing.openTesting": "neverOpen",
+  "files.associations": {
+    "bunfig.toml": "toml"
+  },
+  "search.exclude": {
+    "coverage": true
+  }
+}

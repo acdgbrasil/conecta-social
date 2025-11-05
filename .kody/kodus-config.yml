@@ -1,0 +1,192 @@
+version: 2
+automatedReviewActive: true
+kodusConfigFileOverridesWebPreferences: true
+reviewCadence:
+  type: automatic
+  timeWindow: 15
+  pushesToTrigger: 3
+pullRequestApprovalActive: false
+isRequestChangesActive: false
+runOnDraft: true
+ignorePaths:
+  - yarn.lock
+  - package-lock.json
+  - package.json
+  - .env
+ignoredTitleKeywords: []
+baseBranches:
+  - main
+  - develop
+codeReviewVersion: v2
+reviewOptions:
+  bug: true
+  performance: true
+  security: true
+  breaking_changes: true
+  cross_file: true
+  kody_rules: true
+  code_style: false
+  refactoring: false
+  error_handling: false
+  maintainability: false
+  potential_issues: false
+  documentation_and_comments: true
+  performance_and_optimization: true
+suggestionControl:
+  groupingMode: full
+  applyFiltersToKodyRules: false
+  limitationType: pr
+  maxSuggestions: 9
+  severityLevelFilter: high
+  severityLimits:
+    low: 0
+    medium: 0
+    high: 0
+    critical: 0
+summary:
+  generatePRSummary: true
+  behaviourForNewCommits: none
+  behaviourForExistingDescription: replace
+  customInstructions: ''
+ideRulesSyncEnabled: false
+kodyRulesGeneratorEnabled: false
+customMessages:
+  globalSettings:
+    hideComments: false
+  startReviewMessage:
+    status: every_push
+    content: >
+      # PR Summary (Comment created by [Kody](https://kodus.io) 🤖)
+
+
+      ## Code Review Started! 🚀
+
+
+      ✋ Hi, team! I'm already looking at the changed files and starting the
+      review to ensure everything is in order. If you need more details, I'm
+      here! [Kody](https://kodus.io)
+
+
+      @reviewCadence
+
+
+      @changedFiles
+
+
+      @changeSummary
+  endReviewMessage:
+    status: every_push
+    content: >
+      ## Code Review Completed! 🔥
+
+
+      The code review was successfully completed based on your current
+      configurations.
+
+
+
+
+      <details>
+
+      <summary>Kody Guide: Usage and Configuration</summary>
+
+
+      <details>
+
+      <summary>Interacting with Kody</summary>
+
+
+      - **Request a Review:** Ask Kody to review your PR manually by adding a
+      comment with the \`@kody start-review\` command at the root of your PR.
+
+
+      - **Provide Feedback:** Help Kody learn and improve by reacting to its
+      comments with a 👍 for helpful suggestions or a 👎 if improvements are
+      needed.
+
+
+      </details>
+
+
+      <details>
+
+      <summary>Current Kody Configuration</summary>
+
+
+      @reviewOptions
+
+
+      </details>
+
+
+      **[Access your configuration settings
+      here.](https://app.kodus.io/settings/code-review/global/general)**
+
+
+      </details>
+v2PromptOverrides:
+  categories:
+    descriptions:
+      bug: >
+        Execution breaks: Code throws unhandled exceptions
+
+        Wrong results: Output doesn't match expected behavior
+
+        Resource leaks: Unclosed files, connections, memory accumulation
+
+        State corruption: Invalid object/data states
+
+        Logic errors: Control flow produces incorrect outcomes
+
+        Race conditions: Concurrent access causes inconsistent state or
+        duplicates
+
+        Incorrect measurements: Metrics/timings that don't reflect actual
+        operations
+
+        Invariant violations: Broken constraints (size limits, uniqueness, etc.)
+
+        Async timing bugs: Variables captured incorrectly in async closures
+      performance: |
+        Algorithm complexity: O(n²) when O(n) is possible
+        Redundant operations: Duplicate calculations or unnecessary loops
+        Memory waste: Large allocations or leaks over time
+        Blocking operations: Synchronous I/O in critical paths
+        Database inefficiency: N+1, missing indexes, full scans
+        Cache misses: Not leveraging available caching mechanisms
+      security: |
+        Injection vulnerabilities: SQL/NoSQL/command/LDAP injection
+        AuthZ/AuthN flaws: Missing checks, privilege escalation
+        Data exposure: Sensitive data in logs, responses, or errors
+        Crypto issues: Weak algorithms, hardcoded keys, improper validation
+        Input validation gaps: Missing sanitization or bounds checks
+        Session management: Predictable tokens or missing expiration
+  severity:
+    flags:
+      critical: |
+        Application crash/downtime
+        Data loss/corruption
+        Security breach (unauthorized access/data exfiltration)
+        Critical operation failure (auth/payment/authorization)
+        Direct financial loss operations
+        Memory leaks that inevitably crash production
+      high: |
+        Important functionality broken
+        Memory leaks that cause eventual crash
+        Performance degradation affecting UX under normal load
+        Security issues with indirect exploitation paths
+        Financial calculation errors affecting revenue
+      medium: |
+        Partially broken functionality
+        Performance issues in specific scenarios
+        Security weaknesses requiring specific conditions
+        Incorrect but recoverable data
+        Non-critical business logic errors with workarounds
+      low: |
+        Minor performance overhead
+        Low-risk security improvements
+        Incorrect metrics/logs
+        Rarely affecting few users
+        Edge-case issues
+  generation:
+    main: Detailed and verifiable issue description
