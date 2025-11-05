@@ -1,47 +1,68 @@
-import { ok, Result } from "@conecta/result";
+import { DomainError } from "@conecta/domain-error";
+import { err, ok, Result } from "@conecta/result";
+import { TE } from "../err/Timestamp.error";
 import { TimestampProps } from "./props/timestamp.props";
-import { DomainError } from "src";
 
 export class Timestamp {
-    private constructor(readonly value: Date) {
-        Object.freeze(this);
+  private constructor(private readonly value: Date) {
+    Object.freeze(this);
+  }
+
+  static create(props: TimestampProps): Result<Timestamp, DomainError> {
+    const candidate = props.value;
+
+    if (!(candidate instanceof Date)) {
+      return err(
+        TE.InvalidDate({
+          value: String(candidate),
+        }),
+      );
     }
 
-    static create(props: TimestampProps): Result<Timestamp, DomainError> {
-        const dateValue = new Date(props.value);
-        return Object.freeze(ok(new Timestamp(dateValue.toISOString())));
+    const value = Timestamp.clone(candidate);
+
+    if (Number.isNaN(value.getTime())) {
+      return err(
+        TE.InvalidDate({
+          value: String(candidate),
+        }),
+      );
     }
 
-    copyWith(props: Partial<TimestampProps>): Result<Timestamp, never> {
-        return Timestamp.create({value: props.value ?? new Date(this.value) });
-    }
+    return ok(new Timestamp(value));
+  }
 
-    isAfter(other: Timestamp): boolean {
-        const thisTime = new Date(this.value).getTime();
-        const otherTime = new Date(other.value).getTime();
-        return thisTime > otherTime;
-    }
+  copyWith(props: Partial<TimestampProps>): Result<Timestamp, DomainError> {
+    return Timestamp.create({
+      value: Timestamp.clone(props.value ?? this.value),
+    });
+  }
 
-    isBefore(other: Timestamp): boolean {
-        const thisTime = new Date(this.value).getTime();
-        const otherTime = new Date(other.value).getTime();
-        return thisTime < otherTime;
-    }
+  isAfter(other: Timestamp): boolean {
+    return this.value.getTime() > other.value.getTime();
+  }
 
-    equals(other: Timestamp): boolean {
-        return this.value === other.value;
-    }
+  isBefore(other: Timestamp): boolean {
+    return this.value.getTime() < other.value.getTime();
+  }
 
-    getFullYear(): number {
-        return this.copyWith({}).unwrap().toDate().getFullYear();
-    }
+  equals(other: Timestamp): boolean {
+    return this.value.getTime() === other.value.getTime();
+  }
 
-    toISOString(): string {
-        return this.copyWith({}).unwrap().toDate().toISOString();
-    }
+  getFullYear(): number {
+    return this.value.getUTCFullYear();
+  }
 
-    toDate(): Date {
-        const dateValue = new Date(this.value);
-        return new Date(dateValue.getTime());
-    }
+  toISOString(): string {
+    return this.value.toISOString();
+  }
+
+  toDate(): Date {
+    return Timestamp.clone(this.value);
+  }
+
+  private static clone(source: Date): Date {
+    return new Date(source.getTime());
+  }
 }

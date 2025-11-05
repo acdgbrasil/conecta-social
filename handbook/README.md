@@ -3,11 +3,12 @@
 Este diretório concentra toda a documentação viva do projeto. A ideia é manter a raiz do repositório o mais enxuta possível enquanto preservamos um ponto único de verdade para contexto, decisões e guias de trabalho.
 
 ## Como o handbook está organizado
-- `reports/` — registros cronológicos (diários e relatórios de refatoração). Funcionam como log histórico.
+- `reports/` — registros cronológicos (diários, code reviews e relatórios de refatoração). Funcionam como log histórico.
 - `quality/` — estado da suíte de testes, planos de correção e métricas de qualidade.
 - `process/` — regras operacionais, incluindo versionamento, retrocompatibilidade e rituais de PR.
 - `principles/` — fundamentos técnicos e culturais (DDD + EDD, TDD/BDD e como manter testes como documentação viva).
 - `tooling/` — notas de ferramentas, com foco especial em Bun e no ecossistema atual.
+- `codebase/` — documentação viva dos pacotes (`packages/**`), incluindo guias detalhados e cookbooks.
 - `references/` — material de apoio (livros, artigos, PDFs). Mantido aqui para consulta offline.
 
 ## Convenções gerais

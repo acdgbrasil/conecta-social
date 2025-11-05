@@ -58,4 +58,13 @@ describe("ICDCode.valueObject", () => {
     expect(ICDCode.is("C50.9")).toBe(true);
     expect(ICDCode.is("invalid")).toBe(false);
   });
+
+  test("rejeita códigos CID aposentados conhecidos", () => {
+    const result = ICDCode.create("A15.0", { requireDot: true });
+
+    expect(result.isErr).toBe(true);
+    if (!result.isErr) return;
+
+    expect(result.error.code).toBe("ICD-003");
+  });
 });

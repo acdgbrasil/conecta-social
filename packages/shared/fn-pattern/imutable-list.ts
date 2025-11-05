@@ -1,4 +1,3 @@
-import { None } from "src";
 import { ImutableList as ImutableListType } from "./fn-types";
 
 function imutableList<T>(elements: T[]): ImutableListType<T> {
@@ -11,7 +10,12 @@ function imutableList<T>(elements: T[]): ImutableListType<T> {
     contains: (element: T) => elements.includes(element),
     empty: () => imutableList<T>([]),
     castTolist: (list: ImutableListType<T>) => imutableList<T>(list.getAll() as T[]),
-    setUnique: () => imutableList<T>(Array.from(new Set(elements)))
+    setUnique: () => imutableList<T>(elements.reduce((acc: T[], curr: T) => {
+      if (!acc.includes(curr)) {
+        acc.push(curr);
+      }
+      return acc;
+    }, [])),
 
   };
 }

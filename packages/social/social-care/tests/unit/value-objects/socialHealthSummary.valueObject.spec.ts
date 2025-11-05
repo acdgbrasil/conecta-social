@@ -39,4 +39,16 @@ describe("SocialHealthSummary.valueObject", () => {
     expect(summary.hasMobilityImpairment).toBe(true);
     expect(Object.isFrozen(summary)).toBe(true);
   });
+
+  test("rejeita dependências funcionais vazias ou apenas com espaços", () => {
+    const dependencies = ImutableListFactory.fromArray(["Banho", "  "]);
+    const result = SocialHealthSummary.create({
+      requiresConstantCare: false,
+      hasMobilityImpairment: false,
+      functionalDependencies: dependencies,
+      hasRelevantDrugTheapy: false,
+    });
+
+    expect(result.isErr).toBe(true);
+  });
 });

@@ -53,4 +53,13 @@ describe("CommunitySupportNetwork.valueObject", () => {
     if (!result.isErr) return;
     expect(result.error.code).toBe("CSN-001"); // Ex: CommunitySupportNetwork error 1
   });
+
+  test("impede descrições de conflitos excessivamente longas", () => {
+    const veryLongConflicts = "Conflito ".repeat(300);
+    const result = CommunitySupportNetwork.create(
+      createValidProps({ familyConflicts: veryLongConflicts }),
+    );
+
+    expect(result.isErr).toBe(true);
+  });
 });

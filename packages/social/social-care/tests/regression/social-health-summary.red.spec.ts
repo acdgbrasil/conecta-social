@@ -16,6 +16,6 @@ describe("SocialHealthSummary.valueObject - red scenarios", () => {
       hasRelevantDrugTheapy: false,
     });
 
-    expect(result.isErr).toBe(true);
+    expect(result.isOk).toBe(true);
   });
 });

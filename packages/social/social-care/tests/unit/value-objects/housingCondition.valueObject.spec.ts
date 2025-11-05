@@ -89,4 +89,12 @@ describe("HousingCondition.valueObject", () => {
     // Assert
     expect(result.isOk).toBe(true);
   });
+
+  test("não permite residências sem nenhum cômodo habitável", () => {
+    const props = createValidProps({ numberOfRooms: 0 });
+
+    const result = HousingCondition.create(props);
+
+    expect(result.isErr).toBe(true);
+  });
 });

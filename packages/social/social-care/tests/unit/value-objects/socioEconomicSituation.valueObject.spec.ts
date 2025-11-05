@@ -99,4 +99,33 @@ describe("SocioEconomicSituation.valueObject", () => {
     expect(result.isErr).toBe(true);
     expect(result.unwrapErr().code).toBe("SES-005");
   });
+
+  test("impede renda per capita maior do que a renda familiar total", () => {
+    const result = SocioEconomicSituation.create({
+      totalFamilyIncome: 1000,
+      incomePerCapita: 1500,
+      receivesSocialBenefit: false,
+      socialBenefits: EMPTY_BENEFITS,
+      mainSourceOfIncome: "Trabalho",
+      hasUnemployed: false,
+    });
+
+    expect(result.isErr).toBe(true);
+  });
+
+  test("normaliza a fonte principal de renda removendo espaços excedentes", () => {
+    const result = SocioEconomicSituation.create({
+      totalFamilyIncome: 3000,
+      incomePerCapita: 1000,
+      receivesSocialBenefit: false,
+      socialBenefits: EMPTY_BENEFITS,
+      mainSourceOfIncome: "   Trabalho informal   ",
+      hasUnemployed: false,
+    });
+
+    expect(result.isOk).toBe(true);
+    if (!result.isOk) return;
+
+    expect(result.unwrap().mainSourceOfIncome).toBe("Trabalho informal");
+  });
 });

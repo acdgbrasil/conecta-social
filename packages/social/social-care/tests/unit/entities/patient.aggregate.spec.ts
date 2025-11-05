@@ -18,6 +18,9 @@ import {
   type FamilyMemberProps,
   P,
   type ReferralStatus,
+  type ReferralProps,
+  type RightsViolationReportProps,
+  type SocialCareAppointmentProps,
 } from "@conecta/social-care";
 import { ImutableListFactory } from "@conecta/fn";
 import { Uuid } from "@conecta/uuid";
@@ -121,6 +124,49 @@ const makeFamilyMemberData = (overrides: Partial<FamilyMemberProps> = {}) => ({
   relationship: overrides.relationship ?? "SIBLING",
   isPrimaryCaregiver: overrides.isPrimaryCaregiver ?? false,
   residesWithPatient: overrides.residesWithPatient ?? true,
+});
+
+const makeReferralDraft = (
+  referredPersonId: Uuid,
+  overrides: Partial<Omit<ReferralProps, "referredPersonId">> = {},
+): ReferralProps => ({
+  id: overrides.id ?? Uuid.create().unwrap(),
+  date: overrides.date ?? makeTimestamp(NOW),
+  requestingProfessionalId:
+    overrides.requestingProfessionalId ?? Uuid.create().unwrap(),
+  referredPersonId,
+  destinationService: overrides.destinationService ?? "CRAS",
+  reason:
+    overrides.reason ??
+    "Encaminhamento para acompanhamento multiprofissional.",
+  status: overrides.status,
+});
+
+const makeRightsViolationDraft = (
+  victimId: Uuid,
+  overrides: Partial<Omit<RightsViolationReportProps, "victimId">> = {},
+): RightsViolationReportProps => ({
+  id: overrides.id ?? Uuid.create().unwrap(),
+  reportDate: overrides.reportDate ?? makeTimestamp(NOW),
+  incidentDate: overrides.incidentDate ?? makeTimestamp(TWO_DAYS_AGO),
+  victimId,
+  violationType: overrides.violationType ?? ViolationType.NEGLECT,
+  descriptionOfFact:
+    overrides.descriptionOfFact ??
+    "Relato de violação registrado pelo agregado.",
+  actionsTaken: overrides.actionsTaken ?? "Medidas iniciais adotadas.",
+});
+
+const makeAppointmentDraft = (
+  overrides: Partial<SocialCareAppointmentProps> = {},
+): SocialCareAppointmentProps => ({
+  id: overrides.id ?? Uuid.create().unwrap(),
+  date: overrides.date ?? makeTimestamp(NOW),
+  professionalInChargeId:
+    overrides.professionalInChargeId ?? Uuid.create().unwrap(),
+  type: overrides.type ?? "FOLLOW_UP",
+  summary: overrides.summary ?? "Resumo padrão do atendimento.",
+  actionPlan: overrides.actionPlan ?? "Plano de ação inicial.",
 });
 
 // Helper de Criação do Agregado
@@ -326,42 +372,95 @@ describe("Patient.entity", () => {
 
     test("deve permitir criar 'Referral' para o paciente e para membros da família", () => {
       // Arrange
-      const referralForPatient = { /* ... props ... */ referredPersonId: Uuid.create(personId.toString()).unwrap() };
-      const referralForFamily = { /* ... props ... */ referredPersonId: Uuid.create(familyMember.personId.toString()).unwrap() };
+      const referralForPatient = makeReferralDraft(
+        Uuid.create(personId.toString()).unwrap(),
+      );
+      const referralForFamily = makeReferralDraft(
+        Uuid.create(familyMember.personId.toString()).unwrap(),
+        { destinationService: "CAPS" },
+      );
 
       // Act
       const resultP = patientWithFamily.createReferral(referralForPatient, NOW);
-      const resultF = patientWithFamily.createReferral(referralForFamily, NOW);
 
       // Assert
       expect(resultP.isOk).toBe(true);
+      const patientAfterPatientReferral = resultP.unwrap();
+      expect(patientAfterPatientReferral.referrals.count()).toBe(1);
+
+      const resultF = patientAfterPatientReferral.createReferral(
+        referralForFamily,
+        NOW,
+      );
       expect(resultF.isOk).toBe(true);
+      const patientAfterFamilyReferral = resultF.unwrap();
+      expect(patientAfterFamilyReferral.referrals.count()).toBe(2);
+
+      const [firstReferral, secondReferral] =
+        patientAfterFamilyReferral.referrals.getAll();
+      expect(
+        firstReferral.props.referredPersonId.equals(
+          referralForPatient.referredPersonId,
+        ),
+      ).toBe(true);
+      expect(
+        secondReferral.props.referredPersonId.equals(
+          referralForFamily.referredPersonId,
+        ),
+      ).toBe(true);
     });
 
     test("deve FALHAR ao criar 'Referral' para uma pessoa de fora do agregado", () => {
       // Arrange
       const strangerId = Uuid.create().unwrap();
-      const invalidReferral = { /* ... props ... */ referredPersonId: strangerId };
+      const invalidReferral = makeReferralDraft(strangerId);
 
       // Act
       const result = patientWithFamily.createReferral(invalidReferral, NOW);
 
       // Assert
       expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe("PAT-003"); // Seu código de erro customizado
+      expect(result.unwrapErr().code).toBe("PAT-003"); // Guarda da fronteira
+    });
+
+    test("deve permitir registrar 'RightsViolationReport' para membros internos", () => {
+      // Arrange
+      const reportForFamily = makeRightsViolationDraft(
+        Uuid.create(familyMember.personId.toString()).unwrap(),
+        {
+          violationType: ViolationType.PHYSICAL_VIOLENCE,
+          actionsTaken: "Encaminhado para acompanhamento jurídico.",
+        },
+      );
+
+      // Act
+      const result = patientWithFamily.reportRightsViolation(
+        reportForFamily,
+        NOW,
+      );
+
+      // Assert
+      expect(result.isOk).toBe(true);
+      const updatedPatient = result.unwrap();
+      expect(updatedPatient.violationsReports.count()).toBe(1);
+      const report = updatedPatient.violationsReports.getAll()[0];
+      expect(report.violationType).toBe(ViolationType.PHYSICAL_VIOLENCE);
     });
 
     test("deve FALHAR ao criar 'RightsViolationReport' para uma pessoa de fora do agregado", () => {
       // Arrange
       const strangerId = Uuid.create().unwrap();
-      const invalidReport = { /* ... props ... */ victimId: strangerId, violationType: ViolationType.NEGLECT };
+      const invalidReport = makeRightsViolationDraft(strangerId);
 
       // Act
-      const result = patientWithFamily.reportRightsViolation(invalidReport, NOW);
-      
+      const result = patientWithFamily.reportRightsViolation(
+        invalidReport,
+        NOW,
+      );
+
       // Assert
       expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe("PAT-004"); // Seu código de erro customizado
+      expect(result.unwrapErr().code).toBe("PAT-004"); // Guarda da fronteira
     });
   });
 
@@ -386,7 +485,7 @@ describe("Patient.entity", () => {
       
       // Assert: Estado "A" e Imutabilidade
       expect(patientA).not.toBe(patient); // Imutabilidade
-      expect(patientA.housingCondition.isSome()).toBe(true);
+      expect(patientA.housingCondition.isSome).toBe(true);
       expect(patientA.housingCondition.unwrap().numberOfRooms).toBe(3);
 
       // Act: Atualiza para o estado "B"
@@ -408,8 +507,14 @@ describe("Patient.entity", () => {
     test("deve adicionar um novo atendimento (Appointment) à lista, preservando os existentes", () => {
       // Arrange
       const { patient } = createPatient();
-      const firstApptProps = { /* ... props ... */ summary: "Primeira visita" };
-      const secondApptProps = { /* ... props ... */ summary: "Segunda visita" };
+      const firstApptProps = makeAppointmentDraft({
+        summary: "Primeira visita",
+        actionPlan: "Registrar estado inicial.",
+      });
+      const secondApptProps = makeAppointmentDraft({
+        summary: "Segunda visita",
+        actionPlan: "Manter acompanhamento mensal.",
+      });
       
       // Act: Adiciona o primeiro
       const patientWithOne = patient.registerAppointment(firstApptProps, NOW).unwrap();

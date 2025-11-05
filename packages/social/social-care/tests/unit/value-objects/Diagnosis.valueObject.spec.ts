@@ -53,4 +53,16 @@ describe("Diagnosis.valueObject", () => {
 
     expect(result.error.code).toBe("DIAG-003");
   });
+
+  test("remove espaços excedentes da descrição antes de persistir", () => {
+    const result = Diagnosis.create(
+      { id: VALID_ICD_CODE, date: VALID_DATE, description: "  Doença respiratória aguda  " },
+      NOW,
+    );
+
+    expect(result.isOk).toBe(true);
+    if (!result.isOk) return;
+
+    expect(result.unwrap().description).toBe("Doença respiratória aguda");
+  });
 });
