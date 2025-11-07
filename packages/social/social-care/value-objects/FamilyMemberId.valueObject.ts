@@ -26,13 +26,11 @@ export class FamilyMemberId {
   public static create(): Result<FamilyMemberId, DomainError>;
   public static create(value: string): Result<FamilyMemberId, DomainError>;
   public static create(value?: string): Result<FamilyMemberId, DomainError> {
-    if (typeof value === "undefined") {
-      return ok(new FamilyMemberId(Uuid.create().unwrap().toString()));
-    }
-    if (!Uuid.isV7(value)) {
-      return err(FMIE.InvalidFormat(value));
-    }
-    return ok(new FamilyMemberId(value));
+    
+    if (typeof value === "undefined") return ok(new FamilyMemberId(Uuid.create().unwrap().toString()));
+    const lowercaseValue = value.toLowerCase();
+    if (!Uuid.isV7(lowercaseValue)) return err(FMIE.InvalidFormat(lowercaseValue));
+    return ok(new FamilyMemberId(lowercaseValue));
   }
 
   /**

@@ -8,4 +8,5 @@ export type ImutableList<T> = {
   empty: () => ImutableList<T>;
   castTolist: (list: ImutableList<T>) => ImutableList<T>;
   setUnique: () => ImutableList<T>;
+  hasDuplicates: () => boolean;
 };

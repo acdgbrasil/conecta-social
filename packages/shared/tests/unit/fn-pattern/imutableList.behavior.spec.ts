@@ -33,4 +33,23 @@ describe("ImutableListFactory behavior", () => {
     expect(cloned.getAll()).toEqual([1, 2, 3]);
     expect(cloned).not.toBe(base);
   });
+
+  test("setUnique elimina duplicados e mantém ordem original", () => {
+    const list = ImutableListFactory.fromArray(["a", "a", "b"]);
+
+    const unique = list.setUnique();
+
+    expect(unique.count()).toBe(2);
+    expect(unique.getAll()).toEqual(["a", "b"]);
+  });
+
+  test("remove remove o elemento alvo e não reaproveita referência", () => {
+    const list = ImutableListFactory.fromArray(["x"]);
+
+    const updated = list.remove("x");
+
+    expect(updated.contains("x")).toBe(false);
+    expect(updated.count()).toBe(0);
+    expect(updated).not.toBe(list);
+  });
 });

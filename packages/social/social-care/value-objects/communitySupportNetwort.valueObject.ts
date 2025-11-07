@@ -30,6 +30,8 @@ export class CommunitySupportNetwork implements CommunitySupportNetworkProps {
             return err(CSN.FamilyConflictsWhitespace());
         }
 
+        if ( trimmed.length > 300 ) return err(CSN.FamilyConflictsTooLong());
+
         return ok(
             new CommunitySupportNetwork({
                 ...props,

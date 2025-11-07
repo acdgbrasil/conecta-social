@@ -20,7 +20,7 @@ export class Diagnosis {
 
         if (!props.description || props.description.trim().length === 0) return err(DE.DescriptionEmpty(props.description));
 
-        return ok(new Diagnosis(props.id, props.date, props.description));
+        return ok(new Diagnosis(props.id, props.date, props.description.trim()));
     }
 
     copyWith(

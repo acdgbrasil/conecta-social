@@ -17,6 +17,9 @@ type NoneOption<T> = {
   map<U>(fn: (value: T) => U): Option<U>;
 };
 
+export const unSafe = <T>(value: T | undefined | null): Option<T> =>
+  value === null || value === undefined ? None<T>() : Some(value);
+
 export type Option<T> = SomeOption<T> | NoneOption<T>;
 
 const freeze = <T extends object>(value: T): T => Object.freeze(value);

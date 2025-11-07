@@ -4,7 +4,7 @@ import {
   shortcuts,
 } from "@conecta/domain-error";
 
-type CommunitySupportNetworkErrorKind = "FamilyConflictsWhitespace";
+type CommunitySupportNetworkErrorKind = "FamilyConflictsWhitespace" | "FamilyConflictsTooLong";
 
 export const CommunitySupportNetworkErrors =
   makeDomainErrorFactory<CommunitySupportNetworkErrorKind>({
@@ -19,9 +19,17 @@ export const CommunitySupportNetworkErrors =
         template: () =>
           "O campo de conflitos familiares não pode conter apenas espaços em branco.",
       },
+      FamilyConflictsTooLong: {
+        code: "CSN-002",
+        http: 422,
+        category: ErrorTaxonomy.DomainRuleViolation,
+        template: () =>
+          "O campo de conflitos familiares não pode ter mais de 300 caracteres.",
+      }
     },
   });
 
 export const CSN = shortcuts(CommunitySupportNetworkErrors, {
   FamilyConflictsWhitespace: [] as const,
+  FamilyConflictsTooLong: [] as const,
 });

@@ -1,6 +1,8 @@
 import { SocialBenefit } from "./SocialBenefit.valueObject";
-import { Result, ok } from "@conecta/result";
+import { Result, err, ok } from "@conecta/result";
 import { DomainError } from "@conecta/domain-error";
+import { SBC } from "@conecta/social-care/err/SocialBenefitsCollection.error";
+import { ImutableListFactory } from "src";
 
 /**
  * Representa uma coleção de benefícios sociais como um Value Object imutável.
@@ -23,8 +25,9 @@ export class SocialBenefitsCollection {
    * @returns Um `Result` contendo a nova coleção.
    */
   public static create(benefits: SocialBenefit[]): Result<SocialBenefitsCollection, DomainError> {
-    // No futuro, validações complexas podem ser adicionadas aqui.
-    // Ex: verificar benefícios duplicados, etc.
+    if (benefits.length === 0) return ok(new SocialBenefitsCollection([]));
+    const hasDuplicates = ImutableListFactory.fromArray(benefits).hasDuplicates();
+    if (hasDuplicates) return err(SBC.DuplicateBenefitNotAllowed(benefits[0].benefitName));
     return ok(new SocialBenefitsCollection([...benefits])); // Clona o array para garantir imutabilidade
   }
 
