@@ -51,6 +51,6 @@ export const DiagnosisErrors = makeDomainErrorFactory<DiagnosisKind>({
 export const DE = shortcuts(DiagnosisErrors, {
   DateInFuture: ["date", "now"] as const,
   DateBeforeYearZero: ["year"] as const,
-  DescriptionEmpty: ["raw"] as const,
+  DescriptionEmpty: [] as const,
   InvalidICDCode: ["id"] as const,
 });

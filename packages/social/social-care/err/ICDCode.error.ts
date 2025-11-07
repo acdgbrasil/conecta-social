@@ -15,7 +15,7 @@ type ICDCodeErrorKind =
   | "ICD_CONTEXT_CONFLICT";
 
 const template = (literal: string): Template => (ctx) =>
-  literal.replace(/\{([a-zA-Z0-9_]+)\}/g, (_, key) => {
+  literal.replace(/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, (_, key) => {
     const value = ctx[key];
     if (value === null || value === undefined) {
       return "∅";

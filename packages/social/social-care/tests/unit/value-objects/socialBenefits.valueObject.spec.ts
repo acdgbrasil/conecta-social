@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { FamilyMemberId, SocialBenefit } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 
-const VALID_UUID_RESULT = Uuid.create("123e4567-e89b-12d3-a456-426614174000");
+const VALID_UUID_RESULT = FamilyMemberId.create("01890e18-257b-7b32-b264-93c9d46242ab");
 if (VALID_UUID_RESULT.isErr) throw new Error("UUID Válido de teste falhou ao criar");
 const VALID_UUID = VALID_UUID_RESULT.unwrap();
 

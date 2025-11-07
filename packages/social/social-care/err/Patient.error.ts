@@ -13,7 +13,8 @@ export type PatientErrorKind =
   | "MemberAlreadyIsPrimaryCaregiver"
   | "FamilyMemberAlreadyContainsPrimaryCaregiver"
   | "ReferralTargetOutsideBoundary"
-  | "ViolationTargetOutsideBoundary";
+  | "ViolationTargetOutsideBoundary"
+  | "InitialDiagnosesCantHaveDuplicates";
 
 export const PatientErrors = makeDomainErrorFactory<PatientErrorKind>({
   bc: "SOCIAL",
@@ -80,6 +81,13 @@ export const PatientErrors = makeDomainErrorFactory<PatientErrorKind>({
       category: ErrorTaxonomy.DomainRuleViolation,
       template: () => "PersonId inicial é obrigatório para criar um paciente.",
     },
+    InitialDiagnosesCantHaveDuplicates: {
+      code: "PAT-010",
+      http: 422,
+      category: ErrorTaxonomy.DomainRuleViolation,
+      template: () =>
+        "Paciente não pode ser criado com diagnósticos iniciais duplicados.",
+    },
   },
 });
 
@@ -93,4 +101,5 @@ export const P = shortcuts(PatientErrors, {
   FamilyMemberAlreadyContainsPrimaryCaregiver: ["currentCaregiverId"] as const,
   ReferralTargetOutsideBoundary: ["targetId"] as const,
   ViolationTargetOutsideBoundary: ["targetId"] as const,
+  InitialDiagnosesCantHaveDuplicates: [] as const,
 });

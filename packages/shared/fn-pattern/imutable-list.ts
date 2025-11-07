@@ -19,10 +19,6 @@ function imutableList<T>(elements: T[]): ImutableListType<T> {
     hasDuplicates: () => {
       const vistos = new Set<string>();
       for (const item of elements) {
-        // Converte o item para uma string única que reflita sua estrutura.
-        // JSON.stringify trata bem objetos simples, mas precisamos garantir
-        // ordem estável das propriedades para objetos cujas chaves não são
-        // garantidas em ordem.  A função `stableStringify` resolve isso.
         const hash = stableStringify(item);
 
         if (vistos.has(hash)) {

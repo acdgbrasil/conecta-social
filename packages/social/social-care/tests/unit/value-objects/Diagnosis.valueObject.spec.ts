@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Diagnosis, ICDCode, Timestamp } from "@conecta/social-care";
+import { DE, Diagnosis, ICDCode, Timestamp } from "@conecta/social-care";
 
 const VALID_DESCRIPTION = "Paciente apresentou diagnóstico confirmado.";
 const NOW = Timestamp.create({ value: new Date("2024-05-10T00:00:00Z") }).unwrap();
@@ -66,3 +66,45 @@ describe("Diagnosis.valueObject", () => {
     expect(result.unwrap().description).toBe("Doença respiratória aguda");
   });
 });
+
+describe("copyWith", () => {
+    const makeDiagnosis = () => {
+      return Diagnosis.create(
+        { id: VALID_ICD_CODE, date: VALID_DATE, description: "Descrição Original" },
+        NOW,
+      ).unwrap();
+    };
+
+    test("deve atualizar um campo (ex: description) e manter os outros", () => {
+      const original = makeDiagnosis();
+      const novaDescricao = "Descrição atualizada";
+
+      const result = original.copyWith({ description: novaDescricao }, NOW);
+
+      expect(result.isOk).toBe(true);
+      const copied = result.unwrap();
+
+      expect(copied.description).toBe(novaDescricao); // Campo novo
+      expect(copied.id).toBe(original.id); // Campo antigo mantido
+      expect(copied.date).toBe(original.date); // Campo antigo mantido
+    });
+
+    test("deve falhar a revalidação se um dado inválido for passado (ex: data futura)", () => {
+      const original = makeDiagnosis();
+      const futureDate = Timestamp.create({ value: new Date("2024-05-11T00:00:00Z") }).unwrap(); // Data futura
+      
+      const result = original.copyWith({ date: futureDate }, NOW); // NOW é 10/05/2024
+
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(DE.DateInFuture(futureDate, NOW).code); // "DIAG-001"
+    });
+
+    test("deve falhar a revalidação se a descrição for vazia", () => {
+      const original = makeDiagnosis();
+      
+      const result = original.copyWith({ description: "   " }, NOW);
+
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(DE.DescriptionEmpty().code); // "DIAG-003"
+    });
+  });

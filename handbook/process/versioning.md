@@ -1,38 +1,34 @@
 # Versionamento e Retrocompatibilidade
 
-## Esquema de versão a partir da 2.0.0
-Adotamos quatro números: `MAJOR.MINOR.FEATURE.PATCH`.
+## Esquema vigente (SemVer)
+A partir deste canal iniciamos em **`0.1.0`** e seguimos [SemVer](https://semver.org/) padrão (`MAJOR.MINOR.PATCH`).
 
-- **MAJOR** — alterações incompatíveis (quebram contratos públicos). Só sobe quando encerrarmos um ciclo completo de descontinuação.
-- **MINOR** — novas capacidades retrocompatíveis (novas APIs, eventos, agregados opcionais).
-- **FEATURE** — incrementado em **todo PR** que altera código, mesmo que seja bugfix. Serve como marcador de rastreabilidade para merges contínuos.
-- **PATCH** — correções pequenas liberadas em produção sem novas features (hotfix). Resetado para `0` sempre que `FEATURE` ou `MINOR` mudam.
+- **MAJOR** — alterações incompatíveis nos pacotes publicados (`@conecta/result`, `@conecta/social-care`, eventos, schemas persistidos). Só subir após concluir plano de migração.
+- **MINOR** — novas capacidades retrocompatíveis (APIs opcionais, novos value objects, catálogos de erro adicionais).
+- **PATCH** — correções, hardening ou ajustes de toolchain que não expõem novas APIs.
 
-Exemplo de fluxo:
-1. Versão base `2.0.0.0`.
-2. Primeiro PR mergeado: `2.0.1.0`.
-3. Segundo PR sem quebra: `2.0.2.0`.
-4. Hotfix urgente sobre o estado atual: `2.0.2.1`.
-5. Entrega relevante agregando comportamento: promover para `2.1.0.0`.
+Enquanto estivermos em `0.y.z`, trate qualquer quebra como aumento de `MINOR` e documente explicitamente o impacto antes do merge.
 
-O `FEATURE` garante um identificador incremental por PR, enquanto `PATCH` permite hotfix rápido sem precisar aguardar o próximo merge funcional.
+### Recomendações práticas
+- Use `bun pm version <patch|minor|major>` para atualizar `package.json` na raiz **e** cada pacote tocado em `packages/**`.
+- Gere tags anotadas (`git tag -a v0.1.0 -m "Conecta Social kick-off"`). As tags são a origem do changelog.
+- Inclua o número da versão no PR/commit final e referencie o relatório correspondente (`reports/daily` ou `reports/refactor`).
 
-## Processo por PR
-1. Atualizar `package.json` na raiz (e em pacotes afetados) com a nova versão seguindo as regras acima.
-2. Atualizar changelog (próximo item) antes do merge.
-3. Garantir que testes e linters foram executados. Sem suite verde, a versão não é válida.
-4. Registrar no PR o resumo da mudança + versão resultante.
-
-## Changelog e documentação
-- Manter `reports/daily` ou `reports/refactor` atualizados com notas de decisão relevantes.
-- Para mudanças que afetem compatibilidade, adicionar uma seção em `process/retrocompatibilidade.md` (ver abaixo).
+## Checklist por PR
+1. **Classificar mudança** (patch/minor/major) olhando o que saiu pelos barrels (`src/index.ts`, `packages/*/index.ts`).
+2. **Atualizar versões**: raiz + pacotes afetados.
+3. **Changelog/relatório**: registrar resumo e motivação em `reports/daily/*.md` ou `reports/refactor/*.md`.
+4. **Garantir suíte verde** (`bun test`). Sem testes passando, não há versão.
+5. **Sincronizar handbook**: qualquer alteração de contrato precisa refletir `handbook/codebase/**` e `process/retrocompatibilidade.md`.
 
 ## Retrocompatibilidade
-1. **Contrato público imutável**: nenhuma API/domain event é removida após publicada. Somente extensão até termos migração segura.
-2. **Feature flag / soft deprecation**: ao introduzir alternativa, sinalizar no handbook (process/retrocompatibilidade.md) com prazo e plano de migração.
-3. **Teste de regressão obrigatório**: bug corrigido vira teste (`packages/**/tests`). Sem teste, a depreciação não está autorizada.
-4. **Janela de convivência**: por padrão, manter recursos antigos convivendo por pelo menos duas versões `MINOR`.
+1. **Contrato público imutável**: não remova APIs/eventos publicados antes de oferecer alternativa e janela de convivência.
+2. **Soft deprecation**: registrar no quadro (`process/retrocompatibilidade.md`) quando algo entra em descontinuação.
+3. **Teste obrigatório**: toda correção gera teste (unit ou regression). Sem teste, a ruptura não pode ser mergeada.
+4. **Janela mínima**: mantenha recursos deprecados por, pelo menos, duas versões `MINOR`.
 
-## Próximos artefatos
-- `process/retrocompatibilidade.md` (pendente) — tabela com features, estado (ativo/deprecando), data estimada de remoção.
-- Script `bun run version <type>` (futuro) para automatizar incremento de versão e atualização do changelog.
+## Artefatos de apoio
+- `process/retrocompatibilidade.md` — catálogo de features, status e plano de migração.
+- `reports/refactor/*.md` — contexto de decisões estruturais.
+- `reports/daily/*.md` — log operacional das execuções de teste e releases.
+- *(Futuro)* script `bun run version <type>` para automatizar bump + changelog/tag.

@@ -3,32 +3,32 @@
 Derivado das respostas da primeira entrevista (`handbook/ domain_questions/first_interview.md:102`), este documento formaliza o contrato da raiz de agregado que representa o prontuário social.
 
 ## Propósito
-- Único ponto de entrada para qualquer mutação no prontuário social (`handbook/ domain_questions/first_interview.md:105`).
-- Garante invariantes de negócio que atravessam múltiplos objetos do agregado antes de publicar eventos ou persistir.
-- Expõe comportamentos com nomes orientados ao domínio, evitando setters anêmicos.
+- Servir como único ponto de entrada para qualquer mutação no prontuário social.
+- Encapsular invariantes antes de interagir com ACLs (People, Auth) ou persistência.
+- Expor comportamentos na linguagem ubíqua (`assignPrimaryCaregiver`, `reportRightsViolation`, ...), evitando property bags.
 
 ## Estado Gerenciado
 - Identidade: `id` (Uuid), `personId` (Uuid vinculado ao People Context).
 - Value Objects: `Diagnosis`, `SocialHealthSummary`, `HousingCondition`, `SocioeconomicSituation`, `CommunitySupportNetwork` (`handbook/ domain_questions/first_interview.md:114`).
 - Coleções de Entidades: `familyMembers`, `appointments`, `referrals`, `violationReports`.
 
-## API Pública (Comportamentos)
-- Fábrica: `Patient.create(props, personId, diagnosis)` (`handbook/ domain_questions/first_interview.md:126`).
-- Atualizações de VOs: `updateHousingCondition`, `updateSocioeconomicSituation`, `updateCommunitySupportNetwork`, `updateSocialHealthSummary` (todos substituem a instância inteira, preservando imutabilidade).
-- Operações sobre entidades internas:
-  - `addFamilyMember`, `removeFamilyMember`, `assignPrimaryCaregiver`.
-  - `registerAppointment`.
-  - `createReferral`, `updateReferralStatus`.
-  - `reportRightsViolation`, `updateRightsViolationActions`.
+## API Pública (2025-11)
+- **Fábricas**: `createFromScratch(personId, diagnoses)` e `createFromObject(id, props)` retornam `Result`.
+- **Família**: `addFamilyMember`, `removeFamilyMember`, `assignPrimaryCaregiver`.
+- **Encaminhamentos/violações**: `createReferral`, `reportRightsViolation` (ambos validam timestamps e fronteira).
+- **Narrativas clínicas**: `registerAppointment`, `updateHousingCondition`, `updateSocioEconomicSituation`, `updateCommunitySupportNetwork`, `updateSocialHealthSummary`.
+- **Read-only**: getters expõem snapshots de VO`s ou `ImutableList` sem permitir mutação externa.
 
 ## Invariantes do Agregado
-- **Unicidade de membro**: `addFamilyMember` rejeita pessoas duplicadas (`handbook/ domain_questions/first_interview.md:137`).
-- **Cuidador principal único**: `assignPrimaryCaregiver` revoga o cuidador anterior antes de promover o novo (`handbook/ domain_questions/first_interview.md:139`).
-- **Fronteira referencial**: `createReferral` e `reportRightsViolation` aceitam apenas IDs pertencentes ao agregado (`handbook/ domain_questions/first_interview.md:145`).
-- **Imutabilidade de VOs**: atualizações substituem instâncias já validadas pelo respectivo `create`.
+- **Diagnóstico inicial obrigatório**: criação exige `ImutableList` não vazia e sem duplicatas.
+- **Unicidade de membro**: `addFamilyMember` rejeita `personId` repetido; `removeFamilyMember` erra com `P.FamilyMemberNotFound`.
+- **Cuidador principal único**: `assignPrimaryCaregiver` revoga automaticamente o cuidador atual antes de promover o novo.
+- **Fronteira**: `createReferral`/`reportRightsViolation` só aceitam `personId` pertencente ao paciente ou membros.
+- **Temporalidade**: `ensureTimestamp` cria/valida `Timestamp` e impede datas futuras ou incidentes após o relato.
+- **Imutabilidade**: listas são sempre reconstruídas via `ImutableListFactory` e VO`s substituídos, nunca mutados in place.
 
 ## Próximos Passos
-1. Implementar os métodos ainda pendentes com base nesta especificação (`createReferral`, `reportRightsViolation`, etc.).
-2. Definir eventos de domínio correspondentes (ex.: `ReferralCreated`, `RightsViolationReported`) e documentar versões/payloads.
-3. Criar suites BDD/TDD que cubram cada invariante antes de codificar.
-4. Registrar quaisquer alternativas retrocompatíveis na matriz (`handbook/process/retrocompatibilidade.md`).
+1. Definir eventos de domínio publicados por cada operação (ex.: `ReferralCreated`, `RightsViolationReported`) e documentar payload/versão.
+2. Modelar ACLs para People/Auth antes de ligar o agregado a camadas externas.
+3. Expandir testes BDD para fluxos multi-agregado (encaminhamento + agenda) usando os helpers atuais.
+4. Registrar alterações que afetem contratos públicos em `process/retrocompatibilidade.md`.

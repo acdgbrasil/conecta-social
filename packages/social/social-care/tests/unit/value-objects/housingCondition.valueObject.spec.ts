@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { HousingCondition } from "@conecta/social-care";
+import { HC, HousingCondition } from "@conecta/social-care";
 import {
   ACCESSIBILITY_LEVEL,
   ELETRICITY_ACCESS,
@@ -98,3 +98,56 @@ describe("HousingCondition.valueObject", () => {
     expect(result.isErr).toBe(true);
   });
 });
+
+
+describe("copyWith", () => {
+    // Helper do seu arquivo de teste
+    const createValidProps = (overrides = {}) => ({
+      housingConditionType: HOUSING_CONDITION_TYPE.OWNED,
+      wallMaterial: WALL_MATERIAL.MASONRY,
+      numberOfRooms: 3,
+      numberOfBathrooms: 2,
+      isInGeographicRiskArea: false,
+      isInSocialConflictArea: false,
+      electricityAccess: ELETRICITY_ACCESS.METERED_CONNECTION,
+      sewerDisposalMethod: SEWAGE_DISPOSAL_METHOD.OPEN_SEWAGE,
+      wasteCollectionType: WASTE_COLLECTION_TYPE.DIRECT_COLLECTION,
+      accessibilityLevel: ACCESSIBILITY_LEVEL.FULLY_ACCESSIBLE,
+      ...overrides,
+    });
+    
+    const makeCondition = (props = {}) => HousingCondition.create(createValidProps(props)).unwrap();
+
+    test("deve atualizar com sucesso (ex: numberOfBathrooms)", () => {
+      const original = makeCondition({ numberOfRooms: 5, numberOfBathrooms: 2 });
+      const result = original.copyWith({ numberOfBathrooms: 3 }); // Válido (3 <= 5)
+
+      expect(result.isOk).toBe(true);
+      expect(result.unwrap().numberOfBathrooms).toBe(3);
+      expect(result.unwrap().numberOfRooms).toBe(5);
+    });
+
+    test("deve falhar a revalidação se banheiros > quartos", () => {
+      const original = makeCondition({ numberOfRooms: 3, numberOfBathrooms: 1 });
+      const result = original.copyWith({ numberOfBathrooms: 4 }); // Inválido (4 > 3)
+
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(HC.BathroomsExceedRooms().code); // "HC-003"
+    });
+
+    test("deve falhar a revalidação se número de quartos for negativo", () => {
+      const original = makeCondition();
+      const result = original.copyWith({ numberOfRooms: -1 });
+
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(HC.NegativeRooms().code); // "HC-001"
+    });
+
+    test("deve falhar a revalidação se número de banheiros for negativo", () => {
+      const original = makeCondition();
+      const result = original.copyWith({ numberOfBathrooms: -1 });
+
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(HC.NegativeBathrooms().code); // "HC-002"
+    });
+  });

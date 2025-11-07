@@ -54,6 +54,42 @@ export class Patient {
     private readonly patientId: Uuid,
   ) { }
 
+  static createFromScratch(personId:PersonId,diagnoses:ImutableList<Diagnosis>): Result<Patient, DomainError> {
+
+    const patientId = Uuid.create();
+    if(!personId) return err(P.InitialPersonIdIsRequired());
+    if(!diagnoses) return err(P.InitialDiagnosesCantBeEmpty());
+    if(diagnoses.isEmpty()) return err(P.InitialDiagnosesCantBeEmpty());
+    if(diagnoses.hasDuplicates()) return err(P.InitialDiagnosesCantHaveDuplicates());
+
+
+    const initialProps: PatientProps = {
+      personId,
+      diagnoses,
+      familyMembers: ImutableListFactory.empty<FamilyMember>(),
+      appointments: ImutableListFactory.empty<SocialCareAppointment>(),
+      referrals: ImutableListFactory.empty<Referral>(),
+      violationsReports: ImutableListFactory.empty<RightsViolationReport>(),
+      housingCondition: None<HousingCondition>(),
+      socioeconomicSituation: None<SocioEconomicSituation>(),
+      communitySupportNetwork: None<CommunitySupportNetwork>(),
+      socialHealthSummary: None<SocialHealthSummary>(),
+    };
+
+    return ok(new Patient(initialProps, patientId.unwrap()));
+  }
+
+  static createFromObject( 
+    id: Uuid, 
+    props: PatientProps 
+  ): Result<Patient, DomainError> {
+    
+    if (!id) return err(P.InitialIdIsRequired());
+    if (!props.personId) return err(P.InitialPersonIdIsRequired());
+
+    return ok(new Patient(props, id));
+  }
+
   get id(): Uuid {
     return this.patientId;
   }
@@ -98,29 +134,7 @@ export class Patient {
     return this.props.socialHealthSummary;
   }
 
-  static create( id: Uuid | null, personId: PersonId | null, diagnoses: ImutableList<Diagnosis> ): Result<Patient, DomainError> {
-    
-    if (!diagnoses || diagnoses.isEmpty()) return err(P.InitialDiagnosesCantBeEmpty());
-
-    if (!id) return err(P.InitialIdIsRequired());
-
-    if (!personId) return err(P.InitialPersonIdIsRequired());
-
-    const initialProps: PatientProps = {
-      personId,
-      diagnoses,
-      familyMembers: ImutableListFactory.empty<FamilyMember>(),
-      appointments: ImutableListFactory.empty<SocialCareAppointment>(),
-      referrals: ImutableListFactory.empty<Referral>(),
-      violationsReports: ImutableListFactory.empty<RightsViolationReport>(),
-      housingCondition: None<HousingCondition>(),
-      socioeconomicSituation: None<SocioEconomicSituation>(),
-      communitySupportNetwork: None<CommunitySupportNetwork>(),
-      socialHealthSummary: None<SocialHealthSummary>(),
-    };
-
-    return ok(new Patient(initialProps, id));
-  }
+  
 
   copyWith(changes: Partial<PatientProps>): Patient {
     const merged: PatientProps = {
