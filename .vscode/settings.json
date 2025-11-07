@@ -18,5 +18,6 @@
   },
   "search.exclude": {
     "coverage": true
-  }
+  },
+  "testing.automaticallyOpenTestResults": "neverOpen"
 }
