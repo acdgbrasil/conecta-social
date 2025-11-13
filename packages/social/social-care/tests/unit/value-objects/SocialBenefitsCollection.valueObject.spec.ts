@@ -1,8 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { SocialBenefit, SocialBenefitsCollection } from "@conecta/social-care";
+import { FamilyMemberId, SocialBenefit, SocialBenefitsCollection } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 
-const BENEFICIARY_ID = Uuid.create("01890e18-257b-7b32-b264-93c9d46242ab").unwrap();
+const internId = Uuid.create("01890e18-257b-7b32-b264-93c9d46242ab").unwrap();
+const BENEFICIARY_ID = FamilyMemberId.create(internId.value).unwrap();
 
 const makeBenefit = (overrides?: Partial<{ name: string; amount: number }>) => {
   const result = SocialBenefit.create({
@@ -19,6 +20,7 @@ const makeBenefit = (overrides?: Partial<{ name: string; amount: number }>) => {
 };
 
 describe("SocialBenefitsCollection.valueObject (RED tests)", () => {
+  
   test("impede inserir o mesmo benefício duas vezes para o mesmo beneficiário", () => {
     const benefit = makeBenefit();
     const result = SocialBenefitsCollection.create([benefit, benefit]);
@@ -26,14 +28,66 @@ describe("SocialBenefitsCollection.valueObject (RED tests)", () => {
     expect(result.isErr).toBe(true);
   });
 
-  test("calcula valor total ignorando benefícios duplicados", () => {
-    const benefit = makeBenefit({ amount: 200 });
-    const duplicate = makeBenefit({ amount: 200 });
+  test("expõe o nome correto do benefício duplicado no erro", () => {
+    const uniqueBenefit = makeBenefit({ name: "Auxílio Transporte", amount: 180 });
+    const duplicated = makeBenefit({ name: "Auxílio Energia", amount: 200 });
+    const duplicatedAgain = makeBenefit({ name: "Auxílio Energia", amount: 200 });
 
-    const collection = SocialBenefitsCollection.create([benefit, duplicate]);
-    expect(collection.isOk).toBe(true);
-    if (!collection.isOk) return;
+    const result = SocialBenefitsCollection.create([
+      uniqueBenefit,
+      duplicated,
+      duplicatedAgain,
+    ]);
 
-    expect(collection.unwrap().getTotalAmount()).toBe(200);
+    expect(result.isErr).toBe(true);
+    if (!result.isErr) return;
+
+    const duplicateError = result.unwrapErr();
+    expect(duplicateError.context?.benefitName).toBe("Auxílio Energia");
+    expect(duplicateError.message).toContain("Auxílio Energia");
+  });
+
+  test("permite criar coleção vazia", () => {
+    const result = SocialBenefitsCollection.create([]);
+
+    expect(result.isOk).toBe(true);
+    expect(result.unwrap().isEmpty()).toBe(true);
+  });
+
+  test("calcula o valor total dos benefícios na coleção", () => {
+    const benefit1 = makeBenefit({ name: "Auxílio Alimentação", amount: 200 });
+    const benefit2 = makeBenefit({ name: "Auxílio Transporte", amount: 100 });
+
+    const collectionResult = SocialBenefitsCollection.create([benefit1, benefit2]);
+
+    expect(collectionResult.isOk).toBe(true);
+    const collection = collectionResult.unwrap();
+    expect(collection.getTotalAmount()).toBe(300);
+  });
+
+  test("permite copiar a coleção com modificações", () => {
+    const benefit1 = makeBenefit({ name: "Auxílio Saúde", amount: 250 });
+    const collectionResult = SocialBenefitsCollection.create([benefit1]);
+
+    expect(collectionResult.isOk).toBe(true);
+    const collection = collectionResult.unwrap();
+
+    const benefit2 = makeBenefit({ name: "Auxílio Educação", amount: 150 });
+    const newCollectionResult = collection.copyWith({ items: [benefit1, benefit2] });
+
+    expect(newCollectionResult.isOk).toBe(true);
+    const newCollection = newCollectionResult.unwrap();
+    expect(newCollection.count()).toBe(2);
+    expect(newCollection.getTotalAmount()).toBe(400);
+  });
+});
+
+describe("SocialBenefitsCollection.create — regressões", () => {
+  test("retorna Result.err quando payload recebido é null", () => {
+    const result = SocialBenefitsCollection.create(
+      null as unknown as SocialBenefit[],
+    );
+
+    expect(result.isErr).toBe(true);
   });
 });

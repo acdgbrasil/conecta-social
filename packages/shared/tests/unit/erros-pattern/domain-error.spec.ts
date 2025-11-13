@@ -180,4 +180,83 @@ describe("makeDomainErrorFactory", () => {
       }),
     ).toThrow(/prefixo inconsistente/i);
   });
+
+  test("normalizeCatalog lança quando código não possui separador válido", () => {
+    expect(() =>
+      makeDomainErrorFactory({
+        bc: "CORE",
+        module: "billing",
+        catalog: {
+          InvalidCode: {
+            code: "INVALID",
+            template: () => "erro",
+            category: ErrorTaxonomy.DomainRuleViolation,
+          },
+        },
+      }),
+    ).toThrow(/impossível inferir prefixo/i);
+  });
+
+  test("normalizeCatalog lança quando shortCode fica vazio", () => {
+    expect(() =>
+      makeDomainErrorFactory({
+        bc: "CORE",
+        module: "billing",
+        codePrefix: "PAY",
+        catalog: {
+          InvalidShortCode: {
+            code: "PAY-",
+            template: () => "erro",
+            category: ErrorTaxonomy.DomainRuleViolation,
+          },
+        },
+      }),
+    ).toThrow(/shortCode vazio/i);
+  });
+
+  test("normalizeCatalog exige catálogo não vazio ou codePrefix explícito", () => {
+    expect(() =>
+      makeDomainErrorFactory({
+        bc: "CORE",
+        module: "billing",
+        catalog: {} as Record<string, never>,
+      }),
+    ).toThrow(/não foi possível deduzir o codePrefix/i);
+  });
+
+  test("toTelemetry reaproveita observability existente no erro", () => {
+    const error = factory.PaymentIntegrationDown();
+    const customObservability = Object.freeze({
+      category: ErrorTaxonomy.SecurityBoundaryViolation,
+      severity: ObservabilitySeverity.Critical,
+      fingerprint: Object.freeze(["custom"]) as ReadonlyArray<string>,
+      tags: Object.freeze({ foo: "bar" }) as Readonly<Record<string, string>>,
+    });
+
+    (error as any).observability = customObservability;
+
+    const telemetry = factory.toTelemetry(error);
+    expect(telemetry.category).toBe(ErrorTaxonomy.SecurityBoundaryViolation);
+    expect(telemetry.severity).toBe(ObservabilitySeverity.Critical);
+    expect(telemetry.tags.foo).toBe("bar");
+    expect(telemetry.fingerprint).toEqual(["custom"]);
+  });
+
+  test("toTelemetry reconstrói observabilidade quando erro conhecido não foi decorado", () => {
+    const bareError = new SpecificDomainError({
+      id: "manual-id",
+      code: "PAY-404",
+      message: "Pagamento perdido",
+      bc: "CORE",
+      module: "billing/payments",
+      kind: "PaymentNotFound",
+      context: { paymentId: "pay-123" },
+    });
+
+    const telemetry = factory.toTelemetry(bareError as any);
+
+    expect(telemetry.category).toBe(ErrorTaxonomy.DataConsistencyIncident);
+    expect(telemetry.severity).toBe(ObservabilitySeverity.Warning);
+    expect(telemetry.tags.code).toBe("PAY-404");
+  });
 });

@@ -10,7 +10,8 @@ export type SocioEconomicSituationKind =
   | "MissingSocialBenefits"
   | "NegativeFamilyIncome"
   | "NegativeIncomePerCapita"
-  | "EmptyMainSourceOfIncome";
+  | "EmptyMainSourceOfIncome"
+  | "InconsistentIncomePerCapita";
 
 // 2) Catálogo
 export const SocioEconomicSituationErrors = makeDomainErrorFactory<SocioEconomicSituationKind>({
@@ -48,6 +49,12 @@ export const SocioEconomicSituationErrors = makeDomainErrorFactory<SocioEconomic
       category: ErrorTaxonomy.DomainRuleViolation,
       template: () => "A principal fonte de renda não pode estar vazia.",
     },
+    InconsistentIncomePerCapita: {
+      code: "SES-006",
+      http: 422,
+      category: ErrorTaxonomy.DomainRuleViolation,
+      template: ({ incomePerCapita, totalFamilyIncome }) => `A renda per capita (${incomePerCapita}) não pode ser maior que a renda familiar total (${totalFamilyIncome}).`,
+    },
   },
 });
 
@@ -58,4 +65,5 @@ export const SES = shortcuts(SocioEconomicSituationErrors, {
   NegativeFamilyIncome: ["totalFamilyIncome"] as const,
   NegativeIncomePerCapita: ["incomePerCapita"] as const,
   EmptyMainSourceOfIncome: [] as const,
+  InconsistentIncomePerCapita: ["incomePerCapita", "totalFamilyIncome"] as const,
 });

@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { ImutableListFactory } from "@conecta/fn";
 
 describe("ImutableListFactory - regressões prevenidas", () => {
+  //Corrigido na branch fix/fix_all_tests_was_failling_in_06_11_2025
   test("[CR-IML-01] setUnique elimina duplicados e mantém ordem original", () => {
     const list = ImutableListFactory.fromArray(["a", "a", "b"]);
 
@@ -11,6 +12,7 @@ describe("ImutableListFactory - regressões prevenidas", () => {
     expect(unique.getAll()).toEqual(["a", "b"]);
   });
 
+  //Corrigido na branch fix/fix_all_tests_was_failling_in_06_11_2025
   test("[CR-IML-02] remove remove o elemento alvo e não reaproveita referência", () => {
     const list = ImutableListFactory.fromArray(["x"]);
 

@@ -11,13 +11,10 @@ export class PersonId {
     public static create(): Result<PersonId, DomainError>;
     public static create(value: string): Result<PersonId, DomainError>;
     public static create(value?: string): Result<PersonId, DomainError> {
-        if (typeof value === "undefined") {
-            return ok(new PersonId(Uuid.create().unwrap().toString()));
-        }
-        if (!Uuid.isV7(value)) {
-            return err(PID.InvalidFormat(value));
-        }
-        return ok(new PersonId(value));
+        if (typeof value === "undefined") return ok(new PersonId(Uuid.create().unwrap().toString()));
+        const normalized = value.toLowerCase().trim();
+        if (!Uuid.isV7(normalized)) return err(PID.InvalidFormat(normalized));
+        return ok(new PersonId(normalized));
     }
 
     public toString(): string {

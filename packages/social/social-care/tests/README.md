@@ -4,6 +4,7 @@ Esta pasta concentra a suíte de testes do contexto `social-care`, separada por 
 
 - `unit/value-objects/` — regras isoladas dos VOs (`Diagnosis`, `HousingCondition`, etc.).
 - `unit/entities/` — comportamento das entidades e agregados (`Patient`, `FamilyMember`, `Referral`, ...).
+- `unit/errors/` — atalhos e catálogos de erros de domínio (`ICDError`, `PatientErrors`, `SocialBenefitErrors`).
 - `regression/` — cenários RED derivados de code reviews ou bugs conhecidos; servem como guardiões até que a correção seja entregue.
 - `support/` *(futuro)* — espaço reservado para builders/shared fixtures quando necessário.
 

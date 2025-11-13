@@ -17,10 +17,10 @@
 - Toda correção de bug gera um teste de regressão explícito em `tests/regression`.
 
 ## 4. Layout e execução (Bun)
-- Estrutura padrão: `packages/<context>/tests/{unit,regression}` com arquivos `*.spec.ts` nomeados pelo comportamento.
-- Regressões ficam em `tests/regression` e só saem dali quando a correção estiver entregue.
-- Usar `bun test --filter "<pacote ou pasta>"` para rodar subconjuntos (vide `handbook/tooling/bun/Packege_Manager/documentation.md`).
-- Executar testes do contexto completo com `bun test packages/<context>/tests` para manter idempotência no monorepo.
+- Estrutura atual: `packages/shared/tests/{unit,regression}` para o shared kernel e `packages/social/social-care/tests/{unit,regression}` para o core domain.
+- Cada pasta segue o padrão `*.spec.ts` nomeado pelo comportamento; regressões permanecem em `tests/regression` até que o bug seja resolvido.
+- Use `bun test packages/shared/tests` ou `bun test packages/social/social-care/tests` para rodadas completas; `--filter "<pacote|arquivo>"` agiliza ciclos menores.
+- Mantenha o `README.md` de cada pasta de testes como fonte rápida de comandos e convenções.
 
 ## 5. Testes = Documentação
 - Nomes de testes devem explicar regra de negócio (“deve rejeitar encaminhamento para membro desconhecido”).

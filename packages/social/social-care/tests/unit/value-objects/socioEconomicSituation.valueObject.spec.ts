@@ -1,8 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { SocioEconomicSituation, SocialBenefit, SocialBenefitsCollection } from "@conecta/social-care";
-import { Uuid } from "@conecta/uuid";
+import { SocioEconomicSituation, SocialBenefit, SocialBenefitsCollection, FamilyMemberId, SES } from "@conecta/social-care";
 
-const VALID_UUID = Uuid.create("123e4567-e89b-12d3-a456-426614174000").unwrap();
+const VALID_UUID = FamilyMemberId.create("018f0b9c-5b5a-7b1e-9b0a-0e1f2c3d4e5f").unwrap();
 
 const makeBenefit = (name = "Benefício Família", amount = 150) => {
   return SocialBenefit.create({ benefitName: name, amount: amount, beneficiaryId: VALID_UUID }).unwrap();
@@ -129,3 +128,76 @@ describe("SocioEconomicSituation.valueObject", () => {
     expect(result.unwrap().mainSourceOfIncome).toBe("Trabalho informal");
   });
 });
+
+
+describe("copyWith", () => {
+    // Helpers do seu arquivo de teste
+    const makeBenefit = (name = "Benefício Família", amount = 150) => {
+      return SocialBenefit.create({ benefitName: name, amount: amount, beneficiaryId: VALID_UUID }).unwrap();
+    };
+    const SINGLE_BENEFIT = SocialBenefitsCollection.create([makeBenefit()]).unwrap();
+
+    const makeSituation = (props = {}) => {
+      const validProps = {
+        totalFamilyIncome: 3000,
+        incomePerCapita: 1500,
+        receivesSocialBenefit: true,
+        socialBenefits: SINGLE_BENEFIT,
+        mainSourceOfIncome: "Trabalho Formal",
+        hasUnemployed: false,
+        ...props,
+      };
+      return SocioEconomicSituation.create(validProps).unwrap();
+    };
+
+    test("deve falhar se (receivesSocialBenefit=false) mas lista de benefícios não está vazia", () => {
+      const original = makeSituation({ 
+        receivesSocialBenefit: true, 
+        socialBenefits: SINGLE_BENEFIT 
+      });
+
+      // Tenta atualizar a flag para false, mas "esquece" de limpar a lista
+      const result = original.copyWith({ receivesSocialBenefit: false });
+
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(SES.InconsistentSocialBenefit().code); // "SES-001"
+    });
+
+    test("deve falhar se (receivesSocialBenefit=true) mas a nova lista está vazia", () => {
+      const EMPTY_BENEFITS = SocialBenefitsCollection.create([]).unwrap();
+      const original = makeSituation({
+        receivesSocialBenefit: false,
+        socialBenefits: EMPTY_BENEFITS
+      });
+
+      // Tenta atualizar a flag para true, mas "esquece" de adicionar benefícios
+      const result = original.copyWith({ receivesSocialBenefit: true });
+      
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(SES.MissingSocialBenefits().code); // "SES-002"
+    });
+
+    test("deve falhar a revalidação se a renda familiar for negativa", () => {
+      const original = makeSituation();
+      const result = original.copyWith({ totalFamilyIncome: -100 });
+      
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(SES.NegativeFamilyIncome(original.totalFamilyIncome).code); // "SES-003"
+    });
+
+    test("deve falhar a revalidação se a renda per capita for negativa", () => {
+      const original = makeSituation();
+      const result = original.copyWith({ incomePerCapita: -50 });
+      
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(SES.NegativeIncomePerCapita(original.incomePerCapita).code); // "SES-004"
+    });
+
+    test("deve aplicar trim na fonte de renda", () => {
+      const original = makeSituation();
+      const result = original.copyWith({ mainSourceOfIncome: "  Autônomo  " });
+      
+      expect(result.isOk).toBe(true);
+      expect(result.unwrap().mainSourceOfIncome).toBe("Autônomo");
+    });
+  });

@@ -100,7 +100,7 @@ export class DomainErrorFactory<K extends string> {
 
     const safe = (v: unknown): string => (v === null || v === undefined ? '∅' : String(v));
     const render = (template: string, context: Record<string, unknown>): string =>
-      template.replace(/\{([a-zA-Z0-9_]+)\}/g, (_, key) => safe(context[key]));
+      template.replace(/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, (_, key) => safe(context[key]));
 
     const message = render(templateFn(ctx), ctx);
     const id = generateDescriptiveId({

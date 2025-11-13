@@ -8,10 +8,10 @@ Este registro cobre a ativação do agregado `Patient` com regras de consistênc
 
 ## Diferenças principais em relação ao registro 06
 
-- **1. Agregado `Patient` com regras explícitas**  
-  - `Patient.create` agora valida a presença de `Uuid`, `PersonId` e ao menos um diagnóstico inicial antes de gerar o estado (`ok/err` via `Result`).  
-  - Os métodos `addFamilyMember`, `removeFamilyMember` e `assignPrimaryCaregiver` tratam duplicidade, inexistência e unicidade do cuidador principal usando os novos erros `P.FamilyMember*`.  
-  - `PatientProps` e o barrel `entities/index.ts` passaram a exportar tipos utilitários para os demais módulos consumirem a superfície do agregado sem imports profundos.
+- **1. Agregado `Patient` com regras completas**  
+  - `Patient.createFromScratch` continua blindando diagnóstico inicial e duplicidade de `ImutableList`.  
+  - Foram implementados `createReferral`, `reportRightsViolation`, `registerAppointment`, `updateHousingCondition` e helpers de timestamp, garantindo que nenhum comportamento dependa de mutações diretas das listas internas.  
+  - `PatientProps` e `copyWith` seguem sendo a porta de atualização para coleções/VO`s, mantendo o agregado congelado externamente.
 
 - **2. Catálogo de erros e entidades de apoio fortalecidos**  
   - `packages/social/social-care/err/Patient.error.ts` define o catálogo `P-00x`, permitindo short-hands consistentes em todo o domínio.  
@@ -28,12 +28,10 @@ Este registro cobre a ativação do agregado `Patient` com regras de consistênc
   - Os testes de `FamilyMember`, `Referral` e `RightsViolationReport` receberam pequenos ajustes para refletir os novos utilitários (`FamilyMemberProps`, `Uuid` helpers).
 
 ## Estado de testes
-- `bun test packages/social/social-care/tests/unit/entities/patient.aggregate.spec.ts`  
-  - Seções 1 a 3 (criação, membros, cuidador) estão verdes.  
-  - Seções 4 a 6 falham legitimamente porque os métodos `createReferral`, `reportRightsViolation`, `updateHousingCondition` e `registerAppointment` ainda não existem na classe (`TypeError: ... is not a function`).  
-- A suite de regressão (`regration.entity.test.ts`) permanece RED até que os bugs do CR sejam sanados (por exemplo, `Timestamp` ainda expõe referência mutável).
+- `bun test` (07/11/2025) — suites de `shared` e `social-care` 100% verdes.  
+- A pasta `tests/regression` agora registra apenas o catálogo de erros (`domain-errors.red.regression.spec.ts`). Os bugs críticos apontados no CR-143 foram cobertos por testes unitários e estão verdes após os ajustes em VO`s (`Timestamp`, `CommunitySupportNetwork`, etc.).
 
 ## Próximas ações sugeridas
-- Implementar os métodos pendentes do agregado (`createReferral`, `reportRightsViolation`, `updateHousingCondition`, `registerAppointment`) e demais mutações do estado clínico, respeitando as mesmas garantias de imutabilidade.  
-- Endereçar os bugs sinalizados nos testes de regressão: cópia defensiva em `Timestamp`, validação de whitespace em `CommunitySupportNetwork`, `Result.err` em `SocialBenefitsCollection.create(null)`, `copyWith` dos VOs lidando com entradas inválidas e remoção de imports profundos remanescentes.  
-- Automatizar a limpeza de artefatos de cobertura (`coverage/*.tmp`) ou ajustar o fluxo local para não versioná-los, mantendo o repositório enxuto.
+- Reforçar testes de VO`s ainda frágeis (`SocialBenefit.copyWith`, `SocialBenefitsCollection.create(null)`, `housingCondition.props`).
+- Remover imports profundos remanescentes (`from "src"`) e alinhar catálogos (`ELETRICITY_ACCESS`) ao domínio real.
+- Documentar eventos e integrações planejadas do agregado antes da primeira release pública (`v0.1.0`) e incluir no handbook/process.

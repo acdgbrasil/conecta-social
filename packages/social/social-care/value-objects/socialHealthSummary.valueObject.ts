@@ -3,6 +3,7 @@ import { err, ok, Result } from "@conecta/result";
 import { DomainError } from "@conecta/domain-error";
 import { SHSDE } from "../err/SocialHealthSummary.error";
 import { SocialHealthSummaryProps } from "./props/socialHealthSummary.props";
+import { unSafe } from "@conecta/option";
 
 export class SocialHealthSummary {
     readonly requiresConstantCare: boolean;
@@ -26,7 +27,10 @@ export class SocialHealthSummary {
     static create(props: SocialHealthSummaryProps): Result<SocialHealthSummary, DomainError> {
         
         const uniqueDependencies = props.functionalDependencies.setUnique().getAll();
+        const hasEmptyDependencies = uniqueDependencies.some((dependeces) => dependeces.trim().length === 0);
 
+        if (hasEmptyDependencies) return err(SHSDE.FunctionalDependenciesEmpty());
+            
         return ok(new SocialHealthSummary({
             ...props,
             functionalDependencies: uniqueDependencies,
@@ -34,12 +38,15 @@ export class SocialHealthSummary {
     }
 
     copyWith(props: Partial<SocialHealthSummaryProps>): Result<SocialHealthSummary, DomainError> {
-        const currentDeps = ImutableListFactory.fromArray([...this.functionalDependencies]);
+        const unSafeList = unSafe(props.functionalDependencies);
+        const safeList = unSafeList.isSome ? unSafeList.unwrap().setUnique().getAll() : this.functionalDependencies;
+        const normalizedSafeList = ImutableListFactory.fromArray(safeList.map(dep => dep.trim())) ? ImutableListFactory.fromArray(safeList.map(dep => dep.trim())).getAll() : [];
+        const imutabilidadeSafeList = normalizedSafeList.some((dependeces) => dependeces.trim().length !== 0) ? ImutableListFactory.fromArray(safeList.map(dep => dep.trim())) : ImutableListFactory.fromArray(this.functionalDependencies.map(dep => dep.trim()));
 
         return SocialHealthSummary.create({
             requiresConstantCare: props.requiresConstantCare ?? this.requiresConstantCare,
             hasMobilityImpairment: props.hasMobilityImpairment ?? this.hasMobilityImpairment,
-            functionalDependencies: props.functionalDependencies ?? currentDeps,
+            functionalDependencies: imutabilidadeSafeList,
             hasRelevantDrugTheapy: props.hasRelevantDrugTheapy ?? this.hasRelevantDrugTheapy,
         });
     }

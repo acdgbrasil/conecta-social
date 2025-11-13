@@ -1,50 +1,63 @@
 # Orquestrando value objects com Result
 
 ## Cenário
-Ao registrar um diagnóstico, precisamos validar o CID, o timestamp e a descrição em cadeia, abortando no primeiro erro.
+`Diagnosis.create` depende de três value objects (`ICDCode`, `Timestamp`, `Diagnosis`). Queremos compor a validação do payload de forma sequencial, abortando no primeiro erro e propagando o `DomainError` correto.
 
 ## Ferramentas
-- `Result`, `ok`, `err`, `isOk`
-- Value objects (`ICDCode`, `Timestamp`, `Diagnosis`)
+- `Result` (`flatMap`, `isOk`, `unwrap`)
+- Value objects já exportados por `@conecta/social-care`
+- `DiagnosisErrors` (`packages/social/social-care/err/Diagnosis.error.ts`)
 
 ## Passo a passo
 
 ```ts typescript
-import { ICDCode, Timestamp, Diagnosis } from "@conecta/social-care";
-import { Result, ok, err } from "@conecta/result";
-import { DE } from "../err/Diagnosis.error";
+import type { DomainError } from "@conecta/domain-error";
+import { Diagnosis, ICDCode, Timestamp } from "@conecta/social-care";
+import { Result } from "@conecta/result";
 
 type CreateDiagnosisInput = {
-  icdCode: string;
-  occurredAt: string;
-  description: string;
+  readonly icdCode: string;
+  readonly occurredAt: string;
+  readonly description: string;
 };
 
 export const createDiagnosis = (
   input: CreateDiagnosisInput,
-): Result<Diagnosis, ReturnType<typeof DE.DescriptionEmpty>> => {
-  const cid = ICDCode.create(input.icdCode, { requireDot: true });
-  if (cid.isErr) return err(cid.error);
-
-  const date = Timestamp.create({ value: new Date(input.occurredAt) });
-  if (date.isErr) return err(date.error);
-
-  const now = Timestamp.create({ value: new Date() }).unwrap();
-
-  const diagnosis = Diagnosis.create(
-    {
-      id: cid.unwrap(),
-      date: date.unwrap(),
-      description: input.description,
-    },
-    now,
+): Result<Diagnosis, DomainError> =>
+  ICDCode.create(input.icdCode, { requireDot: true }).flatMap((cid) =>
+    Timestamp.create({ value: new Date(input.occurredAt) }).flatMap((date) =>
+      Timestamp.create({ value: new Date() }).flatMap((now) =>
+        Diagnosis.create(
+          {
+            id: cid,
+            date,
+            description: input.description,
+          },
+          now,
+        ),
+      ),
+    ),
   );
+```
 
-  return diagnosis.isOk ? diagnosis : err(diagnosis.error);
-};
+### Tratando o resultado no application service
+
+```ts typescript
+import { DiagnosisErrors } from "../err/Diagnosis.error";
+
+const result = createDiagnosis(payload);
+
+if (result.isErr) {
+  const { status, body } = DiagnosisErrors.toHttp(result.error);
+  reply.status(status).json(body);
+  return;
+}
+
+const diagnosis = result.unwrap();
+await diagnosisRepository.save(diagnosis);
 ```
 
 ### Dicas
-- Evite misturar `try/catch` com `Result`. Prefira retornar `err` nos value objects.
-- Quando precisar do valor, use `if (result.isOk)` antes de chamar `unwrap`.
-- Para pipelines longos, considere helpers reutilizáveis (`flatMap`) para reduzir `if` encadeados.
+- `flatMap` evita blocos `if (result.isErr) return err(...)` a cada etapa, mantendo o pipeline linear.
+- `unwrap` só deve ser usado depois de `isOk`; fora disso, prefira `result.error` ou `result.unwrapErr()` para manter o contrato da monada.
+- Value objects devem continuar retornando `Result` (como `Timestamp.create` e `Diagnosis.create`) para que toda a árvore de chamadas compartilhe o mesmo mecanismo de falha.

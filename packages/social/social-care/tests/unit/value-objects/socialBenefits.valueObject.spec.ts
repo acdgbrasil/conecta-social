@@ -1,10 +1,17 @@
 import { describe, expect, test } from "bun:test";
-import { FamilyMemberId, SocialBenefit } from "@conecta/social-care";
+import { BE, FamilyMemberId, FMIE, SocialBenefit } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 
-const VALID_UUID_RESULT = Uuid.create("123e4567-e89b-12d3-a456-426614174000");
+const VALID_UUID_RESULT = FamilyMemberId.create("01890e18-257b-7b32-b264-93c9d46242ab");
 if (VALID_UUID_RESULT.isErr) throw new Error("UUID Válido de teste falhou ao criar");
 const VALID_UUID = VALID_UUID_RESULT.unwrap();
+
+const makeSocialBenefit = () =>
+  SocialBenefit.create({
+    benefitName: "Bolsa Família",
+    amount: 600,
+    beneficiaryId: FamilyMemberId.create().unwrap(),
+  }).unwrap();
 
 
 describe("SocialBenefit.valueObject", () => {
@@ -78,5 +85,53 @@ describe("SocialBenefit.valueObject", () => {
     if (!updated.isOk) return;
 
     expect(updated.unwrap().beneficiaryId).toBe(updatedBeneficiary.toString());
+  });
+});
+
+
+describe("SocialBenefit.copyWith — regressões", () => {
+  test("não lança nem retorna ok quando beneficiaryId novo é inválido", () => {
+    const benefit = makeSocialBenefit();
+    const invalidBeneficiaryId = {
+      value: "beneficiary-id-invalido",
+    } as FamilyMemberId;
+
+    const result = benefit.copyWith({
+      beneficiaryId: invalidBeneficiaryId,
+    });
+
+    expect(result.isErr).toBe(true);
+    if (!result.isErr) return;
+
+    expect(result.unwrapErr().code).toBe(
+      FMIE.InvalidFormat("beneficiary-id-invalido").code,
+    );
+  });
+
+  test("valida o novo beneficiaryId apenas uma vez durante o copyWith", () => {
+    const benefit = makeSocialBenefit();
+    const updatedBeneficiary = FamilyMemberId.create(
+      "01890e18-257b-7b32-b264-93c9d46242ad",
+    ).unwrap();
+
+    const originalCreate = FamilyMemberId.create;
+    let createCallsWithString = 0;
+
+    FamilyMemberId.create = ((value?: string) => {
+      if (typeof value === "string") {
+        createCallsWithString += 1;
+        return originalCreate(value);
+      }
+      return originalCreate();
+    }) as typeof FamilyMemberId.create;
+
+    try {
+      const result = benefit.copyWith({ beneficiaryId: updatedBeneficiary });
+      expect(result.isOk).toBe(true);
+    } finally {
+      FamilyMemberId.create = originalCreate;
+    }
+
+    expect(createCallsWithString).toBe(1);
   });
 });

@@ -1,50 +1,67 @@
 # Garantindo invariantes em coleções
 
 ## Cenário
-Um agregado precisa manter a lista de dependências funcionais de um paciente sem permitir duplicatas ou mutações diretas.
+`Patient.createFromScratch` precisa validar a lista inicial de diagnósticos sem permitir mutações diretas, duplicatas ou listas vazias.
 
 ## Ferramentas
-- `ImutableListFactory`
-- `Result`
+- `ImutableListFactory`, `ImutableList`
+- `Result`, `err`, `ok`
+- `P` (`packages/social/social-care/err/Patient.error.ts`)
 
 ## Passo a passo
 
+### 1. Construa a lista a partir do payload
+
 ```ts typescript
-import { ImutableListFactory } from "@conecta/fn";
-import { Result, ok, err } from "@conecta/result";
-import { SHSDE } from "../err/SocialHealthSummary.error";
+import type { Diagnosis } from "@conecta/social-care";
+import { ImutableList, ImutableListFactory } from "@conecta/fn";
+import { err, ok, Result } from "@conecta/result";
+import { P } from "../err/Patient.error";
 
-type FunctionalDependency = string;
+type Draft = { diagnoses: readonly Diagnosis[] };
 
-type SummaryProps = {
-  dependencies: readonly FunctionalDependency[];
+export const ensureInitialDiagnoses = (
+  draft: Draft,
+): Result<ImutableList<Diagnosis>, ReturnType<typeof P.InitialDiagnosesCantBeEmpty>> => {
+  const diagnoses = ImutableListFactory.fromArray([...draft.diagnoses]);
+
+  if (diagnoses.isEmpty()) {
+    return err(P.InitialDiagnosesCantBeEmpty());
+  }
+
+  if (diagnoses.hasDuplicates()) {
+    return err(P.InitialDiagnosesCantHaveDuplicates());
+  }
+
+  // mantém a referência imutável para o agregado
+  return ok(diagnoses);
 };
+```
 
-export class FunctionalDependencyList {
-  private constructor(readonly items: readonly FunctionalDependency[]) {
-    Object.freeze(this);
-  }
+### 2. Reutilize as factories para operações subsequentes
 
-  static create(props: SummaryProps): Result<FunctionalDependencyList, ReturnType<typeof SHSDE.DuplicateDependency>> {
-    const list = ImutableListFactory.fromArray([...props.dependencies]);
-    const unique = list.setUnique();
+Dentro de um método do agregado:
 
-    if (unique.count() !== list.count()) {
-      return err(SHSDE.DuplicateDependency());
-    }
+```ts typescript
+const updatedDiagnoses = ImutableListFactory.castTolist(patient.diagnoses).add(input);
 
-    return ok(new FunctionalDependencyList(unique.getAll()));
-  }
-
-  add(entry: FunctionalDependency) {
-    return FunctionalDependencyList.create({
-      dependencies: ImutableListFactory.fromArray([...this.items]).add(entry).getAll(),
-    });
-  }
+if (updatedDiagnoses.hasDuplicates()) {
+  return err(P.InitialDiagnosesCantHaveDuplicates());
 }
+
+return ok(patient.copyWith({ diagnoses: updatedDiagnoses }));
+```
+
+### 3. Atualize outras coleções seguindo o padrão
+
+O agregado já faz isso para `appointments`, `referrals` e `violationsReports`:
+
+```ts typescript
+const appointments = ImutableListFactory.castTolist(this.appointments).add(appointment);
+return ok(this.copyWith({ appointments }));
 ```
 
 ### Pontos de atenção
-- Sempre clone o array de entrada (`[...props.dependencies]`) antes de transformar em `ImutableList`.
-- Use `setUnique` para detectar duplicidade sem escrever loops manuais.
-- Métodos de mutação devem retornar um novo `Result`, nunca mutar `this.items`.
+- Sempre clone arrays externos (`[...draft.diagnoses]`) antes de criar a `ImutableList`.
+- `hasDuplicates` é mais barato que `setUnique().count()` e já está disponível no pacote compartilhado.
+- Métodos como `add`, `remove` e `setUnique` retornam **novas** listas; nunca mutam a instância anterior, preservando as invariantes do agregado.

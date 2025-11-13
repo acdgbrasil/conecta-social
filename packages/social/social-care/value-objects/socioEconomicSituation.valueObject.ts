@@ -32,8 +32,9 @@ export class SocioEconomicSituation implements SocioEconomicSituationProps {
         if(props.totalFamilyIncome < 0) return err(SES.NegativeFamilyIncome({ totalFamilyIncome: props.totalFamilyIncome }));
         if(props.incomePerCapita < 0) return err(SES.NegativeIncomePerCapita({ incomePerCapita: props.incomePerCapita }));
         if(!props.mainSourceOfIncome || props.mainSourceOfIncome.trim().length === 0) return err(SES.EmptyMainSourceOfIncome());
-
-        return ok(new SocioEconomicSituation(props));
+        if(props.incomePerCapita > props.totalFamilyIncome) return err(SES.InconsistentIncomePerCapita(props.incomePerCapita, props.totalFamilyIncome));
+        const socioEconomicSituation = new SocioEconomicSituation({hasUnemployed: props.hasUnemployed, mainSourceOfIncome: props.mainSourceOfIncome.trim(), socialBenefits: props.socialBenefits, receivesSocialBenefit: props.receivesSocialBenefit, incomePerCapita: props.incomePerCapita, totalFamilyIncome: props.totalFamilyIncome});
+        return ok(new SocioEconomicSituation(socioEconomicSituation));
     }
 
     copyWith(props: Partial<SocioEconomicSituationProps>): Result<SocioEconomicSituation, DomainError> {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { PersonId } from "@conecta/social-care";
+import { PersonId, PID } from "@conecta/social-care";
 
 const UPPERCASE_PERSON_ID = "01890E18-257B-7B32-B264-93C9D46242AB";
 const LOWERCASE_PERSON_ID = UPPERCASE_PERSON_ID.toLowerCase();
@@ -22,5 +22,16 @@ describe("PersonId.valueObject (RED tests)", () => {
     if (!upper.isOk || !lower.isOk) return;
 
     expect(upper.unwrap().equals(lower.unwrap())).toBe(true);
+  });
+
+  test("falha ao criar com formato de UUID inválido", () => {
+    const invalidValue = "12345";
+    const result = PersonId.create(invalidValue);
+
+    expect(result.isErr).toBe(true);
+    if (!result.isErr) return;
+
+    expect(result.unwrapErr().code).toBe(PID.InvalidFormat(invalidValue).code); // "PID-001"
+    expect(result.unwrapErr().message).toContain(invalidValue);
   });
 });

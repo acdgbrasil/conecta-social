@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { SocialHealthSummary } from "@conecta/social-care";
+import { SHSDE, SocialHealthSummary } from "@conecta/social-care";
 import { ImutableListFactory } from "@conecta/fn";
 
 describe("SocialHealthSummary.valueObject", () => {
@@ -52,3 +52,60 @@ describe("SocialHealthSummary.valueObject", () => {
     expect(result.isErr).toBe(true);
   });
 });
+
+
+describe("copyWith", () => {
+    const makeSummary = (deps: string[]) => {
+      return SocialHealthSummary.create({
+        requiresConstantCare: true,
+        hasMobilityImpairment: false,
+        functionalDependencies: ImutableListFactory.fromArray(deps),
+        hasRelevantDrugTheapy: true,
+      }).unwrap();
+    };
+
+    test("deve revalidar, aplicar trim e deduplicação", () => {
+      const original = makeSummary(["Banho"]);
+      const newDependencies = ImutableListFactory.fromArray([
+        "  Alimentação  ",
+        "Medicação",
+        "Alimentação",
+      ]);
+      
+      const result = original.copyWith({ functionalDependencies: newDependencies });
+      
+      expect(result.isOk).toBe(true);
+      const copied = result.unwrap();
+      
+      expect(copied.functionalDependencies).toEqual(["Alimentação", "Medicação"]);
+    });
+
+    test("deve falhar a revalidação se a lista injetada contiver strings vazias", () => {
+      const original = makeSummary(["Banho"]);
+      const invalidDependencies = ImutableListFactory.fromArray([
+        "Alimentação",
+        "   ", // Inválido
+      ]);
+      
+      const result = original.copyWith({ functionalDependencies: invalidDependencies });
+      
+      expect(result.isErr).toBe(true);
+      expect(result.unwrapErr().code).toBe(SHSDE.FunctionalDependenciesEmpty().code); // "SHS-001"
+    });
+
+    test("deve falhar quando não remove dependências duplicadas automaticamente", () => {
+    const duplicatedDependencies = ImutableListFactory.fromArray([
+      "Alimentação",
+      "Alimentação",
+    ]);
+
+    const result = SocialHealthSummary.create({
+      requiresConstantCare: false,
+      hasMobilityImpairment: false,
+      functionalDependencies: duplicatedDependencies,
+      hasRelevantDrugTheapy: false,
+    });
+
+    expect(result.isOk).toBe(true);
+  });
+  });

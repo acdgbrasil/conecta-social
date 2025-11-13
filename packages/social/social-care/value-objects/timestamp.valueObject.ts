@@ -20,6 +20,7 @@ export class Timestamp {
     }
 
     const value = Timestamp.clone(candidate);
+    const ms = value.getUTCMilliseconds();
 
     if (Number.isNaN(value.getTime())) {
       return err(
@@ -29,7 +30,12 @@ export class Timestamp {
       );
     }
 
-    return ok(new Timestamp(value));
+    return ok(new Timestamp(ms > 0 ? new Date(value.getTime() - ms) : value));
+  }
+
+  static createFromISOString(isoString: string): Result<Timestamp, DomainError> {
+    const date = new Date(isoString);
+    return Timestamp.create({ value: date });
   }
 
   copyWith(props: Partial<TimestampProps>): Result<Timestamp, DomainError> {

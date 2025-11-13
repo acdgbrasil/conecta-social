@@ -50,6 +50,9 @@ const makeDiagnosis = () => {
   ).unwrap();
 };
 
+
+
+
 const makeHousingCondition = (overrides: Partial<Parameters<typeof HousingCondition.create>[0]> = {}) => {
   
   // Refletindo o Code Review #2:
@@ -175,7 +178,7 @@ const createPatient = () => {
   const personId = PersonId.create().unwrap();
   const diagnosis = makeDiagnosis();
   
-  const result = Patient.create(id, personId, ImutableListFactory.fromArray([diagnosis]));
+  const result = Patient.createFromScratch(personId, ImutableListFactory.fromArray([diagnosis]));
 
   if (!result.isOk) {
     throw new Error(`Falha ao criar patient de teste: ${result.error.message}`);
@@ -195,15 +198,14 @@ describe("Patient.entity", () => {
   
   /**
    * 💡 O que este teste ensina:
-   * Testa a função `Patient.create` (Fábrica).
+   * Testa a função `Patient.createFromScratch` (Fábrica).
    * Um Agregado deve sempre ser criado em um estado válido e consistente.
    */
   describe("1. Criação e Estado Inicial", () => {
     test("deve criar um Patient com estado inicial coerente", () => {
       // Act
-      const { patient, patientId, personId, diagnosis } = createPatient();
+      const { patient, personId, diagnosis } = createPatient();
       // Assert
-      expect(patient.id.equals(patientId)).toBe(true);
       expect(patient.personId.equals(personId)).toBe(true);
       expect(patient.diagnoses.count()).toBe(1);
       expect(patient.diagnoses.getAll()[0].description).toBe(diagnosis.description);
@@ -220,7 +222,7 @@ describe("Patient.entity", () => {
       const personId = PersonId.create().unwrap();
       const emptyDiagnoses = ImutableListFactory.empty<Diagnosis>();
       // Act
-      const result = Patient.create(id, personId, emptyDiagnoses);
+      const result = Patient.createFromScratch(personId, emptyDiagnoses);
       // Assert
       expect(result.isErr).toBe(true);
       expect(result.unwrapErr().code).toBe(P.InitialDiagnosesCantBeEmpty().code); // P-001
@@ -246,7 +248,7 @@ describe("Patient.entity", () => {
       expect(result.isOk).toBe(true);
       const updatedPatient = result.unwrap();
       expect(updatedPatient.familyMembers.count()).toBe(1);
-      expect(updatedPatient).not.toBe(patient); // Imutabilidade
+      expect(updatedPatient === patient).toBe(false); // Imutabilidade
       expect(patient.familyMembers.count()).toBe(0); // Original inalterado
     });
     
@@ -278,7 +280,7 @@ describe("Patient.entity", () => {
       expect(result.isOk).toBe(true);
       const updatedPatient = result.unwrap();
       expect(updatedPatient.familyMembers.count()).toBe(0);
-      expect(updatedPatient).not.toBe(patientWithMember); // Imutabilidade
+      expect(updatedPatient === patientWithMember).toBe(false); // Imutabilidade
     });
     
     test("deve FALHAR ao tentar remover um membro que não existe (regra P-005)", () => {
@@ -484,7 +486,7 @@ describe("Patient.entity", () => {
       const patientA = patient.updateHousingCondition(housingA).unwrap();
       
       // Assert: Estado "A" e Imutabilidade
-      expect(patientA).not.toBe(patient); // Imutabilidade
+      expect(patientA === patient).toBe(false); // Imutabilidade
       expect(patientA.housingCondition.isSome).toBe(true);
       expect(patientA.housingCondition.unwrap().numberOfRooms).toBe(3);
 
@@ -492,7 +494,7 @@ describe("Patient.entity", () => {
       const patientB = patientA.updateHousingCondition(housingB).unwrap();
 
       // Assert: Estado "B" e Imutabilidade
-      expect(patientB).not.toBe(patientA);
+      expect(patientB === patientA).toBe(false);
       expect(patientB.housingCondition.unwrap().numberOfRooms).toBe(5);
     });
   });
@@ -522,7 +524,7 @@ describe("Patient.entity", () => {
       const patientWithTwo = patientWithOne.registerAppointment(secondApptProps, NOW).unwrap();
       
       // Assert: Imutabilidade e Histórico
-      expect(patientWithTwo).not.toBe(patientWithOne);
+      expect(patientWithTwo === patientWithOne).toBe(false);
       expect(patientWithTwo.appointments.count()).toBe(2);
       expect(patientWithTwo.appointments.getAll()[0].summary).toBe("Primeira visita");
       expect(patientWithTwo.appointments.getAll()[1].summary).toBe("Segunda visita");

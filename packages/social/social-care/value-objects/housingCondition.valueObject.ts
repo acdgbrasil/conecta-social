@@ -14,6 +14,7 @@ export class HousingCondition implements HousingConditionProps {
     readonly sewerDisposalMethod: HousingConditionProps['sewerDisposalMethod'];
     readonly wasteCollectionType: HousingConditionProps['wasteCollectionType'];
     readonly accessibilityLevel: HousingConditionProps['accessibilityLevel'];
+    readonly waterSupplyType: HousingConditionProps['waterSupplyType'];
 
     private constructor(props: HousingConditionProps) {
         this.housingConditionType = props.housingConditionType;
@@ -26,8 +27,11 @@ export class HousingCondition implements HousingConditionProps {
         this.sewerDisposalMethod = props.sewerDisposalMethod;
         this.wasteCollectionType = props.wasteCollectionType;
         this.accessibilityLevel = props.accessibilityLevel;
+        this.waterSupplyType = props.waterSupplyType;
+        
         Object.freeze(this);
     }
+    
 
     static create(props: HousingConditionProps): Result<HousingCondition, DomainError> {
         if (props.numberOfRooms < 0) return err(HC.NegativeRooms());
@@ -49,6 +53,7 @@ export class HousingCondition implements HousingConditionProps {
             sewerDisposalMethod: props.sewerDisposalMethod ?? this.sewerDisposalMethod,
             wasteCollectionType: props.wasteCollectionType ?? this.wasteCollectionType,
             accessibilityLevel: props.accessibilityLevel ?? this.accessibilityLevel,
+            waterSupplyType: props.waterSupplyType ?? this.waterSupplyType,
         });
     }
 }
