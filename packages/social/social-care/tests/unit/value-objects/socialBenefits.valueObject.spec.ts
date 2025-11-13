@@ -1,10 +1,17 @@
 import { describe, expect, test } from "bun:test";
-import { FamilyMemberId, SocialBenefit } from "@conecta/social-care";
+import { BE, FamilyMemberId, SocialBenefit } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 
 const VALID_UUID_RESULT = FamilyMemberId.create("01890e18-257b-7b32-b264-93c9d46242ab");
 if (VALID_UUID_RESULT.isErr) throw new Error("UUID Válido de teste falhou ao criar");
 const VALID_UUID = VALID_UUID_RESULT.unwrap();
+
+const makeSocialBenefit = () =>
+  SocialBenefit.create({
+    benefitName: "Bolsa Família",
+    amount: 600,
+    beneficiaryId: FamilyMemberId.create().unwrap(),
+  }).unwrap();
 
 
 describe("SocialBenefit.valueObject", () => {
@@ -78,5 +85,26 @@ describe("SocialBenefit.valueObject", () => {
     if (!updated.isOk) return;
 
     expect(updated.unwrap().beneficiaryId).toBe(updatedBeneficiary.toString());
+  });
+});
+
+
+describe("SocialBenefit.copyWith — regressões", () => {
+  test("não lança nem retorna ok quando beneficiaryId novo é inválido", () => {
+    const benefit = makeSocialBenefit();
+    const invalidBeneficiaryId = {
+      value: "beneficiary-id-invalido",
+    } as FamilyMemberId;
+
+    const result = benefit.copyWith({
+      beneficiaryId: invalidBeneficiaryId,
+    });
+
+    expect(result.isErr).toBe(true);
+    if (!result.isErr) return;
+
+    expect(result.unwrapErr().code).toBe(
+      BE.BeneficiaryIdInvalid("beneficiary-id-invalido").code,
+    );
   });
 });

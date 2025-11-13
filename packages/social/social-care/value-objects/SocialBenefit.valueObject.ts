@@ -21,10 +21,14 @@ export class SocialBenefit {
         const unSafeBeneficiaryId = unSafe(props.beneficiaryId?.value);
         const safeBeneficiaryId = unSafeBeneficiaryId.isSome ? unSafeBeneficiaryId.unwrap() : this.beneficiaryId;
         const beneficiaryId = FamilyMemberId.create(safeBeneficiaryId).isErr ? err(BE.BeneficiaryIdInvalid(safeBeneficiaryId)) : FamilyMemberId.create(safeBeneficiaryId);
-        return SocialBenefit.create({
+        if(beneficiaryId.isErr) return err(beneficiaryId.unwrapErr());
+        const socialBenefitObject =  SocialBenefit.create({
           benefitName: props.benefitName ?? this.benefitName,
           amount: props.amount ?? this.amount,
           beneficiaryId: beneficiaryId.unwrap(),
-        });
+        }); 
+
+        if(socialBenefitObject.isErr) return err(socialBenefitObject.unwrapErr());
+        return ok(socialBenefitObject.unwrap());
       }
 }

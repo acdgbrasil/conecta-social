@@ -62,3 +62,13 @@ describe("SocialBenefitsCollection.valueObject (RED tests)", () => {
     expect(newCollection.getTotalAmount()).toBe(400);
   });
 });
+
+describe("SocialBenefitsCollection.create — regressões", () => {
+  test("retorna Result.err quando payload recebido é null", () => {
+    const result = SocialBenefitsCollection.create(
+      null as unknown as SocialBenefit[],
+    );
+
+    expect(result.isErr).toBe(true);
+  });
+});

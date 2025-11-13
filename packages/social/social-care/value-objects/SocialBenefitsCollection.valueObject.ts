@@ -25,6 +25,7 @@ export class SocialBenefitsCollection {
    * @returns Um `Result` contendo a nova coleção.
    */
   public static create(benefits: SocialBenefit[]): Result<SocialBenefitsCollection, DomainError> {
+    if (benefits === null || benefits === undefined) return err(SBC.BenefitsArrayNullOrUndefined());
     if (benefits.length === 0) return ok(new SocialBenefitsCollection([]));
     const hasDuplicates = ImutableListFactory.fromArray(benefits).hasDuplicates();
     if (hasDuplicates) return err(SBC.DuplicateBenefitNotAllowed(benefits[0].benefitName));
