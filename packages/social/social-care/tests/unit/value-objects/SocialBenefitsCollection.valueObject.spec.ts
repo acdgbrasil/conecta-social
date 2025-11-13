@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { FamilyMemberId, SocialBenefit, SocialBenefitsCollection } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 
-const internId = Uuid.create("01890e18-257b-7b32-b264-93c9d46242ab").unwrap()
+const internId = Uuid.create("01890e18-257b-7b32-b264-93c9d46242ab").unwrap();
 const BENEFICIARY_ID = FamilyMemberId.create(internId.value).unwrap();
 
 const makeBenefit = (overrides?: Partial<{ name: string; amount: number }>) => {
@@ -26,6 +26,25 @@ describe("SocialBenefitsCollection.valueObject (RED tests)", () => {
     const result = SocialBenefitsCollection.create([benefit, benefit]);
 
     expect(result.isErr).toBe(true);
+  });
+
+  test("expõe o nome correto do benefício duplicado no erro", () => {
+    const uniqueBenefit = makeBenefit({ name: "Auxílio Transporte", amount: 180 });
+    const duplicated = makeBenefit({ name: "Auxílio Energia", amount: 200 });
+    const duplicatedAgain = makeBenefit({ name: "Auxílio Energia", amount: 200 });
+
+    const result = SocialBenefitsCollection.create([
+      uniqueBenefit,
+      duplicated,
+      duplicatedAgain,
+    ]);
+
+    expect(result.isErr).toBe(true);
+    if (!result.isErr) return;
+
+    const duplicateError = result.unwrapErr();
+    expect(duplicateError.context?.benefitName).toBe("Auxílio Energia");
+    expect(duplicateError.message).toContain("Auxílio Energia");
   });
 
   test("permite criar coleção vazia", () => {

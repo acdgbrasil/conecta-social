@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { BE, FamilyMemberId, SocialBenefit } from "@conecta/social-care";
+import { BE, FamilyMemberId, FMIE, SocialBenefit } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 
 const VALID_UUID_RESULT = FamilyMemberId.create("01890e18-257b-7b32-b264-93c9d46242ab");
@@ -104,7 +104,34 @@ describe("SocialBenefit.copyWith — regressões", () => {
     if (!result.isErr) return;
 
     expect(result.unwrapErr().code).toBe(
-      BE.BeneficiaryIdInvalid("beneficiary-id-invalido").code,
+      FMIE.InvalidFormat("beneficiary-id-invalido").code,
     );
+  });
+
+  test("valida o novo beneficiaryId apenas uma vez durante o copyWith", () => {
+    const benefit = makeSocialBenefit();
+    const updatedBeneficiary = FamilyMemberId.create(
+      "01890e18-257b-7b32-b264-93c9d46242ad",
+    ).unwrap();
+
+    const originalCreate = FamilyMemberId.create;
+    let createCallsWithString = 0;
+
+    FamilyMemberId.create = ((value?: string) => {
+      if (typeof value === "string") {
+        createCallsWithString += 1;
+        return originalCreate(value);
+      }
+      return originalCreate();
+    }) as typeof FamilyMemberId.create;
+
+    try {
+      const result = benefit.copyWith({ beneficiaryId: updatedBeneficiary });
+      expect(result.isOk).toBe(true);
+    } finally {
+      FamilyMemberId.create = originalCreate;
+    }
+
+    expect(createCallsWithString).toBe(1);
   });
 });

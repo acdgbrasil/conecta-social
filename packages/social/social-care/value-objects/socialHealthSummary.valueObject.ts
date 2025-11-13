@@ -3,7 +3,7 @@ import { err, ok, Result } from "@conecta/result";
 import { DomainError } from "@conecta/domain-error";
 import { SHSDE } from "../err/SocialHealthSummary.error";
 import { SocialHealthSummaryProps } from "./props/socialHealthSummary.props";
-import { unSafe } from "@conecta/shared/option-pattern/Option";
+import { unSafe } from "@conecta/option";
 
 export class SocialHealthSummary {
     readonly requiresConstantCare: boolean;

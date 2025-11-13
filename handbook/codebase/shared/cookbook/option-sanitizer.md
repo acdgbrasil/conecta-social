@@ -1,49 +1,75 @@
 # Higienizando entradas opcionais
 
 ## Cenário
-Formulários externos chegam com campos opcionais cheios de espaços ou `null`. Queremos criar um Value Object que só aceite valores limpos, mantendo a API funcional.
+Ao registrar um `Referral`, o payload externo pode (ou não) trazer um `primaryCaregiverId`. Queremos manter o campo opcional no agregado, mas impedir que valores vazios ou inválidos escapem da borda.
 
 ## Ferramentas
 - `Option`, `Some`, `None`
 - `guardLet`
-- `Uuid`
+- `FamilyMemberId` (value object dependente de `Uuid`)
+- `Result`
 
 ## Passo a passo
 
+### 1. Converta o payload em `Option`
+
 ```ts typescript
-import { Option, Some, None, guardLet } from "@conecta/option";
-import { Uuid } from "@conecta/uuid";
-import { Result, ok, err } from "@conecta/result";
-import { PE } from "../err/Patient.error";
+import { None, Option, Some } from "@conecta/option";
 
-type ExternalPayload = {
-  caregiverId?: string | null;
+type ReferralPayload = {
+  primaryCaregiverId?: string | null;
 };
 
-const sanitizeCaregiver = (payload: ExternalPayload): Option<string> => {
-  const raw = payload.caregiverId?.trim();
-  return raw ? Some(raw) : None();
-};
-
-export const ensureCaregiverId = (
-  payload: ExternalPayload,
-): Result<Uuid, ReturnType<typeof PE.MissingCaregiver>> => {
-  const maybeId = sanitizeCaregiver(payload);
-
-  if (maybeId.isNone) {
-    return err(PE.MissingCaregiver("anonymous"));
-  }
-
-  const parsed = Uuid.create(guardLet(maybeId));
-  return parsed.isOk ? ok(parsed.unwrap()) : err(PE.MissingCaregiver("invalid"));
+export const sanitizeCaregiverId = (payload: ReferralPayload): Option<string> => {
+  const trimmed = payload.primaryCaregiverId?.trim();
+  return trimmed ? Some(trimmed) : None();
 };
 ```
 
-<Accordion title="Por que usar Option aqui?">
-  `Option` evita checks repetidos (`if (!payload.caregiverId)`) e força o consumo a tratar explicitamente a ausência ou presença do campo.
+### 2. Promova o valor para o VO correto
+
+```ts typescript
+import type { DomainError } from "@conecta/domain-error";
+import { None, Option, Some, guardLet } from "@conecta/option";
+import { err, ok, Result } from "@conecta/result";
+import { FamilyMemberId } from "@conecta/social-care";
+
+export const parseOptionalCaregiver = (
+  payload: ReferralPayload,
+): Result<Option<FamilyMemberId>, DomainError> => {
+  const maybeId = sanitizeCaregiverId(payload);
+
+  // Campo realmente opcional -> devolve None embrulhado em Result
+  if (maybeId.isNone) return ok(None());
+
+  const parsed = FamilyMemberId.create(guardLet(maybeId));
+  return parsed.isOk ? ok(Some(parsed.unwrap())) : err(parsed.unwrapErr());
+};
+```
+
+### 3. Use o resultado dentro do agregado
+
+```ts typescript
+const caregiverResult = parseOptionalCaregiver(payload);
+if (caregiverResult.isErr) {
+  // Já recebemos um DomainError de catálogo (ex.: FMIE.InvalidFormat)
+  return err(caregiverResult.unwrapErr());
+}
+
+const caregiverId = caregiverResult.unwrap();
+if (caregiverId.isNone) {
+  // nada a fazer neste fluxo
+  return ok(patient);
+}
+
+return patient.assignPrimaryCaregiver(caregiverId.unwrap());
+```
+
+<Accordion title="Quando o campo for obrigatório?">
+  Troque o `return ok(None())` por um `err(P.FamilyMemberNotFound({ personId }))` ou outro erro de catálogo. A presença explícita da `Option` continua útil para normalizar o payload e facilitar a instrumentação.
 </Accordion>
 
-### Checkerboard
-- Normalize (`trim`) antes de decidir `Some/None`.
-- Ao transformar em `Uuid`, sempre trate o `Result` retornado.
-- Evite lançar exceções; use `err` para propagar erros de domínio.
+### Checklist
+- Sempre chame `trim`/normalizadores **antes** de decidir `Some` ou `None`.
+- Use `guardLet` para destravar `Option` apenas no ponto em que o valor é obrigatório.
+- Reaproveite os erros já existentes (`FMIE.InvalidFormat`, `P.FamilyMemberAlreadyExists`, etc.) em vez de lançar `Error`.

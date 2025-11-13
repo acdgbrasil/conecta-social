@@ -16,6 +16,12 @@ function imutableList<T>(elements: T[]): ImutableListType<T> {
       }
       return acc;
     }, [])),
+    /**
+     * Detecta duplicatas calculando um hash estrutural determinístico para cada item.
+     * A estratégia considera igualdade profunda (ordena chaves e trata ciclos) e
+     * possui custo aproximado O(n * m), onde `m` é o custo de serialização de cada elemento.
+     * Ideal para coleções pequenas do domínio; para listas extensas considere alternativas com hashing incremental.
+     */
     hasDuplicates: () => {
       const vistos = new Set<string>();
       for (const item of elements) {
@@ -27,7 +33,27 @@ function imutableList<T>(elements: T[]): ImutableListType<T> {
         vistos.add(hash);
       }
       return false;                  // nenhum duplicado
-    }
+    },
+    findDuplicates: () => {
+      const vistos = new Map<string, T>();
+      const duplicatas: T[] = [];
+
+      for (const item of elements) {
+        const hash = stableStringify(item);
+
+        if (vistos.has(hash)) {
+          // Adiciona à lista de duplicatas se ainda não estiver presente
+          if (!duplicatas.includes(item)) {
+            duplicatas.push(item);
+          }
+        } else {
+          vistos.set(hash, item);
+        }
+      }
+
+      return duplicatas;
+    },
+
   };
 }
 
@@ -37,6 +63,14 @@ export const ImutableListFactory = {
   castTolist: <T>(list: ImutableListType<T>) => imutableList<T>(list.getAll() as T[]),
 };
 
+/**
+ * Serializa valores em uma string estável para permitir comparações estruturais.
+ * - Ordena chaves de objetos para evitar falsos negativos.
+ * - Marca referências cíclicas como "[Circular]" para evitar loops infinitos.
+ * Esse processo é custoso (JSON.stringify + ordenação a cada elemento), e deve ser
+ * monitorado em coleções grandes. Futuras otimizações podem incluir cache por referência
+ * ou caminhos especializados para tipos primitivos.
+ */
 function stableStringify(value: any): string {
   const cache = new Set<any>();
 

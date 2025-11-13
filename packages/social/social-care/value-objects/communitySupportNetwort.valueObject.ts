@@ -3,6 +3,8 @@ import { err, ok, Result } from "@conecta/result";
 import { CSN } from "../err/CommunitySupportNetwork.error";
 import { CommunitySupportNetworkProps } from "./props/communitySupportNetwork.props";
 
+const MAX_FAMILY_CONFLICTS_LENGTH = 300;
+
 export class CommunitySupportNetwork implements CommunitySupportNetworkProps {
     readonly hasSupportFromRelatives:boolean;
     readonly hasSupportFromNeighbors:boolean;
@@ -30,7 +32,9 @@ export class CommunitySupportNetwork implements CommunitySupportNetworkProps {
             return err(CSN.FamilyConflictsWhitespace());
         }
 
-        if ( trimmed.length > 300 ) return err(CSN.FamilyConflictsTooLong());
+        if ( trimmed.length > MAX_FAMILY_CONFLICTS_LENGTH ) {
+            return err(CSN.FamilyConflictsTooLong());
+        }
 
         return ok(
             new CommunitySupportNetwork({

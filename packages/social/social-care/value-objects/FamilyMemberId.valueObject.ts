@@ -1,4 +1,3 @@
-
 import { DomainError } from "@conecta/domain-error";
 import { FMIE } from "../err/FamilyMemberId.error";
 import { err, ok, Result } from "@conecta/result";
@@ -7,54 +6,75 @@ import { Uuid } from "@conecta/uuid";
 /**
  * Representa o identificador único de um membro da família.
  *
- * Este Value Object garante que qualquer ID usado para um FamilyMember
- * seja um UUID v7 válido, protegendo as invariantes da entidade.
+ * É um Value Object imutável que garante:
+ * - uso exclusivo de UUID v7
+ * - normalização do valor (lowercase)
+ * - validação centralizada
  */
 export class FamilyMemberId {
-  private constructor(readonly value: string) {
+  private constructor(private readonly _value: string) {
     Object.freeze(this);
   }
 
   /**
-   * Cria uma instância de FamilyMemberId a partir de uma string.
+   * Cria uma nova instância.
    *
-   * A criação só é bem-sucedida se a string fornecida for um UUID v7 válido.
+   * - Se nenhum valor for fornecido, um UUID v7 novo é gerado.
+   * - Se um valor for fornecido, ele é validado como UUID v7.
    *
-   * @param value A string a ser validada.
-   * @returns Um `Result` contendo a instância de `FamilyMemberId` ou um `DomainError`.
+   * @param value UUID v7 ou undefined.
+   * @returns Result contendo a instância válida ou um erro de domínio.
    */
-  public static create(): Result<FamilyMemberId, DomainError>;
-  public static create(value: string): Result<FamilyMemberId, DomainError>;
-  public static create(value?: string): Result<FamilyMemberId, DomainError> {
-    
-    if (typeof value === "undefined") return ok(new FamilyMemberId(Uuid.create().unwrap().toString()));
-    const lowercaseValue = value.toLowerCase();
-    if (!Uuid.isV7(lowercaseValue)) return err(FMIE.InvalidFormat(lowercaseValue));
-    return ok(new FamilyMemberId(lowercaseValue));
+  static create(value?: string): Result<FamilyMemberId, DomainError> {
+    if (value === undefined) {
+      const fresh = Uuid.create().unwrap().toString();
+      return ok(new FamilyMemberId(fresh));
+    }
+
+    const normalized = value.toLowerCase();
+
+    if (!Uuid.isV7(normalized)) {
+      return err(FMIE.InvalidFormat(normalized));
+    }
+
+    return ok(new FamilyMemberId(normalized));
   }
 
   /**
-   * Cria uma cópia do ID, opcionalmente com um novo valor.
-   * @param props Um objeto contendo o novo `value`.
-   * @returns Um `Result` com a nova instância de `FamilyMemberId` ou um erro de validação.
+   * Retorna uma nova instância com o valor atualizado.
+   * 
+   * Se nenhum `value` for informado, retorna a própria instância.
+   *
+   * @param props Objeto contendo o novo valor opcional.
    */
-  public copyWith(props: Partial<{ value: string }>): Result<FamilyMemberId, DomainError> {
-    return FamilyMemberId.create(props.value ?? this.value);
+  copyWith(props: Partial<{ value: string }>): Result<FamilyMemberId, DomainError> {
+    if (props.value === undefined) {
+      return ok(this);
+    }
+
+    return FamilyMemberId.create(props.value);
   }
 
   /**
-   * Retorna a representação em string do ID.
+   * Retorna o valor interno como string.
    */
-  public toString(): string {
-    return this.value;
+  toString(): string {
+    return this._value;
   }
 
   /**
-   * Compara este ID com outro para verificar a igualdade.
-   * @param other O outro FamilyMemberId.
-   * @returns `true` se os valores forem iguais, `false` caso contrário.
+   * Compara dois IDs pelo valor interno.
+   *
+   * @param other Outra instância de FamilyMemberId.
    */
-  public equals(other: FamilyMemberId): boolean {
-    return this.value === other.value;
+  equals(other: FamilyMemberId): boolean {
+    return this._value === other._value;
+  }
+
+  /**
+   * Acesso somente-leitura ao valor interno.
+   */
+  get value(): string {
+    return this._value;
   }
 }
