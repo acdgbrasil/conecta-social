@@ -10,7 +10,7 @@ A partir deste canal iniciamos em **`0.1.0`** e seguimos [SemVer](https://semver
 Enquanto estivermos em `0.y.z`, trate qualquer quebra como aumento de `MINOR` e documente explicitamente o impacto antes do merge.
 
 ### Recomendações práticas
-- Use `bun pm version <patch|minor|major>` para atualizar `package.json` na raiz **e** cada pacote tocado em `packages/**`.
+- Use `bun pm version <patch|minor|major>` para atualizar `package.json` na raiz **e** cada pacote tocado em `packages/**`. Atalhos: `bun run version:patch|minor|major|prerelease` (scripts/version.ts).
 - Gere tags anotadas (`git tag -a v0.1.0 -m "Conecta Social kick-off"`). As tags são a origem do changelog.
 - Inclua o número da versão no PR/commit final e referencie o relatório correspondente (`reports/daily` ou `reports/refactor`).
 
@@ -31,4 +31,4 @@ Enquanto estivermos em `0.y.z`, trate qualquer quebra como aumento de `MINOR` e 
 - `process/retrocompatibilidade.md` — catálogo de features, status e plano de migração.
 - `reports/refactor/*.md` — contexto de decisões estruturais.
 - `reports/daily/*.md` — log operacional das execuções de teste e releases.
-- *(Futuro)* script `bun run version <type>` para automatizar bump + changelog/tag.
+- `scripts/version.ts` — wrapper leve para `bun pm version` + lembrete de changelog/tag.

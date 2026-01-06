@@ -1,0 +1,39 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "conecta-social",
+    },
+    "packages/shared/erros-pattern": {
+      "name": "@conecta/domain-error",
+      "version": "0.0.1",
+    },
+    "packages/shared/fn-pattern": {
+      "name": "@conecta/fn",
+      "version": "0.0.1",
+    },
+    "packages/shared/option-pattern": {
+      "name": "@conecta/option",
+      "version": "0.0.1",
+    },
+    "packages/shared/result-pattern": {
+      "name": "@conecta/result",
+      "version": "0.0.1",
+    },
+    "packages/shared/uuid-pattern": {
+      "name": "@conecta/uuid",
+      "version": "0.0.1",
+    },
+  },
+  "packages": {
+    "@conecta/domain-error": ["@conecta/domain-error@workspace:packages/shared/erros-pattern"],
+
+    "@conecta/fn": ["@conecta/fn@workspace:packages/shared/fn-pattern"],
+
+    "@conecta/option": ["@conecta/option@workspace:packages/shared/option-pattern"],
+
+    "@conecta/result": ["@conecta/result@workspace:packages/shared/result-pattern"],
+
+    "@conecta/uuid": ["@conecta/uuid@workspace:packages/shared/uuid-pattern"],
+  }
+}

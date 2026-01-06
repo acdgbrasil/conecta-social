@@ -1,0 +1,33 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "name": "Launch Swift Executable",
+      "program": "${workspaceRoot}/.build/debug/swift-core",
+      "args": [],
+      "env": {},
+      "cwd": "${workspaceRoot}"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:conecta-social}/packages/swift-core",
+      "name": "Debug swift-core (packages/swift-core)",
+      "target": "swift-core",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug swift-core (packages/swift-core)"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:conecta-social}/packages/swift-core",
+      "name": "Release swift-core (packages/swift-core)",
+      "target": "swift-core",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release swift-core (packages/swift-core)"
+    }
+  ]
+}

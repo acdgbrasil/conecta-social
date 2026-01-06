@@ -1,6 +1,12 @@
 {
   "name": "conecta-social",
   "private": true,
+  "scripts": {
+    "version:patch": "bun run scripts/version.ts patch",
+    "version:minor": "bun run scripts/version.ts minor",
+    "version:major": "bun run scripts/version.ts major",
+    "version:prerelease": "bun run scripts/version.ts prerelease"
+  },
   "workspaces": [
     "packages/*",
     "packages/*/*"

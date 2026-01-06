@@ -2,6 +2,8 @@ import { DomainError } from "@conecta/domain-error";
 import { FMIE } from "../err/FamilyMemberId.error";
 import { err, ok, Result } from "@conecta/result";
 import { Uuid } from "@conecta/uuid";
+import { IdProviderProtocol } from "@conecta/protocols";
+import { uuidV7Provider } from "@conecta/adapters";
 
 /**
  * Representa o identificador único de um membro da família.
@@ -25,10 +27,15 @@ export class FamilyMemberId {
    * @param value UUID v7 ou undefined.
    * @returns Result contendo a instância válida ou um erro de domínio.
    */
-  static create(value?: string): Result<FamilyMemberId, DomainError> {
+  static create(
+    value?: string,
+    idProvider: IdProviderProtocol = uuidV7Provider,
+  ): Result<FamilyMemberId, DomainError> {
     if (value === undefined) {
-      const fresh = Uuid.create().unwrap().toString();
-      return ok(new FamilyMemberId(fresh));
+      const fresh = idProvider.generate();
+      const uuid = Uuid.create(fresh);
+      if (uuid.isErr) return err(FMIE.InvalidFormat(fresh));
+      return ok(new FamilyMemberId(uuid.unwrap().toString()));
     }
 
     const normalized = value.toLowerCase();

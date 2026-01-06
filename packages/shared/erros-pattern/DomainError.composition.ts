@@ -26,6 +26,9 @@ export const ErrorTaxonomy = {
   ObservabilityPipelineFailure: "OBSERVABILITY_PIPELINE_FAILURE",
   /** Estado inesperado que não deveria acontecer em execução normal. */
   UnexpectedSystemState: "UNEXPECTED_SYSTEM_STATE",
+  /** Conflitos detectados, como tentativas de criar recursos duplicados. */
+  Conflict: "CONFLICT",
+
 } as const;
 
 /**

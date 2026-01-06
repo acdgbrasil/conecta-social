@@ -25,7 +25,7 @@ function imutableList<T>(elements: T[]): ImutableListType<T> {
     hasDuplicates: () => {
       const vistos = new Set<string>();
       for (const item of elements) {
-        const hash = stableStringify(item);
+        const hash = hashValue(item);
 
         if (vistos.has(hash)) {
           return true;               // duplicata encontrada
@@ -39,7 +39,7 @@ function imutableList<T>(elements: T[]): ImutableListType<T> {
       const duplicatas: T[] = [];
 
       for (const item of elements) {
-        const hash = stableStringify(item);
+        const hash = hashValue(item);
 
         if (vistos.has(hash)) {
           // Adiciona à lista de duplicatas se ainda não estiver presente
@@ -100,4 +100,35 @@ function stableStringify(value: any): string {
   };
 
   return JSON.stringify(value, replacer);
+}
+
+export { stableStringify };
+
+/**
+ * Produz um hash estável para comparação estrutural, com fast-path para primitivos/Date.
+ */
+function hashValue(value: unknown): string {
+  if (value === null) return "p:null";
+  const type = typeof value;
+  switch (type) {
+    case "undefined":
+      return "p:undefined";
+    case "string":
+      return `p:string:${value as string}`;
+    case "number":
+      return `p:number:${value as number}`;
+    case "boolean":
+      return `p:boolean:${value as boolean}`;
+    case "bigint":
+      return `p:bigint:${value.toString()}`;
+    case "symbol":
+      return `p:symbol:${String(value)}`;
+  }
+
+  if (value instanceof Date) {
+    return `d:${value.toISOString()}`;
+  }
+
+  // Fallback para comparação estrutural profunda.
+  return stableStringify(value as any);
 }

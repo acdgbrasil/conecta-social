@@ -4,6 +4,8 @@ import type { ImutableList } from "@conecta/fn";
 import { ImutableListFactory } from "@conecta/fn";
 import { None, Option, Some } from "@conecta/option";
 import { Uuid } from "@conecta/uuid";
+import { ClockProtocol, DomainEvent, IdProviderProtocol } from "@conecta/protocols";
+import { systemClock, uuidV7Provider } from "@conecta/adapters";
 
 import { P } from "../err/Patient.error";
 import type { Diagnosis } from "../value-objects/Diagnosis.valueObject";
@@ -23,6 +25,7 @@ import {
   SocialCareAppointment,
   type SocialCareAppointmentProps,
 } from "./SocialCareAppointment.entity";
+import { FamilyMemberAddedEvent, PatientCreatedEvent } from "@conecta/social-care/events";
 
 type ReferralDraft = Partial<Omit<ReferralProps, "referredPersonId">> &
   Pick<ReferralProps, "referredPersonId">;
@@ -48,15 +51,33 @@ export type PatientProps = {
   readonly socialHealthSummary: Option<SocialHealthSummary>;
 };
 
+type PatientDependencies = {
+  idProvider?: IdProviderProtocol;
+  clock?: ClockProtocol;
+};
+
+const defaultDependencies: Required<PatientDependencies> = {
+  idProvider: uuidV7Provider,
+  clock: systemClock,
+};
+
 export class Patient {
   private constructor(
     private readonly props: PatientProps,
     private readonly patientId: Uuid,
+    private readonly deps: Required<PatientDependencies>,
+    private readonly _version: number = 0,
+    private readonly _domainEvents: DomainEvent[] = [],
   ) { }
 
-  static createFromScratch(personId:PersonId,diagnoses:ImutableList<Diagnosis>): Result<Patient, DomainError> {
+  static createFromScratch(
+    personId: PersonId,
+    diagnoses: ImutableList<Diagnosis>,
+    deps: PatientDependencies = {},
+  ): Result<Patient, DomainError> {
 
-    const patientId = Uuid.create();
+    const resolvedDeps = Patient.resolveDeps(deps);
+    const patientId = Uuid.create(resolvedDeps.idProvider.generate());
     if(!personId) return err(P.InitialPersonIdIsRequired());
     if(!diagnoses) return err(P.InitialDiagnosesCantBeEmpty());
     if(diagnoses.isEmpty()) return err(P.InitialDiagnosesCantBeEmpty());
@@ -75,19 +96,27 @@ export class Patient {
       communitySupportNetwork: None<CommunitySupportNetwork>(),
       socialHealthSummary: None<SocialHealthSummary>(),
     };
+    const domainEvents: DomainEvent[] = [
+      PatientCreatedEvent({
+        patientId: patientId.unwrap().toString(),
+        personId: personId.toString(),
+        occurredAt: resolvedDeps.clock.now(),
+      })
+    ];
 
-    return ok(new Patient(initialProps, patientId.unwrap()));
+    return ok(new Patient(initialProps, patientId.unwrap(), resolvedDeps, 0, domainEvents));
   }
 
   static createFromObject( 
     id: Uuid, 
-    props: PatientProps 
+    props: PatientProps,
+    deps: PatientDependencies = {},
   ): Result<Patient, DomainError> {
     
     if (!id) return err(P.InitialIdIsRequired());
     if (!props.personId) return err(P.InitialPersonIdIsRequired());
 
-    return ok(new Patient(props, id));
+    return ok(new Patient(props, id, Patient.resolveDeps(deps)));
   }
 
   get id(): Uuid {
@@ -134,9 +163,12 @@ export class Patient {
     return this.props.socialHealthSummary;
   }
 
-  
+  get version(): number {
+    return this._version;
+  }
 
-  copyWith(changes: Partial<PatientProps>): Patient {
+
+  copyWith(changes: Partial<PatientProps>, version?: number, domainEvents?: DomainEvent[]): Patient {
     const merged: PatientProps = {
       personId: changes.personId ?? this.props.personId,
       diagnoses: changes.diagnoses ?? this.props.diagnoses,
@@ -153,7 +185,7 @@ export class Patient {
         changes.socialHealthSummary ?? this.props.socialHealthSummary,
     };
 
-    return new Patient(merged, this.patientId);
+    return new Patient(merged, this.patientId, this.deps, version ?? this._version,[...this._domainEvents, ...(domainEvents ?? [])]);
   }
 
   addFamilyMember(member: FamilyMember): Result<Patient, DomainError> {
@@ -170,7 +202,10 @@ export class Patient {
     }
 
     const updatedMembers = this.familyMembers.add(member);
-    return ok(this.copyWith({ familyMembers: updatedMembers }));
+    const domainEvents: DomainEvent[] = [
+      FamilyMemberAddedEvent({memberId: member.personId.toString(),patientId: this.patientId.toString(),relationship: member.relationship, occurredAt: this.deps.clock.now()})
+    ];
+    return ok(this.copyWith({ familyMembers: updatedMembers },this.version + 1, [...domainEvents]));
   }
 
   removeFamilyMember(personId: PersonId): Result<Patient, DomainError> {
@@ -239,10 +274,10 @@ export class Patient {
 
     const referralResult = Referral.create(
       {
-        id: draft.id ?? Uuid.create().unwrap(),
+        id: draft.id ?? this.generateUuid(),
         date,
         requestingProfessionalId:
-          draft.requestingProfessionalId ?? Uuid.create().unwrap(),
+          draft.requestingProfessionalId ?? this.generateUuid(),
         referredPersonId: draft.referredPersonId,
         destinationService: draft.destinationService ?? "UNSPECIFIED",
         reason:
@@ -292,7 +327,7 @@ export class Patient {
 
     const violationResult = RightsViolationReport.create(
       {
-        id: draft.id ?? Uuid.create().unwrap(),
+        id: draft.id ?? this.generateUuid(),
         reportDate,
         incidentDate,
         victimId: draft.victimId,
@@ -337,10 +372,10 @@ export class Patient {
 
     const appointmentResult = SocialCareAppointment.create(
       {
-        id: draft.id ?? Uuid.create().unwrap(),
+        id: draft.id ?? this.generateUuid(),
         date,
         professionalInChargeId:
-          draft.professionalInChargeId ?? Uuid.create().unwrap(),
+          draft.professionalInChargeId ?? this.generateUuid(),
         type: draft.type ?? "FOLLOW_UP",
         summary: draft.summary,
         actionPlan: draft.actionPlan ?? "",
@@ -379,4 +414,19 @@ export class Patient {
 
     return Timestamp.create({ value: referenceDate });
   }
+
+  private generateUuid(): Uuid {
+    return Uuid.create(this.deps.idProvider.generate()).unwrap();
+  }
+
+  private static resolveDeps(
+    deps: PatientDependencies,
+  ): Required<PatientDependencies> {
+    return {
+      idProvider: deps.idProvider ?? defaultDependencies.idProvider,
+      clock: deps.clock ?? defaultDependencies.clock,
+    };
+  }
+
+  public pullDomainEvents = (): DomainEvent[] => this._domainEvents;
 }

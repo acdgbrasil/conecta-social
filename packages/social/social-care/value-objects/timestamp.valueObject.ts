@@ -1,5 +1,7 @@
 import { DomainError } from "@conecta/domain-error";
 import { err, ok, Result } from "@conecta/result";
+import { ClockProtocol } from "@conecta/protocols";
+import { systemClock } from "@conecta/adapters";
 import { TE } from "../err/Timestamp.error";
 import { TimestampProps } from "./props/timestamp.props";
 
@@ -9,39 +11,19 @@ export class Timestamp {
   }
 
   static create(props: TimestampProps): Result<Timestamp, DomainError> {
-    const candidate = props.value;
+    return this.fromDate(props.value);
+  }
 
-    if (!(candidate instanceof Date)) {
-      return err(
-        TE.InvalidDate({
-          value: String(candidate),
-        }),
-      );
-    }
-
-    const value = Timestamp.clone(candidate);
-    const ms = value.getUTCMilliseconds();
-
-    if (Number.isNaN(value.getTime())) {
-      return err(
-        TE.InvalidDate({
-          value: String(candidate),
-        }),
-      );
-    }
-
-    return ok(new Timestamp(ms > 0 ? new Date(value.getTime() - ms) : value));
+  static now(clock: ClockProtocol = systemClock): Result<Timestamp, DomainError> {
+    return this.fromDate(clock.now());
   }
 
   static createFromISOString(isoString: string): Result<Timestamp, DomainError> {
-    const date = new Date(isoString);
-    return Timestamp.create({ value: date });
+    return Timestamp.fromDate(new Date(isoString));
   }
 
   copyWith(props: Partial<TimestampProps>): Result<Timestamp, DomainError> {
-    return Timestamp.create({
-      value: Timestamp.clone(props.value ?? this.value),
-    });
+    return Timestamp.fromDate(props.value ?? this.value);
   }
 
   isAfter(other: Timestamp): boolean {
@@ -66,6 +48,21 @@ export class Timestamp {
 
   toDate(): Date {
     return Timestamp.clone(this.value);
+  }
+
+  private static fromDate(candidate: Date): Result<Timestamp, DomainError> {
+    if (!(candidate instanceof Date)) {
+      return err(TE.InvalidDate({ value: String(candidate) }));
+    }
+
+    const value = Timestamp.clone(candidate);
+    const ms = value.getUTCMilliseconds();
+
+    if (Number.isNaN(value.getTime())) {
+      return err(TE.InvalidDate({ value: String(candidate) }));
+    }
+
+    return ok(new Timestamp(ms > 0 ? new Date(value.getTime() - ms) : value));
   }
 
   private static clone(source: Date): Date {
