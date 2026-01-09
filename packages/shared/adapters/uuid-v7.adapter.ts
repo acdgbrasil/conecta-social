@@ -1,4 +1,4 @@
-import { IdProviderProtocol } from "../protocols/id-provider.protocol";
+import { IdProviderProtocol } from "@conecta/protocols";
 import { Uuid } from "@conecta/uuid";
 
 /**

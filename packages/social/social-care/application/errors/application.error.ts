@@ -8,6 +8,7 @@ export type ApplicationErrorKind =
   | "UseCaseNotImplemented"
   | "RepositoryNotAvailable"
   | "PersonIdAlreadyExists"
+  | "FailToCastDignosisList"
 
 export const ApplicationError = makeDomainErrorFactory<ApplicationErrorKind>({
   bc: "SOCIAL",
@@ -32,6 +33,12 @@ export const ApplicationError = makeDomainErrorFactory<ApplicationErrorKind>({
       category: ErrorTaxonomy.Conflict,
       template: () => "O PersonId já existe.",
     },
+    FailToCastDignosisList: {
+      code: "APP-004",
+      http: 400,
+      category: ErrorTaxonomy.DataConsistencyIncident,
+      template: () => "Falha ao converter a lista de diagnósticos.",
+    },
   },
 });
 
@@ -39,4 +46,5 @@ export const AppError = shortcuts(ApplicationError, {
   UseCaseNotImplemented: [] as const,
   RepositoryNotAvailable: [] as const,
   PersonIdAlreadyExists: [] as const,
+  FailToCastDignosisList: [] as const,
 });

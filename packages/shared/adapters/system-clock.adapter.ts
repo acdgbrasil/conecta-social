@@ -1,4 +1,4 @@
-import { ClockProtocol } from "../protocols/clock.protocol";
+import { ClockProtocol } from "@conecta/protocols";
 
 /**
  * Implementação padrão baseada em `Date`.

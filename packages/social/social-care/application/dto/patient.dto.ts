@@ -1,4 +1,7 @@
-import { None, Some, PersonId,Option, ICDCode, Timestamp, Result, DomainError, ok, err, Diagnosis, DiagnosisProps} from "src";
+import { None, Some, Option } from "@conecta/option";
+import { ICDCode, Timestamp, PersonId, Diagnosis, DiagnosisProps } from "@conecta/social-care";
+import { Result, ok, err } from "@conecta/result";
+import { DomainError } from "@conecta/domain-error";
 
 export const createDtoPersonID = (inputPersonID: string) : Result<PersonId,DomainError> => PersonId.create(inputPersonID).isOk ? ok(PersonId.create(inputPersonID).unwrap()) : err(PersonId.create(inputPersonID).unwrapErr());
 

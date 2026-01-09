@@ -3,6 +3,7 @@
   "typescript.enablePromptUseWorkspaceTsdk": false,
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "javascript.preferences.importModuleSpecifierEnding": "minimal",
   "debug.javascript.defaultRuntimeExecutable": {

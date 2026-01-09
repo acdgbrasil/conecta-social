@@ -1,3 +1,4 @@
-export * from "./value-objects";
-export * from "./err";
-export * from "./entities";
+export * from "./domain/value-objects";
+export * from "./domain/errors";
+export * from "./domain/entities";
+export * from "./domain/events";

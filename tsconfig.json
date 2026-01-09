@@ -4,7 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "allowJs": false,
+    "allowJs": true,
     "resolveJsonModule": true,
     "noEmit": true,
     "strict": true,
@@ -12,6 +12,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "typeRoots": ["./types"],
     "paths": {
       "@conecta/shared": ["packages/shared/index.ts"],
       "@conecta/shared/*": ["packages/shared/*"],
