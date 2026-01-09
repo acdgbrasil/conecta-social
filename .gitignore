@@ -9,3 +9,4 @@ coverage/
 bun-test.xml
 bun.lock
 firebase-debug.log
+types/docs/
