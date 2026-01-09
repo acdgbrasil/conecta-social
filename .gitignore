@@ -7,3 +7,5 @@ library/
 handbook/references/
 coverage/
 bun-test.xml
+bun.lock
+firebase-debug.log
