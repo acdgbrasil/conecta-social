@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package social_care.events;
+
+import "common/ids.proto";
+
+message PatientCreated {
+  string event_id = 1;
+  common.UUID patient_id = 2;
+  common.UUID person_id = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message FamilyMemberAdded {
+  string event_id = 1;
+  common.UUID patient_id = 2;
+  common.UUID member_id = 3;
+  string relationship = 4; // e.g., "SPOUSE", "CHILD"
+  int64 occurred_at_unix_ms = 5;
+}
+
+message ReferralCreated {
+  string event_id = 1;
+  common.UUID referral_id = 2;
+  common.UUID patient_id = 3;
+  common.UUID referred_person_id = 4;
+  string destination_service = 5;
+  int64 occurred_at_unix_ms = 6;
+}
+
+message RightsViolationReported {
+  string event_id = 1;
+  common.UUID report_id = 2;
+  common.UUID patient_id = 3;
+  common.UUID victim_id = 4;
+  string violation_type = 5; // e.g., "NEGLECT"
+  int64 occurred_at_unix_ms = 6;
+}

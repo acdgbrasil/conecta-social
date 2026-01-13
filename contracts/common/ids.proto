@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package common;
+
+// UUID v7 (128-bit) representation
+message UUID {
+  string value = 1; // Canonical string format (e.g., "018f4a7a-1e37-7b2c-8f00-123456789abc")
+}
+
+// Timestamp compatible with ISO 8601
+message Timestamp {
+  int64 seconds = 1;
+  int32 nanos = 2;
+}
+
+// Standard Monetary Amount
+message Money {
+  string currency_code = 1; // ISO 4217 (e.g., "BRL")
+  int64 units = 2;
+  int32 nanos = 3;
+}

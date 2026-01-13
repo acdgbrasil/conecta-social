@@ -4,7 +4,7 @@
 - O pacote legado (`packages/legacy/**`) foi removido por completo.
 - Toda a surface pública do monorepo está exposta através dos barrels:
   - `packages/shared/index.ts`
-  - `packages/social/social-care/index.ts`
+  - `packages/social/conecta-raros/index.ts`
 - O arquivo `src/index.ts` apenas reexporta esses módulos para consumo externo.
 
 ## Estrutura atual
@@ -16,7 +16,7 @@ packages/
 │  ├─ result-pattern
 │  ├─ erros-pattern
 │  └─ uuid-pattern
-└─ social/
+└─ conecta-raros/
    └─ social-care/
       ├─ entities
       ├─ err

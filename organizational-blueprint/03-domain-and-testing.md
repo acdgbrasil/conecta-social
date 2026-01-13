@@ -1,7 +1,7 @@
 # 03 — Domain Modeling & Testing Strategy
 
 ## Táticas de Domínio
-- **DDD Estrutural**: cada contexto possui entidades, agregados, value objects e catálogos de erros (`packages/social/social-care/entities`, `.../value-objects`, `.../err`).
+- **DDD Estrutural**: cada contexto possui entidades, agregados, value objects e catálogos de erros (`packages/conecta-raros/social-care/domain/entities`, `.../value-objects`, `.../errors`).
 - **Factories de erro** (`@conecta/domain-error`) garantem mensagens rastreáveis e códigos fixos.
 - **Shared Kernel** (`packages/shared/*`) contém construções puras reutilizáveis (Result, Option, UUID, Fn, etc.).
 - **Protocol-Oriented onde há side effects**: dependências externas ficam atrás de protocolos (interfaces) hospedados em `packages/shared/protocols/*` e adaptadores default em `packages/shared/adapters/*` (ex.: `Clock`, `IdProvider`, `Notifier`, `EventBus`). Entidades/VOs continuam no modelo atual; protocolos entram nos pontos de integração para facilitar testes e injeção.
@@ -32,7 +32,7 @@ packages/<contexto>/tests/
 5. **Atualizar handbook** se a regra evoluir.
 
 ### Exemplos no repo
-- `packages/social/social-care/tests/unit/entities/patient.aggregate.spec.ts` documenta invariantes do agregado Patient.
+- `packages/conecta-raros/social-care/domain/tests/unit/entities/patient.aggregate.spec.ts` documenta invariantes do agregado Patient.
 - `packages/queue_manager/tests/...` recém-criados mostram como iniciar um contexto apenas com testes RED.
 
 ## Diretrizes para novos contextos

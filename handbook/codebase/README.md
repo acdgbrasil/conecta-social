@@ -12,6 +12,6 @@
 
 ### Escopo atual
 - `shared/` — utilitários reutilizáveis e padrões cross-context.
-- `social/` — bounded contexts sociais, começando por `social-care` e seus agregados/VOs.
+- `conecta-raros/` — bounded contexts sociais, começando por `social-care` e seus agregados/VOs.
 
 Conforme novos contextos amadurecem, replique o formato (README + `documentation.md`) para manter a superfície pública sincronizada com o código.

@@ -13,11 +13,11 @@
 ### 1. Implemente o Value Object seguindo o padrão atual
 
 ```ts typescript
-// packages/social/social-care/value-objects/FamilyMemberId.valueObject.ts
+// packages/conecta-raros/social-care/domain/value-objects/FamilyMemberId.valueObject.ts
 import type { DomainError } from "@conecta/domain-error";
 import { err, ok, Result } from "@conecta/result";
 import { Uuid } from "@conecta/uuid";
-import { FMIE } from "../err/FamilyMemberId.error";
+import { FMIE } from "../errors/FamilyMemberId.error";
 
 export class FamilyMemberId {
   private constructor(readonly value: string) {

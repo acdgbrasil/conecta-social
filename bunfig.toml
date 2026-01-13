@@ -15,8 +15,8 @@
 "@conecta/adapters/*" = "./packages/shared/adapters/*"
 "@conecta/shared" = "./packages/shared/index.ts"
 "@conecta/shared/*" = "./packages/shared/*"
-"@conecta/social-care" = "./packages/social/social-care/index.ts"
-"@conecta/social-care/*" = "./packages/social/social-care/*"
+"@conecta/social-care" = "./packages/conecta-raros/social-care/index.ts"
+"@conecta/social-care/*" = "./packages/conecta-raros/social-care/*"
 "@conecta/queue-core" = "./packages/queue_manager/queue_core/index.ts"
 "@conecta/queue-core/*" = "./packages/queue_manager/queue_core/*"
 

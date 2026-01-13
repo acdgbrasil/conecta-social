@@ -3,7 +3,7 @@
 Este mapa consolida os limites de domínio descritos na primeira entrevista (`handbook/ domain_questions/first_interview.md`) para orientar novas features no monorepo.
 
 ## Contextos Atuais
-- **Social Care Context (Core Domain)** — `packages/social/social-care/`; concentra entidades e VOs ricos (`Patient`, `RightsViolationReport`, `SocialHealthSummary`) (`handbook/ domain_questions/first_interview.md:15`).
+- **Social Care Context (Core Domain)** — `packages/conecta-raros/social-care/`; concentra entidades e VOs ricos (`Patient`, `RightsViolationReport`, `SocialHealthSummary`) (`handbook/ domain_questions/first_interview.md:15`).
 - **Shared Kernel Context** — `packages/shared/`; provê utilitários genéricos (`Result`, `DomainError`, `Uuid`, `Option`) partilhados pelos demais contextos (`handbook/ domain_questions/first_interview.md:17`).
 
 ## Contextos Emergentes

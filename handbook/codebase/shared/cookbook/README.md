@@ -5,7 +5,7 @@
 Cada receita segue o formato:
 - **Cenário** — problema recorrente observado nos bounded contexts.
 - **Ferramentas** — módulos do shared necessários.
-- **Passo a passo** — código comentado espelhando o que já está em `packages/social/social-care`.
+- **Passo a passo** — código comentado espelhando o que já está em `packages/conecta-raros/social-care/domain`.
 
 ## Como usar
 - Todos os imports apresentados existem hoje no repositório via `tsconfig.json` (ex.: `@conecta/domain-error`, `@conecta/result`, `@conecta/uuid`).
@@ -13,7 +13,7 @@ Cada receita segue o formato:
 - Sempre valide com a suíte de testes do pacote correspondente (`packages/shared/tests/**`) antes de propagar para outros contextos.
 
 ## Receitas disponíveis
-- [Construindo catálogos de erros consistentes](./domain-errors.md) — `makeDomainErrorFactory`, `shortcuts` e `toHttp` exatamente como usados em `packages/social/social-care/err`.
+- [Construindo catálogos de erros consistentes](./domain-errors.md) — `makeDomainErrorFactory`, `shortcuts` e `toHttp` exatamente como usados em `packages/conecta-raros/social-care/domain/errors`.
 - [Higienizando entradas opcionais](./option-sanitizer.md) — conversão segura de payloads externos com `Option`, `guardLet` e value objects reais.
 - [Garantindo invariantes em coleções](./immutable-collections.md) — uso de `ImutableListFactory` e `hasDuplicates` presente no agregado `Patient`.
 - [Orquestrando value objects com Result](./result-workflow.md) — pipelines com `ICDCode`, `Timestamp` e `Diagnosis` utilizando `flatMap`.

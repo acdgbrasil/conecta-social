@@ -17,9 +17,9 @@
 - Toda correção de bug gera um teste de regressão explícito em `tests/regression`.
 
 ## 4. Layout e execução (Bun)
-- Estrutura atual: `packages/shared/tests/{unit,regression}` para o shared kernel e `packages/social/social-care/tests/{unit,regression}` para o core domain.
+- Estrutura atual: `packages/shared/tests/{unit,regression}` para o shared kernel e `packages/conecta-raros/social-care/domain/tests/{unit,regression}` para o core domain.
 - Cada pasta segue o padrão `*.spec.ts` nomeado pelo comportamento; regressões permanecem em `tests/regression` até que o bug seja resolvido.
-- Use `bun test packages/shared/tests` ou `bun test packages/social/social-care/tests` para rodadas completas; `--filter "<pacote|arquivo>"` agiliza ciclos menores.
+- Use `bun test packages/shared/tests` ou `bun test packages/conecta-raros/social-care/domain/tests` para rodadas completas; `--filter "<pacote|arquivo>"` agiliza ciclos menores.
 - Mantenha o `README.md` de cada pasta de testes como fonte rápida de comandos e convenções.
 
 ## 5. Testes = Documentação

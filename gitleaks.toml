@@ -1,7 +1,0 @@
-title = "conecta-social gitleaks"
-
-[allowlist]
-paths = [
-  "coverage/.*",
-  ".tmp/.*"
-]

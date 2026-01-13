@@ -27,8 +27,8 @@ packages/
 ## Padrões de Nome e Caminho
 | Elemento           | Convenção                            | Exemplo                                    |
 | ------------------ | ------------------------------------ | ------------------------------------------ |
-| Pacote             | `packages/<bc>/<nome-contexto>`      | `packages/social/social-care`              |
-| Tests              | `packages/<bc>/<contexto>/tests`     | `packages/social/social-care/tests`        |
+| Pacote             | `packages/<bc>/<nome-contexto>`      | `packages/conecta-raros/social-care`              |
+| Tests              | `packages/<bc>/<contexto>/tests`     | `packages/conecta-raros/social-care/tests`        |
 | Shared Pattern     | `packages/shared/<pattern>-pattern`  | `packages/shared/result-pattern`           |
 | Alias TS           | `@conecta/<contexto>`                | `@conecta/queue-core`                      |
 

@@ -16,8 +16,8 @@
     "paths": {
       "@conecta/shared": ["packages/shared/index.ts"],
       "@conecta/shared/*": ["packages/shared/*"],
-      "@conecta/social-care": ["packages/social/social-care/index.ts"],
-      "@conecta/social-care/*": ["packages/social/social-care/*"],
+      "@conecta/social-care": ["packages/conecta-raros/social-care/index.ts"],
+      "@conecta/social-care/*": ["packages/conecta-raros/social-care/*"],
       "@conecta/result": ["packages/shared/result-pattern/index.ts"],
       "@conecta/result/*": ["packages/shared/result-pattern/*"],
       "@conecta/domain-error": ["packages/shared/erros-pattern/index.ts"],
