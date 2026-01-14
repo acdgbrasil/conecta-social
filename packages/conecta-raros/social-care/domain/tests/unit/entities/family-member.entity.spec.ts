@@ -1,6 +1,12 @@
 // packages/social/social-care/tests/unit/entities/family-member.entity.spec.ts
 import { describe, expect, test } from "bun:test";
-import { FamilyMember, type FamilyMemberProps, FamilyMemberId, PersonId, FM } from "packages/conecta-raros/social-care";
+import {
+  FamilyMember,
+  FamilyMemberId,
+  type FamilyMemberProps,
+  FM,
+  PersonId,
+} from "packages/conecta-raros/social-care";
 
 /**
  * 💡 O que este teste ensina:
@@ -14,19 +20,18 @@ import { FamilyMember, type FamilyMemberProps, FamilyMemberId, PersonId, FM } fr
  * 2. Um 'FamilyMember' deve ter um 'relationship' (parentesco).
  * 3. A entidade é imutável (métodos como 'assignAsPrimaryCaregiver' retornam uma nova cópia).
  */
-describe('FamilyMember.entity', () => {
-
+describe("FamilyMember.entity", () => {
   // Helper para criar props válidas
   const createValidProps = (overrides: Partial<FamilyMemberProps> = {}) => ({
     id: FamilyMemberId.create().unwrap(),
     personId: PersonId.create().unwrap(),
-    relationship: 'FATHER_MOTHER',
+    relationship: "FATHER_MOTHER",
     isPrimaryCaregiver: false,
     residesWithPatient: true,
     ...overrides,
   });
 
-  test('deve criar um FamilyMember válido com estado inicial correto', () => {
+  test("deve criar um FamilyMember válido com estado inicial correto", () => {
     // Arrange
     const props = createValidProps();
 
@@ -36,16 +41,16 @@ describe('FamilyMember.entity', () => {
     // Assert
     expect(result.isOk).toBe(true);
     const member = result.unwrap();
-    
+
     expect(member.id.equals(props.id)).toBe(true);
     expect(member.personId.equals(props.personId!)).toBe(true);
-    expect(member.relationship).toBe('FATHER_MOTHER');
+    expect(member.relationship).toBe("FATHER_MOTHER");
     expect(member.isPrimaryCaregiver).toBe(false);
     expect(member.residesWithPatient).toBe(true);
     expect(Object.isFrozen(member)).toBe(true);
   });
 
-  test('deve FALHAR ao criar sem um personId (regra FM-001)', () => {
+  test("deve FALHAR ao criar sem um personId (regra FM-001)", () => {
     // Arrange
     const props = createValidProps({ personId: null });
 
@@ -58,9 +63,9 @@ describe('FamilyMember.entity', () => {
     expect(result.unwrapErr().code).toBe(FM.MissingPerson().code); // FM-001
   });
 
-  test('deve FALHAR ao criar com um relationship vazio (regra FM-002)', () => {
+  test("deve FALHAR ao criar com um relationship vazio (regra FM-002)", () => {
     // Arrange
-    const props = createValidProps({ relationship: '   ' }); // String com espaços
+    const props = createValidProps({ relationship: "   " }); // String com espaços
 
     // Act
     const result = FamilyMember.create(props);
@@ -70,10 +75,10 @@ describe('FamilyMember.entity', () => {
     // Valida o código de erro específico
     expect(result.unwrapErr().code).toBe(FM.InvalidRelationship().code); // FM-002
   });
-  
-  test('deve remover espaços em branco do relationship na criação', () => {
+
+  test("deve remover espaços em branco do relationship na criação", () => {
     // Arrange
-    const props = createValidProps({ relationship: '  CHILD  ' });
+    const props = createValidProps({ relationship: "  CHILD  " });
 
     // Act
     const result = FamilyMember.create(props);
@@ -81,14 +86,15 @@ describe('FamilyMember.entity', () => {
     // Assert
     expect(result.isOk).toBe(true);
     // Garante que o 'trim()' foi aplicado
-    expect(result.unwrap().relationship).toBe('CHILD'); 
+    expect(result.unwrap().relationship).toBe("CHILD");
   });
 
-  describe('Gerenciamento de Estado (Imutabilidade)', () => {
-
-    test('deve retornar uma nova instância ao ser designado como cuidador principal', () => {
+  describe("Gerenciamento de Estado (Imutabilidade)", () => {
+    test("deve retornar uma nova instância ao ser designado como cuidador principal", () => {
       // Arrange
-      const initialMember = FamilyMember.create(createValidProps({ isPrimaryCaregiver: false })).unwrap();
+      const initialMember = FamilyMember.create(
+        createValidProps({ isPrimaryCaregiver: false }),
+      ).unwrap();
 
       // Act
       const updatedMember = initialMember.assignAsPrimaryCaregiver();
@@ -99,13 +105,15 @@ describe('FamilyMember.entity', () => {
       expect(updatedMember).not.toBe(initialMember); // Deve ser uma nova instância
     });
 
-    test('deve retornar a SI MESMO (idempotência) se já for o cuidador principal', () => {
+    test("deve retornar a SI MESMO (idempotência) se já for o cuidador principal", () => {
       // Arrange
-      const initialMember = FamilyMember.create(createValidProps({ isPrimaryCaregiver: true })).unwrap();
+      const initialMember = FamilyMember.create(
+        createValidProps({ isPrimaryCaregiver: true }),
+      ).unwrap();
 
       // Act
       // O método deve ser idempotente
-      const updatedMember = initialMember.assignAsPrimaryCaregiver(); 
+      const updatedMember = initialMember.assignAsPrimaryCaregiver();
 
       // Assert
       expect(updatedMember.isPrimaryCaregiver).toBe(true);
@@ -115,9 +123,8 @@ describe('FamilyMember.entity', () => {
     // (Você deve adicionar um teste similar para 'revokePrimaryCaregiver' quando o criar)
   });
 
-  describe('Identidade da Entidade', () => {
-    
-    test('deve considerar duas instâncias iguais se seus IDs forem os mesmos (equals)', () => {
+  describe("Identidade da Entidade", () => {
+    test("deve considerar duas instâncias iguais se seus IDs forem os mesmos (equals)", () => {
       /**
        * 💡 O que este teste ensina:
        * A definição de uma Entidade (vs. Value Object) é que ela tem uma
@@ -126,10 +133,12 @@ describe('FamilyMember.entity', () => {
        * o *mesmo papel* (mesmo 'id'), mesmo que seus atributos
        * (como 'isPrimaryCaregiver') sejam diferentes.
        */
-       
+
       // Arrange
       const id = FamilyMemberId.create().unwrap();
-      const member1 = FamilyMember.create(createValidProps({ id, isPrimaryCaregiver: false })).unwrap();
+      const member1 = FamilyMember.create(
+        createValidProps({ id, isPrimaryCaregiver: false }),
+      ).unwrap();
       const member2 = member1.assignAsPrimaryCaregiver(); // Mesmo ID, estado diferente
 
       // Act & Assert

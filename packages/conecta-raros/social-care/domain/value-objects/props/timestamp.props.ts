@@ -1,3 +1,3 @@
 export type TimestampProps = {
-    value: Date;
+  value: Date;
 };

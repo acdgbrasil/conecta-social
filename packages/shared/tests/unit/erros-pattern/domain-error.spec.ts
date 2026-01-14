@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import {
   DomainErrorFactory,
-  SpecificDomainError,
-  makeDomainErrorFactory,
   ErrorTaxonomy,
+  makeDomainErrorFactory,
   ObservabilitySeverity,
+  SpecificDomainError,
   shortcuts,
 } from "@conecta/domain-error";
 
@@ -16,10 +16,7 @@ describe("DomainErrorFactory", () => {
     module: "users/profile",
     codePrefix: "USR",
     specs: {
-      USER_NOT_FOUND: [
-        "001",
-        (ctx) => `Usuário ${ctx.userId} não encontrado`,
-      ],
+      USER_NOT_FOUND: ["001", (ctx) => `Usuário ${ctx.userId} não encontrado`],
     },
   });
 
@@ -53,11 +50,17 @@ describe("DomainErrorFactory", () => {
 describe("shortcuts", () => {
   test("gera helpers que propagam contexto e causa corretamente", () => {
     const helperImpl = {
-      MissingField: (ctx?: Record<string, unknown>, extra?: { cause?: unknown }) => ({
+      MissingField: (
+        ctx?: Record<string, unknown>,
+        extra?: { cause?: unknown },
+      ) => ({
         ctx,
         cause: extra?.cause,
       }),
-      InvalidFormat: (ctx?: Record<string, unknown>, extra?: { cause?: unknown }) => ({
+      InvalidFormat: (
+        ctx?: Record<string, unknown>,
+        extra?: { cause?: unknown },
+      ) => ({
         ctx,
         cause: extra?.cause,
       }),
@@ -121,7 +124,9 @@ describe("makeDomainErrorFactory", () => {
       paymentId: "pay-001",
       secret: "***",
     });
-    expect(error.observability.category).toBe(ErrorTaxonomy.DataConsistencyIncident);
+    expect(error.observability.category).toBe(
+      ErrorTaxonomy.DataConsistencyIncident,
+    );
     expect(error.observability.severity).toBe(ObservabilitySeverity.Warning);
     expect(error.observability.tags.feature).toBe("payments");
 

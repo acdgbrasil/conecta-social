@@ -3,9 +3,10 @@ import {
   makeDomainErrorFactory,
   ObservabilitySeverity,
 } from "@conecta/domain-error";
-import { Template } from "@conecta/domain-error/DomainError.factory";
+import type { Template } from "@conecta/domain-error/DomainError.factory";
 
-const ICD_PATTERN_WITH_OPTIONAL_DOT = "^[A-TV-Z]\\d{2}(?:\\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$";
+const ICD_PATTERN_WITH_OPTIONAL_DOT =
+  "^[A-TV-Z]\\d{2}(?:\\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$";
 const ICD_PATTERN_WITH_DOT = "^[A-TV-Z]\\d{2}\\.[A-Z0-9]{1,4}$";
 
 type ICDCodeErrorKind =
@@ -14,14 +15,16 @@ type ICDCodeErrorKind =
   | "RETIRED_CID_CODE"
   | "ICD_CONTEXT_CONFLICT";
 
-const template = (literal: string): Template => (ctx) =>
-  literal.replace(/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, (_, key) => {
-    const value = ctx[key];
-    if (value === null || value === undefined) {
-      return "∅";
-    }
-    return String(value);
-  });
+const template =
+  (literal: string): Template =>
+  (ctx) =>
+    literal.replace(/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, (_, key) => {
+      const value = ctx[key];
+      if (value === null || value === undefined) {
+        return "∅";
+      }
+      return String(value);
+    });
 
 const ICDCodeErrorCatalog = {
   INVALID_CID_NUMBER: {
@@ -111,42 +114,23 @@ const invalidCidNumber = (
     { cause },
   );
 
-
 /**
  * Indica que nenhum CID foi informado em um campo obrigatório.
  */
 const emptyCidCode = (field = "icdCode", cause?: unknown) =>
-  factory.EMPTY_CID_CODE(
-    { field },
-    { cause },
-  );
+  factory.EMPTY_CID_CODE({ field }, { cause });
 
 /**
  * Sinaliza que um CID foi aposentado e não deve mais ser utilizado.
  */
-const retiredCidCode = (
-  code: string,
-  retiredAt: string,
-  cause?: unknown,
-) =>
-  factory.RETIRED_CID_CODE(
-    { code, retiredAt },
-    { cause },
-  );
-
+const retiredCidCode = (code: string, retiredAt: string, cause?: unknown) =>
+  factory.RETIRED_CID_CODE({ code, retiredAt }, { cause });
 
 /**
  * Erro disparado quando um CID não é aplicável para um determinado contexto clínico.
  */
-const contextConflict = (
-  code: string,
-  context: string,
-  cause?: unknown,
-) =>
-  factory.ICD_CONTEXT_CONFLICT(
-    { code, context },
-    { cause },
-  );
+const contextConflict = (code: string, context: string, cause?: unknown) =>
+  factory.ICD_CONTEXT_CONFLICT({ code, context }, { cause });
 
 /**
  * Coleção de helpers nomeados para construir erros de domínio relacionados a CID

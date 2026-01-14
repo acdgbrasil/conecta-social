@@ -46,4 +46,3 @@ export const None = <T = unknown>(): Option<T> =>
     unwrapOr: (fallback) => fallback,
     map: () => None(),
   });
-

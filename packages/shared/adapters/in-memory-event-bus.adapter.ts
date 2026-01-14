@@ -1,4 +1,4 @@
-import { EventBusProtocol, DomainEvent } from "@conecta/protocols";
+import type { DomainEvent, EventBusProtocol } from "@conecta/protocols";
 import { ok } from "@conecta/result";
 
 /**

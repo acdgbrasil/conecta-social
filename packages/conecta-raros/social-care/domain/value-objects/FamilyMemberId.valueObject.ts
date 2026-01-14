@@ -1,9 +1,9 @@
-import { DomainError } from "@conecta/domain-error";
-import { FMIE } from "../errors/FamilyMemberId.error";
-import { err, ok, Result } from "@conecta/result";
-import { Uuid } from "@conecta/uuid";
-import { IdProviderProtocol } from "@conecta/protocols";
 import { uuidV7Provider } from "@conecta/adapters";
+import type { DomainError } from "@conecta/domain-error";
+import type { IdProviderProtocol } from "@conecta/protocols";
+import { err, ok, type Result } from "@conecta/result";
+import { Uuid } from "@conecta/uuid";
+import { FMIE } from "../errors/FamilyMemberId.error";
 
 /**
  * Representa o identificador único de um membro da família.
@@ -49,12 +49,14 @@ export class FamilyMemberId {
 
   /**
    * Retorna uma nova instância com o valor atualizado.
-   * 
+   *
    * Se nenhum `value` for informado, retorna a própria instância.
    *
    * @param props Objeto contendo o novo valor opcional.
    */
-  copyWith(props: Partial<{ value: string }>): Result<FamilyMemberId, DomainError> {
+  copyWith(
+    props: Partial<{ value: string }>,
+  ): Result<FamilyMemberId, DomainError> {
     if (props.value === undefined) {
       return ok(this);
     }

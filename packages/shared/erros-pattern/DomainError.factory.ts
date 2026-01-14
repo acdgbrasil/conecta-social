@@ -1,4 +1,4 @@
-import { SpecificDomainError } from './DomainError';
+import { SpecificDomainError } from "./DomainError";
 
 /**
  * Define a assinatura para uma função que gera uma string de template.
@@ -9,28 +9,28 @@ export type Template = (ctx: Record<string, unknown>) => string;
 
 // Helper para formatar datas no padrão brasileiro para o timezone de Fortaleza (UTC-3).
 // Usar a API Intl é uma boa prática para evitar erros de fuso horário e formatação.
-const formatadorDataBr = new Intl.DateTimeFormat('pt-BR', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
+const formatadorDataBr = new Intl.DateTimeFormat("pt-BR", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
   hour12: false,
-  timeZone: 'America/Fortaleza',
+  timeZone: "America/Fortaleza",
 });
 
 function formatarDataParaId(date: Date): string {
   const parts = formatadorDataBr.formatToParts(date);
   const find = (type: Intl.DateTimeFormatPartTypes) =>
-    parts.find((p) => p.type === type)?.value ?? '';
+    parts.find((p) => p.type === type)?.value ?? "";
 
-  const day = find('day');
-  const month = find('month');
-  const year = find('year');
-  const hour = find('hour');
-  const minute = find('minute');
-  const second = find('second');
+  const day = find("day");
+  const month = find("month");
+  const year = find("year");
+  const hour = find("hour");
+  const minute = find("minute");
+  const second = find("second");
 
   return `${day}/${month}/${year}:${hour}:${minute}:${second}`;
 }
@@ -92,15 +92,23 @@ export class DomainErrorFactory<K extends string> {
 
     const spec = this.specs[kind];
     if (!spec) {
-        throw new Error(`Especificação de erro não encontrada para o tipo: ${kind}`);
+      throw new Error(
+        `Especificação de erro não encontrada para o tipo: ${kind}`,
+      );
     }
     const [shortCode, templateFn] = spec;
 
     const code = `${this.codePrefix}-${shortCode}`;
 
-    const safe = (v: unknown): string => (v === null || v === undefined ? '∅' : String(v));
-    const render = (template: string, context: Record<string, unknown>): string =>
-      template.replace(/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, (_, key) => safe(context[key]));
+    const safe = (v: unknown): string =>
+      v === null || v === undefined ? "∅" : String(v);
+    const render = (
+      template: string,
+      context: Record<string, unknown>,
+    ): string =>
+      template.replace(/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, (_, key) =>
+        safe(context[key]),
+      );
 
     const message = render(templateFn(ctx), ctx);
     const id = generateDescriptiveId({
@@ -112,8 +120,8 @@ export class DomainErrorFactory<K extends string> {
 
     const enrichedCtx = {
       ...ctx,
-      tz: 'America/Fortaleza',
-      tz_offset: '-03:00',
+      tz: "America/Fortaleza",
+      tz_offset: "-03:00",
       generated_at_br: formatarDataParaId(now),
     };
 

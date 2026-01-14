@@ -8,7 +8,7 @@ export type ApplicationErrorKind =
   | "UseCaseNotImplemented"
   | "RepositoryNotAvailable"
   | "PersonIdAlreadyExists"
-  | "FailToCastDignosisList"
+  | "FailToCastDignosisList";
 
 export const ApplicationError = makeDomainErrorFactory<ApplicationErrorKind>({
   bc: "SOCIAL",

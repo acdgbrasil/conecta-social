@@ -38,7 +38,7 @@ describe("FamilyMemberId.valueObject (RED tests)", () => {
   test("falha ao usar copyWith com formato de UUID inválido", () => {
     // Primeiro, crie um válido
     const validId = FamilyMemberId.create(LOWERCASE_V7).unwrap();
-    
+
     const invalidValue = "id-invalido-no-copy";
     const result = validId.copyWith({ value: invalidValue }); // Tenta copiar com um valor inválido
 
@@ -48,5 +48,4 @@ describe("FamilyMemberId.valueObject (RED tests)", () => {
     // Isso também conta para a cobertura do arquivo de erro
     expect(result.unwrapErr().code).toBe(FMIE.InvalidFormat(invalidValue).code);
   });
-
 });

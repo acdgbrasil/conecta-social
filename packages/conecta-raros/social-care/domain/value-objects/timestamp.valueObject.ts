@@ -1,9 +1,9 @@
-import { DomainError } from "@conecta/domain-error";
-import { err, ok, Result } from "@conecta/result";
-import { ClockProtocol } from "@conecta/protocols";
 import { systemClock } from "@conecta/adapters";
+import type { DomainError } from "@conecta/domain-error";
+import type { ClockProtocol } from "@conecta/protocols";
+import { err, ok, type Result } from "@conecta/result";
 import { TE } from "../errors/Timestamp.error";
-import { TimestampProps } from "./props/timestamp.props";
+import type { TimestampProps } from "./props/timestamp.props";
 
 export class Timestamp {
   private constructor(private readonly value: Date) {
@@ -11,14 +11,18 @@ export class Timestamp {
   }
 
   static create(props: TimestampProps): Result<Timestamp, DomainError> {
-    return this.fromDate(props.value);
+    return Timestamp.fromDate(props.value);
   }
 
-  static now(clock: ClockProtocol = systemClock): Result<Timestamp, DomainError> {
-    return this.fromDate(clock.now());
+  static now(
+    clock: ClockProtocol = systemClock,
+  ): Result<Timestamp, DomainError> {
+    return Timestamp.fromDate(clock.now());
   }
 
-  static createFromISOString(isoString: string): Result<Timestamp, DomainError> {
+  static createFromISOString(
+    isoString: string,
+  ): Result<Timestamp, DomainError> {
     return Timestamp.fromDate(new Date(isoString));
   }
 

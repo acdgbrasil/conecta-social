@@ -30,7 +30,8 @@ export const ReferralErrors = makeDomainErrorFactory<ReferralErrorKind>({
       code: "REF-003",
       http: 409,
       category: ErrorTaxonomy.DomainRuleViolation,
-      template: ({ from, to }) => `Não é permitido mover o encaminhamento de ${from} para ${to}.`,
+      template: ({ from, to }) =>
+        `Não é permitido mover o encaminhamento de ${from} para ${to}.`,
     },
   },
 });

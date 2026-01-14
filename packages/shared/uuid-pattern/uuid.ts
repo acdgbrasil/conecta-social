@@ -21,14 +21,14 @@
  * console.log(`Novo ID v7: ${newId}`);
  * ```
  */
-import { err, ok, Result } from "../result-pattern";
+import { err, ok, type Result } from "../result-pattern";
 
 /** Enum para identificar a versão de um UUID suportado. */
 export enum Version {
-  V1 = 'v1',
-  V3 = 'v3',
-  V4 = 'v4',
-  V7 = 'v7',
+  V1 = "v1",
+  V3 = "v3",
+  V4 = "v4",
+  V7 = "v7",
 }
 
 /** Interface para um gerador de números aleatórios injetável. */
@@ -52,10 +52,14 @@ export class InvalidUuidError extends Error {
  */
 export class Uuid {
   // Expressões Regulares para validação, 'i' para case-insensitivity.
-  private static readonly RE_V1 = /^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  private static readonly RE_V3 = /^[0-9a-f]{8}-[0-9a-f]{4}-3[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  private static readonly RE_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  private static readonly RE_V7 = /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  private static readonly RE_V1 =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  private static readonly RE_V3 =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-3[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  private static readonly RE_V4 =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  private static readonly RE_V7 =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
   readonly value: string;
 
@@ -74,13 +78,13 @@ export class Uuid {
   public static create(): Result<Uuid, InvalidUuidError>;
   public static create(value: string): Result<Uuid, InvalidUuidError>;
   public static create(value?: string): Result<Uuid, InvalidUuidError> {
-    if (typeof value === 'undefined') {
-      if (!this.autoSeq) this.autoSeq = 0;
+    if (typeof value === "undefined") {
+      if (!Uuid.autoSeq) Uuid.autoSeq = 0;
       const { uuid, nextSeq } = Uuid.generateV7({
         rng: Uuid.defaultRng,
-        seq: this.autoSeq,
+        seq: Uuid.autoSeq,
       });
-      this.autoSeq = nextSeq;
+      Uuid.autoSeq = nextSeq;
       return ok(uuid);
     }
     if (!Uuid.isSupported(value)) {
@@ -144,9 +148,11 @@ export class Uuid {
   }
 
   /** Gera um UUID v7 (ordenado por tempo). */
-  public static generateV7(
-    ctx: { unixMillis?: number; rng: Rng; seq?: number }
-  ): { uuid: Uuid; nextSeq: number } {
+  public static generateV7(ctx: {
+    unixMillis?: number;
+    rng: Rng;
+    seq?: number;
+  }): { uuid: Uuid; nextSeq: number } {
     const { unixMillis = Date.now(), rng, seq = 0 } = ctx;
     const currentSeq = seq & 0x0fff;
 
@@ -171,9 +177,9 @@ export class Uuid {
 
   /** Formata um array de 16 bytes em uma string UUID canônica. */
   private static format(bytes: Uint8Array): string {
-    let hex = '';
+    let hex = "";
     for (let i = 0; i < bytes.length; i++) {
-      hex += bytes[i].toString(16).padStart(2, '0');
+      hex += bytes[i].toString(16).padStart(2, "0");
     }
     return (
       `${hex.substring(0, 8)}-` +

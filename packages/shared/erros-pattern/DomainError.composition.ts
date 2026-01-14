@@ -1,7 +1,7 @@
 // shared-kernel (já existe): DomainError + DomainErrorFactory
 // Aqui adicionamos a ideia de catálogo e helpers (composição).
 
-import { SpecificDomainError } from "./DomainError";
+import type { SpecificDomainError } from "./DomainError";
 import { DomainErrorFactory } from "./DomainError.factory";
 
 /**
@@ -28,7 +28,6 @@ export const ErrorTaxonomy = {
   UnexpectedSystemState: "UNEXPECTED_SYSTEM_STATE",
   /** Conflitos detectados, como tentativas de criar recursos duplicados. */
   Conflict: "CONFLICT",
-
 } as const;
 
 /**
@@ -163,7 +162,9 @@ type MakeFactoryOptions<K extends string> = {
 };
 
 const REDACTION_MASK = "***" as const;
-const EMPTY_SAFE_CONTEXT = Object.freeze({}) as Readonly<Record<string, unknown>>;
+const EMPTY_SAFE_CONTEXT = Object.freeze({}) as Readonly<
+  Record<string, unknown>
+>;
 
 /**
  * Resultado da normalização do catálogo, contendo o prefixo inferido e o mapa de specs
@@ -185,7 +186,9 @@ function normalizeCatalog<K extends string>(
 ): NormalizedCatalog<K> {
   const initialPrefix = forcedPrefix ?? null;
 
-  const { codePrefix, specs } = (Object.entries(catalog) as [K, CatalogEntry][]).reduce(
+  const { codePrefix, specs } = (
+    Object.entries(catalog) as [K, CatalogEntry][]
+  ).reduce(
     (state, [kind, entry]) => {
       const existingPrefix = state.codePrefix ?? initialPrefix;
       const nextPrefix =
@@ -410,7 +413,8 @@ function asHttpPayload<K extends string>(
   const status = meta?.http ?? 400;
 
   const safeContext =
-    (error as Partial<ComposedDomainError<K>>).safeContext ?? EMPTY_SAFE_CONTEXT;
+    (error as Partial<ComposedDomainError<K>>).safeContext ??
+    EMPTY_SAFE_CONTEXT;
 
   const observability = resolveObservabilityMetadata({
     catalog,
@@ -444,7 +448,8 @@ function asTelemetry<K extends string>(
   error: SpecificDomainError<K>,
 ): TelemetrySnapshot<K> {
   const safeContext =
-    (error as Partial<ComposedDomainError<K>>).safeContext ?? EMPTY_SAFE_CONTEXT;
+    (error as Partial<ComposedDomainError<K>>).safeContext ??
+    EMPTY_SAFE_CONTEXT;
 
   const observability = resolveObservabilityMetadata({
     catalog,
@@ -477,7 +482,9 @@ function asTelemetry<K extends string>(
  * @template K Identificadores literais das categorias de erro.
  * @returns Um objeto composto pelos metadados fornecidos e helpers para cada entrada do catálogo.
  */
-export function makeDomainErrorFactory<K extends string>(opts: MakeFactoryOptions<K>) {
+export function makeDomainErrorFactory<K extends string>(
+  opts: MakeFactoryOptions<K>,
+) {
   const { bc, module, catalog, redactor, codePrefix } = opts;
   const timestampProvider = opts.now ?? (() => new Date());
 
@@ -491,21 +498,25 @@ export function makeDomainErrorFactory<K extends string>(opts: MakeFactoryOption
   });
 
   const helpersEntries = (Object.entries(catalog) as [K, CatalogEntry][]).map(
-    ([kind, entry]) => [
-      kind,
-      makeKindHelper(kind, entry, {
-        factory,
-        timestampProvider,
-        redactor,
-        bc,
-        module,
-      }),
-    ] as const,
+    ([kind, entry]) =>
+      [
+        kind,
+        makeKindHelper(kind, entry, {
+          factory,
+          timestampProvider,
+          redactor,
+          bc,
+          module,
+        }),
+      ] as const,
   );
 
   const helpers = Object.fromEntries(helpersEntries) as Record<
     K,
-    (ctx?: Record<string, unknown>, extra?: { readonly cause?: unknown }) => ComposedDomainError<K>
+    (
+      ctx?: Record<string, unknown>,
+      extra?: { readonly cause?: unknown },
+    ) => ComposedDomainError<K>
   >;
 
   const toHttp = (error: SpecificDomainError<K>) =>

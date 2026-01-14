@@ -26,7 +26,13 @@ const extraArgs = rest.join(" ");
 await $`bun pm version ${type} ${extraArgs}`.quiet();
 
 console.log("\nPróximos passos:");
-console.log("- Atualize o changelog/report no handbook (handbook/reports/daily ou refactor).");
-console.log("- Gere tag anotada: git tag -a v<nova-versao> -m \"<mensagem>\" && git push --tags");
-console.log("- Verifique pacotes afetados (workspaces) e publique se aplicável.");
+console.log(
+  "- Atualize o changelog/report no handbook (handbook/reports/daily ou refactor).",
+);
+console.log(
+  '- Gere tag anotada: git tag -a v<nova-versao> -m "<mensagem>" && git push --tags',
+);
+console.log(
+  "- Verifique pacotes afetados (workspaces) e publique se aplicável.",
+);
 console.log("- Rode a suíte: bun test");

@@ -1,7 +1,7 @@
-import { FamilyMemberId } from "../FamilyMemberId.valueObject";
+import type { FamilyMemberId } from "../FamilyMemberId.valueObject";
 
 export type SocialBenefitProps = {
-    benefitName: string;
-    amount: number;
-    beneficiaryId: FamilyMemberId;
+  benefitName: string;
+  amount: number;
+  beneficiaryId: FamilyMemberId;
 };

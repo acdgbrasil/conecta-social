@@ -1,15 +1,15 @@
 import { describe, expect, test } from "bun:test";
-import { SHSDE, SocialHealthSummary } from "packages/conecta-raros/social-care";
 import { ImutableListFactory } from "@conecta/fn";
+import { SHSDE, SocialHealthSummary } from "packages/conecta-raros/social-care";
 
 describe("SocialHealthSummary.valueObject", () => {
   test("deve criar com sucesso um resumo mesmo quando não há dependências funcionais registradas", () => {
     // Arrange
     const result = SocialHealthSummary.create({
-        requiresConstantCare: true,
-        hasMobilityImpairment: false,
-        functionalDependencies: ImutableListFactory.empty<string>(),
-        hasRelevantDrugTheapy: true,
+      requiresConstantCare: true,
+      hasMobilityImpairment: false,
+      functionalDependencies: ImutableListFactory.empty<string>(),
+      hasRelevantDrugTheapy: true,
     });
 
     // Assert
@@ -22,12 +22,16 @@ describe("SocialHealthSummary.valueObject", () => {
 
   test("deve criar resumo com dependências únicas, removendo duplicatas", () => {
     // Arrange
-    const dependencies = ImutableListFactory.fromArray(["Alimentação", "Banho", "Alimentação"]);
+    const dependencies = ImutableListFactory.fromArray([
+      "Alimentação",
+      "Banho",
+      "Alimentação",
+    ]);
     const result = SocialHealthSummary.create({
-        requiresConstantCare: true,
-        hasMobilityImpairment: true,
-        functionalDependencies: dependencies,
-        hasRelevantDrugTheapy: false,
+      requiresConstantCare: true,
+      hasMobilityImpairment: true,
+      functionalDependencies: dependencies,
+      hasRelevantDrugTheapy: false,
     });
 
     // Assert
@@ -53,47 +57,52 @@ describe("SocialHealthSummary.valueObject", () => {
   });
 });
 
-
 describe("copyWith", () => {
-    const makeSummary = (deps: string[]) => {
-      return SocialHealthSummary.create({
-        requiresConstantCare: true,
-        hasMobilityImpairment: false,
-        functionalDependencies: ImutableListFactory.fromArray(deps),
-        hasRelevantDrugTheapy: true,
-      }).unwrap();
-    };
+  const makeSummary = (deps: string[]) => {
+    return SocialHealthSummary.create({
+      requiresConstantCare: true,
+      hasMobilityImpairment: false,
+      functionalDependencies: ImutableListFactory.fromArray(deps),
+      hasRelevantDrugTheapy: true,
+    }).unwrap();
+  };
 
-    test("deve revalidar, aplicar trim e deduplicação", () => {
-      const original = makeSummary(["Banho"]);
-      const newDependencies = ImutableListFactory.fromArray([
-        "  Alimentação  ",
-        "Medicação",
-        "Alimentação",
-      ]);
-      
-      const result = original.copyWith({ functionalDependencies: newDependencies });
-      
-      expect(result.isOk).toBe(true);
-      const copied = result.unwrap();
-      
-      expect(copied.functionalDependencies).toEqual(["Alimentação", "Medicação"]);
+  test("deve revalidar, aplicar trim e deduplicação", () => {
+    const original = makeSummary(["Banho"]);
+    const newDependencies = ImutableListFactory.fromArray([
+      "  Alimentação  ",
+      "Medicação",
+      "Alimentação",
+    ]);
+
+    const result = original.copyWith({
+      functionalDependencies: newDependencies,
     });
 
-    test("deve falhar a revalidação se a lista injetada contiver strings vazias", () => {
-      const original = makeSummary(["Banho"]);
-      const invalidDependencies = ImutableListFactory.fromArray([
-        "Alimentação",
-        "   ", // Inválido
-      ]);
-      
-      const result = original.copyWith({ functionalDependencies: invalidDependencies });
-      
-      expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe(SHSDE.FunctionalDependenciesEmpty().code); // "SHS-001"
+    expect(result.isOk).toBe(true);
+    const copied = result.unwrap();
+
+    expect(copied.functionalDependencies).toEqual(["Alimentação", "Medicação"]);
+  });
+
+  test("deve falhar a revalidação se a lista injetada contiver strings vazias", () => {
+    const original = makeSummary(["Banho"]);
+    const invalidDependencies = ImutableListFactory.fromArray([
+      "Alimentação",
+      "   ", // Inválido
+    ]);
+
+    const result = original.copyWith({
+      functionalDependencies: invalidDependencies,
     });
 
-    test("deve falhar quando não remove dependências duplicadas automaticamente", () => {
+    expect(result.isErr).toBe(true);
+    expect(result.unwrapErr().code).toBe(
+      SHSDE.FunctionalDependenciesEmpty().code,
+    ); // "SHS-001"
+  });
+
+  test("deve falhar quando não remove dependências duplicadas automaticamente", () => {
     const duplicatedDependencies = ImutableListFactory.fromArray([
       "Alimentação",
       "Alimentação",
@@ -108,4 +117,4 @@ describe("copyWith", () => {
 
     expect(result.isOk).toBe(true);
   });
-  });
+});

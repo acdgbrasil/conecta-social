@@ -1,18 +1,13 @@
-import { describe, expect, test, beforeEach } from "bun:test";
+import { beforeEach, describe, expect, test } from "bun:test";
+import { inMemoryEventBus } from "@conecta/adapters";
 import { SQL } from "bun";
-import { ok, Result } from "@conecta/result";
-import { DomainError } from "@conecta/domain-error";
 import {
-  RegisterNewPatientInput,
+  type RegisterNewPatientInput,
   RegisterNewPatientUseCase,
 } from "packages/conecta-raros/social-care/application/use-cases/register-patient.use-case";
-import { PatientRepositoryProtocol } from "packages/conecta-raros/social-care/application/protocols/patient.repository.protocol";
-import { inMemoryEventBus } from "@conecta/adapters";
-import { Patient, PersonId, FamilyMember } from "packages/conecta-raros/social-care";
 import { PatientSQLiteRepository } from "packages/conecta-raros/social-care/infrastructure/database/memory/SQLite/patient.sqlite.repository";
 
 // Repositório com implementação real em memória usando Bun.SQL
-
 
 describe("UseCase: RegisterNewPatient (Integration with Bun.SQL)", () => {
   let repo: PatientSQLiteRepository;

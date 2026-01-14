@@ -1,8 +1,8 @@
-import { SocialBenefit } from "./SocialBenefit.valueObject";
-import { Result, err, ok } from "@conecta/result";
-import { DomainError } from "@conecta/domain-error";
-import { SBC } from "packages/conecta-raros/social-care/domain/errors/SocialBenefitsCollection.error";
+import type { DomainError } from "@conecta/domain-error";
 import { ImutableListFactory } from "@conecta/fn";
+import { err, ok, type Result } from "@conecta/result";
+import { SBC } from "packages/conecta-raros/social-care/domain/errors/SocialBenefitsCollection.error";
+import type { SocialBenefit } from "./SocialBenefit.valueObject";
 
 /**
  * Representa uma coleção de benefícios sociais como um Value Object imutável.
@@ -24,12 +24,19 @@ export class SocialBenefitsCollection {
    * @param benefits O array de benefícios.
    * @returns Um `Result` contendo a nova coleção.
    */
-  public static create(benefits: SocialBenefit[]): Result<SocialBenefitsCollection, DomainError> {
-    if (benefits === null || benefits === undefined) return err(SBC.BenefitsArrayNullOrUndefined());
+  public static create(
+    benefits: SocialBenefit[],
+  ): Result<SocialBenefitsCollection, DomainError> {
+    if (benefits === null || benefits === undefined)
+      return err(SBC.BenefitsArrayNullOrUndefined());
     if (benefits.length === 0) return ok(new SocialBenefitsCollection([]));
-    const hasDuplicates = ImutableListFactory.fromArray(benefits).hasDuplicates();
-    const benefitNamesDuplicated = ImutableListFactory.fromArray(benefits.map(b => b.benefitName)).findDuplicates();
-    if (hasDuplicates) return err(SBC.DuplicateBenefitNotAllowed(benefitNamesDuplicated[0]));
+    const hasDuplicates =
+      ImutableListFactory.fromArray(benefits).hasDuplicates();
+    const benefitNamesDuplicated = ImutableListFactory.fromArray(
+      benefits.map((b) => b.benefitName),
+    ).findDuplicates();
+    if (hasDuplicates)
+      return err(SBC.DuplicateBenefitNotAllowed(benefitNamesDuplicated[0]));
     return ok(new SocialBenefitsCollection([...benefits])); // Clona o array para garantir imutabilidade
   }
 
@@ -38,7 +45,9 @@ export class SocialBenefitsCollection {
    * @param props Um objeto contendo a nova lista `items`.
    * @returns Um `Result` com a nova instância de `SocialBenefitsCollection`.
    */
-  public copyWith(props: Partial<{ items: SocialBenefit[] }>): Result<SocialBenefitsCollection, DomainError> {
+  public copyWith(
+    props: Partial<{ items: SocialBenefit[] }>,
+  ): Result<SocialBenefitsCollection, DomainError> {
     return SocialBenefitsCollection.create(props.items ?? [...this.items]);
   }
 

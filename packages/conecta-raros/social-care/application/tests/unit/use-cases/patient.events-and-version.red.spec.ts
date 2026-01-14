@@ -1,19 +1,23 @@
 import { describe, expect, test } from "bun:test";
 import { ImutableListFactory } from "@conecta/fn";
 import {
+  Diagnosis,
   FamilyMember,
   FamilyMemberId,
   ICDCode,
   Patient,
   PersonId,
-  Diagnosis,
   Timestamp,
 } from "packages/conecta-raros/social-care";
 
 const makeDiagnosis = () => {
   const icd = ICDCode.create("A00").unwrap();
-  const today = Timestamp.create({ value: new Date("2024-01-10T00:00:00Z") }).unwrap();
-  const now = Timestamp.create({ value: new Date("2024-01-10T12:00:00Z") }).unwrap();
+  const today = Timestamp.create({
+    value: new Date("2024-01-10T00:00:00Z"),
+  }).unwrap();
+  const now = Timestamp.create({
+    value: new Date("2024-01-10T12:00:00Z"),
+  }).unwrap();
   return Diagnosis.create(
     {
       id: icd,
@@ -48,24 +52,28 @@ describe("Patient — eventos de domínio e versionamento (RED)", () => {
   test("expõe eventos de domínio ao criar e modificar o agregado", () => {
     const patient = makePatient();
 
-    const pullEvents = (patient as any).pullDomainEvents;
+    const pullEvents = patient.pullDomainEvents;
     expect(typeof pullEvents).toBe("function");
 
     const eventsAfterCreate = pullEvents?.() ?? [];
-    expect(eventsAfterCreate.some((evt: any) => evt.name === "PatientCreated")).toBe(true);
+    expect(eventsAfterCreate.some((evt) => evt.name === "PatientCreated")).toBe(
+      true,
+    );
 
     const added = patient.addFamilyMember(makeFamilyMember()).unwrap();
-    const eventsAfterAdd = (added as any).pullDomainEvents?.() ?? [];
-    expect(eventsAfterAdd.some((evt: any) => evt.name === "FamilyMemberAdded")).toBe(true);
+    const eventsAfterAdd = added.pullDomainEvents?.() ?? [];
+    expect(eventsAfterAdd.some((evt) => evt.name === "FamilyMemberAdded")).toBe(
+      true,
+    );
   });
 
   test("mantém campo de versão para optimistic locking e incrementa a cada mudança", () => {
     const patient = makePatient();
-    const initialVersion = (patient as any).version;
+    const initialVersion = patient.version;
     expect(initialVersion).toBe(0);
 
     const updated = patient.addFamilyMember(makeFamilyMember()).unwrap();
-    const nextVersion = (updated as any).version;
+    const nextVersion = updated.version;
     expect(nextVersion).toBe(initialVersion + 1);
   });
 });

@@ -1,5 +1,5 @@
-import { DomainError } from "@conecta/domain-error";
-import { Result } from "@conecta/result";
+import type { DomainError } from "@conecta/domain-error";
+import type { Result } from "@conecta/result";
 
 export type NotifierMessage = {
   channel: "email" | "sms" | "push" | "webhook" | string;

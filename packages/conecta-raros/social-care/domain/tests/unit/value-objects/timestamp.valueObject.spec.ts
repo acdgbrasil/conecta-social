@@ -1,4 +1,4 @@
-import { describe, expect, spyOn, test, } from "bun:test";
+import { describe, expect, spyOn, test } from "bun:test";
 import { TE, Timestamp } from "packages/conecta-raros/social-care";
 
 describe("Timestamp.valueObject (RED tests)", () => {
@@ -30,8 +30,6 @@ describe("Timestamp.valueObject (RED tests)", () => {
 
     expect(result.unwrap().toISOString()).toBe("2024-05-10T03:00:00.000Z");
   });
-
-
 
   test("isAfter retorna true quando a data é posterior", () => {
     const t1 = Timestamp.createFromISOString("2024-01-01T00:00:00Z").unwrap();
@@ -96,7 +94,7 @@ describe("Timestamp.valueObject (RED tests)", () => {
     const timestamp = Timestamp.create({ value: originalDate }).unwrap();
     const clonedDate = timestamp.toDate();
 
-    expect(clonedDate != originalDate).toBe(true);
+    expect(clonedDate !== originalDate).toBe(true);
     expect(clonedDate.getTime()).toBe(timestamp.toDate().getTime());
 
     clonedDate.setFullYear(1999);
@@ -104,7 +102,9 @@ describe("Timestamp.valueObject (RED tests)", () => {
   });
 
   test("copyWith cria uma nova instância com o valor fornecido", () => {
-    const initial = Timestamp.createFromISOString("2024-01-01T00:00:00Z").unwrap();
+    const initial = Timestamp.createFromISOString(
+      "2024-01-01T00:00:00Z",
+    ).unwrap();
     const newDate = new Date("2025-02-02T00:00:00Z");
     const copied = initial.copyWith({ value: newDate }).unwrap();
 
@@ -113,16 +113,19 @@ describe("Timestamp.valueObject (RED tests)", () => {
   });
 
   test("copyWith cria uma cópia exata se nenhum valor for fornecido", () => {
-    const initial = Timestamp.createFromISOString("2024-01-01T00:00:00Z").unwrap();
+    const initial = Timestamp.createFromISOString(
+      "2024-01-01T00:00:00Z",
+    ).unwrap();
     const copied = initial.copyWith({}).unwrap();
 
     expect(copied.equals(initial)).toBe(true);
-    expect(copied != initial).toBe(true);
+    expect(copied !== initial).toBe(true);
   });
 
-
   test("copyWith trunca milissegundos do novo valor", () => {
-    const initial = Timestamp.createFromISOString("2024-01-01T00:00:00Z").unwrap();
+    const initial = Timestamp.createFromISOString(
+      "2024-01-01T00:00:00Z",
+    ).unwrap();
     const newDateWithMs = new Date("2025-02-02T10:20:30.123Z");
     const copiedResult = initial.copyWith({ value: newDateWithMs });
 
@@ -148,8 +151,7 @@ describe("Timestamp.valueObject (RED tests)", () => {
  *
  * Estes testes são projetados para quebrar se essas regras não forem seguidas.
  */
-describe('Timestamp.valueObject', () => {
-
+describe("Timestamp.valueObject", () => {
   // --- Helpers de Teste ---
   const dateA = new Date("2024-01-10T12:00:00Z");
   const dateB_later = new Date("2024-01-11T12:00:00Z");
@@ -163,9 +165,8 @@ describe('Timestamp.valueObject', () => {
    * O uso de 'test.each' (uma boa prática do bun:test)
    * nos permite testar múltiplos casos de falha de forma concisa.
    */
-  describe('1. Criação (Factory) e Validação', () => {
-
-    test('deve criar um Timestamp válido a partir de um objeto Date', () => {
+  describe("1. Criação (Factory) e Validação", () => {
+    test("deve criar um Timestamp válido a partir de um objeto Date", () => {
       // Arrange
       const props = { value: dateA };
 
@@ -178,13 +179,15 @@ describe('Timestamp.valueObject', () => {
 
     // REATORADO: Usando test.each para agrupar casos de falha
     const invalidCases = [
-      { name: "data inválida (NaN)", value: new Date('isto não é uma data') },
+      { name: "data inválida (NaN)", value: new Date("isto não é uma data") },
       { name: "valor null", value: null },
-      { name: "valor undefined", value: undefined }
+      { name: "valor undefined", value: undefined },
     ];
 
     // test.each é a forma idiomática de fazer testes parametrizados
-    test.each(invalidCases)('deve FALHAR ao criar a partir de $name (regra TS-001)', ({ value }) => {
+    test.each(
+      invalidCases,
+    )("deve FALHAR ao criar a partir de $name (regra TS-001)", ({ value }) => {
       // Arrange
       const props = { value: value as any };
 
@@ -195,7 +198,7 @@ describe('Timestamp.valueObject', () => {
       // Sua implementação 'new Date(props.value).toISOString()' lançará uma
       // exceção (RangeError) aqui se não for validada. O teste espera um Result.err.
       expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe(TE.InvalidDate({value: ""}).code); //
+      expect(result.unwrapErr().code).toBe(TE.InvalidDate({ value: "" }).code); //
     });
   });
 
@@ -206,9 +209,8 @@ describe('Timestamp.valueObject', () => {
    * 1. (Teste 1) Criar uma "Cópia Defensiva" no 'create()'.
    * 2. (Teste 2) Retornar uma "Cópia Defensiva" no 'toDate()'.
    */
-  describe('2. Imutabilidade (Cópia Defensiva - [CR-1])', () => {
-
-    test('[CR-1] deve ser imune a mutações no objeto Date original (cópia na criação)', () => {
+  describe("2. Imutabilidade (Cópia Defensiva - [CR-1])", () => {
+    test("[CR-1] deve ser imune a mutações no objeto Date original (cópia na criação)", () => {
       // Arrange
       const originalDate = new Date("2024-01-01T12:00:00Z");
       // O 'create' deve fazer uma cópia defensiva
@@ -224,10 +226,10 @@ describe('Timestamp.valueObject', () => {
       expect(timestamp.getFullYear()).not.toBe(2099);
     });
 
-    test('[CR-1] deve proteger o estado interno contra mutações no objeto Date retornado (cópia na saída)', () => {
+    test("[CR-1] deve proteger o estado interno contra mutações no objeto Date retornado (cópia na saída)", () => {
       // Arrange
       const timestamp = Timestamp.create({ value: dateA }).unwrap();
-      
+
       // Pega o que deveria ser uma CÓPIA do Date interno
       const dateCopia = timestamp.toDate();
 
@@ -248,8 +250,7 @@ describe('Timestamp.valueObject', () => {
    * nos permite validar múltiplos cenários (passado, futuro, presente)
    * para cada método de forma limpa.
    */
-  describe('3. Métodos de Comparação', () => {
-
+  describe("3. Métodos de Comparação", () => {
     // Arrange: Criamos as instâncias uma vez
     const tsA = Timestamp.create({ value: dateA }).unwrap();
     const tsLater = Timestamp.create({ value: dateB_later }).unwrap();
@@ -260,26 +261,58 @@ describe('Timestamp.valueObject', () => {
     test.each(<any[]>[
       { name: "presente vs passado", ts1: tsA, ts2: tsEarlier, expected: true },
       { name: "presente vs futuro", ts1: tsA, ts2: tsLater, expected: false },
-      { name: "presente vs presente", ts1: tsA, ts2: tsA_copy, expected: false },
-    ])('isAfter() deve retornar $expected para $name', ({ ts1, ts2, expected }) => {
+      {
+        name: "presente vs presente",
+        ts1: tsA,
+        ts2: tsA_copy,
+        expected: false,
+      },
+    ])("isAfter() deve retornar $expected para $name", ({
+      ts1,
+      ts2,
+      expected,
+    }) => {
       expect(ts1.isAfter(ts2)).toBe(expected);
     });
-    
+
     // REATORADO: Usando test.each para 'isBefore'
     test.each(<any[]>[
       { name: "presente vs futuro", ts1: tsA, ts2: tsLater, expected: true },
-      { name: "presente vs passado", ts1: tsA, ts2: tsEarlier, expected: false },
-      { name: "presente vs presente", ts1: tsA, ts2: tsA_copy, expected: false },
-    ])('isBefore() deve retornar $expected para $name', ({ ts1, ts2, expected }) => {
+      {
+        name: "presente vs passado",
+        ts1: tsA,
+        ts2: tsEarlier,
+        expected: false,
+      },
+      {
+        name: "presente vs presente",
+        ts1: tsA,
+        ts2: tsA_copy,
+        expected: false,
+      },
+    ])("isBefore() deve retornar $expected para $name", ({
+      ts1,
+      ts2,
+      expected,
+    }) => {
       expect(ts1.isBefore(ts2)).toBe(expected);
     });
 
     // REATORADO: Usando test.each para 'equals'
     test.each(<any[]>[
       { name: "mesma instância", ts1: tsA, ts2: tsA, expected: true },
-      { name: "instâncias diferentes, mesmo valor", ts1: tsA, ts2: tsA_copy, expected: true },
+      {
+        name: "instâncias diferentes, mesmo valor",
+        ts1: tsA,
+        ts2: tsA_copy,
+        expected: true,
+      },
       { name: "valores diferentes", ts1: tsA, ts2: tsLater, expected: false },
-    ])('equals() deve retornar $expected para $name', ({ ts1, ts2, expected }) => {
+    ])("equals() deve retornar $expected para $name", ({
+      ts1,
+      ts2,
+      expected,
+    }) => {
       expect(ts1.equals(ts2)).toBe(expected);
     });
   });
@@ -293,16 +326,15 @@ describe('Timestamp.valueObject', () => {
    * para garantir que a implementação correta (que armazena 'Date')
    * acesse o valor diretamente, sem chamar outros métodos.
    */
-  describe('4. Métodos Getters (Acesso Eficiente)', () => {
-
-    test('deve retornar os valores (getFullYear, toISOString) eficientemente sem chamadas extras', () => {
+  describe("4. Métodos Getters (Acesso Eficiente)", () => {
+    test("deve retornar os valores (getFullYear, toISOString) eficientemente sem chamadas extras", () => {
       // Arrange
       const specificDate = new Date("2025-02-15T10:30:00Z");
       const ts = Timestamp.create({ value: specificDate }).unwrap();
-      
+
       // Criamos espiões
-      const copyWithSpy = spyOn(ts, 'copyWith');
-      const toDateSpy = spyOn(ts, 'toDate');
+      const copyWithSpy = spyOn(ts, "copyWith");
+      const toDateSpy = spyOn(ts, "toDate");
 
       // Act
       const year = ts.getFullYear();
@@ -315,7 +347,7 @@ describe('Timestamp.valueObject', () => {
       expect(iso).toBe("2025-02-15T10:30:00.000Z");
       expect(copyWithSpy).not.toHaveBeenCalled();
       expect(toDateSpy).not.toHaveBeenCalled();
-      
+
       // Limpa os espiões
       copyWithSpy.mockRestore();
       toDateSpy.mockRestore();
@@ -329,12 +361,11 @@ describe('Timestamp.valueObject', () => {
    * de 'string' (pois 'new Date(this.value)' falha se 'this.value'
    * for uma string ISO).
    */
-  describe('5. Imutabilidade (copyWith)', () => {
-
-    test('copyWith() deve criar uma nova instância com o valor alterado', () => {
+  describe("5. Imutabilidade (copyWith)", () => {
+    test("copyWith() deve criar uma nova instância com o valor alterado", () => {
       // Arrange
       const ts1 = Timestamp.create({ value: dateA }).unwrap();
-      
+
       // Act
       const result = ts1.copyWith({ value: dateB_later });
       const ts2 = result.unwrap();
@@ -345,20 +376,19 @@ describe('Timestamp.valueObject', () => {
       expect(ts2.isAfter(ts1)).toBe(true);
     });
 
-    test('copyWith() deve criar uma nova instância com o mesmo valor se chamado vazio', () => {
+    test("copyWith() deve criar uma nova instância com o mesmo valor se chamado vazio", () => {
       // Arrange
       const ts1 = Timestamp.create({ value: dateA }).unwrap();
-      
+
       // Act
       // Sua implementação atual de 'string' FALHARÁ aqui.
-      const result = ts1.copyWith({}); 
+      const result = ts1.copyWith({});
       const ts2 = result.unwrap();
 
       // Assert
       expect(result.isOk).toBe(true);
-      expect(ts1).not.toBe(ts2);       // Ainda deve ser uma nova instância
+      expect(ts1).not.toBe(ts2); // Ainda deve ser uma nova instância
       expect(ts1.equals(ts2)).toBe(true); // Mas com o mesmo valor
     });
   });
 });
-

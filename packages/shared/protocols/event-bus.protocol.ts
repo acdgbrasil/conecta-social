@@ -1,5 +1,5 @@
-import { DomainError } from "@conecta/domain-error";
-import { Result } from "@conecta/result";
+import type { DomainError } from "@conecta/domain-error";
+import type { Result } from "@conecta/result";
 
 export type DomainEvent = {
   name: string;
@@ -13,5 +13,7 @@ export type DomainEvent = {
  * Contrato para publicação de eventos de domínio.
  */
 export type EventBusProtocol = {
-  publish(event: DomainEvent | DomainEvent[]): Promise<Result<void, DomainError>>;
+  publish(
+    event: DomainEvent | DomainEvent[],
+  ): Promise<Result<void, DomainError>>;
 };

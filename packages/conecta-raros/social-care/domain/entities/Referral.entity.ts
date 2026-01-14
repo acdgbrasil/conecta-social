@@ -1,9 +1,9 @@
 import type { DomainError } from "@conecta/domain-error";
-import { err, ok, Result } from "@conecta/result";
+import { err, ok, type Result } from "@conecta/result";
 import type { Uuid } from "@conecta/uuid";
 
 import { RE } from "../errors/Referral.error";
-import { Timestamp } from "../value-objects/timestamp.valueObject";
+import type { Timestamp } from "../value-objects/timestamp.valueObject";
 
 export type ReferralStatus = "PENDING" | "COMPLETED" | "CANCELLED";
 

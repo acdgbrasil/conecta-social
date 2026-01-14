@@ -21,6 +21,5 @@
       "import": "./fn-types.ts",
       "default": "./fn-types.ts"
     }
-
   }
 }

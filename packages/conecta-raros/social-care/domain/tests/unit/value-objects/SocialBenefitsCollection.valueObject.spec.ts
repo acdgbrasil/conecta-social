@@ -1,6 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { FamilyMemberId, SocialBenefit, SocialBenefitsCollection } from "packages/conecta-raros/social-care";
 import { Uuid } from "@conecta/uuid";
+import {
+  FamilyMemberId,
+  SocialBenefit,
+  SocialBenefitsCollection,
+} from "packages/conecta-raros/social-care";
 
 const internId = Uuid.create("01890e18-257b-7b32-b264-93c9d46242ab").unwrap();
 const BENEFICIARY_ID = FamilyMemberId.create(internId.value).unwrap();
@@ -20,7 +24,6 @@ const makeBenefit = (overrides?: Partial<{ name: string; amount: number }>) => {
 };
 
 describe("SocialBenefitsCollection.valueObject (RED tests)", () => {
-  
   test("impede inserir o mesmo benefício duas vezes para o mesmo beneficiário", () => {
     const benefit = makeBenefit();
     const result = SocialBenefitsCollection.create([benefit, benefit]);
@@ -29,9 +32,15 @@ describe("SocialBenefitsCollection.valueObject (RED tests)", () => {
   });
 
   test("expõe o nome correto do benefício duplicado no erro", () => {
-    const uniqueBenefit = makeBenefit({ name: "Auxílio Transporte", amount: 180 });
+    const uniqueBenefit = makeBenefit({
+      name: "Auxílio Transporte",
+      amount: 180,
+    });
     const duplicated = makeBenefit({ name: "Auxílio Energia", amount: 200 });
-    const duplicatedAgain = makeBenefit({ name: "Auxílio Energia", amount: 200 });
+    const duplicatedAgain = makeBenefit({
+      name: "Auxílio Energia",
+      amount: 200,
+    });
 
     const result = SocialBenefitsCollection.create([
       uniqueBenefit,
@@ -58,7 +67,10 @@ describe("SocialBenefitsCollection.valueObject (RED tests)", () => {
     const benefit1 = makeBenefit({ name: "Auxílio Alimentação", amount: 200 });
     const benefit2 = makeBenefit({ name: "Auxílio Transporte", amount: 100 });
 
-    const collectionResult = SocialBenefitsCollection.create([benefit1, benefit2]);
+    const collectionResult = SocialBenefitsCollection.create([
+      benefit1,
+      benefit2,
+    ]);
 
     expect(collectionResult.isOk).toBe(true);
     const collection = collectionResult.unwrap();
@@ -73,7 +85,9 @@ describe("SocialBenefitsCollection.valueObject (RED tests)", () => {
     const collection = collectionResult.unwrap();
 
     const benefit2 = makeBenefit({ name: "Auxílio Educação", amount: 150 });
-    const newCollectionResult = collection.copyWith({ items: [benefit1, benefit2] });
+    const newCollectionResult = collection.copyWith({
+      items: [benefit1, benefit2],
+    });
 
     expect(newCollectionResult.isOk).toBe(true);
     const newCollection = newCollectionResult.unwrap();

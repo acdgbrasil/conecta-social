@@ -17,7 +17,8 @@ export const TimestampErrors = makeDomainErrorFactory<TimestampKind>({
       code: "TS-001",
       http: 422,
       category: ErrorTaxonomy.DomainRuleViolation,
-      template: ({ value }) => `O valor fornecido ('${value}') não é uma data válida.`,
+      template: ({ value }) =>
+        `O valor fornecido ('${value}') não é uma data válida.`,
     },
   },
 });

@@ -4,7 +4,9 @@ import {
   shortcuts,
 } from "@conecta/domain-error";
 
-type CommunitySupportNetworkErrorKind = "FamilyConflictsWhitespace" | "FamilyConflictsTooLong";
+type CommunitySupportNetworkErrorKind =
+  | "FamilyConflictsWhitespace"
+  | "FamilyConflictsTooLong";
 
 export const CommunitySupportNetworkErrors =
   makeDomainErrorFactory<CommunitySupportNetworkErrorKind>({
@@ -25,7 +27,7 @@ export const CommunitySupportNetworkErrors =
         category: ErrorTaxonomy.DomainRuleViolation,
         template: () =>
           "O campo de conflitos familiares não pode ter mais de 300 caracteres.",
-      }
+      },
     },
   });
 

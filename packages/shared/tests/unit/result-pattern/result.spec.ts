@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { ok, err, isOk, isErr } from "@conecta/result";
 import { SpecificDomainError } from "@conecta/domain-error";
+import { err, isErr, isOk, ok } from "@conecta/result";
 
 describe("Result", () => {
   test("ok mantém valor e permite map/flatMap encadeados", () => {

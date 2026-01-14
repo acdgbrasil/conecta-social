@@ -1,4 +1,4 @@
-import { DomainEvent } from "@conecta/shared/protocols/event-bus.protocol";
+import type { DomainEvent } from "@conecta/shared/protocols/event-bus.protocol";
 import { Uuid } from "@conecta/shared/uuid-pattern/uuid";
 
 export const FamilyMemberAddedEvent = (props: {

@@ -75,7 +75,9 @@ describe("Uuid utilities", () => {
       for (let i = 0; i < 6; i++) {
         bytes.push((unixMillis / 2 ** (8 * (5 - i))) & 0xff);
       }
-      const hex = bytes.map((value) => value.toString(16).padStart(2, "0")).join("");
+      const hex = bytes
+        .map((value) => value.toString(16).padStart(2, "0"))
+        .join("");
       return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-`;
     })();
 

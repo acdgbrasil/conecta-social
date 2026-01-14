@@ -1,4 +1,4 @@
-import { NotifierProtocol, NotifierMessage } from "@conecta/protocols";
+import type { NotifierMessage, NotifierProtocol } from "@conecta/protocols";
 import { ok } from "@conecta/result";
 
 /**

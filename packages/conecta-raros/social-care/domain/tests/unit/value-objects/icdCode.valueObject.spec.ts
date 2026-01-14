@@ -59,7 +59,7 @@ describe("ICDCode.valueObject", () => {
     expect(ICDCode.is("invalid")).toBe(false);
   });
 
-    /**
+  /**
    * Justificativa para comentar/remover este teste:
    *
    * Este teste verifica a rejeição de "códigos CID aposentados" a partir de uma lista fixa

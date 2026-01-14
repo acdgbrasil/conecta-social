@@ -1,5 +1,5 @@
-import { guardLet, ifLet, None, Some } from "@conecta/option";
 import { describe, expect, mock, test } from "bun:test";
+import { guardLet, ifLet, None, Some } from "@conecta/option";
 
 describe("guardCause", () => {
   describe("guardLet", () => {

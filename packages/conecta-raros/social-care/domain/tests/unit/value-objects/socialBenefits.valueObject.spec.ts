@@ -1,9 +1,16 @@
 import { describe, expect, test } from "bun:test";
-import { BE, FamilyMemberId, FMIE, SocialBenefit } from "packages/conecta-raros/social-care";
 import { Uuid } from "@conecta/uuid";
+import {
+  FamilyMemberId,
+  FMIE,
+  SocialBenefit,
+} from "packages/conecta-raros/social-care";
 
-const VALID_UUID_RESULT = FamilyMemberId.create("01890e18-257b-7b32-b264-93c9d46242ab");
-if (VALID_UUID_RESULT.isErr) throw new Error("UUID Válido de teste falhou ao criar");
+const VALID_UUID_RESULT = FamilyMemberId.create(
+  "01890e18-257b-7b32-b264-93c9d46242ab",
+);
+if (VALID_UUID_RESULT.isErr)
+  throw new Error("UUID Válido de teste falhou ao criar");
 const VALID_UUID = VALID_UUID_RESULT.unwrap();
 
 const makeSocialBenefit = () =>
@@ -13,10 +20,13 @@ const makeSocialBenefit = () =>
     beneficiaryId: FamilyMemberId.create().unwrap(),
   }).unwrap();
 
-
 describe("SocialBenefit.valueObject", () => {
   test("cria benefício social válido com dados corretos", () => {
-    const result = SocialBenefit.create({ benefitName: "Benefício Família", amount: 250, beneficiaryId: VALID_UUID });
+    const result = SocialBenefit.create({
+      benefitName: "Benefício Família",
+      amount: 250,
+      beneficiaryId: VALID_UUID,
+    });
 
     expect(result.isOk).toBe(true);
     if (!result.isOk) return;
@@ -29,7 +39,11 @@ describe("SocialBenefit.valueObject", () => {
   });
 
   test("retorna erro quando nome está vazio", () => {
-    const result = SocialBenefit.create({ benefitName: " ", amount: 250, beneficiaryId: VALID_UUID });
+    const result = SocialBenefit.create({
+      benefitName: " ",
+      amount: 250,
+      beneficiaryId: VALID_UUID,
+    });
 
     expect(result.isErr).toBe(true);
     if (!result.isErr) return;
@@ -38,7 +52,11 @@ describe("SocialBenefit.valueObject", () => {
   });
 
   test("retorna erro quando valor é menor ou igual a zero", () => {
-    const result = SocialBenefit.create({ benefitName: "Benefício Família", amount: 0, beneficiaryId: VALID_UUID });
+    const result = SocialBenefit.create({
+      benefitName: "Benefício Família",
+      amount: 0,
+      beneficiaryId: VALID_UUID,
+    });
 
     expect(result.isErr).toBe(true);
     if (!result.isErr) return;
@@ -56,7 +74,9 @@ describe("SocialBenefit.valueObject", () => {
   });
 
   test("normaliza nome do benefício removendo espaços excedentes", () => {
-    const beneficiaryId = FamilyMemberId.create("01890e18-257b-7b32-b264-93c9d46242ab").unwrap();
+    const beneficiaryId = FamilyMemberId.create(
+      "01890e18-257b-7b32-b264-93c9d46242ab",
+    ).unwrap();
     const result = SocialBenefit.create({
       benefitName: "   Programa de Renda   ",
       amount: 180,
@@ -70,8 +90,12 @@ describe("SocialBenefit.valueObject", () => {
   });
 
   test("permite alterar o beneficiário via copyWith", () => {
-    const originalBeneficiary = FamilyMemberId.create("01890e18-257b-7b32-b264-93c9d46242ab").unwrap();
-    const updatedBeneficiary = FamilyMemberId.create("01890e18-257b-7b32-b264-93c9d46242ac").unwrap();
+    const originalBeneficiary = FamilyMemberId.create(
+      "01890e18-257b-7b32-b264-93c9d46242ab",
+    ).unwrap();
+    const updatedBeneficiary = FamilyMemberId.create(
+      "01890e18-257b-7b32-b264-93c9d46242ac",
+    ).unwrap();
 
     const benefit = SocialBenefit.create({
       benefitName: "Programa de Renda",
@@ -87,7 +111,6 @@ describe("SocialBenefit.valueObject", () => {
     expect(updated.unwrap().beneficiaryId).toBe(updatedBeneficiary.toString());
   });
 });
-
 
 describe("SocialBenefit.copyWith — regressões", () => {
   test("não lança nem retorna ok quando beneficiaryId novo é inválido", () => {

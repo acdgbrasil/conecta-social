@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { Some, None } from "@conecta/option";
+import { None, Some } from "@conecta/option";
 import { unSafe } from "@conecta/shared/option-pattern/Option";
 
 describe("Option", () => {
@@ -32,41 +32,40 @@ describe("Option", () => {
     expect(none.unwrapOr(7)).toBe(7);
     expect(() => none.unwrap()).toThrowError("Cannot unwrap value from None");
   });
-  
 });
 
 describe("unSafe factory", () => {
-    test("deve retornar Some para valores não nulos e não indefinidos", () => {
-      const values = ["string", 42, { a: 1 }, [], true, false, 0, ""];
-      values.forEach((value) => {
-        const option = unSafe(value);
-        expect(option.isSome).toBe(true);
-        expect(option.unwrap()).toBe(value);
-      });
-    });
-
-    test("deve retornar None para valor nulo", () => {
-      const option = unSafe(null);
-      expect(option.isNone).toBe(true);
-    });
-
-    test("deve retornar None para valor indefinido", () => {
-      const option = unSafe(undefined);
-      expect(option.isNone).toBe(true);
-    });
-
-    test("deve inferir o tipo corretamente e retornar Some", () => {
-      const value = { id: "123" };
+  test("deve retornar Some para valores não nulos e não indefinidos", () => {
+    const values = ["string", 42, { a: 1 }, [], true, false, 0, ""];
+    values.forEach((value) => {
       const option = unSafe(value);
       expect(option.isSome).toBe(true);
-      // O tipo de `v` deve ser inferido como `{ id: string }`
-      const id = option.map((v) => v.id).unwrapOr("");
-      expect(id).toBe("123");
-    });
-
-    test("deve retornar None para um tipo que pode ser nulo", () => {
-      let value: string | null = null;
-      const option = unSafe(value);
-      expect(option.isNone).toBe(true);
+      expect(option.unwrap()).toBe(value);
     });
   });
+
+  test("deve retornar None para valor nulo", () => {
+    const option = unSafe(null);
+    expect(option.isNone).toBe(true);
+  });
+
+  test("deve retornar None para valor indefinido", () => {
+    const option = unSafe(undefined);
+    expect(option.isNone).toBe(true);
+  });
+
+  test("deve inferir o tipo corretamente e retornar Some", () => {
+    const value = { id: "123" };
+    const option = unSafe(value);
+    expect(option.isSome).toBe(true);
+    // O tipo de `v` deve ser inferido como `{ id: string }`
+    const id = option.map((v) => v.id).unwrapOr("");
+    expect(id).toBe("123");
+  });
+
+  test("deve retornar None para um tipo que pode ser nulo", () => {
+    const value: string | null = null;
+    const option = unSafe(value);
+    expect(option.isNone).toBe(true);
+  });
+});

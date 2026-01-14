@@ -1,5 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { CommunitySupportNetwork, CSN } from "packages/conecta-raros/social-care";
+import {
+  CommunitySupportNetwork,
+  CSN,
+} from "packages/conecta-raros/social-care";
 
 describe("CommunitySupportNetwork.valueObject", () => {
   const createValidProps = (overrides = {}) => ({
@@ -16,7 +19,7 @@ describe("CommunitySupportNetwork.valueObject", () => {
   test("deve criar uma rede de apoio com dados válidos", () => {
     // Arrange
     const props = createValidProps();
-    
+
     // Act
     const result = CommunitySupportNetwork.create(props);
 
@@ -64,38 +67,42 @@ describe("CommunitySupportNetwork.valueObject", () => {
   });
 });
 
-
 describe("copyWith", () => {
-    // Helper do seu arquivo de teste
-    const createValidProps = (overrides = {}) => ({
-      hasSupportFromRelatives: true,
-      hasSupportFromNeighbors: false,
-      familyConflicts: "Conflitos sobre finanças.",
-      patientParticipatesInGroups: true,
-      familyParticipatesInGroups: false,
-      patientHasAccessToLeisure: true,
-      facesDiscriminationInCommunity: false,
-      ...overrides,
-    });
-    
-    const makeNetwork = () => CommunitySupportNetwork.create(createValidProps()).unwrap();
-
-    test("deve atualizar parcialmente (ex: familyConflicts) e aplicar trim", () => {
-      const original = makeNetwork();
-      const result = original.copyWith({ familyConflicts: "  Novos conflitos  " });
-
-      expect(result.isOk).toBe(true);
-      const copied = result.unwrap();
-
-      expect(copied.familyConflicts).toBe("Novos conflitos"); // Trim aplicado
-      expect(copied.hasSupportFromRelatives).toBe(original.hasSupportFromRelatives); // Outro campo mantido
-    });
-
-    test("deve falhar a revalidação se o campo for apenas whitespace", () => {
-      const original = makeNetwork();
-      const result = original.copyWith({ familyConflicts: "   " }); // Inválido
-
-      expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe(CSN.FamilyConflictsWhitespace().code); // "CSN-001"
-    });
+  // Helper do seu arquivo de teste
+  const createValidProps = (overrides = {}) => ({
+    hasSupportFromRelatives: true,
+    hasSupportFromNeighbors: false,
+    familyConflicts: "Conflitos sobre finanças.",
+    patientParticipatesInGroups: true,
+    familyParticipatesInGroups: false,
+    patientHasAccessToLeisure: true,
+    facesDiscriminationInCommunity: false,
+    ...overrides,
   });
+
+  const makeNetwork = () =>
+    CommunitySupportNetwork.create(createValidProps()).unwrap();
+
+  test("deve atualizar parcialmente (ex: familyConflicts) e aplicar trim", () => {
+    const original = makeNetwork();
+    const result = original.copyWith({
+      familyConflicts: "  Novos conflitos  ",
+    });
+
+    expect(result.isOk).toBe(true);
+    const copied = result.unwrap();
+
+    expect(copied.familyConflicts).toBe("Novos conflitos"); // Trim aplicado
+    expect(copied.hasSupportFromRelatives).toBe(
+      original.hasSupportFromRelatives,
+    ); // Outro campo mantido
+  });
+
+  test("deve falhar a revalidação se o campo for apenas whitespace", () => {
+    const original = makeNetwork();
+    const result = original.copyWith({ familyConflicts: "   " }); // Inválido
+
+    expect(result.isErr).toBe(true);
+    expect(result.unwrapErr().code).toBe(CSN.FamilyConflictsWhitespace().code); // "CSN-001"
+  });
+});

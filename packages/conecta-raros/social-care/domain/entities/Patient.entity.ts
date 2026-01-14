@@ -1,21 +1,28 @@
+import { systemClock, uuidV7Provider } from "@conecta/adapters";
 import type { DomainError } from "@conecta/domain-error";
-import { err, ok, Result } from "@conecta/result";
 import type { ImutableList } from "@conecta/fn";
 import { ImutableListFactory } from "@conecta/fn";
-import { None, Option, Some } from "@conecta/option";
+import { None, type Option, Some } from "@conecta/option";
+import type {
+  ClockProtocol,
+  DomainEvent,
+  IdProviderProtocol,
+} from "@conecta/protocols";
+import { err, ok, type Result } from "@conecta/result";
 import { Uuid } from "@conecta/uuid";
-import { ClockProtocol, DomainEvent, IdProviderProtocol } from "@conecta/protocols";
-import { systemClock, uuidV7Provider } from "@conecta/adapters";
-
+import {
+  FamilyMemberAddedEvent,
+  PatientCreatedEvent,
+} from "packages/conecta-raros/social-care/domain/events";
 import { P } from "../errors/Patient.error";
+import type { CommunitySupportNetwork } from "../value-objects/communitySupportNetwort.valueObject";
 import type { Diagnosis } from "../value-objects/Diagnosis.valueObject";
 import type { HousingCondition } from "../value-objects/housingCondition.valueObject";
-import type { CommunitySupportNetwork } from "../value-objects/communitySupportNetwort.valueObject";
+import type { PersonId } from "../value-objects/personId.valueObject";
 import type { SocialHealthSummary } from "../value-objects/socialHealthSummary.valueObject";
 import type { SocioEconomicSituation } from "../value-objects/socioEconomicSituation.valueObject";
-import { PersonId } from "../value-objects/personId.valueObject";
 import { Timestamp } from "../value-objects/timestamp.valueObject";
-import { FamilyMember } from "./FamilyMember.entity";
+import type { FamilyMember } from "./FamilyMember.entity";
 import { Referral, type ReferralProps } from "./Referral.entity";
 import {
   RightsViolationReport,
@@ -25,7 +32,6 @@ import {
   SocialCareAppointment,
   type SocialCareAppointmentProps,
 } from "./SocialCareAppointment.entity";
-import { FamilyMemberAddedEvent, PatientCreatedEvent } from "packages/conecta-raros/social-care/domain/events";
 
 type ReferralDraft = Partial<Omit<ReferralProps, "referredPersonId">> &
   Pick<ReferralProps, "referredPersonId">;
@@ -68,21 +74,20 @@ export class Patient {
     private readonly deps: Required<PatientDependencies>,
     private readonly _version: number = 0,
     private readonly _domainEvents: DomainEvent[] = [],
-  ) { }
+  ) {}
 
   static createFromScratch(
     personId: PersonId,
     diagnoses: ImutableList<Diagnosis>,
     deps: PatientDependencies = {},
   ): Result<Patient, DomainError> {
-
     const resolvedDeps = Patient.resolveDeps(deps);
     const patientId = Uuid.create(resolvedDeps.idProvider.generate());
-    if(!personId) return err(P.InitialPersonIdIsRequired());
-    if(!diagnoses) return err(P.InitialDiagnosesCantBeEmpty());
-    if(diagnoses.isEmpty()) return err(P.InitialDiagnosesCantBeEmpty());
-    if(diagnoses.hasDuplicates()) return err(P.InitialDiagnosesCantHaveDuplicates());
-
+    if (!personId) return err(P.InitialPersonIdIsRequired());
+    if (!diagnoses) return err(P.InitialDiagnosesCantBeEmpty());
+    if (diagnoses.isEmpty()) return err(P.InitialDiagnosesCantBeEmpty());
+    if (diagnoses.hasDuplicates())
+      return err(P.InitialDiagnosesCantHaveDuplicates());
 
     const initialProps: PatientProps = {
       personId,
@@ -101,18 +106,25 @@ export class Patient {
         patientId: patientId.unwrap().toString(),
         personId: personId.toString(),
         occurredAt: resolvedDeps.clock.now(),
-      })
+      }),
     ];
 
-    return ok(new Patient(initialProps, patientId.unwrap(), resolvedDeps, 0, domainEvents));
+    return ok(
+      new Patient(
+        initialProps,
+        patientId.unwrap(),
+        resolvedDeps,
+        0,
+        domainEvents,
+      ),
+    );
   }
 
-  static createFromObject( 
-    id: Uuid, 
+  static createFromObject(
+    id: Uuid,
     props: PatientProps,
     deps: PatientDependencies = {},
   ): Result<Patient, DomainError> {
-    
     if (!id) return err(P.InitialIdIsRequired());
     if (!props.personId) return err(P.InitialPersonIdIsRequired());
 
@@ -167,15 +179,19 @@ export class Patient {
     return this._version;
   }
 
-
-  copyWith(changes: Partial<PatientProps>, version?: number, domainEvents?: DomainEvent[]): Patient {
+  copyWith(
+    changes: Partial<PatientProps>,
+    version?: number,
+    domainEvents?: DomainEvent[],
+  ): Patient {
     const merged: PatientProps = {
       personId: changes.personId ?? this.props.personId,
       diagnoses: changes.diagnoses ?? this.props.diagnoses,
       familyMembers: changes.familyMembers ?? this.props.familyMembers,
       appointments: changes.appointments ?? this.props.appointments,
       referrals: changes.referrals ?? this.props.referrals,
-      violationsReports: changes.violationsReports ?? this.props.violationsReports,
+      violationsReports:
+        changes.violationsReports ?? this.props.violationsReports,
       housingCondition: changes.housingCondition ?? this.props.housingCondition,
       socioeconomicSituation:
         changes.socioeconomicSituation ?? this.props.socioeconomicSituation,
@@ -185,7 +201,13 @@ export class Patient {
         changes.socialHealthSummary ?? this.props.socialHealthSummary,
     };
 
-    return new Patient(merged, this.patientId, this.deps, version ?? this._version,[...this._domainEvents, ...(domainEvents ?? [])]);
+    return new Patient(
+      merged,
+      this.patientId,
+      this.deps,
+      version ?? this._version,
+      [...this._domainEvents, ...(domainEvents ?? [])],
+    );
   }
 
   addFamilyMember(member: FamilyMember): Result<Patient, DomainError> {
@@ -203,9 +225,18 @@ export class Patient {
 
     const updatedMembers = this.familyMembers.add(member);
     const domainEvents: DomainEvent[] = [
-      FamilyMemberAddedEvent({memberId: member.personId.toString(),patientId: this.patientId.toString(),relationship: member.relationship, occurredAt: this.deps.clock.now()})
+      FamilyMemberAddedEvent({
+        memberId: member.personId.toString(),
+        patientId: this.patientId.toString(),
+        relationship: member.relationship,
+        occurredAt: this.deps.clock.now(),
+      }),
     ];
-    return ok(this.copyWith({ familyMembers: updatedMembers },this.version + 1, [...domainEvents]));
+    return ok(
+      this.copyWith({ familyMembers: updatedMembers }, this.version + 1, [
+        ...domainEvents,
+      ]),
+    );
   }
 
   removeFamilyMember(personId: PersonId): Result<Patient, DomainError> {
@@ -310,7 +341,10 @@ export class Patient {
       );
     }
 
-    const reportDateResult = this.ensureTimestamp(draft.reportDate, referenceDate);
+    const reportDateResult = this.ensureTimestamp(
+      draft.reportDate,
+      referenceDate,
+    );
     if (reportDateResult.isErr) {
       return err(reportDateResult.unwrapErr());
     }
@@ -344,9 +378,9 @@ export class Patient {
       return err(violationResult.unwrapErr());
     }
 
-    const reports = ImutableListFactory.castTolist(
-      this.violationsReports,
-    ).add(violationResult.unwrap());
+    const reports = ImutableListFactory.castTolist(this.violationsReports).add(
+      violationResult.unwrap(),
+    );
     return ok(this.copyWith({ violationsReports: reports }));
   }
 
@@ -387,9 +421,9 @@ export class Patient {
       return err(appointmentResult.unwrapErr());
     }
 
-    const appointments = ImutableListFactory.castTolist(
-      this.appointments,
-    ).add(appointmentResult.unwrap());
+    const appointments = ImutableListFactory.castTolist(this.appointments).add(
+      appointmentResult.unwrap(),
+    );
     return ok(this.copyWith({ appointments }));
   }
 

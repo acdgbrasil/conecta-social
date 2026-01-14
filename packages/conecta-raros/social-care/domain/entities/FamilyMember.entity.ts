@@ -1,9 +1,9 @@
 import type { DomainError } from "@conecta/domain-error";
-import { err, ok, Result } from "@conecta/result";
+import { err, ok, type Result } from "@conecta/result";
 
 import { FM } from "../errors/FamilyMember.error";
-import { FamilyMemberId } from "../value-objects/FamilyMemberId.valueObject";
-import { PersonId } from "../value-objects/personId.valueObject";
+import type { FamilyMemberId } from "../value-objects/FamilyMemberId.valueObject";
+import type { PersonId } from "../value-objects/personId.valueObject";
 
 export type FamilyMemberProps = {
   id: FamilyMemberId;

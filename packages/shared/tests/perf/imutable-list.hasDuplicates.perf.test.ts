@@ -1,4 +1,4 @@
-import { describe, test, expect } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { ImutableListFactory, stableStringify } from "@conecta/fn";
 
 type FixtureKind = "primitive" | "shallow" | "nested";
@@ -101,7 +101,9 @@ describe("Perf — ImutableList.hasDuplicates", () => {
     // A própria asserção é só para garantir que rodou; ajuste thresholds conforme hardware.
     for (const r of results) {
       expect(r.mean).toBeGreaterThanOrEqual(0);
-      expect(r.mean).toBeLessThanOrEqual(thresholdsMs[r.case.split("-")[0] as FixtureKind]);
+      expect(r.mean).toBeLessThanOrEqual(
+        thresholdsMs[r.case.split("-")[0] as FixtureKind],
+      );
     }
 
     // Print resumido para consulta manual (não falha teste).

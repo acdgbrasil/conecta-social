@@ -1,30 +1,29 @@
 // packages/social/social-care/tests/unit/entities/patient.aggregate.spec.ts
-import { describe, expect, test, beforeEach } from "bun:test";
-import {
-  Patient,
-  PersonId,
-  Diagnosis,
-  ICDCode,
-  Timestamp,
-  FamilyMemberId,
-  HousingCondition,
-  SocioEconomicSituation,
-  SocialBenefitsCollection,
-  SocialBenefit,
-  CommunitySupportNetwork,
-  SocialHealthSummary,
-  ViolationType,
-  FamilyMember,
-  type FamilyMemberProps,
-  P,
-  type ReferralStatus,
-  type ReferralProps,
-  type RightsViolationReportProps,
-  type SocialCareAppointmentProps,
-} from "packages/conecta-raros/social-care";
+import { beforeEach, describe, expect, test } from "bun:test";
 import { ImutableListFactory } from "@conecta/fn";
 import { Uuid } from "@conecta/uuid";
-import { None } from "@conecta/option";
+import {
+  CommunitySupportNetwork,
+  Diagnosis,
+  FamilyMember,
+  FamilyMemberId,
+  type FamilyMemberProps,
+  HousingCondition,
+  ICDCode,
+  P,
+  Patient,
+  PersonId,
+  type ReferralProps,
+  type ReferralStatus,
+  type RightsViolationReportProps,
+  SocialBenefit,
+  SocialBenefitsCollection,
+  type SocialCareAppointmentProps,
+  SocialHealthSummary,
+  SocioEconomicSituation,
+  Timestamp,
+  ViolationType,
+} from "packages/conecta-raros/social-care";
 
 // --- Helpers Globais de Teste ---
 
@@ -32,8 +31,8 @@ const NOW = new Date("2024-01-10T12:00:00Z");
 const YESTERDAY = new Date("2024-01-09T12:00:00Z");
 const TWO_DAYS_AGO = new Date("2024-01-08T12:00:00Z");
 
-const COMPLETED_STATUS: ReferralStatus = "COMPLETED";
-const CANCELLED_STATUS: ReferralStatus = "CANCELLED";
+const _COMPLETED_STATUS: ReferralStatus = "COMPLETED";
+const _CANCELLED_STATUS: ReferralStatus = "CANCELLED";
 
 const makeTimestamp = (value: Date) => Timestamp.create({ value }).unwrap();
 
@@ -50,18 +49,16 @@ const makeDiagnosis = () => {
   ).unwrap();
 };
 
-
-
-
-const makeHousingCondition = (overrides: Partial<Parameters<typeof HousingCondition.create>[0]> = {}) => {
-  
+const makeHousingCondition = (
+  overrides: Partial<Parameters<typeof HousingCondition.create>[0]> = {},
+) => {
   // Refletindo o Code Review #2:
   // As props válidas para 'electricityAccess' devem ser de eletricidade.
   // O seu arquivo [social-care/value-objects/props/housingCondition.props.ts]
   // está com valores de ÁGUA (WELL_SPRING, etc.). Este teste falhará
   // na compilação ou na execução se a constante não for corrigida.
   const validElectricityAccess = "METERED_CONNECTION";
-  
+
   return HousingCondition.create({
     housingConditionType: "OWNED",
     wallMaterial: "MASONRY",
@@ -84,10 +81,14 @@ const makeSocialBenefit = (amount: number) =>
     beneficiaryId: FamilyMemberId.create().unwrap(),
   }).unwrap();
 
-const makeSocioEconomicSituation = (overrides: Partial<Parameters<typeof SocioEconomicSituation.create>[0]> = {}) => {
+const _makeSocioEconomicSituation = (
+  overrides: Partial<Parameters<typeof SocioEconomicSituation.create>[0]> = {},
+) => {
   const benefits =
     overrides.socialBenefits ??
-    SocialBenefitsCollection.create(overrides.receivesSocialBenefit ? [makeSocialBenefit(600)] : []).unwrap();
+    SocialBenefitsCollection.create(
+      overrides.receivesSocialBenefit ? [makeSocialBenefit(600)] : [],
+    ).unwrap();
 
   return SocioEconomicSituation.create({
     totalFamilyIncome: overrides.receivesSocialBenefit ? 1200 : 1800,
@@ -100,7 +101,9 @@ const makeSocioEconomicSituation = (overrides: Partial<Parameters<typeof SocioEc
   }).unwrap();
 };
 
-const makeCommunitySupportNetwork = (overrides: Partial<Parameters<typeof CommunitySupportNetwork.create>[0]> = {}) =>
+const _makeCommunitySupportNetwork = (
+  overrides: Partial<Parameters<typeof CommunitySupportNetwork.create>[0]> = {},
+) =>
   CommunitySupportNetwork.create({
     hasSupportFromRelatives: true,
     hasSupportFromNeighbors: true,
@@ -112,7 +115,9 @@ const makeCommunitySupportNetwork = (overrides: Partial<Parameters<typeof Commun
     ...overrides,
   }).unwrap();
 
-const makeSocialHealthSummary = (overrides: Partial<Parameters<typeof SocialHealthSummary.create>[0]> = {}) =>
+const _makeSocialHealthSummary = (
+  overrides: Partial<Parameters<typeof SocialHealthSummary.create>[0]> = {},
+) =>
   SocialHealthSummary.create({
     requiresConstantCare: false,
     hasMobilityImpairment: false,
@@ -140,8 +145,7 @@ const makeReferralDraft = (
   referredPersonId,
   destinationService: overrides.destinationService ?? "CRAS",
   reason:
-    overrides.reason ??
-    "Encaminhamento para acompanhamento multiprofissional.",
+    overrides.reason ?? "Encaminhamento para acompanhamento multiprofissional.",
   status: overrides.status,
 });
 
@@ -177,8 +181,11 @@ const createPatient = () => {
   const id = Uuid.create().unwrap();
   const personId = PersonId.create().unwrap();
   const diagnosis = makeDiagnosis();
-  
-  const result = Patient.createFromScratch(personId, ImutableListFactory.fromArray([diagnosis]));
+
+  const result = Patient.createFromScratch(
+    personId,
+    ImutableListFactory.fromArray([diagnosis]),
+  );
 
   if (!result.isOk) {
     throw new Error(`Falha ao criar patient de teste: ${result.error.message}`);
@@ -195,7 +202,6 @@ const createPatient = () => {
 // --- Início dos Testes ---
 
 describe("Patient.entity", () => {
-  
   /**
    * 💡 O que este teste ensina:
    * Testa a função `Patient.createFromScratch` (Fábrica).
@@ -208,7 +214,9 @@ describe("Patient.entity", () => {
       // Assert
       expect(patient.personId.equals(personId)).toBe(true);
       expect(patient.diagnoses.count()).toBe(1);
-      expect(patient.diagnoses.getAll()[0].description).toBe(diagnosis.description);
+      expect(patient.diagnoses.getAll()[0].description).toBe(
+        diagnosis.description,
+      );
       expect(patient.familyMembers.count()).toBe(0);
       expect(patient.appointments.count()).toBe(0);
       expect(patient.referrals.count()).toBe(0);
@@ -218,14 +226,16 @@ describe("Patient.entity", () => {
 
     test("deve FALHAR ao criar sem um diagnóstico inicial (regra P-001)", () => {
       // Arrange
-      const id = Uuid.create().unwrap();
+      const _id = Uuid.create().unwrap();
       const personId = PersonId.create().unwrap();
       const emptyDiagnoses = ImutableListFactory.empty<Diagnosis>();
       // Act
       const result = Patient.createFromScratch(personId, emptyDiagnoses);
       // Assert
       expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe(P.InitialDiagnosesCantBeEmpty().code); // P-001
+      expect(result.unwrapErr().code).toBe(
+        P.InitialDiagnosesCantBeEmpty().code,
+      ); // P-001
     });
   });
 
@@ -236,7 +246,6 @@ describe("Patient.entity", () => {
    * membros, garantindo suas regras de negócio (invariantes).
    */
   describe("2. Gerenciamento de Membros da Família", () => {
-    
     test("deve adicionar um novo membro da família e manter imutabilidade", () => {
       // Arrange
       const { patient } = createPatient();
@@ -251,22 +260,28 @@ describe("Patient.entity", () => {
       expect(updatedPatient === patient).toBe(false); // Imutabilidade
       expect(patient.familyMembers.count()).toBe(0); // Original inalterado
     });
-    
+
     test("deve FALHAR ao adicionar um membro com um personId duplicado (regra P-004)", () => {
       // Arrange
       const { patient } = createPatient();
       const personId = PersonId.create().unwrap();
-      const memberA = FamilyMember.create(makeFamilyMemberData({ personId })).unwrap();
-      const memberB = FamilyMember.create(makeFamilyMemberData({ personId })).unwrap(); 
+      const memberA = FamilyMember.create(
+        makeFamilyMemberData({ personId }),
+      ).unwrap();
+      const memberB = FamilyMember.create(
+        makeFamilyMemberData({ personId }),
+      ).unwrap();
       const patientWithMember = patient.addFamilyMember(memberA).unwrap();
       // Act
       const result = patientWithMember.addFamilyMember(memberB);
       // Assert
       expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe(P.FamilyMemberAlreadyExists({memberId: ""}).code); // P-004
+      expect(result.unwrapErr().code).toBe(
+        P.FamilyMemberAlreadyExists({ memberId: "" }).code,
+      ); // P-004
       expect(patientWithMember.familyMembers.count()).toBe(1);
     });
-    
+
     test("deve remover um membro da família existente pelo personId", () => {
       // Arrange
       const { patient } = createPatient();
@@ -282,7 +297,7 @@ describe("Patient.entity", () => {
       expect(updatedPatient.familyMembers.count()).toBe(0);
       expect(updatedPatient === patientWithMember).toBe(false); // Imutabilidade
     });
-    
+
     test("deve FALHAR ao tentar remover um membro que não existe (regra P-005)", () => {
       // Arrange
       const { patient } = createPatient();
@@ -291,52 +306,79 @@ describe("Patient.entity", () => {
       const result = patient.removeFamilyMember(missingPersonId);
       // Assert
       expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe(P.FamilyMemberNotFound({personId: ""}).code); // P-005
+      expect(result.unwrapErr().code).toBe(
+        P.FamilyMemberNotFound({ personId: "" }).code,
+      ); // P-005
     });
   });
-  
+
   /**
    * 💡 O que este teste ensina:
    * Testa uma regra de negócio complexa: "Sempre deve haver no máximo um Cuidador Principal".
    * O método `assignPrimaryCaregiver` *impõe* esse estado.
    */
   describe("3. Gerenciamento de Cuidador Principal", () => {
-    
     // (O teste abrangente que criamos na resposta anterior)
     test("deve designar o cuidador principal e garantir que apenas um esteja ativo por vez", () => {
       // --- Arrange ---
       const { patient } = createPatient();
-      const memberA = FamilyMember.create(makeFamilyMemberData({ relationship: "MOTHER" })).unwrap();
-      const memberB = FamilyMember.create(makeFamilyMemberData({ relationship: "FATHER" })).unwrap();
-      const memberC = FamilyMember.create(makeFamilyMemberData({ relationship: "SIBLING" })).unwrap();
+      const memberA = FamilyMember.create(
+        makeFamilyMemberData({ relationship: "MOTHER" }),
+      ).unwrap();
+      const memberB = FamilyMember.create(
+        makeFamilyMemberData({ relationship: "FATHER" }),
+      ).unwrap();
+      const memberC = FamilyMember.create(
+        makeFamilyMemberData({ relationship: "SIBLING" }),
+      ).unwrap();
 
       const patientWithMembers = patient
-        .addFamilyMember(memberA).unwrap()
-        .addFamilyMember(memberB).unwrap()
-        .addFamilyMember(memberC).unwrap();
+        .addFamilyMember(memberA)
+        .unwrap()
+        .addFamilyMember(memberB)
+        .unwrap()
+        .addFamilyMember(memberC)
+        .unwrap();
 
       // --- Act (Caso 1: Designar A) ---
-      const result1 = patientWithMembers.assignPrimaryCaregiver(memberA.personId);
+      const result1 = patientWithMembers.assignPrimaryCaregiver(
+        memberA.personId,
+      );
       // --- Assert (Caso 1) ---
       expect(result1.isOk).toBe(true);
       const patient1 = result1.unwrap();
-      expect(patient1.familyMembers.getAll().find(m => m.id.equals(memberA.id))?.isPrimaryCaregiver).toBe(true);
-      expect(patient1.familyMembers.getAll().find(m => m.id.equals(memberB.id))?.isPrimaryCaregiver).toBe(false);
+      expect(
+        patient1.familyMembers.getAll().find((m) => m.id.equals(memberA.id))
+          ?.isPrimaryCaregiver,
+      ).toBe(true);
+      expect(
+        patient1.familyMembers.getAll().find((m) => m.id.equals(memberB.id))
+          ?.isPrimaryCaregiver,
+      ).toBe(false);
 
       // --- Act (Caso 2: Re-designar para B) ---
       const result2 = patient1.assignPrimaryCaregiver(memberB.personId);
       // --- Assert (Caso 2) ---
       expect(result2.isOk).toBe(true);
       const patient2 = result2.unwrap();
-      expect(patient2.familyMembers.getAll().find(m => m.id.equals(memberA.id))?.isPrimaryCaregiver).toBe(false);
-      expect(patient2.familyMembers.getAll().find(m => m.id.equals(memberB.id))?.isPrimaryCaregiver).toBe(true);
+      expect(
+        patient2.familyMembers.getAll().find((m) => m.id.equals(memberA.id))
+          ?.isPrimaryCaregiver,
+      ).toBe(false);
+      expect(
+        patient2.familyMembers.getAll().find((m) => m.id.equals(memberB.id))
+          ?.isPrimaryCaregiver,
+      ).toBe(true);
 
       // --- Act (Caso 3: Idempotência - Re-designar B novamente) ---
       const result3 = patient2.assignPrimaryCaregiver(memberB.personId);
       // --- Assert (Caso 3) ---
       expect(result3.isOk).toBe(true);
       const patient3 = result3.unwrap();
-      expect(patient3.familyMembers.getAll().find(m => m.id.equals(memberB.id))?.isPrimaryCaregiver).toBe(true);
+      expect(
+        patient3.familyMembers.getAll().find((m) => m.id.equals(memberB.id))
+          ?.isPrimaryCaregiver,
+      ).toBe(true);
     });
 
     test("deve FALHAR ao tentar designar um personId que não é membro (regra P-005)", () => {
@@ -347,7 +389,9 @@ describe("Patient.entity", () => {
       const result = patient.assignPrimaryCaregiver(missingPersonId);
       // --- Assert ---
       expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe(P.FamilyMemberNotFound({personId: ""}).code); // P-005
+      expect(result.unwrapErr().code).toBe(
+        P.FamilyMemberNotFound({ personId: "" }).code,
+      ); // P-005
     });
   });
 
@@ -357,7 +401,6 @@ describe("Patient.entity", () => {
    * suas entidades filhas (Referral, RightsViolationReport).
    */
   describe("4. Proteção da Fronteira do Agregado (Encaminhamentos e Violações)", () => {
-    
     let patient: Patient;
     let personId: PersonId;
     let familyMember: FamilyMember;
@@ -474,7 +517,6 @@ describe("Patient.entity", () => {
    * VOs (HousingCondition, etc.) são "substituídos inteiramente".
    */
   describe("5. Gerenciamento de Avaliações (Value Objects)", () => {
-    
     test("deve substituir VOs e retornar uma nova instância do agregado (imutabilidade)", () => {
       // Arrange
       const { patient } = createPatient();
@@ -484,7 +526,7 @@ describe("Patient.entity", () => {
 
       // Act: Atualiza para o estado "A"
       const patientA = patient.updateHousingCondition(housingA).unwrap();
-      
+
       // Assert: Estado "A" e Imutabilidade
       expect(patientA === patient).toBe(false); // Imutabilidade
       expect(patientA.housingCondition.isSome).toBe(true);
@@ -505,7 +547,6 @@ describe("Patient.entity", () => {
    * que formam um histórico (Appointments).
    */
   describe("6. Gerenciamento de Atendimentos (Append-Only)", () => {
-
     test("deve adicionar um novo atendimento (Appointment) à lista, preservando os existentes", () => {
       // Arrange
       const { patient } = createPatient();
@@ -517,21 +558,26 @@ describe("Patient.entity", () => {
         summary: "Segunda visita",
         actionPlan: "Manter acompanhamento mensal.",
       });
-      
+
       // Act: Adiciona o primeiro
-      const patientWithOne = patient.registerAppointment(firstApptProps, NOW).unwrap();
+      const patientWithOne = patient
+        .registerAppointment(firstApptProps, NOW)
+        .unwrap();
       // Act: Adiciona o segundo
-      const patientWithTwo = patientWithOne.registerAppointment(secondApptProps, NOW).unwrap();
-      
+      const patientWithTwo = patientWithOne
+        .registerAppointment(secondApptProps, NOW)
+        .unwrap();
+
       // Assert: Imutabilidade e Histórico
       expect(patientWithTwo === patientWithOne).toBe(false);
       expect(patientWithTwo.appointments.count()).toBe(2);
-      expect(patientWithTwo.appointments.getAll()[0].summary).toBe("Primeira visita");
-      expect(patientWithTwo.appointments.getAll()[1].summary).toBe("Segunda visita");
+      expect(patientWithTwo.appointments.getAll()[0].summary).toBe(
+        "Primeira visita",
+      );
+      expect(patientWithTwo.appointments.getAll()[1].summary).toBe(
+        "Segunda visita",
+      );
       expect(patientWithOne.appointments.count()).toBe(1); // Original inalterado
     });
   });
-  
-  
-
 });

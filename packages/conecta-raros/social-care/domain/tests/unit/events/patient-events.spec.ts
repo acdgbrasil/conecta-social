@@ -1,5 +1,8 @@
-import { FamilyMemberAddedEvent, PatientCreatedEvent } from "packages/conecta-raros/social-care/domain/events";
 import { describe, expect, test } from "bun:test";
+import {
+  FamilyMemberAddedEvent,
+  PatientCreatedEvent,
+} from "packages/conecta-raros/social-care/domain/events";
 
 // Estes testes garantem que os eventos seguem o contrato do EventBusProtocol
 // e carregam os dados necessários para o downstream (ex: auditoria, projeção).

@@ -22,7 +22,8 @@ export const DiagnosisErrors = makeDomainErrorFactory<DiagnosisKind>({
       code: "DIAG-001",
       http: 422,
       category: ErrorTaxonomy.DomainRuleViolation,
-      template: ({ date, now }) => `Data do diagnóstico (${date}) não pode estar no futuro (agora: ${now}).`,
+      template: ({ date, now }) =>
+        `Data do diagnóstico (${date}) não pode estar no futuro (agora: ${now}).`,
     },
     DateBeforeYearZero: {
       code: "DIAG-002",
@@ -42,7 +43,8 @@ export const DiagnosisErrors = makeDomainErrorFactory<DiagnosisKind>({
       code: "DIAG-004",
       http: 422,
       category: ErrorTaxonomy.DomainRuleViolation,
-      template: ({ id }) => `O código CID '${id}' fornecido para o diagnóstico é inválido.`,
+      template: ({ id }) =>
+        `O código CID '${id}' fornecido para o diagnóstico é inválido.`,
       redact: ["id"],
     },
   },

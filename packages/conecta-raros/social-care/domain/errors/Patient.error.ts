@@ -25,7 +25,8 @@ export const PatientErrors = makeDomainErrorFactory<PatientErrorKind>({
       code: "PAT-001",
       http: 422,
       category: ErrorTaxonomy.DomainRuleViolation,
-      template: () => "Paciente não pode ser criado sem um diagnóstico inicial.",
+      template: () =>
+        "Paciente não pode ser criado sem um diagnóstico inicial.",
     },
     InitialIdIsRequired: {
       code: "PAT-002",

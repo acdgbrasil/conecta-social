@@ -25,7 +25,8 @@ export const RightsViolationReportErrors =
         code: "RVR-002",
         http: 422,
         category: ErrorTaxonomy.DomainRuleViolation,
-        template: () => "A data do incidente não pode ser posterior à data do relato.",
+        template: () =>
+          "A data do incidente não pode ser posterior à data do relato.",
       },
       EmptyDescription: {
         code: "RVR-003",
