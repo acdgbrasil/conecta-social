@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package people.events;
+
+import "common/ids.proto";
+
+message PersonRegistered {
+  string event_id = 1;
+  common.UUID person_id = 2;
+  string tax_id = 3; // CPF
+  string legal_name = 4;
+  int64 occurred_at_unix_ms = 5;
+}
+
+message AccountCreated {
+  string event_id = 1;
+  common.UUID account_id = 2;
+  common.UUID person_id = 3;
+  string login = 4;
+  int64 occurred_at_unix_ms = 5;
+}
+
+message PersonRolePromoted {
+  string event_id = 1;
+  common.UUID person_id = 2;
+  string new_role = 3; // e.g., "PATIENT", "PROFESSIONAL:FISIO"
+  int64 occurred_at_unix_ms = 4;
+}
+
+message DataAccessRequested {
+  string event_id = 1;
+  common.UUID request_id = 2;
+  common.UUID requester_id = 3;
+  common.UUID target_person_id = 4;
+  string context_ref = 5;
+  string justification = 6;
+  int64 occurred_at_unix_ms = 7;
+}
+
+message DataAccessAuthorized {
+  string event_id = 1;
+  common.UUID request_id = 2;
+  common.UUID authorizer_id = 3;
+  int64 duration_in_days = 4;
+  int64 occurred_at_unix_ms = 5;
+}
+
+message AccountBlocked {
+  string event_id = 1;
+  common.UUID account_id = 2;
+  string reason = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message PresenceLogged {
+  string event_id = 1;
+  common.UUID person_id = 2;
+  string device_id = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message ForgetfulnessRequested {
+  string event_id = 1;
+  common.UUID person_id = 2;
+  string reason = 3;
+  int64 occurred_at_unix_ms = 4;
+}

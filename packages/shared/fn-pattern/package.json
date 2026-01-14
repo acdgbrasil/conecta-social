@@ -1,0 +1,25 @@
+{
+  "name": "@conecta/fn",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "import": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./fundaments": {
+      "import": "./fundaments.ts",
+      "default": "./fundaments.ts"
+    },
+    "./imutable-list": {
+      "import": "./imutable-list.ts",
+      "default": "./imutable-list.ts"
+    },
+    "./fn-types": {
+      "import": "./fn-types.ts",
+      "default": "./fn-types.ts"
+    }
+  }
+}

@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package acdg.events;
+
+import "common/ids.proto";
+
+message PatientArrived {
+  string event_id = 1;
+  common.UUID visit_id = 2;
+  common.UUID patient_id = 3;
+  int64 timestamp_unix_ms = 4;
+}
+
+message TriageConcluded {
+  string event_id = 1;
+  common.UUID patient_id = 2;
+  common.UUID person_id = 3;
+  string plan_id = 4;
+  // Repeated fields for lists
+  repeated SpecialtyPlanItem specialties = 5;
+}
+
+message SpecialtyPlanItem {
+  string specialty_id = 1; // e.g. "FISIO"
+  // Could add authorized dates here if needed
+}
+
+message ServiceOrderReady {
+  string event_id = 1;
+  common.UUID order_id = 2;
+  common.UUID visit_id = 3;
+  string specialty_id = 4;
+  int32 priority = 5; // Enum value
+  int64 occurred_at_unix_ms = 6;
+}
+
+message ProfessionalOpenedQueue {
+  string event_id = 1;
+  common.UUID professional_id = 2;
+  string specialty_id = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message ServiceOrderReserved {
+  string event_id = 1;
+  common.UUID order_id = 2;
+  common.UUID professional_id = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message AttendanceStarted {
+  string event_id = 1;
+  common.UUID order_id = 2;
+  common.UUID professional_id = 3;
+  string room_id = 4;
+  int64 occurred_at_unix_ms = 5;
+}
+
+message AttendanceProofAttached {
+  string event_id = 1;
+  common.UUID order_id = 2;
+  string proof_resource_key = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message AttendanceConcluded {
+  string event_id = 1;
+  common.UUID order_id = 2;
+  common.UUID visit_id = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message ServiceOrderEnteredCarryOver {
+  string event_id = 1;
+  common.UUID order_id = 2;
+  common.UUID visit_id = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message CancellationSolicited {
+  string event_id = 1;
+  common.UUID order_id = 2;
+  string reason = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message CancellationApproved {
+  string event_id = 1;
+  common.UUID order_id = 2;
+  string social_justification = 3;
+  int64 occurred_at_unix_ms = 4;
+}
+
+message NoShowRegistered {
+  string event_id = 1;
+  common.UUID order_id = 2;
+  int64 occurred_at_unix_ms = 3;
+}
+
+message DayClosed {
+  string event_id = 1;
+  int64 date_unix_ms = 2;
+  int32 total_visits = 3;
+  int32 carry_over_count = 4;
+}
