@@ -14,7 +14,8 @@ export type PatientErrorKind =
   | "FamilyMemberAlreadyContainsPrimaryCaregiver"
   | "ReferralTargetOutsideBoundary"
   | "ViolationTargetOutsideBoundary"
-  | "InitialDiagnosesCantHaveDuplicates";
+  | "InitialDiagnosesCantHaveDuplicates"
+  | "PatientNotFound";
 
 export const PatientErrors = makeDomainErrorFactory<PatientErrorKind>({
   bc: "SOCIAL",
@@ -89,6 +90,12 @@ export const PatientErrors = makeDomainErrorFactory<PatientErrorKind>({
       template: () =>
         "Paciente não pode ser criado com diagnósticos iniciais duplicados.",
     },
+    PatientNotFound: {
+      code: "PAT-011",
+      http: 404,
+      category: ErrorTaxonomy.DomainRuleViolation,
+      template: ({ id }) => `Paciente com identificador '${id}' não foi encontrado.`,
+    },
   },
 });
 
@@ -103,4 +110,5 @@ export const P = shortcuts(PatientErrors, {
   ReferralTargetOutsideBoundary: ["targetId"] as const,
   ViolationTargetOutsideBoundary: ["targetId"] as const,
   InitialDiagnosesCantHaveDuplicates: [] as const,
+  PatientNotFound: ["id"] as const,
 });

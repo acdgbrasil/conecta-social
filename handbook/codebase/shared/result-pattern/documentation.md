@@ -52,3 +52,6 @@ const created = Timestamp.create({ value: new Date() })
 - Nunca use `unwrap` em produção sem antes garantir o ramo (`isOk` / `isErr`).
 - Em value objects, prefira retornar `Result` para manter as invariantes e permitir composição com `flatMap`.
 - Combine com `Option` quando existir a possibilidade de ausência: `Result<Option<T>, DomainError>`.
+
+## Melhorias Futuras
+- [Proposta: Do Notation (com Generators)](./do-notation-proposal.md) — para evitar o "Unwrap Hell" em fluxos sequenciais extensos.

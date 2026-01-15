@@ -7,7 +7,7 @@ import type { PersonId } from "../value-objects/personId.valueObject";
 
 export type FamilyMemberProps = {
   id: FamilyMemberId;
-  personId: PersonId | null;
+  personId: PersonId;
   relationship: string;
   isPrimaryCaregiver: boolean;
   residesWithPatient: boolean;
@@ -42,7 +42,7 @@ export class FamilyMember {
   }
 
   get personId(): PersonId {
-    return this.props.personId as PersonId;
+    return this.props.personId;
   }
 
   get relationship(): string {
