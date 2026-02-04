@@ -35,7 +35,7 @@ export class FamilyMemberId {
       const fresh = idProvider.generate();
       const uuid = Uuid.create(fresh);
       if (uuid.isErr) return err(FMIE.InvalidFormat(fresh));
-      return ok(new FamilyMemberId(uuid.unwrap().toString()));
+      return ok(new FamilyMemberId(uuid.value.toString()));
     }
 
     const normalized = value.toLowerCase();

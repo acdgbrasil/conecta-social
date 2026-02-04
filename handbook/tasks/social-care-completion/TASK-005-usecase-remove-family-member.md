@@ -1,6 +1,6 @@
 # [TASK-005] UseCase: RemoveFamilyMember
 
-**Status:** [ ] Aberto
+**Status:** [x] Concluído
 **Prioridade:** Baixa
 **Labels:** `feature`, `application`
 
@@ -12,5 +12,5 @@ Permitir a remoção de um membro cadastrado erroneamente ou que saiu do núcleo
 2. Persistir alterações.
 
 ## Critérios de Aceite
-- [ ] Use Case implementado.
-- [ ] Teste de sucesso e erro (membro não encontrado).
+- [x] Use Case implementado.
+- [x] Teste de sucesso e erro (membro não encontrado).

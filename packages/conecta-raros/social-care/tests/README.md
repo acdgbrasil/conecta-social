@@ -14,8 +14,8 @@ Esta pasta concentra a suíte de testes do contexto `social-care`, separada por 
 - Quando um teste representar bug pendente, prefira `test.todo` ou mover para `regression/` com contexto claro.
 
 ### Execução
-- Rodar o contexto completo: `bun test packages/social/social-care/tests`.
+- Rodar o contexto completo: `bun test packages/conecta-raros/social-care/tests`.
 - Apenas VOs: `bun test --filter value-objects`.
-- Apenas regressões: `bun test packages/social/social-care/tests/regression`.
+- Apenas regressões: `bun test packages/conecta-raros/social-care/tests/regression`.
 
 As opções `--filter` e filtros por path vêm da CLI do Bun (`handbook/tooling/bun/Packege_Manager/documentation.md`) e permitem idempotência no monorepo sem depender de ferramentas externas.

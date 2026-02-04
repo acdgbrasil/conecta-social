@@ -18,3 +18,9 @@ Este diretório concentra toda a documentação viva do projeto. A ideia é mant
 - Testes fazem parte da documentação: manter descrições claras (`describe/it`) e, quando necessário, registrar resumos no handbook para orientar futuros colaboradores.
 
 Para qualquer novo documento, escolha a sub-pasta existente que fizer sentido ou crie uma nova mantendo a hierarquia descrita acima. O objetivo é nunca mais se perguntar “onde registrar isso?”.
+
+## Estado Atual (03/02/2026)
+- **Domínio Social Care**: implementado e testado, com pendências pontuais (ver relatório diário).
+- **Aplicação**: use cases existem, mas ainda não implementados.
+- **Infraestrutura**: será reconstruída após estabilização do domínio e casos de uso em memória.
+- **Relatório de referência:** `handbook/reports/daily/daily-report-2026-02-03.md`.

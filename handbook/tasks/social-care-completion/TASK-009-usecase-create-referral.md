@@ -1,6 +1,6 @@
 # [TASK-009] UseCase: CreateReferral (Encaminhamento)
 
-**Status:** [ ] Aberto
+**Status:** [x] Concluído
 **Prioridade:** Alta
 **Labels:** `feature`, `application`
 
@@ -11,6 +11,6 @@ Criar um encaminhamento formal para a rede de serviços (Saúde, Educação, Jur
 - Validar se o `referredPersonId` (quem está sendo encaminhado) é o paciente OU um membro da família. O domínio já valida (`PAT-003`), o Use Case deve capturar esse erro e retornar adequadamente.
 
 ## Critérios de Aceite
-- [ ] Use Case implementado.
-- [ ] Persistência do Referral no agregado.
-- [ ] Evento `ReferralCreated` disparado.
+- [x] Use Case implementado.
+- [x] Persistência do Referral no agregado.
+- [x] Evento `ReferralCreated` disparado.

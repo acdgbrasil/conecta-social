@@ -121,7 +121,7 @@ const _makeSocialHealthSummary = (
   SocialHealthSummary.create({
     requiresConstantCare: false,
     hasMobilityImpairment: false,
-    functionalDependencies: ImutableListFactory.fromArray(["Alimentação"]),
+    functionalDependencies: ["Alimentação"],
     hasRelevantDrugTheapy: true,
     ...overrides,
   }).unwrap();

@@ -44,13 +44,13 @@ export class SocialBenefit {
       : this.beneficiaryId;
     const newBeneficiaryIdResult = FamilyMemberId.create(safeValue);
     if (newBeneficiaryIdResult.isErr)
-      return err(newBeneficiaryIdResult.unwrapErr());
-    const newBeneficiaryId = newBeneficiaryIdResult.unwrap();
+      return err(newBeneficiaryIdResult.error);
+    const newBeneficiaryId = newBeneficiaryIdResult.value;
     const sbResult = SocialBenefit.create({
       benefitName: props.benefitName ?? this.benefitName,
       amount: props.amount ?? this.amount,
       beneficiaryId: newBeneficiaryId,
     });
-    return sbResult.isErr ? err(sbResult.unwrapErr()) : ok(sbResult.unwrap());
+    return sbResult;
   }
 }

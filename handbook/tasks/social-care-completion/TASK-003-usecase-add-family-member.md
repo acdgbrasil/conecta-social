@@ -1,6 +1,6 @@
 # [TASK-003] UseCase: AddFamilyMember
 
-**Status:** [ ] Aberto
+**Status:** [x] Concluído
 **Prioridade:** Alta
 **Labels:** `feature`, `application`
 
@@ -15,7 +15,7 @@ Implementar o Caso de Uso que permite adicionar um membro à família de um paci
 5. Publicar eventos (`FamilyMemberAdded`).
 
 ## Critérios de Aceite
-- [ ] Use Case implementado.
-- [ ] Teste: Sucesso (membro adicionado).
-- [ ] Teste: Erro (membro duplicado `PAT-005`).
-- [ ] Teste: Erro (paciente não encontrado).
+- [x] Use Case implementado.
+- [x] Teste: Sucesso (membro adicionado).
+- [x] Teste: Erro (membro duplicado `PAT-005`).
+- [x] Teste: Erro (paciente não encontrado).

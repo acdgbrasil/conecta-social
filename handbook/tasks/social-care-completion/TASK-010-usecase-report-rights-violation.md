@@ -1,6 +1,6 @@
 # [TASK-010] UseCase: ReportRightsViolation
 
-**Status:** [ ] Aberto
+**Status:** [x] Concluído
 **Prioridade:** Alta
 **Labels:** `feature`, `application`
 
@@ -12,6 +12,6 @@ Registrar suspeita ou confirmação de violação de direitos (negligência, vio
 - Validar consistência temporal (`incidentDate` <= `reportDate`).
 
 ## Critérios de Aceite
-- [ ] Use Case implementado.
-- [ ] Persistência segura.
-- [ ] Evento `RightsViolationReported` disparado.
+- [x] Use Case implementado.
+- [x] Persistência segura.
+- [x] Evento `RightsViolationReported` disparado.

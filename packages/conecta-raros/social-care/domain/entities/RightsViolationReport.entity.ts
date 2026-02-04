@@ -17,6 +17,12 @@ export const ViolationType = {
   OTHER: "OTHER",
 } as const;
 
+
+export type ViolationDraft = Partial<
+  Omit<RightsViolationReportProps, "victimId" | "violationType">
+> &
+  Pick<RightsViolationReportProps, "victimId" | "violationType">;
+
 export type RightsViolationReportProps = {
   id: Uuid;
   reportDate: Timestamp;

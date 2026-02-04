@@ -5,7 +5,13 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
-    ".": "./index.ts",
-    "./uuid": "./uuid.ts"
+    ".": {
+      "import": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./uuid": {
+      "import": "./uuid.ts",
+      "default": "./uuid.ts"
+    }
   }
 }

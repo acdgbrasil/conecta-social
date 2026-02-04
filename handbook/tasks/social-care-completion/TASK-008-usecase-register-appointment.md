@@ -1,6 +1,6 @@
 # [TASK-008] UseCase: RegisterAppointment (Evolução)
 
-**Status:** [ ] Aberto
+**Status:** [x] Concluído
 **Prioridade:** Alta
 **Labels:** `feature`, `application`
 
@@ -15,6 +15,6 @@ Registrar que um atendimento (visita, entrevista, acolhimento) ocorreu. Isso com
 - `professionalId`
 
 ## Critérios de Aceite
-- [ ] Use Case implementado.
-- [ ] Disparo do evento `SocialCareAppointmentRegistered` (se aplicável/definido).
-- [ ] O atendimento deve ser persistido na lista `appointments` do agregado.
+- [x] Use Case implementado.
+- [x] Disparo do evento `SocialCareAppointmentRegistered` (se aplicável/definido).
+- [x] O atendimento deve ser persistido na lista `appointments` do agregado.

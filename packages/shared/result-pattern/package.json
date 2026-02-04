@@ -5,7 +5,13 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
-    ".": "./index.ts",
-    "./Result": "./Result.ts"
+    ".": {
+      "import": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./Result": {
+      "import": "./Result.ts",
+      "default": "./Result.ts"
+    }
   }
 }

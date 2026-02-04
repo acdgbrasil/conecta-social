@@ -1,6 +1,6 @@
 # [TASK-006] UseCase: UpdateHousingCondition
 
-**Status:** [ ] Aberto
+**Status:** [x] Concluído
 **Prioridade:** Média
 **Labels:** `feature`, `application`
 
@@ -13,5 +13,5 @@ Permitir a atualização completa das condições de moradia do paciente.
 - Deve validar regras de domínio (ex: banheiros <= quartos) durante a criação do VO.
 
 ## Critérios de Aceite
-- [ ] Use Case implementado.
-- [ ] Teste de integração com repositório (garantir que o update persistiu).
+- [x] Use Case implementado.
+- [x] Teste de integração com repositório (garantir que o update persistiu).

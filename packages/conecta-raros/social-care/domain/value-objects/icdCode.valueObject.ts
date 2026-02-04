@@ -8,66 +8,66 @@ export class ICDCode {
   private constructor(readonly value: string) {
     Object.freeze(this);
   }
-  private readonly ICD_EITHER_RE =
-    /^[A-TV-Z]\d{2}(?:\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$/i; // This regex is for validation, not for the type
-  private readonly ICD_DOTTED_RE = /^[A-TV-Z]\d{2}\.[A-Z0-9]{1,4}$/i;
-  private readonly ICD_PATTERN_WITH_OPTIONAL_DOT =
-    "^[A-TV-Z]\\d{2}(?:\\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$";
-  private readonly ICD_PATTERN_WITH_DOT = "^[A-TV-Z]\\d{2}\\.[A-Z0-9]{1,4}$";
 
-  /** Normaliza entradas removendo espaços e forçando caixa alta. */
-  private sanitize(input: string): string {
+  // --- MÉTODOS ESTÁTICOS PUROS (Helpers) ---
+
+  /** Normaliza: remove espaços e uppercase. */
+  private static sanitize(input: string): string {
     return input.trim().toUpperCase();
   }
 
-  /** Garante que o código possua ponto entre o prefixo e o sufixo. */
-  private ensureDot(input: string): string {
+  /** Garante o ponto na 3ª casa (Ex: A001 -> A00.1). */
+  private static ensureDot(input: string): string {
     return input.replace(/^([A-TV-Z]\d{2})([A-Z0-9]{1,4})$/, "$1.$2");
   }
 
-  /** Remove o ponto para fins de comparação/armazenamento. */
-  private stripDot(input: string): string {
+  /** Remove o ponto (Ex: A00.1 -> A001). Agora é ESTÁTICO. */
+  private static stripDot(input: string): string {
     return input.replace(".", "");
   }
 
-  private validateByRegex(opts?: { requiredDot?: boolean }) {
-    return (value: string) =>
-      (opts?.requiredDot ? this.ICD_DOTTED_RE : this.ICD_EITHER_RE).test(value);
+  // --- VALIDAÇÃO ---
+
+  // Regex "Either": Aceita COM ou SEM ponto (para validação frouxa inicial)
+  // Inline no método 'is' para segurança máxima em testes.
+  
+  // Regex "Dotted": Exige ponto (para validação estrita)
+  private static readonly ICD_DOTTED_RE = /^[A-TV-Z]\d{2}\.[A-Z0-9]{1,4}$/i;
+
+  private static validateByRegex(opts?: { requiredDot?: boolean }) {
+    return (value: string) => {
+      if (opts?.requiredDot) {
+        return ICDCode.ICD_DOTTED_RE.test(value);
+      }
+      // Regex completa inline para evitar erro de inicialização estática
+      return /^[A-TV-Z]\d{2}(?:\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$/i.test(value);
+    };
   }
 
-  public inferredPattern(requireDot: boolean): string {
+  // --- MÉTODOS PÚBLICOS ESTÁTICOS ---
+
+  public static inferredPattern(requireDot: boolean): string {
     return requireDot
-      ? this.ICD_PATTERN_WITH_DOT
-      : this.ICD_PATTERN_WITH_OPTIONAL_DOT;
+      ? "^[A-TV-Z]\\d{2}\\.[A-Z0-9]{1,4}$"
+      : "^[A-TV-Z]\\d{2}(?:\\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$";
   }
 
-  /** Verifica se uma string já atende ao formato aceito de CID. */
+  /** Verifica se string é CID válido (estático puro). */
   static is(value: string): boolean {
+    // CORREÇÃO: Regex literal inline para garantir que sempre exista
     return /^[A-TV-Z]\d{2}(?:\.[A-Z0-9]{1,4}|[A-Z0-9]{0,4})$/i.test(value);
   }
 
-  /** Remove sinalização de formatação para usar o código como chave normalizada. */
   public static toNormalized(value: ICDCode): string {
-    return value.stripDot(value.value);
+    // CORREÇÃO: Usa o helper estático. Funciona mesmo se 'value' for um mock.
+    return ICDCode.stripDot(value.value);
   }
 
-  /** Ajusta apresentação humana ao inserir ponto e caixa alta. */
   public static toDisplay(value: string): string {
-    return new ICDCode(value).ensureDot(new ICDCode(value).sanitize(value));
+    return ICDCode.ensureDot(ICDCode.sanitize(value));
   }
 
-  /**
-   * Cria um código CID validado a partir de uma string bruta.
-   *
-   * @example
-   * ```ts
-   * const result = ICDCodeClass.createFromString("A00");
-   * if (isErr(result)) {
-   *   const telemetry = ICDError.toTelemetry(result.error);
-   *   logger.error(result.error.message, telemetry);
-   * }
-   * ```
-   */
+  /** Factory Method Otimizado */
   static create(
     stringCode: string,
     opts: {
@@ -78,37 +78,27 @@ export class ICDCode {
   ): Result<ICDCode, DomainError> {
     const { requireDot = false, autoDot = true, fieldName = "icdCode" } = opts;
 
-    try {
-      const icdCodeInstance = new ICDCode(stringCode);
+    // 1. Sanitize (Sem instanciar nada)
+    const sanitized = ICDCode.sanitize(stringCode);
 
-      const sanitized = icdCodeInstance.sanitize(stringCode);
+    if (!sanitized.length) return err(ICDError.EmptyCidCode(fieldName));
 
-      if (!sanitized.length) return err(ICDError.EmptyCidCode(fieldName));
+    // 2. Formatação (Pipe funcional)
+    const candidate = pipe(sanitized, (value) =>
+      autoDot ? ICDCode.ensureDot(value) : value,
+    );
 
-      const candidate = pipe(sanitized, (value) =>
-        autoDot ? icdCodeInstance.ensureDot(value) : value,
-      );
-
-      if (
-        !icdCodeInstance.validateByRegex({ requiredDot: requireDot })(candidate)
-      )
-        return err(
-          ICDError.InvalidCidNumber(stringCode, candidate, {
-            requireDot,
-            autoDot,
-          }),
-        );
-
-      return ok(new ICDCode(candidate));
-    } catch (cause) {
+    // 3. Validação
+    if (!ICDCode.validateByRegex({ requiredDot: requireDot })(candidate)) {
       return err(
-        ICDError.InvalidCidNumber(
-          stringCode,
-          new ICDCode(stringCode).sanitize(stringCode),
-          { requireDot, autoDot },
-          cause,
-        ),
+        ICDError.InvalidCidNumber(stringCode, candidate, {
+          requireDot,
+          autoDot,
+        }),
       );
     }
+
+    // 4. Instanciação Única (Sucesso)
+    return ok(new ICDCode(candidate));
   }
 }

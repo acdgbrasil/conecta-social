@@ -65,7 +65,7 @@
   ```
 
 ### CR-04 — `CommunitySupportNetwork.create` aceita `familyConflicts` inválido
-- **Arquivo**: `packages/social/social-care/value-objects/communitySupportNetwort.valueObject.ts:26`
+- **Arquivo**: `packages/social/social-care/value-objects/CommunitySupportNetwork.valueObject.ts:26`
 - **Problema**: Valor `"   "` passa sem limpeza; VO deveria rejeitar whitespace-only e normalizar string.
 - **Impacto**: Persistimos dados inconsistentes, quebrando invariantes documentadas em `handbook/principles/patient-aggregate.md`.
 - **Correção**: aplicar `trim()` com verificação de comprimento, retornando `Result.err` via `CSN.FamilyConflictsWhitespace()`. Exemplo conforme snippet compartilhado no review.

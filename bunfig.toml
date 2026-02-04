@@ -1,25 +1,3 @@
-[alias]
-"@conecta/result" = "./packages/shared/result-pattern/index.ts"
-"@conecta/result/*" = "./packages/shared/result-pattern/*"
-"@conecta/domain-error" = "./packages/shared/erros-pattern/index.ts"
-"@conecta/domain-error/*" = "./packages/shared/erros-pattern/*"
-"@conecta/fn" = "./packages/shared/fn-pattern/index.ts"
-"@conecta/fn/*" = "./packages/shared/fn-pattern/*"
-"@conecta/uuid" = "./packages/shared/uuid-pattern/index.ts"
-"@conecta/uuid/*" = "./packages/shared/uuid-pattern/*"
-"@conecta/option" = "./packages/shared/option-pattern/index.ts"
-"@conecta/option/*" = "./packages/shared/option-pattern/*"
-"@conecta/protocols" = "./packages/shared/protocols/index.ts"
-"@conecta/protocols/*" = "./packages/shared/protocols/*"
-"@conecta/adapters" = "./packages/shared/adapters/index.ts"
-"@conecta/adapters/*" = "./packages/shared/adapters/*"
-"@conecta/shared" = "./packages/shared/index.ts"
-"@conecta/shared/*" = "./packages/shared/*"
-"@conecta/social-care" = "./packages/conecta-raros/social-care/index.ts"
-"@conecta/social-care/*" = "./packages/conecta-raros/social-care/*"
-"@conecta/queue-core" = "./packages/queue_manager/queue_core/index.ts"
-"@conecta/queue-core/*" = "./packages/queue_manager/queue_core/*"
-
 [test]
 coverage = true
 coverageReporter = ["text", "lcov"]

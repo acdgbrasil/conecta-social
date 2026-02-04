@@ -1,8 +1,6 @@
-import type { ImutableList } from "@conecta/fn";
-
 export type SocialHealthSummaryProps = {
   requiresConstantCare: boolean;
   hasMobilityImpairment: boolean;
-  functionalDependencies: ImutableList<string>;
+  functionalDependencies: readonly string[];
   hasRelevantDrugTheapy: boolean;
 };

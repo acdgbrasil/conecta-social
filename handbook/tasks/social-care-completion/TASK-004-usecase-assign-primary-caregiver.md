@@ -1,6 +1,6 @@
 # [TASK-004] UseCase: AssignPrimaryCaregiver
 
-**Status:** [ ] Aberto
+**Status:** [x] Concluído
 **Prioridade:** Média
 **Labels:** `feature`, `application`
 
@@ -14,6 +14,6 @@ Implementar o Caso de Uso para definir/trocar o cuidador principal do paciente. 
 4. Persistir.
 
 ## Critérios de Aceite
-- [ ] Use Case implementado.
-- [ ] Teste: Flag `isPrimaryCaregiver` trocada corretamente entre membros.
-- [ ] Teste: Erro se o membro alvo não existe na família.
+- [x] Use Case implementado.
+- [x] Teste: Flag `isPrimaryCaregiver` trocada corretamente entre membros.
+- [x] Teste: Erro se o membro alvo não existe na família.

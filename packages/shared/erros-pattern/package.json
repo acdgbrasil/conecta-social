@@ -5,10 +5,25 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
-    ".": "./index.ts",
-    "./DomainError": "./DomainError.ts",
-    "./DomainError.factory": "./DomainError.factory.ts",
-    "./DomainError.shortcuts": "./DomainError.shortcuts.ts",
-    "./DomainError.composition": "./DomainError.composition.ts"
+    ".": {
+      "import": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./DomainError": {
+      "import": "./DomainError.ts",
+      "default": "./DomainError.ts"
+    },
+    "./DomainError.factory": {
+      "import": "./DomainError.factory.ts",
+      "default": "./DomainError.factory.ts"
+    },
+    "./DomainError.shortcuts": {
+      "import": "./DomainError.shortcuts.ts",
+      "default": "./DomainError.shortcuts.ts"
+    },
+    "./DomainError.composition": {
+      "import": "./DomainError.composition.ts",
+      "default": "./DomainError.composition.ts"
+    }
   }
 }

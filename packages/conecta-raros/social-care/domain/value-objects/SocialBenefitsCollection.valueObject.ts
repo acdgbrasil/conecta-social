@@ -27,17 +27,20 @@ export class SocialBenefitsCollection {
   public static create(
     benefits: SocialBenefit[],
   ): Result<SocialBenefitsCollection, DomainError> {
-    if (benefits === null || benefits === undefined)
-      return err(SBC.BenefitsArrayNullOrUndefined());
+
+    if (benefits === null || benefits === undefined) return err(SBC.BenefitsArrayNullOrUndefined());
+    
     if (benefits.length === 0) return ok(new SocialBenefitsCollection([]));
-    const hasDuplicates =
-      ImutableListFactory.fromArray(benefits).hasDuplicates();
-    const benefitNamesDuplicated = ImutableListFactory.fromArray(
-      benefits.map((b) => b.benefitName),
-    ).findDuplicates();
-    if (hasDuplicates)
-      return err(SBC.DuplicateBenefitNotAllowed(benefitNamesDuplicated[0]));
-    return ok(new SocialBenefitsCollection([...benefits])); // Clona o array para garantir imutabilidade
+    const seenNames = new Set<string>();
+    
+    for (const benefit of benefits) {
+      if (seenNames.has(benefit.benefitName)) {
+        return err(SBC.DuplicateBenefitNotAllowed(benefit.benefitName));
+      }
+      seenNames.add(benefit.benefitName);
+    }
+
+    return ok(new SocialBenefitsCollection([...benefits]));
   }
 
   /**

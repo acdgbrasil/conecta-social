@@ -20,7 +20,7 @@ export class PersonId {
       const generated = idProvider.generate();
       const candidate = Uuid.create(generated);
       if (candidate.isErr) return err(PID.InvalidFormat(generated));
-      return ok(new PersonId(candidate.unwrap().toString()));
+      return ok(new PersonId(candidate.value.toString()));
     }
     const normalized = value.toLowerCase().trim();
     if (!Uuid.isV7(normalized)) return err(PID.InvalidFormat(normalized));

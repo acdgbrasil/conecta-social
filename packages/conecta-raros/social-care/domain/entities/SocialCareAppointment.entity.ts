@@ -14,6 +14,9 @@ export type SocialCareAppointmentProps = {
   actionPlan: string;
 };
 
+export type AppointmentDraft = Partial<Omit<SocialCareAppointmentProps, "summary">> &
+  Pick<SocialCareAppointmentProps, "summary">;
+
 const SUMMARY_LIMIT = 500;
 const ACTION_PLAN_LIMIT = 2000;
 

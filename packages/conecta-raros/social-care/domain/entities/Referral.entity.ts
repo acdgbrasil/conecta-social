@@ -17,6 +17,9 @@ export type ReferralProps = {
   status?: ReferralStatus;
 };
 
+export type ReferralDraft = Partial<Omit<ReferralProps, "referredPersonId">> &
+  Pick<ReferralProps, "referredPersonId">;
+
 export class Referral {
   private constructor(readonly props: Required<ReferralProps>) {
     Object.freeze(this.props);

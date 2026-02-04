@@ -1,4 +1,4 @@
-export * from "./communitySupportNetwort.valueObject";
+export * from "./communitySupportNetwork.valueObject";
 export * from "./Diagnosis.valueObject";
 export * from "./FamilyMemberId.valueObject";
 export * from "./housingCondition.valueObject";
