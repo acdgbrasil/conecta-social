@@ -18,6 +18,14 @@ import { AddFamilyMemberUseCase } from "@conecta/social-care/application/use-cas
 const NOW = new Date("2025-01-01T12:00:00Z");
 const VALID_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
 
+type MockedFn<T extends (...args: any[]) => any> = ReturnType<typeof mock<T>>;
+type PatientRepositoryMock = {
+  save: MockedFn<PatientRepositoryPort["save"]>;
+  findByPersonId: MockedFn<PatientRepositoryPort["findByPersonId"]>;
+  addFamilyMember: MockedFn<PatientRepositoryPort["addFamilyMember"]>;
+  existsByPersonId: MockedFn<PatientRepositoryPort["existsByPersonId"]>;
+};
+
 const makePatient = (): Patient => {
   const personId = PersonId.create(VALID_UUID).unwrap();
   const icdCode = ICDCode.create("A00.0").unwrap();
@@ -31,7 +39,7 @@ const makePatient = (): Patient => {
 };
 
 describe("UseCase: AddFamilyMember", () => {
-  let repository: PatientRepositoryPort;
+  let repository: PatientRepositoryMock;
   let eventBus: any;
   let useCase: AddFamilyMemberUseCase;
 
@@ -41,7 +49,7 @@ describe("UseCase: AddFamilyMember", () => {
       findByPersonId: mock(async () => err(P.PatientNotFound({ id: VALID_UUID }))),
       addFamilyMember: mock(async () => ok(undefined)),
       existsByPersonId: mock(),
-    } as any;
+    };
 
     eventBus = inMemoryEventBus();
     useCase = new AddFamilyMemberUseCase(repository, eventBus);
@@ -49,7 +57,7 @@ describe("UseCase: AddFamilyMember", () => {
 
   test("deve adicionar membro, salvar e publicar evento", async () => {
     const patient = makePatient();
-    (repository.findByPersonId as any).mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(ok(patient));
 
     const result = await useCase.execute({
       patientId: VALID_UUID,
@@ -66,7 +74,9 @@ describe("UseCase: AddFamilyMember", () => {
   });
 
   test("deve retornar erro quando paciente não existe", async () => {
-    (repository.findByPersonId as any).mockResolvedValue(err(P.PatientNotFound({ id: VALID_UUID })));
+    repository.findByPersonId.mockResolvedValue(
+      err(P.PatientNotFound({ id: VALID_UUID })),
+    );
 
     const result = await useCase.execute({
       patientId: VALID_UUID,
@@ -98,7 +108,7 @@ describe("UseCase: AddFamilyMember", () => {
     }).unwrap();
     const patientWithMember = patient.addFamilyMember(member).unwrap();
     
-    (repository.findByPersonId as any).mockResolvedValue(ok(patientWithMember));
+    repository.findByPersonId.mockResolvedValue(ok(patientWithMember));
 
     const result = await useCase.execute({
       patientId: VALID_UUID,

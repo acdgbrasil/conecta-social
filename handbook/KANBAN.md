@@ -29,8 +29,6 @@ Este documento é a fonte da verdade para o progresso do projeto.
 | :--- | :--- | :--- | :--- |
 | [TASK-017](./backlog/TASK-017-aggregate-event-cleanup.md) | Implementar Limpeza de Eventos no Agregado | Audit 09/01 | `refactor`, `domain` |
 | [TASK-018](./backlog/TASK-018-outbox-pattern-implementation.md) | Implementar Outbox Pattern para Eventos | Audit 09/01 | `arch`, `infra` |
-| [TASK-021](./quality/TASK-021-remove-any-from-tests.md) | Remover `any` dos Testes Unitários | Audit 09/01 | `quality`, `test` |
-| [TASK-022](./quality/TASK-022-benchmarks-imutable-list.md) | Integrar Benchmarks de ImutableList no CI | Daily 14/11 | `perf`, `ci` |
 
 ## ✅ Done (Histórico de Tarefas Concluídas)
 
@@ -41,5 +39,7 @@ Este documento é a fonte da verdade para o progresso do projeto.
 | [TASK-003](../tasks/social-care-completion/TASK-003-usecase-add-family-member.md) | UseCase: AddFamilyMember | 03/02/2026 | v0.1.0 |
 | ... | (Ver pasta social-care-completion para detalhes) | ... | ... |
 | [TASK-011](../tasks/social-care-completion/TASK-011-refactor-social-health-summary.md) | Refatorar SocialHealthSummary | 03/02/2026 | v0.1.0 |
+| [TASK-021](./quality/TASK-021-remove-any-from-tests.md) | Remover `any` dos Testes Unitários | 05/02/2026 | v0.2.0 |
+| [TASK-022](./quality/TASK-022-benchmarks-imutable-list.md) | Integrar Benchmarks de ImutableList no CI | 05/02/2026 | v0.2.0 |
 | - | **Migração para Monolito Modular** | 05/02/2026 | v0.2.0 |
 | - | **Isolamento de Runtime (Ports & Adapters)** | 05/02/2026 | v0.2.0 |

@@ -4,6 +4,7 @@
   "scripts": {
     "infra:up": "bws run -- docker compose up -d",
     "test:infra": "bws run -- bun test src/modules/social-care/interface/tests/integration/",
+    "test:perf": "bun test src/shared/tests/perf/imutable-list.hasDuplicates.perf.test.ts",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "version:patch": "bun run scripts/version.ts patch",

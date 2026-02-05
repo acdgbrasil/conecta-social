@@ -9,8 +9,16 @@ import type { Patient } from "@conecta/social-care";
 const VALID_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
 const VALID_DATE = new Date("2024-01-01T10:00:00Z");
 
+type MockedFn<T extends (...args: any[]) => any> = ReturnType<typeof mock<T>>;
+type PatientRepositoryMock = {
+  save: MockedFn<PatientRepositoryPort["save"]>;
+  findByPersonId: MockedFn<PatientRepositoryPort["findByPersonId"]>;
+  addFamilyMember: MockedFn<PatientRepositoryPort["addFamilyMember"]>;
+  existsByPersonId: MockedFn<PatientRepositoryPort["existsByPersonId"]>;
+};
+
 describe("UseCase: RegisterNewPatient", () => {
-  let repository: PatientRepositoryPort;
+  let repository: PatientRepositoryMock;
   let eventBus: any;
   let useCase: RegisterNewPatientUseCase;
 
@@ -20,7 +28,7 @@ describe("UseCase: RegisterNewPatient", () => {
       existsByPersonId: mock(async () => ok(false)),
       findByPersonId: mock(async () => err(AppError.RepositoryNotAvailable())),
       addFamilyMember: mock(),
-    } as any;
+    };
 
     eventBus = inMemoryEventBus();
     useCase = new RegisterNewPatientUseCase(repository, eventBus);
@@ -43,7 +51,7 @@ describe("UseCase: RegisterNewPatient", () => {
     expect(result.isOk).toBe(true);
     expect(repository.save).toHaveBeenCalled();
     
-    const savedPatient = (repository.save as any).mock.calls[0][0] as Patient;
+    const savedPatient = repository.save.mock.calls[0][0] as Patient;
     expect(savedPatient).toBeDefined();
     expect(savedPatient.personId.toString()).toBe(VALID_UUID);
     expect(savedPatient.diagnoses.count()).toBe(1);
@@ -69,7 +77,7 @@ describe("UseCase: RegisterNewPatient", () => {
   });
 
   test("deve falhar se paciente já existe", async () => {
-    (repository.existsByPersonId as any).mockResolvedValue(ok(true));
+    repository.existsByPersonId.mockResolvedValue(ok(true));
 
     const input = {
       personId: VALID_UUID,
@@ -108,7 +116,9 @@ describe("UseCase: RegisterNewPatient", () => {
   });
   
   test("deve falhar se repositório falhar no existsByPersonId", async () => {
-     (repository.existsByPersonId as any).mockResolvedValue(err(AppError.RepositoryNotAvailable()));
+     repository.existsByPersonId.mockResolvedValue(
+       err(AppError.RepositoryNotAvailable()),
+     );
  
      const input = {
        personId: VALID_UUID,
@@ -128,7 +138,7 @@ describe("UseCase: RegisterNewPatient", () => {
   });
 
   test("deve falhar se repositório falhar no save", async () => {
-      (repository.save as any).mockResolvedValue(err(AppError.RepositoryNotAvailable()));
+      repository.save.mockResolvedValue(err(AppError.RepositoryNotAvailable()));
       
       const input = {
         personId: VALID_UUID,

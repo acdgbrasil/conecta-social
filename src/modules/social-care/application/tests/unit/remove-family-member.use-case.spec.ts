@@ -19,6 +19,14 @@ const NOW = new Date("2025-01-01T12:00:00Z");
 const PATIENT_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
 const MEMBER_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abd";
 
+type MockedFn<T extends (...args: any[]) => any> = ReturnType<typeof mock<T>>;
+type PatientRepositoryMock = {
+  save: MockedFn<PatientRepositoryPort["save"]>;
+  findByPersonId: MockedFn<PatientRepositoryPort["findByPersonId"]>;
+  addFamilyMember: MockedFn<PatientRepositoryPort["addFamilyMember"]>;
+  existsByPersonId: MockedFn<PatientRepositoryPort["existsByPersonId"]>;
+};
+
 const makePatient = (): Patient => {
   const personId = PersonId.create(PATIENT_UUID).unwrap();
   const icdCode = ICDCode.create("A00.0").unwrap();
@@ -42,7 +50,7 @@ const makeMember = (uuid: string): FamilyMember => {
 };
 
 describe("UseCase: RemoveFamilyMember", () => {
-  let repository: PatientRepositoryPort;
+  let repository: PatientRepositoryMock;
   let eventBus: any;
   let useCase: RemoveFamilyMemberUseCase;
 
@@ -52,7 +60,7 @@ describe("UseCase: RemoveFamilyMember", () => {
       findByPersonId: mock(async () => err(P.PatientNotFound({ id: PATIENT_UUID }))),
       existsByPersonId: mock(),
       addFamilyMember: mock(),
-    } as any;
+    };
 
     eventBus = inMemoryEventBus();
     useCase = new RemoveFamilyMemberUseCase(repository, eventBus);
@@ -63,7 +71,7 @@ describe("UseCase: RemoveFamilyMember", () => {
     const member = makeMember(MEMBER_UUID);
     patient = patient.addFamilyMember(member).unwrap();
     
-    (repository.findByPersonId as any).mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(ok(patient));
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
@@ -73,14 +81,14 @@ describe("UseCase: RemoveFamilyMember", () => {
     expect(result.isOk).toBe(true);
     expect(repository.save).toHaveBeenCalled();
     
-    const savedPatient = (repository.save as any).mock.calls[0][0] as Patient;
+    const savedPatient = repository.save.mock.calls[0][0] as Patient;
     const memberExists = savedPatient.familyMembers.getAll().some(m => m.personId.toString() === MEMBER_UUID);
     expect(memberExists).toBe(false);
   });
 
   test("deve retornar erro quando o membro não existe na família", async () => {
     const patient = makePatient();
-    (repository.findByPersonId as any).mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(ok(patient));
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
@@ -94,7 +102,9 @@ describe("UseCase: RemoveFamilyMember", () => {
   });
 
   test("deve retornar erro quando o paciente não existe", async () => {
-    (repository.findByPersonId as any).mockResolvedValue(err(P.PatientNotFound({ id: PATIENT_UUID })));
+    repository.findByPersonId.mockResolvedValue(
+      err(P.PatientNotFound({ id: PATIENT_UUID })),
+    );
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,

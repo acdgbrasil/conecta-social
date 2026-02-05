@@ -20,6 +20,14 @@ const PATIENT_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
 const MEMBER_1_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abd";
 const MEMBER_2_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abe";
 
+type MockedFn<T extends (...args: any[]) => any> = ReturnType<typeof mock<T>>;
+type PatientRepositoryMock = {
+  save: MockedFn<PatientRepositoryPort["save"]>;
+  findByPersonId: MockedFn<PatientRepositoryPort["findByPersonId"]>;
+  addFamilyMember: MockedFn<PatientRepositoryPort["addFamilyMember"]>;
+  existsByPersonId: MockedFn<PatientRepositoryPort["existsByPersonId"]>;
+};
+
 const makePatient = (): Patient => {
   const personId = PersonId.create(PATIENT_UUID).unwrap();
   const icdCode = ICDCode.create("A00.0").unwrap();
@@ -43,7 +51,7 @@ const makeMember = (uuid: string, isCaregiver: boolean): FamilyMember => {
 };
 
 describe("UseCase: AssignPrimaryCaregiver", () => {
-  let repository: PatientRepositoryPort;
+  let repository: PatientRepositoryMock;
   let eventBus: any;
   let useCase: AssignPrimaryCaregiverUseCase;
 
@@ -53,7 +61,7 @@ describe("UseCase: AssignPrimaryCaregiver", () => {
       findByPersonId: mock(async () => err(P.PatientNotFound({ id: PATIENT_UUID }))),
       existsByPersonId: mock(),
       addFamilyMember: mock(),
-    } as any;
+    };
     
     eventBus = inMemoryEventBus();
     useCase = new AssignPrimaryCaregiverUseCase(repository, eventBus);
@@ -67,7 +75,7 @@ describe("UseCase: AssignPrimaryCaregiver", () => {
     patient = patient.addFamilyMember(member1).unwrap();
     patient = patient.addFamilyMember(member2).unwrap();
     
-    (repository.findByPersonId as any).mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(ok(patient));
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
@@ -78,7 +86,7 @@ describe("UseCase: AssignPrimaryCaregiver", () => {
     expect(repository.save).toHaveBeenCalled();
     
     // Verifica se salvou o paciente com as flags trocadas
-    const savedPatient = (repository.save as any).mock.calls[0][0] as Patient;
+    const savedPatient = repository.save.mock.calls[0][0] as Patient;
     const savedMembers = savedPatient.familyMembers.getAll();
     const m1 = savedMembers.find(m => m.personId.toString() === MEMBER_1_UUID);
     const m2 = savedMembers.find(m => m.personId.toString() === MEMBER_2_UUID);
@@ -89,7 +97,7 @@ describe("UseCase: AssignPrimaryCaregiver", () => {
 
   test("deve retornar erro quando o membro não existe na família", async () => {
     const patient = makePatient();
-    (repository.findByPersonId as any).mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(ok(patient));
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
@@ -103,7 +111,9 @@ describe("UseCase: AssignPrimaryCaregiver", () => {
   });
 
   test("deve retornar erro quando o paciente não existe", async () => {
-    (repository.findByPersonId as any).mockResolvedValue(err(P.PatientNotFound({ id: PATIENT_UUID })));
+    repository.findByPersonId.mockResolvedValue(
+      err(P.PatientNotFound({ id: PATIENT_UUID })),
+    );
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,

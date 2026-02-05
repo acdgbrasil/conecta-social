@@ -18,6 +18,14 @@ const PATIENT_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
 const REFERRED_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc"; // Mesma ID do paciente (dentro da fronteira)
 const OUTSIDE_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abd"; // Fora da fronteira
 
+type MockedFn<T extends (...args: any[]) => any> = ReturnType<typeof mock<T>>;
+type PatientRepositoryMock = {
+  save: MockedFn<PatientRepositoryPort["save"]>;
+  findByPersonId: MockedFn<PatientRepositoryPort["findByPersonId"]>;
+  addFamilyMember: MockedFn<PatientRepositoryPort["addFamilyMember"]>;
+  existsByPersonId: MockedFn<PatientRepositoryPort["existsByPersonId"]>;
+};
+
 const makePatient = (): Patient => {
   const personId = PersonId.create(PATIENT_UUID).unwrap();
   const icdCode = ICDCode.create("A00.0").unwrap();
@@ -33,7 +41,7 @@ const makePatient = (): Patient => {
 };
 
 describe("UseCase: CreateReferral", () => {
-  let repository: PatientRepositoryPort;
+  let repository: PatientRepositoryMock;
   let eventBus: any;
   let clock: any;
   let useCase: CreateReferralUseCase;
@@ -46,7 +54,7 @@ describe("UseCase: CreateReferral", () => {
       ),
       existsByPersonId: mock(),
       addFamilyMember: mock(),
-    } as any;
+    };
 
     eventBus = inMemoryEventBus();
     clock = {
@@ -57,7 +65,7 @@ describe("UseCase: CreateReferral", () => {
 
   test("deve criar um encaminhamento com sucesso", async () => {
     const patient = makePatient();
-    (repository.findByPersonId as any).mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(ok(patient));
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
@@ -70,7 +78,7 @@ describe("UseCase: CreateReferral", () => {
     expect(result.isOk).toBe(true);
     expect(repository.save).toHaveBeenCalled();
 
-    const savedPatient = (repository.save as any).mock.calls[0][0] as Patient;
+    const savedPatient = repository.save.mock.calls[0][0] as Patient;
     expect(savedPatient.referrals.count()).toBe(1);
     
     // Validar eventos
@@ -79,7 +87,7 @@ describe("UseCase: CreateReferral", () => {
   });
 
   test("deve retornar erro quando o paciente não existe", async () => {
-    (repository.findByPersonId as any).mockResolvedValue(
+    repository.findByPersonId.mockResolvedValue(
       err(P.PatientNotFound({ id: PATIENT_UUID })),
     );
 
@@ -96,7 +104,7 @@ describe("UseCase: CreateReferral", () => {
 
   test("deve falhar se a pessoa encaminhada estiver fora da fronteira do agregado", async () => {
     const patient = makePatient();
-    (repository.findByPersonId as any).mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(ok(patient));
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
