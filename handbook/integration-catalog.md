@@ -58,7 +58,7 @@ Este documento atua como o **Registro Central de Integrações** do ecossistema.
 
 ### `SocialCareACL` (no contexto Triagem)
 * **Objetivo**: Impedir que o modelo de filas dependa da estrutura interna do `Patient`.
-* **Localização**: `packages/acdg/triagem/infrastructure/acl/social-care.acl.ts` (Planejado).
+* **Localização**: (Externo) `acdg/triagem/interface/acl/social-care.acl.ts`.
 * **Responsabilidade**: Converter `TriagemFormDTO` -> `Patient.createFromScratch(...)`.
 
 ### `SuasACL` (Planejado no Social Care)

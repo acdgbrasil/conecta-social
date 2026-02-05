@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "infra:up": "bws run -- docker compose up -d",
-    "test:infra": "bws run -- bun test packages/conecta-raros/social-care/infrastructure/tests/integration/",
+    "test:infra": "bws run -- bun test src/modules/social-care/interface/tests/integration/",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "version:patch": "bun run scripts/version.ts patch",
@@ -11,13 +11,9 @@
     "version:major": "bun run scripts/version.ts major",
     "version:prerelease": "bun run scripts/version.ts prerelease"
   },
-  "workspaces": [
-    "packages/*",
-    "packages/*/*"
-  ],
   "devDependencies": {
     "@biomejs/biome": "2.3.11",
     "@types/bun": "^1.3.5"
   },
-  "version": "0.1.0"
+  "version": "0.2.0"
 }

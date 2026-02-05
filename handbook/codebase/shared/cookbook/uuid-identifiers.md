@@ -4,7 +4,7 @@
 `FamilyMemberId` e `PersonId` precisam aceitar valores externos (quando já existem em outra base) e, ao mesmo tempo, gerar UUID v7 canônicos quando o agregado cria novos registros.
 
 ## Ferramentas
-- `Uuid` (`packages/shared/uuid-pattern`)
+- `Uuid` (`src/shared/uuid-pattern`)
 - `Result`, `err`, `ok`
 - Catálogo de erros específico (`FMIE`, `PID`, etc.)
 
@@ -13,7 +13,7 @@
 ### 1. Implemente o Value Object seguindo o padrão atual
 
 ```ts typescript
-// packages/conecta-raros/social-care/domain/value-objects/FamilyMemberId.valueObject.ts
+// src/modules/social-care/domain/value-objects/FamilyMemberId.valueObject.ts
 import type { DomainError } from "@conecta/domain-error";
 import { err, ok, Result } from "@conecta/result";
 import { Uuid } from "@conecta/uuid";

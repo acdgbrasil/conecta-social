@@ -1,34 +1,35 @@
 # Relatório Diário — 05/02/2026
 
 ## Sumário Executivo
-Dia focado na **Infraestrutura e Persistência**. Saímos de um domínio "em memória" para uma aplicação capaz de persistir dados reais em PostgreSQL, com segurança e escalabilidade.
+Dia focado na **Infraestrutura e Persistência** e na **Reestruturação Arquitetural**. O projeto migrou de um Monorepo com workspaces para um **Monolito Modular** simplificado, e implementou a camada de persistência com PostgreSQL.
 
 ## Entregas Realizadas
 
-### 1. Infraestrutura de Banco de Dados
-- **PostgreSQL 17:** Configurado via Docker Compose, com suporte nativo a UUID v7.
-- **Migrations:** Schema inicial criado (`001_initial_schema.sql`) e atualização (`002_add_actions_taken.sql`) aplicadas.
-- **Segurança:** Implementação do **Bitwarden Secrets Manager** (`bws`) para injeção segura de credenciais. Nenhuma senha hardcoded no código.
+### 1. Migração para Monolito Modular
+- **Remoção de Workspaces:** `packages/` foi extinto.
+- **Nova Estrutura:**
+  - `src/modules/social-care`: Core Domain.
+  - `src/shared`: Kernel compartilhado.
+  - `src/infrastructure`: Runtime e Drivers (Bun, Postgres).
+- **Limpeza:** Remoção do módulo `ACDG` (agora um serviço externo).
 
-### 2. Repositório (`PostgresPatientRepository`)
-- **Implementação Completa:** O repositório agora persiste todo o grafo do Agregado `Patient`.
-- **Performance:** Consultas paralelas (`Promise.all`) no `findByPersonId` para reduzir latência de rede.
-- **Mapeamento:** Conversão robusta entre Domínio <-> SQL <-> JSONB.
+### 2. Arquitetura Ports & Adapters
+- **Isolamento de Runtime:** O domínio não depende mais de `Bun.sql` ou `process.env` diretamente.
+- **Portas:** Definidas em `src/shared/ports` (`SqlPort`, `RuntimePort`, `ClockPort`).
+- **Adaptadores:** Implementados em `src/interface/runtime/bun`.
 
-### 3. Evolução do Domínio
-- **Reconstituição:** Criado método `Patient.reconstitute` para suportar a carga de dados legados/persistidos de forma limpa.
+### 3. Infraestrutura de Banco de Dados
+- **PostgreSQL 17:** Configurado via Docker Compose.
+- **Migrations:** Schema inicial criado e aplicado.
+- **Segurança:** Integração com **Bitwarden Secrets Manager** (`bws`).
 
-### 4. Testes
-- **Novos Testes de Integração:** `postgres-patient.repository.spec.ts` valida o ciclo completo de vida (Salvar -> Ler -> Verificar).
-- **Status:** Todos os testes (Unidade + Integração) estão **VERDES**.
-
-## Comandos Novos
-- `bun run infra:up`: Sobe o banco de dados (com Bitwarden).
-- `bun run test:infra`: Roda testes de integração (com Bitwarden).
+### 4. Repositório (`PostgresPatientRepository`)
+- **Implementação Completa:** Persistência do grafo `Patient` (Relacional + JSONB) usando `SqlPort`.
+- **Testes de Integração:** `postgres-patient.repository.spec.ts` validando o ciclo completo com banco real.
 
 ## Próximos Passos
-1. **Versionamento:** Fechar a versão `0.2.0` (Feature: Infraestrutura).
-2. **Pull Request:** Abrir PR com a camada de infraestrutura.
+1. **Novos Módulos:** Iniciar `analysis-bi` e `form-conversions`.
+2. **Documentação:** Manter o Handbook alinhado com a nova estrutura modular.
 
 ---
 *Relatório gerado automaticamente.*

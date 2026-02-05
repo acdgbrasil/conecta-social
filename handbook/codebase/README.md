@@ -1,9 +1,9 @@
 # Codebase Guide
 
-> Documentação viva dos pacotes internos. O objetivo é facilitar a navegação pelo monorepo sem precisar abrir o código-fonte imediatamente.
+> Documentação viva dos módulos internos. O objetivo é facilitar a navegação pelo monolito modular sem precisar abrir o código-fonte imediatamente.
 
 ## Organização
-- Cada subpasta replica a estrutura de `packages/`.
+- A estrutura espelha `src/modules/` e `src/shared/`.
 - Dentro de cada módulo mantemos um `documentation.md` inspirado no estilo das páginas do Bun, com foco em introdução, contrato público e exemplos de uso.
 
 <Note>
@@ -11,7 +11,9 @@
 </Note>
 
 ### Escopo atual
-- `shared/` — utilitários reutilizáveis e padrões cross-context.
-- `conecta-raros/` — bounded contexts sociais, começando por `social-care` e seus agregados/VOs.
+- `shared/` — utilitários reutilizáveis, portas e adapters (`src/shared`).
+- `social-care/` — Bounded Context de Prontuário Social (`src/modules/social-care`).
+- `analysis-bi/` — (Planejado) Contexto de Análise e Pesquisa.
+- `form-conversions/` — (Planejado) Contexto de Conversão e Download de Formulários.
 
 Conforme novos contextos amadurecem, replique o formato (README + `documentation.md`) para manter a superfície pública sincronizada com o código.

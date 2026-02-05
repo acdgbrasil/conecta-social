@@ -6,7 +6,7 @@
 ## Ferramentas
 - `ImutableListFactory`, `ImutableList`
 - `Result`, `err`, `ok`
-- `P` (`packages/conecta-raros/social-care/domain/errors/Patient.error.ts`)
+- `P` (`src/modules/social-care/domain/errors/Patient.error.ts`)
 
 ## Passo a passo
 

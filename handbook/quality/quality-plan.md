@@ -7,7 +7,7 @@
 
 ## 2. Riscos e lacunas identificados
 1. **Cobertura parcial de erros nos VO`s financeiros**
-   - `SocialBenefit.copyWith` lança `unwrap()` em caso de `FamilyMemberId` inválido, mas não há teste cobrindo o cenário (arquivo `packages/conecta-raros/social-care/domain/value-objects/SocialBenefit.valueObject.ts`).
+   - `SocialBenefit.copyWith` lança `unwrap()` em caso de `FamilyMemberId` inválido, mas não há teste cobrindo o cenário (arquivo `src/modules/social-care/domain/value-objects/SocialBenefit.valueObject.ts`).
    - `SocialBenefitsCollection.create` aceita apenas arrays, porém não valida `null/undefined`; precisamos de regressão dedicada.
 2. **Constantes inconsistentes**
    - `ELETRICITY_ACCESS` ainda lista valores de acesso à água (`WELL_SPRING`, `RAINWATER_HARVESTING`). Não há teste garantindo catálogo correto.
@@ -16,7 +16,7 @@
 
 ## 3. Roteiro imediato
 1. **Adicionar regressões RED**
-   - `packages/conecta-raros/social-care/domain/tests/regression/social-benefits.red.spec.ts` cobrindo:
+   - `src/modules/social-care/domain/tests/regression/social-benefits.red.spec.ts` cobrindo:
      - `SocialBenefit.copyWith` com `beneficiaryId` inválido não deve lançar.
      - `SocialBenefitsCollection.create(null as any)` retorna `Result.err`.
    - Testes para catálogos (`housingCondition.props.spec.ts`) assegurando que `ELETRICITY_ACCESS` contém apenas valores elétricos.

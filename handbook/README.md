@@ -8,7 +8,7 @@ Este diretório concentra toda a documentação viva do projeto. A ideia é mant
 - `process/` — regras operacionais, incluindo versionamento, retrocompatibilidade e rituais de PR.
 - `principles/` — fundamentos técnicos e culturais (DDD + EDD, TDD/BDD e como manter testes como documentação viva).
 - `tooling/` — notas de ferramentas, com foco especial em Bun e no ecossistema atual.
-- `codebase/` — documentação viva dos pacotes (`packages/**`), incluindo guias detalhados e cookbooks.
+- `codebase/` — documentação viva dos módulos (`src/modules/**`) e kernel compartilhado (`src/shared/**`), incluindo guias detalhados e cookbooks.
 - `references/` — material de apoio (livros, artigos, PDFs). Mantido aqui para consulta offline.
 
 ## Convenções gerais
@@ -19,8 +19,9 @@ Este diretório concentra toda a documentação viva do projeto. A ideia é mant
 
 Para qualquer novo documento, escolha a sub-pasta existente que fizer sentido ou crie uma nova mantendo a hierarquia descrita acima. O objetivo é nunca mais se perguntar “onde registrar isso?”.
 
-## Estado Atual (03/02/2026)
-- **Domínio Social Care**: implementado e testado, com pendências pontuais (ver relatório diário).
-- **Aplicação**: use cases existem, mas ainda não implementados.
-- **Infraestrutura**: será reconstruída após estabilização do domínio e casos de uso em memória.
-- **Relatório de referência:** `handbook/reports/daily/daily-report-2026-02-03.md`.
+## Estado Atual (05/02/2026)
+- **Estrutura**: Migrado para **Monolito Modular** (`src/modules` e `src/shared`). Runtime agnóstico via Ports & Adapters.
+- **Domínio Social Care**: `src/modules/social-care`. Implementado, testado e com persistência (PostgreSQL) funcional.
+- **Novos Módulos**: `analysis-bi` e `form-conversions` em fase de setup.
+- **Infraestrutura**: Isolada em `src/infrastructure` (Runtime Bun, Drivers SQL).
+- **Relatório de referência:** `handbook/reports/daily/daily-report-2026-02-05.md`.

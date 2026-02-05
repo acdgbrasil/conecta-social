@@ -41,7 +41,7 @@ Dia de **entrega massiva** na camada de Aplicação do `Social Care`. Saímos de
 - **Status:** Estável e Completo.
 - Pronta para ser conectada a uma API HTTP ou gRPC.
 
-### 3) Infraestrutura (`infrastructure/`)
+### 3) Interface (Adapters)
 - **Status:** 🚧 Pendente.
 - Agora que a aplicação está sólida, o próximo grande passo é implementar os adaptadores reais (Repositório SQL, EventBus RabbitMQ/Kafka, etc.).
 

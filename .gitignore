@@ -11,5 +11,4 @@ firebase-debug.log
 types/docs/
 .gemini/
 gha-creds-*.json
-packages/acdg/queue-orquestration/
 handbook/tooling/

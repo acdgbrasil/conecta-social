@@ -11,7 +11,7 @@ A documentação aponta para caminhos que foram renomeados ou reestruturados.
 | Documento | Referência Incorreta | Realidade Atual | Ação Recomendada |
 | :--- | :--- | :--- | :--- |
 | `handbook/codebase/social/README.md` | `packages/social/social-care` | `packages/conecta-raros/social-care` | Atualizar paths e referências de import (`@conecta/social-care` vs `@conecta/conecta-raros`?) |
-| `handbook/codebase/social/social-care/documentation.md` | Estrutura flat (`entities/`, `value-objects/`) | Arquitetura Hexagonal (`domain/`, `application/`, `infrastructure/`) | Reescrever guia para refletir a separação de camadas implementada em 08/01/2026. |
+| `handbook/codebase/social/social-care/documentation.md` | Estrutura flat (`entities/`, `value-objects/`) | Arquitetura Hexagonal (`domain/`, `application/`, `interface/`) | Reescrever guia para refletir a separação de camadas implementada em 08/01/2026. |
 | `handbook/quality/quality-plan.md` | `packages/social/social-care/value-objects/*.ts` | `packages/conecta-raros/social-care/domain/value-objects/*.ts` | Atualizar planos de teste para apontar para os novos caminhos. |
 
 ### 2. Typos em Nomes de Pasta
