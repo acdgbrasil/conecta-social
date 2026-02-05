@@ -120,6 +120,19 @@ export class Patient extends AggregateRoot<PatientProps> {
     );
   }
 
+  /**
+   * Reconstitui o agregado a partir de dados persistidos (ex: Banco de Dados).
+   * Diferente do createFromScratch, não gera eventos de criação e preserva o estado original.
+   */
+  static reconstitute(
+    id: Uuid,
+    props: PatientProps,
+    version = 0,
+    deps: PatientDependencies = {},
+  ): Patient {
+    return new Patient(props, id, Patient.resolveDeps(deps), version, []);
+  }
+
   static createFromObject(
     id: Uuid,
     props: PatientProps,
