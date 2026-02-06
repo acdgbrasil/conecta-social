@@ -10,6 +10,7 @@ export type ApplicationErrorKind =
   | "PersonIdAlreadyExists"
   | "FailToCastDignosisList"
   | "FailToCastPersonId"
+  | "PersistenceMappingFailure"
 
 export const ApplicationError = makeDomainErrorFactory<ApplicationErrorKind>({
   bc: "SOCIAL",
@@ -46,6 +47,13 @@ export const ApplicationError = makeDomainErrorFactory<ApplicationErrorKind>({
       category: ErrorTaxonomy.DataConsistencyIncident,
       template: () => "Falha ao converter o PersonId.",
     },
+    PersistenceMappingFailure: {
+      code: "APP-006",
+      http: 500,
+      category: ErrorTaxonomy.DataConsistencyIncident,
+      template: (ctx) =>
+        `Falha ao mapear dados persistidos do paciente. (${ctx.issueCount ?? "?"} erro(s))`,
+    },
     
   },
 });
@@ -56,4 +64,5 @@ export const AppError = shortcuts(ApplicationError, {
   PersonIdAlreadyExists: [] as const,
   FailToCastDignosisList: [] as const,
   FailToCastPersonId: [] as const,
+  PersistenceMappingFailure: ["patientId", "issues", "issueCount"] as const,
 });

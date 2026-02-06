@@ -1,16 +1,14 @@
 import { err, ok, type Result } from "@conecta/result";
-import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
-import type { UpdateSocioEconomicSituationInput } from "@conecta/social-care/domain/inputs/UpdateSocioEconomicSituation.input";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { UpdateSocioEconomicSituationCommand } from "@conecta/social-care/application/ports/commands/update-socioeconomic-situation.command";
 import type { DomainError } from "@conecta/domain-error";
-import type { EventBusPort } from "@conecta/ports";
+import type { EventBusPort, UseCasePort } from "@conecta/ports";
 import { PersonId } from "@conecta/social-care";
-import { mapSocioEconomicSituationDtoToDomain } from "../mappers/social-assessment.mapper";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 
 export class UpdateSocioEconomicSituationUseCase
   implements
     UseCasePort<
-      UpdateSocioEconomicSituationInput,
+      UpdateSocioEconomicSituationCommand,
       Result<boolean, DomainError>
     >
 {
@@ -20,15 +18,10 @@ export class UpdateSocioEconomicSituationUseCase
   ) {}
 
   async execute(
-    input: Readonly<UpdateSocioEconomicSituationInput>,
+    command: Readonly<UpdateSocioEconomicSituationCommand>,
   ): Promise<Result<boolean, DomainError>> {
-    const personIdResult = PersonId.create(input.patientId);
+    const personIdResult = PersonId.create(command.patientId);
     if (personIdResult.isErr) return err(personIdResult.error);
-
-    const situationResult = mapSocioEconomicSituationDtoToDomain(
-      input.situation,
-    );
-    if (situationResult.isErr) return err(situationResult.error);
 
     const patientResult = await this.repository.findByPersonId(
       personIdResult.value,
@@ -37,7 +30,7 @@ export class UpdateSocioEconomicSituationUseCase
     const patient = patientResult.value;
 
     const updateResult = patient.updateSocioEconomicSituation(
-      situationResult.value,
+      command.situation,
     );
     if (updateResult.isErr) return err(updateResult.error);
 

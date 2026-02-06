@@ -13,4 +13,6 @@ export {
   unwrapErr,
   unwrapOr,
   unwrapOrElse,
+  safe,
+  Result,
 } from "./Result";

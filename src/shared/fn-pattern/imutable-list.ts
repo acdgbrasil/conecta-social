@@ -1,99 +1,38 @@
-import type { ImutableList as ImutableListType } from "./fn-types";
+export type ImutableList<T> = readonly T[];
 
-function imutableList<T>(elements: T[]): ImutableListType<T> {
-  return {
-    add: (element: T) => imutableList([...elements, element]),
-    remove: (element: T) =>
-      imutableList(elements.filter((candidate) => candidate !== element)),
-    getAll: () => [...elements],
-    isEmpty: () => elements.length === 0,
-    count: () => elements.length,
-    contains: (element: T) => elements.includes(element),
-    empty: () => imutableList<T>([]),
-    castTolist: (list: ImutableListType<T>) =>
-      imutableList<T>(list.getAll() as T[]),
-    setUnique: () =>
-      imutableList<T>(
-        elements.reduce((acc: T[], curr: T) => {
-          if (!acc.includes(curr)) {
-            acc.push(curr);
-          }
-          return acc;
-        }, []),
-      ),
-    /**
-     * Detecta duplicatas calculando um hash estrutural determinístico para cada item.
-     * A estratégia considera igualdade profunda (ordena chaves e trata ciclos) e
-     * possui custo aproximado O(n * m), onde `m` é o custo de serialização de cada elemento.
-     * Ideal para coleções pequenas do domínio; para listas extensas considere alternativas com hashing incremental.
-     */
-    hasDuplicates: () => {
-      const vistos = new Set<string>();
-      for (const item of elements) {
-        const hash = hashValue(item);
+const clone = <T>(list: ImutableList<T>): readonly T[] => [...list];
 
-        if (vistos.has(hash)) {
-          return true; // duplicata encontrada
-        }
-        vistos.add(hash);
-      }
-      return false; // nenhum duplicado
-    },
-    findDuplicates: () => {
-      const vistos = new Map<string, T>();
-      const duplicatas: T[] = [];
-
-      for (const item of elements) {
-        const hash = hashValue(item);
-
-        if (vistos.has(hash)) {
-          // Adiciona à lista de duplicatas se ainda não estiver presente
-          if (!duplicatas.includes(item)) {
-            duplicatas.push(item);
-          }
-        } else {
-          vistos.set(hash, item);
-        }
-      }
-
-      return duplicatas;
-    },
-  };
-}
-
-export const ImutableListFactory = {
-  empty: <T>() => imutableList<T>([]),
-  fromArray: <T>(elements: T[]) => imutableList<T>(elements),
-  castTolist: <T>(list: ImutableListType<T>) =>
-    imutableList<T>(list.getAll() as T[]),
+const add = <T>(list: ImutableList<T>, element: T): ImutableList<T> => [...list, element];
+const remove = <T>(list: ImutableList<T>, element: T): ImutableList<T> => list.filter((candidate) => candidate !== element);
+const getAll = <T>(list: ImutableList<T>): T[] => [...list];
+const isEmpty = <T>(list: ImutableList<T>): boolean => list.length === 0;
+const count = <T>(list: ImutableList<T>): number => list.length;
+const contains = <T>(list: ImutableList<T>, element: T): boolean => list.includes(element);
+const empty = <T>(): ImutableList<T> => [] as const;
+const fromArray = <T>(elements: readonly T[]): ImutableList<T> => [...elements];
+const castTolist = <T>(list: ImutableList<T>): ImutableList<T> => [...list];
+const setUnique = <T>(list: ImutableList<T>): ImutableList<T> => {
+  const seen = new Set<T>();
+  const result: T[] = [];
+  for (const item of list) {
+    if (!seen.has(item)) {
+      seen.add(item);
+      result.push(item);
+    }
+  }
+  return result;
 };
 
-/**
- * Serializa valores em uma string estável para permitir comparações estruturais.
- * - Ordena chaves de objetos para evitar falsos negativos.
- * - Marca referências cíclicas como "[Circular]" para evitar loops infinitos.
- * Esse processo é custoso (JSON.stringify + ordenação a cada elemento), e deve ser
- * monitorado em coleções grandes. Futuras otimizações podem incluir cache por referência
- * ou caminhos especializados para tipos primitivos.
- */
 function stableStringify(value: any): string {
   const cache = new Set<any>();
 
   const replacer = (_key: string, val: any) => {
-    // Detecta ciclos (ex.: objeto que referencia a si mesmo)
     if (typeof val === "object" && val !== null) {
-      if (cache.has(val)) {
-        // Representa ciclos de forma determinística
-        return "[Circular]";
-      }
+      if (cache.has(val)) return "[Circular]";
       cache.add(val);
     }
 
-    // Ordena as chaves de objetos para garantir que
-    // {a:1,b:2} e {b:2,a:1} produzam o mesmo hash.
-    if (Array.isArray(val)) {
-      return val;
-    }
+    if (Array.isArray(val)) return val;
     if (val && typeof val === "object" && !(val instanceof Date)) {
       const ordered: any = {};
       Object.keys(val)
@@ -107,11 +46,6 @@ function stableStringify(value: any): string {
   return JSON.stringify(value, replacer);
 }
 
-export { stableStringify };
-
-/**
- * Produz um hash estável para comparação estrutural, com fast-path para primitivos/Date.
- */
 function hashValue(value: unknown): string {
   if (value === null) return "p:null";
   const type = typeof value;
@@ -130,10 +64,50 @@ function hashValue(value: unknown): string {
       return `p:symbol:${String(value)}`;
   }
 
-  if (value instanceof Date) {
-    return `d:${value.toISOString()}`;
-  }
-
-  // Fallback para comparação estrutural profunda.
+  if (value instanceof Date) return `d:${value.toISOString()}`;
   return stableStringify(value as any);
 }
+
+const hasDuplicates = <T>(list: ImutableList<T>): boolean => {
+  const seen = new Set<string>();
+  for (const item of list) {
+    const hash = hashValue(item);
+    if (seen.has(hash)) return true;
+    seen.add(hash);
+  }
+  return false;
+};
+
+const findDuplicates = <T>(list: ImutableList<T>): T[] => {
+  const seen = new Map<string, T>();
+  const duplicates: T[] = [];
+  for (const item of list) {
+    const hash = hashValue(item);
+    if (seen.has(hash)) {
+      if (!duplicates.includes(item)) duplicates.push(item);
+    } else {
+      seen.set(hash, item);
+    }
+  }
+  return duplicates;
+};
+
+/**
+ * Compat layer preservando API ImutableListFactory, mas usando readonly arrays.
+ */
+export const ImutableListFactory = {
+  empty,
+  fromArray,
+  castTolist,
+  add: <T>(list: ImutableList<T>, element: T) => add(list, element),
+  remove: <T>(list: ImutableList<T>, element: T) => remove(list, element),
+  getAll: <T>(list: ImutableList<T>) => getAll(list),
+  isEmpty: <T>(list: ImutableList<T>) => isEmpty(list),
+  count: <T>(list: ImutableList<T>) => count(list),
+  contains: <T>(list: ImutableList<T>, element: T) => contains(list, element),
+  setUnique: <T>(list: ImutableList<T>) => setUnique(list),
+  hasDuplicates: <T>(list: ImutableList<T>) => hasDuplicates(list),
+  findDuplicates: <T>(list: ImutableList<T>) => findDuplicates(list),
+};
+
+export { stableStringify };

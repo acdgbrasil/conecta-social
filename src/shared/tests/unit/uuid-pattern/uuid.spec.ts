@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { InvalidUuidError, Uuid, Version } from "@conecta/uuid";
+import { Result } from "@conecta/result";
 
 const makeDeterministicRng = (values: number[]) => {
   let index = 0;
@@ -18,7 +19,7 @@ describe("Uuid utilities", () => {
 
     expect(result.isOk).toBe(true);
     if (result.isOk) {
-      const uuid = result.unwrap();
+      const uuid = Result.unwrap(result);
       expect(Uuid.isV7(uuid.toString())).toBe(true);
       expect(uuid.getVersion()).toBe(Version.V7);
     }
@@ -39,7 +40,7 @@ describe("Uuid utilities", () => {
 
     expect(result.isOk).toBe(true);
     if (result.isOk) {
-      const uuid = result.unwrap();
+      const uuid = Result.unwrap(result);
       expect(uuid.toString()).toBe(validV4.toLowerCase());
       expect(uuid.getVersion()).toBe(Version.V4);
       expect(uuid.equals(uuid)).toBe(true);

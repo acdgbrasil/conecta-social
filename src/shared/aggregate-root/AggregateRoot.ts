@@ -17,9 +17,13 @@ export abstract class AggregateRoot<Props> {
     return this._domainEvents;
   }
 
+  public clearDomainEvents(): void {
+    this._domainEvents.length = 0;
+  }
+
   public pullDomainEvents(): DomainEvent[] {
     const events = [...this._domainEvents];
-    this._domainEvents.length = 0;
+    this.clearDomainEvents();
     return events;
   }
 

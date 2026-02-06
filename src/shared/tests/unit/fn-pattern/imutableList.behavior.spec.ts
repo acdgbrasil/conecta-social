@@ -11,51 +11,51 @@ describe("ImutableListFactory behavior", () => {
   test("empty cria lista vazia imutável", () => {
     const list = ImutableListFactory.empty<number>();
 
-    expect(list.isEmpty()).toBe(true);
-    expect(list.count()).toBe(0);
+    expect(ImutableListFactory.isEmpty(list)).toBe(true);
+    expect(ImutableListFactory.count(list)).toBe(0);
   });
 
   test("add/remove produzem novas instâncias mantendo imutabilidade", () => {
     const original = ImutableListFactory.empty<string>();
-    const withItem = original.add("item");
-    const withoutItem = withItem.remove("item");
+    const withItem = ImutableListFactory.add(original, "item");
+    const withoutItem = ImutableListFactory.remove(withItem, "item");
 
-    expect(original.isEmpty()).toBe(true);
-    expect(withItem.contains("item")).toBe(true);
-    expect(withoutItem.contains("item")).toBe(false);
+    expect(ImutableListFactory.isEmpty(original)).toBe(true);
+    expect(ImutableListFactory.contains(withItem, "item")).toBe(true);
+    expect(ImutableListFactory.contains(withoutItem, "item")).toBe(false);
   });
 
   test("setUnique elimina duplicados e mantém ordem de inserção", () => {
     const list = ImutableListFactory.fromArray(["a", "b", "a"]);
-    const uniqueList = list.setUnique();
+    const uniqueList = ImutableListFactory.setUnique(list);
 
-    expect(uniqueList.getAll()).toEqual(["a", "b"]);
+    expect(ImutableListFactory.getAll(uniqueList)).toEqual(["a", "b"]);
   });
 
   test("castTolist realiza cópia defensiva dos elementos", () => {
     const base = ImutableListFactory.fromArray([1, 2, 3]);
     const cloned = ImutableListFactory.castTolist(base);
 
-    expect(cloned.getAll()).toEqual([1, 2, 3]);
+    expect(ImutableListFactory.getAll(cloned)).toEqual([1, 2, 3]);
     expect(cloned).not.toBe(base);
   });
 
   test("setUnique elimina duplicados e mantém ordem original", () => {
     const list = ImutableListFactory.fromArray(["a", "a", "b"]);
 
-    const unique = list.setUnique();
+    const unique = ImutableListFactory.setUnique(list);
 
-    expect(unique.count()).toBe(2);
-    expect(unique.getAll()).toEqual(["a", "b"]);
+    expect(ImutableListFactory.count(unique)).toBe(2);
+    expect(ImutableListFactory.getAll(unique)).toEqual(["a", "b"]);
   });
 
   test("remove remove o elemento alvo e não reaproveita referência", () => {
     const list = ImutableListFactory.fromArray(["x"]);
 
-    const updated = list.remove("x");
+    const updated = ImutableListFactory.remove(list, "x");
 
-    expect(updated.contains("x")).toBe(false);
-    expect(updated.count()).toBe(0);
+    expect(ImutableListFactory.contains(updated, "x")).toBe(false);
+    expect(ImutableListFactory.count(updated)).toBe(0);
     expect(updated).not.toBe(list);
   });
 
@@ -65,22 +65,22 @@ describe("ImutableListFactory behavior", () => {
       makeCircularNode(1),
     ]);
 
-    expect(() => list.hasDuplicates()).not.toThrow();
-    expect(list.hasDuplicates()).toBe(true);
+    expect(() => ImutableListFactory.hasDuplicates(list)).not.toThrow();
+    expect(ImutableListFactory.hasDuplicates(list)).toBe(true);
   });
 
   test("setUnique remove duplicatas sem mutar lista original", () => {
     const original = ImutableListFactory.fromArray([1, 1, 2]);
 
-    const unique = original.setUnique();
+    const unique = ImutableListFactory.setUnique(original);
 
-    expect(unique.getAll()).toEqual([1, 2]);
-    expect(original.getAll()).toEqual([1, 1, 2]);
+    expect(ImutableListFactory.getAll(unique)).toEqual([1, 2]);
+    expect(ImutableListFactory.getAll(original)).toEqual([1, 1, 2]);
   });
 
   test("hasDuplicates retorna false quando todos elementos são únicos", () => {
     const list = ImutableListFactory.fromArray([{ id: 1 }, { id: 2 }]);
 
-    expect(list.hasDuplicates()).toBe(false);
+    expect(ImutableListFactory.hasDuplicates(list)).toBe(false);
   });
 });

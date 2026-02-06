@@ -82,7 +82,7 @@ describe("UseCase: RemoveFamilyMember", () => {
     expect(repository.save).toHaveBeenCalled();
     
     const savedPatient = repository.save.mock.calls[0][0] as Patient;
-    const memberExists = savedPatient.familyMembers.getAll().some(m => m.personId.toString() === MEMBER_UUID);
+    const memberExists = ImutableListFactory.getAll(savedPatient.familyMembers).some(m => m.personId.toString() === MEMBER_UUID);
     expect(memberExists).toBe(false);
   });
 

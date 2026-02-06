@@ -12,27 +12,35 @@ import { Uuid } from "@conecta/uuid";
 import { createBunSqlAdapter } from "@conecta/runtime/bun/sql.adapter";
 
 // Conexão real usando o adaptador agnóstico para o runtime Bun
-const sql = createBunSqlAdapter({
-  host: "localhost",
-  port: 5433,
-  user: process.env.SC_DB_USER,
-  password: process.env.SC_DB_PASSWORD,
-  database: process.env.SC_DB_NAME,
-});
+const hasDbEnv =
+  !!process.env.SC_DB_USER &&
+  !!process.env.SC_DB_PASSWORD &&
+  !!process.env.SC_DB_NAME;
+
+let sql: ReturnType<typeof createBunSqlAdapter> | null = null;
 
 const VALID_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
 
-describe("PostgresPatientRepository (Integration)", () => {
+const describeOrSkip = hasDbEnv ? describe : describe.skip;
+
+describeOrSkip("PostgresPatientRepository (Integration)", () => {
   let repository: PostgresPatientRepository;
 
   beforeAll(async () => {
-    repository = new PostgresPatientRepository(sql);
+    sql = createBunSqlAdapter({
+      host: process.env.SC_DB_HOST ?? "localhost",
+      port: Number(process.env.SC_DB_PORT ?? 5433),
+      user: process.env.SC_DB_USER,
+      password: process.env.SC_DB_PASSWORD,
+      database: process.env.SC_DB_NAME,
+    });
+    repository = new PostgresPatientRepository(sql!);
     // Limpeza inicial opcional
-    await sql`DELETE FROM patients WHERE person_id = ${VALID_UUID}`;
+    await sql!`DELETE FROM patients WHERE person_id = ${VALID_UUID}`;
   });
 
   afterAll(async () => {
-    await sql.close();
+    await sql?.close();
   });
 
   test("deve salvar e recuperar um agregado completo com sucesso", async () => {
@@ -80,8 +88,8 @@ describe("PostgresPatientRepository (Integration)", () => {
     
     const recovered = findResult.unwrap();
     expect(recovered.id.toString()).toBe(patient.id.toString());
-    expect(recovered.appointments.count()).toBe(1);
-    expect(recovered.referrals.count()).toBe(1);
-    expect(recovered.appointments.getAll()[0].summary).toBe("Resumo do atendimento");
+    expect(ImutableListFactory.count(recovered.appointments)).toBe(1);
+    expect(ImutableListFactory.count(recovered.referrals)).toBe(1);
+    expect(ImutableListFactory.getAll(recovered.appointments)[0].summary).toBe("Resumo do atendimento");
   });
 });

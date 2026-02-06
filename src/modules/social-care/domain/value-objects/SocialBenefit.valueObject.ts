@@ -39,8 +39,8 @@ export class SocialBenefit {
     props: Partial<SocialBenefitProps>,
   ): Result<SocialBenefit, DomainError> {
     const rawOption = unSafe(props.beneficiaryId?.value);
-    const safeValue = rawOption.isSome
-      ? rawOption.unwrap()
+    const safeValue = Option.isSome(rawOption)
+      ? Option.unwrap(rawOption)
       : this.beneficiaryId;
     const newBeneficiaryIdResult = FamilyMemberId.create(safeValue);
     if (newBeneficiaryIdResult.isErr)

@@ -43,7 +43,7 @@ describe("Entity: Patient", () => {
     const patient = result.unwrap();
 
     expect(patient.personId.toString()).toBe(personId.toString());
-    expect(patient.diagnoses.count()).toBe(1);
+    expect(ImutableListFactory.count(patient.diagnoses)).toBe(1);
     expect(patient.version).toBe(0);
 
     // Validação de Eventos
@@ -92,13 +92,47 @@ describe("Entity: Patient", () => {
     expect(updatedPatientResult.isOk).toBe(true);
     const updatedPatient = updatedPatientResult.unwrap();
 
-    expect(updatedPatient.familyMembers.count()).toBe(1);
+    expect(ImutableListFactory.count(updatedPatient.familyMembers)).toBe(1);
 
     // Validação de Eventos (Deve ter acumulado o Created + Added)
     const events = updatedPatient.pullDomainEvents();
     expect(events.length).toBe(2);
     expect(events[1].name).toBe("FamilyMemberAdded");
     expect(events[1].payload.relationship).toBe("SPOUSE");
+  });
+
+  test("Deve limpar eventos apos pullDomainEvents e evitar duplicidade", () => {
+    const patient = Patient.createFromScratch(
+      personId,
+      diagnosisList,
+      mockDeps,
+    ).unwrap();
+
+    patient.pullDomainEvents(); // limpa evento de criacao
+
+    const validFamilyMemberId = FamilyMemberId.create(
+      "018f4a7a-1e37-7b2c-8f00-123456789abc",
+    ).unwrap();
+    const validPersonId = PersonId.create(
+      "018f4a7a-1e37-7b2c-8f00-123456789abc",
+    ).unwrap();
+
+    const familyMember = FamilyMember.create({
+      personId: validPersonId,
+      relationship: "SPOUSE",
+      isPrimaryCaregiver: true,
+      residesWithPatient: true,
+      id: validFamilyMemberId,
+    }).unwrap();
+
+    const updatedPatient = patient.addFamilyMember(familyMember).unwrap();
+
+    const firstPull = updatedPatient.pullDomainEvents();
+    expect(firstPull.length).toBe(1);
+    expect(firstPull[0].name).toBe("FamilyMemberAdded");
+
+    const secondPull = updatedPatient.pullDomainEvents();
+    expect(secondPull.length).toBe(0);
   });
 
   test("Não deve adicionar membro da família duplicado", () => {

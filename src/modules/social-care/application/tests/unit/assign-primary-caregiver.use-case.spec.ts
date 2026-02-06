@@ -87,7 +87,7 @@ describe("UseCase: AssignPrimaryCaregiver", () => {
     
     // Verifica se salvou o paciente com as flags trocadas
     const savedPatient = repository.save.mock.calls[0][0] as Patient;
-    const savedMembers = savedPatient.familyMembers.getAll();
+    const savedMembers = ImutableListFactory.getAll(savedPatient.familyMembers);
     const m1 = savedMembers.find(m => m.personId.toString() === MEMBER_1_UUID);
     const m2 = savedMembers.find(m => m.personId.toString() === MEMBER_2_UUID);
 

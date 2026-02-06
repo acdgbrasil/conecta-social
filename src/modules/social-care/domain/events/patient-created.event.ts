@@ -1,4 +1,5 @@
-import type { DomainEvent } from "@conecta/shared/protocols/event-bus.protocol";
+
+import { Result, type DomainEvent } from "@conecta/shared";
 import { Uuid } from "@conecta/shared/uuid-pattern/uuid";
 
 type PatientCreatedEventProps = {

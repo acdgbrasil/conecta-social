@@ -1,4 +1,5 @@
 import { ok, err, type Result } from "@conecta/result";
+import { ImutableListFactory } from "@conecta/fn";
 import { describe, test, expect, mock, beforeEach } from "bun:test";
 import { inMemoryEventBus } from "@conecta/adapters";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
@@ -54,7 +55,7 @@ describe("UseCase: RegisterNewPatient", () => {
     const savedPatient = repository.save.mock.calls[0][0] as Patient;
     expect(savedPatient).toBeDefined();
     expect(savedPatient.personId.toString()).toBe(VALID_UUID);
-    expect(savedPatient.diagnoses.count()).toBe(1);
+    expect(ImutableListFactory.count(savedPatient.diagnoses)).toBe(1);
     
     // Validar eventos
     expect(eventBus.published.length).toBe(1);

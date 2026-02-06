@@ -85,8 +85,9 @@ export class Patient extends AggregateRoot<PatientProps> {
     const patientId = Uuid.create(resolvedDeps.idProvider.generate());
     if (!personId) return err(P.InitialPersonIdIsRequired());
     if (!diagnoses) return err(P.InitialDiagnosesCantBeEmpty());
-    if (diagnoses.isEmpty()) return err(P.InitialDiagnosesCantBeEmpty());
-    if (diagnoses.hasDuplicates())
+    if (ImutableListFactory.isEmpty(diagnoses))
+      return err(P.InitialDiagnosesCantBeEmpty());
+    if (ImutableListFactory.hasDuplicates(diagnoses))
       return err(P.InitialDiagnosesCantHaveDuplicates());
 
     const initialProps: PatientProps = {
@@ -224,7 +225,7 @@ export class Patient extends AggregateRoot<PatientProps> {
       return err(existsResult.error);
     }
 
-    const updatedMembers = this.familyMembers.add(member);
+    const updatedMembers = ImutableListFactory.add(this.familyMembers, member);
     const domainEvents: DomainEvent[] = [
       FamilyMemberAddedEvent({
         memberId: member.personId.toString(),
@@ -250,7 +251,10 @@ export class Patient extends AggregateRoot<PatientProps> {
     }
     const member = memberResult.value;
 
-    const updatedMembers = this.familyMembers.remove(member);
+    const updatedMembers = ImutableListFactory.remove(
+      this.familyMembers,
+      member,
+    );
     return ok(this.copyWith({ familyMembers: updatedMembers }));
   }
 
@@ -316,7 +320,8 @@ export class Patient extends AggregateRoot<PatientProps> {
     }
 
     const referral = referralResult.value;
-    const referrals = ImutableListFactory.castTolist(this.referrals).add(
+    const referrals = ImutableListFactory.add(
+      ImutableListFactory.castTolist(this.referrals),
       referral,
     );
     const domainEvents: DomainEvent[] = [
@@ -388,7 +393,8 @@ export class Patient extends AggregateRoot<PatientProps> {
     }
 
     const report = violationResult.value;
-    const reports = ImutableListFactory.castTolist(this.violationsReports).add(
+    const reports = ImutableListFactory.add(
+      ImutableListFactory.castTolist(this.violationsReports),
       report,
     );
     const domainEvents: DomainEvent[] = [
@@ -457,7 +463,8 @@ export class Patient extends AggregateRoot<PatientProps> {
     }
 
     const appointment = appointmentResult.value;
-    const appointments = ImutableListFactory.castTolist(this.appointments).add(
+    const appointments = ImutableListFactory.add(
+      ImutableListFactory.castTolist(this.appointments),
       appointment,
     );
     const domainEvents: DomainEvent[] = [

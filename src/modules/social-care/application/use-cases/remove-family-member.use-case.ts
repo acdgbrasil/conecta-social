@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "@conecta/result";
 import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
-import type { RemoveFamilyMemberInput } from "@conecta/social-care/domain/inputs/RemoveFamilyMember.input";
+import type { RemoveFamilyMemberCommand } from "@conecta/social-care/application/ports/commands/remove-family-member.command";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
 import type { DomainError } from "@conecta/domain-error";
 import type { EventBusPort } from "@conecta/ports";
@@ -8,7 +8,7 @@ import { PersonId } from "@conecta/social-care";
 
 export class RemoveFamilyMemberUseCase
   implements
-    UseCasePort<RemoveFamilyMemberInput, Result<boolean, DomainError>>
+    UseCasePort<RemoveFamilyMemberCommand, Result<boolean, DomainError>>
 {
   constructor(
     private readonly repository: PatientRepositoryPort,
@@ -16,12 +16,12 @@ export class RemoveFamilyMemberUseCase
   ) {}
 
   async execute(
-    input: Readonly<RemoveFamilyMemberInput>,
+    command: Readonly<RemoveFamilyMemberCommand>,
   ): Promise<Result<boolean, DomainError>> {
-    const patientPersonIdResult = PersonId.create(input.patientId);
+    const patientPersonIdResult = PersonId.create(command.patientId);
     if (patientPersonIdResult.isErr) return err(patientPersonIdResult.error);
 
-    const memberPersonIdResult = PersonId.create(input.memberPersonId);
+    const memberPersonIdResult = PersonId.create(command.memberPersonId);
     if (memberPersonIdResult.isErr) return err(memberPersonIdResult.error);
 
     const patientResult = await this.repository.findByPersonId(

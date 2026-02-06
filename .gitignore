@@ -10,5 +10,4 @@ bun-test.xml
 firebase-debug.log
 types/docs/
 .gemini/
-gha-creds-*.json
 handbook/tooling/

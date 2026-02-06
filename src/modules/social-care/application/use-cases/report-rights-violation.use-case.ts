@@ -1,13 +1,13 @@
 import { err, ok, type Result } from "@conecta/result";
 import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
-import type { ReportRightsViolationInput } from "@conecta/social-care/domain/inputs/ReportRightsViolation.input";
+import type { ReportRightsViolationCommand } from "@conecta/social-care/application/ports/commands/report-rights-violation.command";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
 import type { DomainError } from "@conecta/domain-error";
 import type { EventBusPort, ClockPort } from "@conecta/ports";
 
 export class ReportRightsViolationUseCase
   implements
-    UseCasePort<ReportRightsViolationInput, Result<boolean, DomainError>>
+    UseCasePort<ReportRightsViolationCommand, Result<boolean, DomainError>>
 {
   constructor(
     private readonly repository: PatientRepositoryPort,
@@ -16,7 +16,7 @@ export class ReportRightsViolationUseCase
   ) {}
 
   async execute(
-    input: Readonly<ReportRightsViolationInput>,
+    command: Readonly<ReportRightsViolationCommand>,
   ): Promise<Result<boolean, DomainError>> {
     throw new Error("Not implemented");
   }

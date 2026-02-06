@@ -1,6 +1,7 @@
 // packages/social/social-care/tests/unit/entities/patient.aggregate.spec.ts
 import { beforeEach, describe, expect, test } from "bun:test";
 import { ImutableListFactory } from "@conecta/fn";
+import { Option } from "@conecta/option";
 import { Uuid } from "@conecta/uuid";
 import {
   CommunitySupportNetwork,
@@ -213,15 +214,15 @@ describe("Patient.entity", () => {
       const { patient, personId, diagnosis } = createPatient();
       // Assert
       expect(patient.personId.equals(personId)).toBe(true);
-      expect(patient.diagnoses.count()).toBe(1);
-      expect(patient.diagnoses.getAll()[0].description).toBe(
+      expect(ImutableListFactory.count(patient.diagnoses)).toBe(1);
+      expect(ImutableListFactory.getAll(patient.diagnoses)[0].description).toBe(
         diagnosis.description,
       );
-      expect(patient.familyMembers.count()).toBe(0);
-      expect(patient.appointments.count()).toBe(0);
-      expect(patient.referrals.count()).toBe(0);
-      expect(patient.violationsReports.count()).toBe(0);
-      expect(patient.housingCondition.isNone).toBe(true);
+      expect(ImutableListFactory.count(patient.familyMembers)).toBe(0);
+      expect(ImutableListFactory.count(patient.appointments)).toBe(0);
+      expect(ImutableListFactory.count(patient.referrals)).toBe(0);
+      expect(ImutableListFactory.count(patient.violationsReports)).toBe(0);
+      expect(Option.isNone(patient.housingCondition)).toBe(true);
     });
 
     test("deve FALHAR ao criar sem um diagnóstico inicial (regra P-001)", () => {
@@ -250,15 +251,15 @@ describe("Patient.entity", () => {
       // Arrange
       const { patient } = createPatient();
       const member = FamilyMember.create(makeFamilyMemberData()).unwrap();
-      expect(patient.familyMembers.count()).toBe(0);
+      expect(ImutableListFactory.count(patient.familyMembers)).toBe(0);
       // Act
       const result = patient.addFamilyMember(member);
       // Assert
       expect(result.isOk).toBe(true);
       const updatedPatient = result.unwrap();
-      expect(updatedPatient.familyMembers.count()).toBe(1);
+      expect(ImutableListFactory.count(updatedPatient.familyMembers)).toBe(1);
       expect(updatedPatient === patient).toBe(false); // Imutabilidade
-      expect(patient.familyMembers.count()).toBe(0); // Original inalterado
+      expect(ImutableListFactory.count(patient.familyMembers)).toBe(0); // Original inalterado
     });
 
     test("deve FALHAR ao adicionar um membro com um personId duplicado (regra P-004)", () => {
@@ -279,7 +280,7 @@ describe("Patient.entity", () => {
       expect(result.unwrapErr().code).toBe(
         P.FamilyMemberAlreadyExists({ memberId: "" }).code,
       ); // P-004
-      expect(patientWithMember.familyMembers.count()).toBe(1);
+      expect(ImutableListFactory.count(patientWithMember.familyMembers)).toBe(1);
     });
 
     test("deve remover um membro da família existente pelo personId", () => {
@@ -288,13 +289,13 @@ describe("Patient.entity", () => {
       const memberData = makeFamilyMemberData();
       const member = FamilyMember.create(memberData).unwrap();
       const patientWithMember = patient.addFamilyMember(member).unwrap();
-      expect(patientWithMember.familyMembers.count()).toBe(1);
+      expect(ImutableListFactory.count(patientWithMember.familyMembers)).toBe(1);
       // Act
       const result = patientWithMember.removeFamilyMember(memberData.personId);
       // Assert
       expect(result.isOk).toBe(true);
       const updatedPatient = result.unwrap();
-      expect(updatedPatient.familyMembers.count()).toBe(0);
+      expect(ImutableListFactory.count(updatedPatient.familyMembers)).toBe(0);
       expect(updatedPatient === patientWithMember).toBe(false); // Imutabilidade
     });
 
@@ -348,11 +349,11 @@ describe("Patient.entity", () => {
       expect(result1.isOk).toBe(true);
       const patient1 = result1.unwrap();
       expect(
-        patient1.familyMembers.getAll().find((m) => m.id.equals(memberA.id))
+        ImutableListFactory.getAll(patient1.familyMembers).find((m) => m.id.equals(memberA.id))
           ?.isPrimaryCaregiver,
       ).toBe(true);
       expect(
-        patient1.familyMembers.getAll().find((m) => m.id.equals(memberB.id))
+        ImutableListFactory.getAll(patient1.familyMembers).find((m) => m.id.equals(memberB.id))
           ?.isPrimaryCaregiver,
       ).toBe(false);
 
@@ -362,11 +363,11 @@ describe("Patient.entity", () => {
       expect(result2.isOk).toBe(true);
       const patient2 = result2.unwrap();
       expect(
-        patient2.familyMembers.getAll().find((m) => m.id.equals(memberA.id))
+        ImutableListFactory.getAll(patient2.familyMembers).find((m) => m.id.equals(memberA.id))
           ?.isPrimaryCaregiver,
       ).toBe(false);
       expect(
-        patient2.familyMembers.getAll().find((m) => m.id.equals(memberB.id))
+        ImutableListFactory.getAll(patient2.familyMembers).find((m) => m.id.equals(memberB.id))
           ?.isPrimaryCaregiver,
       ).toBe(true);
 
@@ -376,7 +377,7 @@ describe("Patient.entity", () => {
       expect(result3.isOk).toBe(true);
       const patient3 = result3.unwrap();
       expect(
-        patient3.familyMembers.getAll().find((m) => m.id.equals(memberB.id))
+        ImutableListFactory.getAll(patient3.familyMembers).find((m) => m.id.equals(memberB.id))
           ?.isPrimaryCaregiver,
       ).toBe(true);
     });
@@ -431,7 +432,7 @@ describe("Patient.entity", () => {
       // Assert
       expect(resultP.isOk).toBe(true);
       const patientAfterPatientReferral = resultP.unwrap();
-      expect(patientAfterPatientReferral.referrals.count()).toBe(1);
+      expect(ImutableListFactory.count(patientAfterPatientReferral.referrals)).toBe(1);
 
       const resultF = patientAfterPatientReferral.createReferral(
         referralForFamily,
@@ -439,10 +440,10 @@ describe("Patient.entity", () => {
       );
       expect(resultF.isOk).toBe(true);
       const patientAfterFamilyReferral = resultF.unwrap();
-      expect(patientAfterFamilyReferral.referrals.count()).toBe(2);
+      expect(ImutableListFactory.count(patientAfterFamilyReferral.referrals)).toBe(2);
 
       const [firstReferral, secondReferral] =
-        patientAfterFamilyReferral.referrals.getAll();
+        ImutableListFactory.getAll(patientAfterFamilyReferral.referrals);
       expect(
         firstReferral.props.referredPersonId.equals(
           referralForPatient.referredPersonId,
@@ -487,8 +488,8 @@ describe("Patient.entity", () => {
       // Assert
       expect(result.isOk).toBe(true);
       const updatedPatient = result.unwrap();
-      expect(updatedPatient.violationsReports.count()).toBe(1);
-      const report = updatedPatient.violationsReports.getAll()[0];
+      expect(ImutableListFactory.count(updatedPatient.violationsReports)).toBe(1);
+      const report = ImutableListFactory.getAll(updatedPatient.violationsReports)[0];
       expect(report.violationType).toBe(ViolationType.PHYSICAL_VIOLENCE);
     });
 
@@ -522,22 +523,22 @@ describe("Patient.entity", () => {
       const { patient } = createPatient();
       const housingA = makeHousingCondition({ numberOfRooms: 3 });
       const housingB = makeHousingCondition({ numberOfRooms: 5 });
-      expect(patient.housingCondition.isNone).toBe(true);
+      expect(Option.isNone(patient.housingCondition)).toBe(true);
 
       // Act: Atualiza para o estado "A"
       const patientA = patient.updateHousingCondition(housingA).unwrap();
 
       // Assert: Estado "A" e Imutabilidade
       expect(patientA === patient).toBe(false); // Imutabilidade
-      expect(patientA.housingCondition.isSome).toBe(true);
-      expect(patientA.housingCondition.unwrap().numberOfRooms).toBe(3);
+      expect(Option.isSome(patientA.housingCondition)).toBe(true);
+      expect(Option.unwrap(patientA.housingCondition).numberOfRooms).toBe(3);
 
       // Act: Atualiza para o estado "B"
       const patientB = patientA.updateHousingCondition(housingB).unwrap();
 
       // Assert: Estado "B" e Imutabilidade
       expect(patientB === patientA).toBe(false);
-      expect(patientB.housingCondition.unwrap().numberOfRooms).toBe(5);
+      expect(Option.unwrap(patientB.housingCondition).numberOfRooms).toBe(5);
     });
   });
 
@@ -570,14 +571,14 @@ describe("Patient.entity", () => {
 
       // Assert: Imutabilidade e Histórico
       expect(patientWithTwo === patientWithOne).toBe(false);
-      expect(patientWithTwo.appointments.count()).toBe(2);
-      expect(patientWithTwo.appointments.getAll()[0].summary).toBe(
+      expect(ImutableListFactory.count(patientWithTwo.appointments)).toBe(2);
+      expect(ImutableListFactory.getAll(patientWithTwo.appointments)[0].summary).toBe(
         "Primeira visita",
       );
-      expect(patientWithTwo.appointments.getAll()[1].summary).toBe(
+      expect(ImutableListFactory.getAll(patientWithTwo.appointments)[1].summary).toBe(
         "Segunda visita",
       );
-      expect(patientWithOne.appointments.count()).toBe(1); // Original inalterado
+      expect(ImutableListFactory.count(patientWithOne.appointments)).toBe(1); // Original inalterado
     });
   });
 });

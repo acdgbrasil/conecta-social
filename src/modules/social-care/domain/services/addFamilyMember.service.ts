@@ -10,9 +10,9 @@ export const ensureFamilyMemberNotExists = (
   member: FamilyMember,
   familyMembers: ImutableList<FamilyMember>,
 ): Result<void, DomainError> => {
-  const exists = familyMembers
-    .getAll()
-    .some((current) => current.personId.equals(member.personId));
+  const exists = ImutableListFactory.getAll(familyMembers).some((current) =>
+    current.personId.equals(member.personId),
+  );
 
   if (exists) {
     return err(
@@ -29,9 +29,9 @@ export const findFamilyMemberByPersonId = (
   personId: PersonId,
   familyMembers: ImutableList<FamilyMember>,
 ): Result<FamilyMember, DomainError> => {
-  const member = familyMembers
-    .getAll()
-    .find((candidate) => candidate.personId.equals(personId));
+  const member = ImutableListFactory.getAll(familyMembers).find((candidate) =>
+    candidate.personId.equals(personId),
+  );
 
   if (!member) {
     return err(
@@ -53,7 +53,7 @@ export const updatePrimaryCaregiverMembers = (
   personId: PersonId,
   familyMembers: ImutableList<FamilyMember>,
 ): Result<PrimaryCaregiverUpdate, DomainError> => {
-  const members = familyMembers.getAll();
+  const members = ImutableListFactory.getAll(familyMembers);
   const target = members.find((member) => member.personId.equals(personId));
 
   if (!target) {

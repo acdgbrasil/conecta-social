@@ -1,19 +1,19 @@
-import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
-import type { AddFamilyMemberInput } from "@conecta/social-care/domain/inputs/AddFamilyMember.input";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { AddFamilyMemberCommand } from "@conecta/social-care/application/ports/commands/add-family-member.command";
 import { err, ok, type Result } from "@conecta/result";
 import type { DomainError } from "@conecta/domain-error";
-import type { EventBusPort } from "@conecta/ports";
+import type { EventBusPort, UseCasePort } from "@conecta/ports";
 import {
   FamilyMember,
   FamilyMemberId,
   P,
   PersonId,
 } from "@conecta/social-care";
+import { ImutableListFactory } from "@conecta/fn";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 
 export class AddFamilyMemberUseCase
   implements
-    UseCasePort<AddFamilyMemberInput, Result<boolean, DomainError>>
+    UseCasePort<AddFamilyMemberCommand, Result<boolean, DomainError>>
 {
   constructor(
     private readonly repository: PatientRepositoryPort,
@@ -21,13 +21,13 @@ export class AddFamilyMemberUseCase
   ) {}
 
   async execute(
-    input: Readonly<AddFamilyMemberInput>,
+    command: Readonly<AddFamilyMemberCommand>,
   ): Promise<Result<boolean, DomainError>> {
-    const personIdResult = PersonId.create(input.memberPersonId);
+    const personIdResult = PersonId.create(command.memberPersonId);
     if (personIdResult.isErr) return err(personIdResult.error);
     const personId = personIdResult.value;
 
-    const patientPersonIdResult = PersonId.create(input.patientId);
+    const patientPersonIdResult = PersonId.create(command.patientId);
     if (patientPersonIdResult.isErr) return err(patientPersonIdResult.error);
 
     const patientResult = await this.repository.findByPersonId(
@@ -36,21 +36,22 @@ export class AddFamilyMemberUseCase
     if (patientResult.isErr) return err(patientResult.error);
     const patient = patientResult.value;
 
-    const familyMemberIdResult = FamilyMemberId.create(input.memberPersonId);
+    const familyMemberIdResult = FamilyMemberId.create(command.memberPersonId);
     if (familyMemberIdResult.isErr) return err(familyMemberIdResult.error);
 
-    const existingMember = patient.familyMembers
-      .getAll()
+    const existingMember = ImutableListFactory.getAll(patient.familyMembers)
       .find((member) => member.personId.equals(personId));
     if (existingMember)
-      return err(P.FamilyMemberAlreadyExists({ memberId: input.memberPersonId }));
+      return err(
+        P.FamilyMemberAlreadyExists({ memberId: command.memberPersonId }),
+      );
 
     const newFamilyMemberResult = FamilyMember.create({
       id: familyMemberIdResult.value,
       personId: personId,
-      relationship: input.relationship,
-      isPrimaryCaregiver: input.isCaregiver,
-      residesWithPatient: input.isResiding,
+      relationship: command.relationship,
+      isPrimaryCaregiver: command.isCaregiver,
+      residesWithPatient: command.isResiding,
     });
 
     if (newFamilyMemberResult.isErr) return err(newFamilyMemberResult.error);

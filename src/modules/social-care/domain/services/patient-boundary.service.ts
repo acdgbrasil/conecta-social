@@ -1,4 +1,4 @@
-import type { ImutableList } from "@conecta/fn";
+import { ImutableListFactory, type ImutableList } from "@conecta/fn";
 import type { Uuid } from "@conecta/uuid";
 
 import type { FamilyMember } from "../entities/FamilyMember.entity";
@@ -11,5 +11,7 @@ export const belongsToBoundary = (
 ): boolean => {
   const candidate = targetId.toString();
   if (patientPersonId.toString() === candidate) return true;
-  return familyMembers.getAll().some((member) => member.personId.toString() === candidate);
+  return ImutableListFactory.getAll(familyMembers).some(
+    (member) => member.personId.toString() === candidate,
+  );
 };

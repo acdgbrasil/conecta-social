@@ -63,7 +63,7 @@ const runBench = (bench: BenchCase, iterations = 10) => {
     const list = ImutableListFactory.fromArray(data);
 
     const start = performance.now();
-    list.hasDuplicates(); // ignore result; aim is timing
+    ImutableListFactory.hasDuplicates(list); // ignore result; aim is timing
     const end = performance.now();
 
     durations.push(end - start);

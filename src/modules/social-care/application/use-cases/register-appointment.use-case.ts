@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "@conecta/result";
 import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
-import type { RegisterAppointmentInput } from "@conecta/social-care/domain/inputs/RegisterAppointment.input";
+import type { RegisterAppointmentCommand } from "@conecta/social-care/application/ports/commands/register-appointment.command";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
 import type { DomainError } from "@conecta/domain-error";
 import type { EventBusPort, ClockPort } from "@conecta/ports";
@@ -9,7 +9,7 @@ import { Uuid } from "@conecta/uuid";
 
 export class RegisterAppointmentUseCase
   implements
-    UseCasePort<RegisterAppointmentInput, Result<boolean, DomainError>>
+    UseCasePort<RegisterAppointmentCommand, Result<boolean, DomainError>>
 {
   constructor(
     private readonly repository: PatientRepositoryPort,
@@ -18,9 +18,9 @@ export class RegisterAppointmentUseCase
   ) {}
 
   async execute(
-    input: Readonly<RegisterAppointmentInput>,
+    command: Readonly<RegisterAppointmentCommand>,
   ): Promise<Result<boolean, DomainError>> {
-    const personIdResult = PersonId.create(input.patientId);
+    const personIdResult = PersonId.create(command.patientId);
     if (personIdResult.isErr) return err(personIdResult.error);
 
     const patientResult = await this.repository.findByPersonId(
@@ -30,19 +30,19 @@ export class RegisterAppointmentUseCase
     const patient = patientResult.value;
 
     let timestamp: Timestamp | undefined;
-    if (input.date) {
-      const tsResult = Timestamp.create({ value: input.date });
+    if (command.date) {
+      const tsResult = Timestamp.create({ value: command.date });
       if (tsResult.isErr) return err(tsResult.error);
       timestamp = tsResult.value;
     }
 
-    const professionalIdResult = Uuid.create(input.professionalId);
+    const professionalIdResult = Uuid.create(command.professionalId);
     if (professionalIdResult.isErr) return err(professionalIdResult.error);
 
     const draft: AppointmentDraft = {
-      summary: input.summary,
-      actionPlan: input.actionPlan,
-      type: input.type,
+      summary: command.summary,
+      actionPlan: command.actionPlan,
+      type: command.type,
       date: timestamp,
       professionalInChargeId: professionalIdResult.value,
     };

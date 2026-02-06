@@ -79,7 +79,7 @@ describe("UseCase: CreateReferral", () => {
     expect(repository.save).toHaveBeenCalled();
 
     const savedPatient = repository.save.mock.calls[0][0] as Patient;
-    expect(savedPatient.referrals.count()).toBe(1);
+    expect(ImutableListFactory.count(savedPatient.referrals)).toBe(1);
     
     // Validar eventos
     expect(eventBus.published.length).toBe(1);

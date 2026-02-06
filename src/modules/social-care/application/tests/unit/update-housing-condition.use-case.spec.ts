@@ -3,16 +3,17 @@ import { describe, test, expect, mock, beforeEach } from "bun:test";
 import { inMemoryEventBus } from "@conecta/adapters";
 import {
   Diagnosis,
+  HousingCondition,
   ICDCode,
   P,
   Patient,
   PersonId,
   Timestamp,
 } from "@conecta/social-care";
+import { Option } from "@conecta/option";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
 import { ImutableListFactory } from "@conecta/fn";
 import { UpdateHousingConditionUseCase } from "@conecta/social-care/application/use-cases/update-housing-condition.use-case";
-import type { HousingConditionDTO } from "../../../dto/social-assessment.dto";
 
 const NOW = new Date("2025-01-01T12:00:00Z");
 const PATIENT_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
@@ -37,7 +38,7 @@ const makePatient = (): Patient => {
   return Patient.createFromScratch(personId, diagnoses).unwrap();
 };
 
-const VALID_CONDITION_DTO: HousingConditionDTO = {
+const VALID_CONDITION = HousingCondition.create({
   housingConditionType: "OWNED",
   wallMaterial: "MASONRY",
   numberOfRooms: 4,
@@ -49,7 +50,7 @@ const VALID_CONDITION_DTO: HousingConditionDTO = {
   accessibilityLevel: "FULLY_ACCESSIBLE",
   isInGeographicRiskArea: false,
   isInSocialConflictArea: false,
-};
+}).unwrap();
 
 describe("UseCase: UpdateHousingCondition", () => {
   let repository: PatientRepositoryMock;
@@ -76,15 +77,15 @@ describe("UseCase: UpdateHousingCondition", () => {
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
-      condition: VALID_CONDITION_DTO,
+      condition: VALID_CONDITION,
     });
 
     expect(result.isOk).toBe(true);
     expect(repository.save).toHaveBeenCalled();
 
     const savedPatient = repository.save.mock.calls[0][0] as Patient;
-    expect(savedPatient.housingCondition.isSome).toBe(true);
-    expect(savedPatient.housingCondition.unwrap().numberOfRooms).toBe(4);
+    expect(Option.isSome(savedPatient.housingCondition)).toBe(true);
+    expect(Option.unwrap(savedPatient.housingCondition).numberOfRooms).toBe(4);
   });
 
   test("deve retornar erro quando o paciente não existe", async () => {
@@ -94,23 +95,7 @@ describe("UseCase: UpdateHousingCondition", () => {
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
-      condition: VALID_CONDITION_DTO,
-    });
-
-    expect(result.isErr).toBe(true);
-    expect(repository.save).not.toHaveBeenCalled();
-  });
-
-  test("deve retornar erro quando o DTO é inválido (regras de negócio)", async () => {
-    const patient = makePatient();
-    repository.findByPersonId.mockResolvedValue(ok(patient));
-
-    const result = await useCase.execute({
-      patientId: PATIENT_UUID,
-      condition: {
-        ...VALID_CONDITION_DTO,
-        numberOfBathrooms: 10, // Inválido: mais banheiros que quartos
-      },
+      condition: VALID_CONDITION,
     });
 
     expect(result.isErr).toBe(true);

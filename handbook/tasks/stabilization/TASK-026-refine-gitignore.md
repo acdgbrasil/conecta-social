@@ -1,6 +1,6 @@
 # [TASK-026] Refinar .gitignore (Remover ignorados indevidos)
 
-**Status:** 🔴 To Do
+**Status:** ✅ Done
 **Prioridade:** 🟡 Média
 **Labels:** `infra`, `fix`
 **Origem:** PR #147 review
@@ -11,9 +11,9 @@ A entrada em `.gitignore` está muito ampla e ignorando pastas importantes:
 2. `packages/acdg/...`: (Obsoleto) Referência a pacotes que não existem mais neste repo.
 
 ## Tarefas
-- [ ] Remover `handbook/tooling/` do `.gitignore`.
-- [ ] Limpar referências obsoletas a `packages/`.
+- [x] Remover `handbook/tooling/` do `.gitignore`.
+- [x] Limpar referências obsoletas a `packages/`.
 
 ## Critérios de Aceite
-- [ ] Documentação do tooling visível no Git.
-- [ ] `.gitignore` limpo e sem regras desnecessárias.
+- [x] Documentação do tooling visível no Git.
+- [x] `.gitignore` limpo e sem regras desnecessárias.

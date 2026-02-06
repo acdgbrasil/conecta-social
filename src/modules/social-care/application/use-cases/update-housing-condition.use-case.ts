@@ -1,15 +1,13 @@
 import { err, ok, type Result } from "@conecta/result";
-import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
-import type { UpdateHousingConditionInput } from "@conecta/social-care/domain/inputs/UpdateHousingCondition.input";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { UpdateHousingConditionCommand } from "@conecta/social-care/application/ports/commands/update-housing-condition.command";
 import type { DomainError } from "@conecta/domain-error";
-import type { EventBusPort } from "@conecta/ports";
+import type { EventBusPort, UseCasePort } from "@conecta/ports";
 import { PersonId } from "@conecta/social-care";
-import { mapHousingConditionDtoToDomain } from "../mappers/social-assessment.mapper";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 
 export class UpdateHousingConditionUseCase
   implements
-    UseCasePort<UpdateHousingConditionInput, Result<boolean, DomainError>>
+    UseCasePort<UpdateHousingConditionCommand, Result<boolean, DomainError>>
 {
   constructor(
     private readonly repository: PatientRepositoryPort,
@@ -17,15 +15,10 @@ export class UpdateHousingConditionUseCase
   ) {}
 
   async execute(
-    input: Readonly<UpdateHousingConditionInput>,
+    command: Readonly<UpdateHousingConditionCommand>,
   ): Promise<Result<boolean, DomainError>> {
-    const personIdResult = PersonId.create(input.patientId);
+    const personIdResult = PersonId.create(command.patientId);
     if (personIdResult.isErr) return err(personIdResult.error);
-
-    const housingConditionResult = mapHousingConditionDtoToDomain(
-      input.condition,
-    );
-    if (housingConditionResult.isErr) return err(housingConditionResult.error);
 
     const patientResult = await this.repository.findByPersonId(
       personIdResult.value,
@@ -34,7 +27,7 @@ export class UpdateHousingConditionUseCase
     const patient = patientResult.value;
 
     const updateResult = patient.updateHousingCondition(
-      housingConditionResult.value,
+      command.condition,
     );
     if (updateResult.isErr) return err(updateResult.error);
 
