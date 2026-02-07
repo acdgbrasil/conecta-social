@@ -1,9 +1,9 @@
 import type { DomainError } from "@conecta/domain-error";
-import { err, ok, type Result } from "@conecta/result";
+import type { DeepReadonly } from "@conecta/fn";
+import { Result } from "@conecta/result";
 import type { Uuid } from "@conecta/uuid";
-
 import { RVR } from "../errors/RightsViolationReport.error";
-import type { Timestamp } from "../value-objects/timestamp.valueObject";
+import { Timestamp } from "../value-objects/timestamp.valueObject";
 
 export const ViolationType = {
   NEGLECT: "NEGLECT",
@@ -17,12 +17,6 @@ export const ViolationType = {
   OTHER: "OTHER",
 } as const;
 
-
-export type ViolationDraft = Partial<
-  Omit<RightsViolationReportProps, "victimId" | "violationType">
-> &
-  Pick<RightsViolationReportProps, "victimId" | "violationType">;
-
 export type RightsViolationReportProps = {
   id: Uuid;
   reportDate: Timestamp;
@@ -33,62 +27,53 @@ export type RightsViolationReportProps = {
   actionsTaken: string;
 };
 
-export class RightsViolationReport {
-  private constructor(readonly props: RightsViolationReportProps) {
-    Object.freeze(this.props);
-    Object.freeze(this);
-  }
+export type ViolationDraft = Partial<
+  Omit<RightsViolationReportProps, "victimId" | "violationType">
+> &
+  Pick<RightsViolationReportProps, "victimId" | "violationType">;
 
-  static create(
+export type RightsViolationReport = DeepReadonly<RightsViolationReportProps>;
+
+export const RightsViolationReport = {
+  create(
     props: RightsViolationReportProps,
     referenceDate: Date,
   ): Result<RightsViolationReport, DomainError> {
-    if (props.reportDate.toDate().getTime() > referenceDate.getTime()) {
-      return err(RVR.ReportDateInFuture());
+    const nowResult = Timestamp.create({ value: referenceDate });
+    if (Result.isErr(nowResult)) return Result.err(nowResult.error);
+    const now = nowResult.value;
+
+    if (Timestamp.isAfter(props.reportDate, now)) {
+      return Result.err(RVR.ReportDateInFuture());
     }
 
     if (
       props.incidentDate &&
-      props.incidentDate.toDate().getTime() >
-        props.reportDate.toDate().getTime()
+      Timestamp.isAfter(props.incidentDate, props.reportDate)
     ) {
-      return err(RVR.IncidentAfterReport());
+      return Result.err(RVR.IncidentAfterReport());
     }
 
     const description = props.descriptionOfFact?.trim() ?? "";
     if (description.length === 0) {
-      return err(RVR.EmptyDescription());
+      return Result.err(RVR.EmptyDescription());
     }
 
-    return ok(
-      new RightsViolationReport({
-        ...props,
-        descriptionOfFact: description,
-        actionsTaken: props.actionsTaken?.trim() ?? "",
-      }),
-    );
-  }
-
-  get id(): Uuid {
-    return this.props.id;
-  }
-
-  get violationType(): string {
-    return this.props.violationType;
-  }
-
-  get actionsTaken(): string {
-    return this.props.actionsTaken;
-  }
-
-  updateActions(newActions: string): RightsViolationReport {
-    return new RightsViolationReport({
-      ...this.props,
-      actionsTaken: newActions.trim(),
+    return Result.ok({
+      ...props,
+      descriptionOfFact: description,
+      actionsTaken: props.actionsTaken?.trim() ?? "",
     });
-  }
+  },
 
-  equals(other: RightsViolationReport): boolean {
-    return this.id.equals(other.id);
+  updateActions(report: RightsViolationReport, newActions: string): RightsViolationReport {
+    return {
+      ...report,
+      actionsTaken: newActions.trim(),
+    };
+  },
+
+  equals(a: RightsViolationReport, b: RightsViolationReport): boolean {
+    return a.id.equals(b.id);
   }
-}
+} as const;

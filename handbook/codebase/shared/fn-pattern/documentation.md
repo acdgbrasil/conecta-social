@@ -3,51 +3,44 @@
 > Utilitários funcionais leves compartilhados entre os módulos.
 
 ## Módulos exportados
-- `pipe`
-- `ImutableListFactory`
-- `ImutableList` (tipo apenas)
+- `List` (Immutable List Namespace)
+- `ImutableList<T>` (Tipo apenas)
 
-### `pipe(value, ...fns)`
-Composição síncrona de funções estilo Unix pipeline. Cada transform recebe o output do anterior.
-
-```ts typescript
-import { pipe } from "@conecta/fn";
-
-const normalized = pipe(
-  rawInput,
-  (value) => value.trim(),
-  (value) => value.replace(/\s+/g, " "),
-  (value) => value.toUpperCase(),
-);
-```
-
-<Note>
-  `pipe` não trata efeitos colaterais. Se precisar de short-circuit por erro, use `Result` ou `Option`.
-</Note>
-
-### `ImutableListFactory`
-Cria coleções imutáveis com operações básicas (`add`, `remove`, `setUnique` etc.). Ideal para manter invariantes em Value Objects.
+### `List`
+Namespace que fornece operações puras e de alta performance para coleções imutáveis baseadas em arrays nativos. Otimizado para o runtime Bun.
 
 ```ts typescript
-import { ImutableListFactory } from "@conecta/fn";
+import { List } from "@/shared/fn-pattern/imutable-list";
 
-const list = ImutableListFactory.fromArray(["A", "B", "B"]);
+// Construção
+const list = List.of("A", "B", "B");
+const fromArray = List.from(["X", "Y"]);
 
-const unique = list.setUnique();
-unique.getAll(); // ["A", "B"]
+// Operações (Sempre retornam nova referência)
+const unique = List.unique(list); // ["A", "B"]
+const withC = List.add(unique, "C"); // ["A", "B", "C"]
 
-const withC = unique.add("C");
-withC.getAll(); // ["A", "B", "C"]
+// Queries O(1)
+const total = List.count(withC); // 3
+const empty = List.isEmpty(List.empty()); // true
+
+// Buscas e Duplicatas O(N)
+const hasA = List.has(withC, "A"); // true
+const hasDup = List.hasDuplicates(list); // true
 ```
 
-APIs disponíveis:
-- `empty<T>()`
-- `fromArray<T>(elements: T[])`
-- `castTolist(list)`
+#### APIs disponíveis:
+- **Constructors**: `empty()`, `of(...elements)`, `from(iterable)`
+- **Operations**: `add(list, el)`, `remove(list, el)`, `map(list, fn)`, `filter(list, predicate)`, `unique(list, keySelector?)`
+- **Queries**: `isEmpty(list)`, `count(list)`, `has(list, el)`, `hasDuplicates(list, keySelector?)`
+- **Cast**: `toArray(list)`
 
-Cada instância retornada expõe:
-- `add`, `remove`, `getAll`, `isEmpty`, `count`, `contains`, `empty`, `castTolist`, `setUnique`
+### Performance & Stress
+A biblioteca foi testada sob condições extremas para garantir estabilidade:
+- **Carga Massiva**: Suporta até 5.000.000 de itens com operações de escrita entre 15-40ms.
+- **Concorrência**: Thread-safe por design (imutabilidade). Testada com 1.000 operações simultâneas sem corrupção de estado.
+- **Starvation**: Por ser CPU-bound e síncrona, operações gigantes bloqueiam o Event Loop. Use Workers para processamento em background se necessário.
 
-<Accordion title="Quando usar ImutableList">
-  Preserve invariantes em objetos de domínio sem expor arrays mutáveis. Sempre que uma entidade/value object aceitar múltiplos valores e precisar de operações derivadas (uniq, count), utilize a lista imutável.
+<Accordion title="Quando usar List">
+  Preserve invariantes em objetos de domínio sem expor arrays mutáveis. Sempre que uma entidade/value object aceitar múltiplos valores e precisar de operações derivadas (uniq, count), utilize a `List` imutável para garantir integridade referencial.
 </Accordion>

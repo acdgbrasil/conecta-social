@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { ImutableListFactory, stableStringify } from "@conecta/fn";
+import { List } from "../../fn-pattern/imutable-list";
 
 type FixtureKind = "primitive" | "shallow" | "nested";
 
@@ -42,7 +42,7 @@ const makeCases = (): BenchCase[] => {
             nested: { seq: i, label: `l-${i}` },
           },
         }));
-        // Introduce a circular ref on the last element to simulate stableStringify's cycle handling.
+        // Introduce a circular ref on the last element.
         if (base.length > 1) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (base[base.length - 1] as any).meta.self = base[base.length - 1];
@@ -60,10 +60,10 @@ const runBench = (bench: BenchCase, iterations = 10) => {
 
   for (let i = 0; i < iterations; i++) {
     const data = bench.makeData();
-    const list = ImutableListFactory.fromArray(data);
+    const list = List.from(data);
 
     const start = performance.now();
-    ImutableListFactory.hasDuplicates(list); // ignore result; aim is timing
+    List.hasDuplicates(list); // ignore result; aim is timing
     const end = performance.now();
 
     durations.push(end - start);
@@ -90,7 +90,7 @@ const thresholdsMs: Record<FixtureKind, number> = {
   nested: Number(process.env.IMUTABLE_LIST_PERF_THRESHOLD_NESTED ?? 5),
 };
 
-describe("Perf — ImutableList.hasDuplicates", () => {
+describe("Perf — List.hasDuplicates", () => {
   test("coleta tempos médios por tamanho e tipo de dado", () => {
     const cases = makeCases();
     const results = cases.map((bench) => ({
@@ -119,6 +119,3 @@ describe("Perf — ImutableList.hasDuplicates", () => {
     console.log(summary);
   });
 });
-
-// Helper exported for potential future tuning/benchmark runners.
-export const __stableStringify = stableStringify;

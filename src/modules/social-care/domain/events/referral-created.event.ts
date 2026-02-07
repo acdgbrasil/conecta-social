@@ -1,5 +1,5 @@
+import { makeEvent } from "./factory";
 import type { DomainEvent } from "@conecta/shared/protocols/event-bus.protocol";
-import { Uuid } from "@conecta/shared/uuid-pattern/uuid";
 
 export const ReferralCreatedEvent = (props: {
   patientId: string;
@@ -8,15 +8,14 @@ export const ReferralCreatedEvent = (props: {
   destinationService: string;
   status: string;
   occurredAt: Date;
-}): DomainEvent => ({
-  name: "ReferralCreated",
-  id: Uuid.create().unwrap().toString(),
-  occurredAt: props.occurredAt,
-  payload: {
+}): DomainEvent => makeEvent(
+  "ReferralCreated",
+  {
     patientId: props.patientId,
     referralId: props.referralId,
     referredPersonId: props.referredPersonId,
     destinationService: props.destinationService,
     status: props.status,
   },
-});
+  props.occurredAt
+);

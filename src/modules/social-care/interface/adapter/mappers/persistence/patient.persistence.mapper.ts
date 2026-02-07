@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "@conecta/result";
+import { Result } from "@conecta/result";
 import type { DomainError } from "@conecta/domain-error";
 import {
   Diagnosis,
@@ -14,8 +14,8 @@ import {
   SocioEconomicSituation,
   Timestamp,
 } from "@conecta/social-care";
-import { ImutableListFactory } from "@conecta/fn";
-import { None, Option, Some, type Option as OptionType } from "@conecta/option";
+import { List } from "@conecta/fn";
+import { Option } from "@conecta/option";
 import { Uuid } from "@conecta/uuid";
 import { AppError } from "../../../../application/errors/application.error";
 
@@ -140,27 +140,27 @@ export const mapPatientToPersistence = (
   return {
     patient: {
       id: patientId,
-      person_id: patient.personId.toString(),
-      housing_condition: Option.isSome(patient.housingCondition)
-        ? Option.unwrap(patient.housingCondition)
+      person_id: patient.props.personId.toString(),
+      housing_condition: Option.isSome(patient.props.housingCondition)
+        ? Option.unwrap(patient.props.housingCondition)
         : null,
-      socioeconomic_situation: Option.isSome(patient.socioeconomicSituation)
-        ? Option.unwrap(patient.socioeconomicSituation)
+      socioeconomic_situation: Option.isSome(patient.props.socioeconomicSituation)
+        ? Option.unwrap(patient.props.socioeconomicSituation)
         : null,
-      community_support_network: Option.isSome(patient.communitySupportNetwork)
-        ? Option.unwrap(patient.communitySupportNetwork)
+      community_support_network: Option.isSome(patient.props.communitySupportNetwork)
+        ? Option.unwrap(patient.props.communitySupportNetwork)
         : null,
-      social_health_summary: Option.isSome(patient.socialHealthSummary)
-        ? Option.unwrap(patient.socialHealthSummary)
+      social_health_summary: Option.isSome(patient.props.socialHealthSummary)
+        ? Option.unwrap(patient.props.socialHealthSummary)
         : null,
     },
-    diagnoses: ImutableListFactory.getAll(patient.diagnoses).map((diag) => ({
+    diagnoses: patient.props.diagnoses.map((diag) => ({
       patient_id: patientId,
       icd_code: diag.id.value,
-      diagnosis_date: diag.date.toDate(),
+      diagnosis_date: Timestamp.toDate(diag.date),
       description: diag.description || null,
     })),
-    familyMembers: ImutableListFactory.getAll(patient.familyMembers).map(
+    familyMembers: patient.props.familyMembers.map(
       (member) => ({
         id: member.id.toString(),
         patient_id: patientId,
@@ -170,33 +170,33 @@ export const mapPatientToPersistence = (
         resides_with_patient: member.residesWithPatient,
       }),
     ),
-    appointments: ImutableListFactory.getAll(patient.appointments).map((app) => ({
+    appointments: patient.props.appointments.map((app) => ({
       id: app.id.toString(),
       patient_id: patientId,
       professional_in_charge_id: app.professionalInChargeId.toString(),
-      appointment_date: app.date.toDate(),
+      appointment_date: Timestamp.toDate(app.date),
       summary: app.summary,
       action_plan: app.actionPlan,
       appointment_type: app.type,
     })),
-    referrals: ImutableListFactory.getAll(patient.referrals).map((ref) => ({
+    referrals: patient.props.referrals.map((ref) => ({
       id: ref.id.toString(),
       patient_id: patientId,
-      referred_person_id: ref.props.referredPersonId.toString(),
+      referred_person_id: ref.referredPersonId.toString(),
       destination_service: ref.destinationService,
-      reason: ref.props.reason,
+      reason: ref.reason,
       status: ref.status,
-      requesting_professional_id: ref.props.requestingProfessionalId.toString(),
-      referral_date: ref.props.date.toDate(),
+      requesting_professional_id: ref.requestingProfessionalId.toString(),
+      referral_date: Timestamp.toDate(ref.date),
     })),
-    violations: ImutableListFactory.getAll(patient.violationsReports).map((v) => ({
+    violations: patient.props.violationsReports.map((v) => ({
       id: v.id.toString(),
       patient_id: patientId,
-      victim_id: v.props.victimId.toString(),
+      victim_id: v.victimId.toString(),
       violation_type: v.violationType,
-      description_of_fact: v.props.descriptionOfFact,
-      incident_date: v.props.incidentDate ? v.props.incidentDate.toDate() : null,
-      report_date: v.props.reportDate.toDate(),
+      description_of_fact: v.descriptionOfFact,
+      incident_date: v.incidentDate ? Timestamp.toDate(v.incidentDate) : null,
+      report_date: Timestamp.toDate(v.reportDate),
       actions_taken: v.actionsTaken,
     })),
   };
@@ -211,7 +211,7 @@ const mapDiagnosisRowsToDomain = (
   for (const row of rows) {
     const icdResult = ICDCode.create(row.icd_code);
     const dateResult = Timestamp.create({ value: row.diagnosis_date });
-    if (icdResult.isErr) {
+    if (Result.isErr(icdResult)) {
       pushIssue(issues, {
         entity: "Diagnosis",
         recordId: row.id,
@@ -221,7 +221,7 @@ const mapDiagnosisRowsToDomain = (
       });
       continue;
     }
-    if (dateResult.isErr) {
+    if (Result.isErr(dateResult)) {
       pushIssue(issues, {
         entity: "Diagnosis",
         recordId: row.id,
@@ -240,7 +240,7 @@ const mapDiagnosisRowsToDomain = (
       },
       dateResult.value,
     );
-    if (diagResult.isOk) {
+    if (Result.isOk(diagResult)) {
       diagnosesList.push(diagResult.value);
       continue;
     }
@@ -267,7 +267,7 @@ const mapFamilyMemberRowsToDomain = (
     const fIdResult = FamilyMemberId.create(row.id);
     const fPersonIdResult = PersonId.create(row.person_id);
 
-    if (fIdResult.isErr) {
+    if (Result.isErr(fIdResult)) {
       pushIssue(issues, {
         entity: "FamilyMember",
         recordId: row.id,
@@ -278,7 +278,7 @@ const mapFamilyMemberRowsToDomain = (
       continue;
     }
 
-    if (fPersonIdResult.isErr) {
+    if (Result.isErr(fPersonIdResult)) {
       pushIssue(issues, {
         entity: "FamilyMember",
         recordId: row.id,
@@ -297,7 +297,7 @@ const mapFamilyMemberRowsToDomain = (
       residesWithPatient: row.resides_with_patient,
     });
 
-    if (memberResult.isOk) {
+    if (Result.isOk(memberResult)) {
       familyList.push(memberResult.value);
       continue;
     }
@@ -324,7 +324,7 @@ const mapAppointmentRowsToDomain = (
     const aIdResult = Uuid.create(row.id);
     const profIdResult = Uuid.create(row.professional_in_charge_id);
     const dateResult = Timestamp.create({ value: row.appointment_date });
-    if (aIdResult.isErr) {
+    if (Result.isErr(aIdResult)) {
       pushIssue(issues, {
         entity: "SocialCareAppointment",
         recordId: row.id,
@@ -335,7 +335,7 @@ const mapAppointmentRowsToDomain = (
       continue;
     }
 
-    if (profIdResult.isErr) {
+    if (Result.isErr(profIdResult)) {
       pushIssue(issues, {
         entity: "SocialCareAppointment",
         recordId: row.id,
@@ -346,7 +346,7 @@ const mapAppointmentRowsToDomain = (
       continue;
     }
 
-    if (dateResult.isErr) {
+    if (Result.isErr(dateResult)) {
       pushIssue(issues, {
         entity: "SocialCareAppointment",
         recordId: row.id,
@@ -363,13 +363,13 @@ const mapAppointmentRowsToDomain = (
         professionalInChargeId: profIdResult.value,
         date: dateResult.value,
         summary: row.summary,
-        actionPlan: row.action_plan ?? "",
+        action_plan: row.action_plan ?? "",
         type: row.appointment_type ?? "",
-      },
-      dateResult.value.toDate(),
+      } as any,
+      Timestamp.toDate(dateResult.value),
     );
 
-    if (appResult.isOk) {
+    if (Result.isOk(appResult)) {
       appointmentsList.push(appResult.value);
       continue;
     }
@@ -396,7 +396,7 @@ const mapReferralRowsToDomain = (
     const rIdResult = Uuid.create(row.id);
     const refPersonIdResult = Uuid.create(row.referred_person_id);
     const dateResult = Timestamp.create({ value: row.referral_date });
-    if (rIdResult.isErr) {
+    if (Result.isErr(rIdResult)) {
       pushIssue(issues, {
         entity: "Referral",
         recordId: row.id,
@@ -407,7 +407,7 @@ const mapReferralRowsToDomain = (
       continue;
     }
 
-    if (refPersonIdResult.isErr) {
+    if (Result.isErr(refPersonIdResult)) {
       pushIssue(issues, {
         entity: "Referral",
         recordId: row.id,
@@ -418,7 +418,7 @@ const mapReferralRowsToDomain = (
       continue;
     }
 
-    if (dateResult.isErr) {
+    if (Result.isErr(dateResult)) {
       pushIssue(issues, {
         entity: "Referral",
         recordId: row.id,
@@ -440,7 +440,7 @@ const mapReferralRowsToDomain = (
     }
 
     const profIdResult = Uuid.create(row.requesting_professional_id);
-    if (profIdResult.isErr) {
+    if (Result.isErr(profIdResult)) {
       pushIssue(issues, {
         entity: "Referral",
         recordId: row.id,
@@ -458,13 +458,13 @@ const mapReferralRowsToDomain = (
         date: dateResult.value,
         destinationService: row.destination_service,
         reason: row.reason,
-        status: row.status ?? undefined,
+        status: (row.status as any) ?? undefined,
         requestingProfessionalId: profIdResult.value,
       },
-      dateResult.value.toDate(),
+      Timestamp.toDate(dateResult.value),
     );
 
-    if (refResult.isOk) {
+    if (Result.isOk(refResult)) {
       referralsList.push(refResult.value);
       continue;
     }
@@ -495,7 +495,7 @@ const mapViolationRowsToDomain = (
 
     if (row.incident_date) {
       const incResult = Timestamp.create({ value: row.incident_date });
-      if (incResult.isOk) {
+      if (Result.isOk(incResult)) {
         incDate = incResult.value;
       } else {
         pushIssue(issues, {
@@ -509,7 +509,7 @@ const mapViolationRowsToDomain = (
       }
     }
 
-    if (vIdResult.isErr) {
+    if (Result.isErr(vIdResult)) {
       pushIssue(issues, {
         entity: "RightsViolationReport",
         recordId: row.id,
@@ -520,7 +520,7 @@ const mapViolationRowsToDomain = (
       continue;
     }
 
-    if (victimIdResult.isErr) {
+    if (Result.isErr(victimIdResult)) {
       pushIssue(issues, {
         entity: "RightsViolationReport",
         recordId: row.id,
@@ -531,7 +531,7 @@ const mapViolationRowsToDomain = (
       continue;
     }
 
-    if (repDateResult.isErr) {
+    if (Result.isErr(repDateResult)) {
       pushIssue(issues, {
         entity: "RightsViolationReport",
         recordId: row.id,
@@ -548,14 +548,14 @@ const mapViolationRowsToDomain = (
         victimId: victimIdResult.value,
         reportDate: repDateResult.value,
         incidentDate: incDate,
-        violationType: row.violation_type,
+        violationType: row.violation_type as any,
         descriptionOfFact: row.description_of_fact,
         actionsTaken: row.actions_taken || "",
       },
-      repDateResult.value.toDate(),
+      Timestamp.toDate(repDateResult.value),
     );
 
-    if (violResult.isOk) {
+    if (Result.isOk(violResult)) {
       violationsList.push(violResult.value);
       continue;
     }
@@ -575,11 +575,11 @@ const mapViolationRowsToDomain = (
 const mapHousingConditionFromRow = (
   row: PatientRow,
   issues: PersistenceMappingIssue[],
-): OptionType<HousingCondition> => {
-  if (!row.housing_condition) return None();
+): Option<HousingCondition> => {
+  if (!row.housing_condition) return Option.none();
 
   const hcResult = HousingCondition.create(row.housing_condition);
-  if (hcResult.isErr) {
+  if (Result.isErr(hcResult)) {
     pushIssue(issues, {
       entity: "Patient",
       recordId: row.id,
@@ -587,22 +587,22 @@ const mapHousingConditionFromRow = (
       reason: resolveErrorReason(hcResult.error),
       code: resolveErrorCode(hcResult.error),
     });
-    return None();
+    return Option.none();
   }
 
-  return Some(hcResult.value);
+  return Option.some(hcResult.value);
 };
 
 const mapSocioEconomicSituationFromRow = (
   row: PatientRow,
   issues: PersistenceMappingIssue[],
-): OptionType<SocioEconomicSituation> => {
-  if (!row.socioeconomic_situation) return None();
+): Option<SocioEconomicSituation> => {
+  if (!row.socioeconomic_situation) return Option.none();
 
   const sesResult = SocioEconomicSituation.create({
     ...row.socioeconomic_situation,
   });
-  if (sesResult.isErr) {
+  if (Result.isErr(sesResult)) {
     pushIssue(issues, {
       entity: "Patient",
       recordId: row.id,
@@ -610,10 +610,10 @@ const mapSocioEconomicSituationFromRow = (
       reason: resolveErrorReason(sesResult.error),
       code: resolveErrorCode(sesResult.error),
     });
-    return None();
+    return Option.none();
   }
 
-  return Some(sesResult.value);
+  return Option.some(sesResult.value);
 };
 
 export const mapPatientPersistenceToDomain = (
@@ -622,7 +622,7 @@ export const mapPatientPersistenceToDomain = (
   const issues: PersistenceMappingIssue[] = [];
 
   const personIdResult = PersonId.create(input.patient.person_id);
-  if (personIdResult.isErr) {
+  if (Result.isErr(personIdResult)) {
     pushIssue(issues, {
       entity: "Patient",
       recordId: input.patient.id,
@@ -633,7 +633,7 @@ export const mapPatientPersistenceToDomain = (
   }
 
   const patientIdResult = Uuid.create(input.patient.id);
-  if (patientIdResult.isErr) {
+  if (Result.isErr(patientIdResult)) {
     pushIssue(issues, {
       entity: "Patient",
       recordId: input.patient.id,
@@ -661,8 +661,8 @@ export const mapPatientPersistenceToDomain = (
     issues,
   );
 
-  if (issues.length > 0 || personIdResult.isErr || patientIdResult.isErr) {
-    return err(
+  if (issues.length > 0 || Result.isErr(personIdResult) || Result.isErr(patientIdResult)) {
+    return Result.err(
       AppError.PersistenceMappingFailure(
         input.patient.id,
         issues,
@@ -675,18 +675,18 @@ export const mapPatientPersistenceToDomain = (
     patientIdResult.value,
     {
       personId: personIdResult.value,
-      diagnoses: ImutableListFactory.fromArray(diagnoses),
-      familyMembers: ImutableListFactory.fromArray(familyMembers),
-      appointments: ImutableListFactory.fromArray(appointments),
-      referrals: ImutableListFactory.fromArray(referrals),
-      violationsReports: ImutableListFactory.fromArray(violations),
+      diagnoses: List.from(diagnoses),
+      familyMembers: List.from(familyMembers),
+      appointments: List.from(appointments),
+      referrals: List.from(referrals),
+      violationsReports: List.from(violations),
       housingCondition,
       socioeconomicSituation,
-      communitySupportNetwork: None(),
-      socialHealthSummary: None(),
+      communitySupportNetwork: Option.none(),
+      socialHealthSummary: Option.none(),
     },
     0,
   );
 
-  return ok(patient);
+  return Result.ok(patient);
 };

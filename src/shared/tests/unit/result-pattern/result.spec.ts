@@ -1,43 +1,128 @@
-import { describe, expect, test } from "bun:test";
-import { SpecificDomainError } from "@conecta/domain-error";
-import { err, isErr, isOk, ok, Result } from "@conecta/result";
+import { describe, expect, it } from "bun:test";
+import { Result } from "@conecta/result";
 
-describe("Result", () => {
-  test("ok mantém valor e permite map/flatMap encadeados", () => {
-    const result = ok(2);
-    const mapped = Result.map(result, (value) => value + 3);
-    const flatMapped = Result.flatMap(result, (value) => ok(value * 2));
+describe("Result Pattern", () => {
+  describe("Constructors", () => {
+    it("ok cria sucesso", () => {
+      const r = Result.ok(10);
+      expect(Result.isOk(r)).toBe(true);
+      expect(Result.unwrap(r)).toBe(10);
+    });
 
-    expect(Result.unwrap(mapped)).toBe(5);
-    expect(Result.unwrap(flatMapped)).toBe(4);
-    expect(isOk(result)).toBe(true);
-    expect(isErr(result)).toBe(false);
+    it("err cria erro", () => {
+      const r = Result.err("falha");
+      expect(Result.isErr(r)).toBe(true);
+      expect(Result.unwrapErr(r)).toBe("falha");
+    });
+
+    it("safe captura exceção", () => {
+      const r = Result.safe(() => {
+        throw new Error("boom");
+      });
+      expect(Result.isErr(r)).toBe(true);
+    });
+
+    it("tryAsync captura rejeição de promise", async () => {
+      const r = await Result.tryAsync(Promise.reject("boom"));
+      expect(Result.isErr(r)).toBe(true);
+    });
+
+    it("fromCondition cria sucesso ou erro baseado em booleano", () => {
+      expect(Result.isOk(Result.fromCondition(true, 1, "err"))).toBe(true);
+      expect(Result.isErr(Result.fromCondition(false, 1, "err"))).toBe(true);
+    });
   });
 
-  test("err propaga erro e ignora transformações", () => {
-    const originalError = new Error("falha");
-    const result = err(originalError);
+  describe("Transformations", () => {
+    it("map transforma sucesso", () => {
+      const r = Result.ok(2);
+      const mapped = Result.map(r, (n) => n * 2);
+      expect(Result.unwrap(mapped)).toBe(4);
+    });
 
-    const mapped = Result.map(result, (value) => value);
-    const flatMapped = Result.flatMap(result, (value) => ok(value));
+    it("mapErr transforma erro", () => {
+      const r = Result.err(2);
+      const mapped = Result.mapErr(r, (n) => `Erro ${n}`);
+      expect(Result.unwrapErr(mapped)).toBe("Erro 2");
+    });
 
-    expect(Result.unwrapErr(mapped)).toBe(originalError);
-    expect(Result.unwrapErr(flatMapped)).toBe(originalError);
-    expect(isOk(result)).toBe(false);
-    expect(isErr(result)).toBe(true);
+    it("flatMap encadeia logica", () => {
+      const r = Result.ok("10");
+      const chain = Result.flatMap(r, (s) => Result.ok(parseInt(s)));
+      expect(Result.unwrap(chain)).toBe(10);
+    });
   });
 
-  test("unwrap em Err lança Error genérico", () => {
-    const result = err(new Error("falha"));
+  describe("Utilities", () => {
+    it("all combina resultados com sucesso", () => {
+      const list = [Result.ok(1), Result.ok(2)];
+      const combined = Result.all(list);
+      expect(Result.unwrap(combined)).toEqual([1, 2]);
+    });
 
-    expect(() => Result.unwrap(result)).toThrow(Error);
-    expect(() => Result.unwrap(result)).toThrow("Called unwrap on an Err result");
-  });
+    it("all falha no primeiro erro", () => {
+      const list = [Result.ok(1), Result.err("erro"), Result.ok(3)];
+      const combined = Result.all(list);
+      expect(Result.isErr(combined)).toBe(true);
+      expect(Result.unwrapErr(combined)).toBe("erro");
+    });
 
-  test("unwrapErr em Ok lança Error genérico", () => {
-    const result = ok("valor");
+        it("match trata ambos os casos", () => {
 
-    expect(() => Result.unwrapErr(result)).toThrow(Error);
-    expect(() => Result.unwrapErr(result)).toThrow("Called unwrapErr on an Ok result");
-  });
-});
+          const r = Result.ok(1);
+
+          const val = Result.match(r, {
+
+            ok: (n) => n + 1,
+
+            err: () => 0,
+
+          });
+
+          expect(val).toBe(2);
+
+        });
+
+    
+
+        it("unwrapOr retorna fallback em caso de erro", () => {
+
+          expect(Result.unwrapOr(Result.ok(1), 2)).toBe(1);
+
+          expect(Result.unwrapOr(Result.err("err"), 2)).toBe(2);
+
+        });
+
+    
+
+        it("unwrapOrElse executa função em caso de erro", () => {
+
+          expect(Result.unwrapOrElse(Result.ok(1), () => 2)).toBe(1);
+
+          expect(Result.unwrapOrElse(Result.err("err"), (e) => (e as string).length)).toBe(3);
+
+        });
+
+    
+
+        it("promiseAll aguarda lista de promises", async () => {
+
+          const promises = [
+
+            Promise.resolve(Result.ok(1)),
+
+            Promise.resolve(Result.ok(2))
+
+          ];
+
+          const result = await Result.promiseAll(promises);
+
+          expect(Result.unwrap(result)).toEqual([1, 2]);
+
+        });
+
+      });
+
+    });
+
+    

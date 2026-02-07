@@ -1,6 +1,6 @@
 import type { DomainError } from "@conecta/domain-error";
-import { err, ok, type Result } from "@conecta/result";
-
+import type { DeepReadonly } from "@conecta/fn";
+import { Result } from "@conecta/result";
 import { FM } from "../errors/FamilyMember.error";
 import type { FamilyMemberId } from "../value-objects/FamilyMemberId.valueObject";
 import type { PersonId } from "../value-objects/personId.valueObject";
@@ -13,73 +13,39 @@ export type FamilyMemberProps = {
   residesWithPatient: boolean;
 };
 
-export class FamilyMember {
-  private constructor(readonly props: FamilyMemberProps) {
-    Object.freeze(this.props);
-    Object.freeze(this);
-  }
+export type FamilyMember = DeepReadonly<FamilyMemberProps>;
 
-  static create(props: FamilyMemberProps): Result<FamilyMember, DomainError> {
+export const FamilyMember = {
+  create(props: FamilyMemberProps): Result<FamilyMember, DomainError> {
     if (!props.personId) {
-      return err(FM.MissingPerson());
+      return Result.err(FM.MissingPerson());
     }
 
     if (!props.relationship || props.relationship.trim().length === 0) {
-      return err(FM.InvalidRelationship());
+      return Result.err(FM.InvalidRelationship());
     }
 
-    return ok(
-      new FamilyMember({
-        ...props,
-        relationship: props.relationship.trim(),
-        personId: props.personId,
-      }),
-    );
-  }
-
-  get id(): FamilyMemberId {
-    return this.props.id;
-  }
-
-  get personId(): PersonId {
-    return this.props.personId;
-  }
-
-  get relationship(): string {
-    return this.props.relationship;
-  }
-
-  get isPrimaryCaregiver(): boolean {
-    return this.props.isPrimaryCaregiver;
-  }
-
-  get residesWithPatient(): boolean {
-    return this.props.residesWithPatient;
-  }
-
-  assignAsPrimaryCaregiver(): FamilyMember {
-    if (this.isPrimaryCaregiver) {
-      return this;
-    }
-
-    return new FamilyMember({
-      ...this.props,
-      isPrimaryCaregiver: true,
+    return Result.ok({
+      ...props,
+      relationship: props.relationship.trim(),
     });
-  }
+  },
 
-  revokePrimaryCaregiver(): FamilyMember {
-    if (!this.isPrimaryCaregiver) {
-      return this;
+  assignAsPrimaryCaregiver(member: FamilyMember): FamilyMember {
+    if (member.isPrimaryCaregiver) {
+      return member;
     }
+    return { ...member, isPrimaryCaregiver: true };
+  },
 
-    return new FamilyMember({
-      ...this.props,
-      isPrimaryCaregiver: false,
-    });
-  }
+  revokePrimaryCaregiver(member: FamilyMember): FamilyMember {
+    if (!member.isPrimaryCaregiver) {
+      return member;
+    }
+    return { ...member, isPrimaryCaregiver: false };
+  },
 
-  equals(other: FamilyMember): boolean {
-    return this.id.equals(other.id);
+  equals(a: FamilyMember, b: FamilyMember): boolean {
+    return a.id === b.id; // Primitivos branded comparam por valor/referência
   }
-}
+} as const;

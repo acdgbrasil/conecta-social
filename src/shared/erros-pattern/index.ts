@@ -1,16 +1,17 @@
-export type { DomainError } from "./DomainError";
-export { SpecificDomainError } from "./DomainError";
-export type {
-  ErrorCategory,
-  ObservabilitySeverityLevel,
-  Template as DomainErrorCatalogTemplate,
-} from "./DomainError.composition";
-export {
-  ErrorTaxonomy,
-  makeDomainErrorFactory,
-  ObservabilitySeverity,
-} from "./DomainError.composition";
-export type { Template as DomainErrorTemplate } from "./DomainError.factory";
-export { DomainErrorFactory } from "./DomainError.factory";
+export * from "./DomainError";
+export * from "./DomainError.composition";
+export * from "./DomainError.shortcuts";
 
-export { shortcuts } from "./DomainError.shortcuts";
+import { ErrorTaxonomy, ObservabilitySeverity } from "./DomainError";
+import { makeDomainErrorFactory } from "./DomainError.composition";
+import { shortcuts } from "./DomainError.shortcuts";
+
+/**
+ * Namespace unificado para erros de domínio.
+ */
+export const DomainError = {
+  Taxonomy: ErrorTaxonomy,
+  Severity: ObservabilitySeverity,
+  makeFactory: makeDomainErrorFactory,
+  shortcuts,
+};

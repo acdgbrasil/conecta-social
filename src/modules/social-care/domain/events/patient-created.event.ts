@@ -1,6 +1,5 @@
-
-import { Result, type DomainEvent } from "@conecta/shared";
-import { Uuid } from "@conecta/shared/uuid-pattern/uuid";
+import { makeEvent } from "./factory";
+import type { DomainEvent } from "@conecta/shared";
 
 type PatientCreatedEventProps = {
   patientId: string;
@@ -10,12 +9,11 @@ type PatientCreatedEventProps = {
 
 export const PatientCreatedEvent = (
   props: PatientCreatedEventProps,
-): DomainEvent => ({
-  name: "PatientCreated",
-  id: Uuid.create().unwrap().toString(),
-  occurredAt: props.occurredAt,
-  payload: {
+): DomainEvent => makeEvent(
+  "PatientCreated",
+  {
     patientId: props.patientId,
     personId: props.personId,
   },
-});
+  props.occurredAt
+);

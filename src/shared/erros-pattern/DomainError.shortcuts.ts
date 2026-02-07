@@ -1,7 +1,19 @@
-// shared/erros-pattern/shortcuts.ts
+import type { SpecificDomainError } from "./DomainError";
 
-type ArgsFor<S extends readonly unknown[]> = { [I in keyof S]: unknown };
-
+/**
+ * Cria atalhos (shortcuts) posicionais para criação de erros.
+ * Útil para reduzir o boilerplate de passar objetos de contexto manualmente.
+ * 
+ * @example
+ * ```ts
+ * const Errors = makeDomainErrorFactory({ ... });
+ * const P = shortcuts(Errors, {
+ *   UserNotFound: ["userId"]
+ * });
+ * 
+ * throw P.UserNotFound("123"); // Cria o erro com { userId: "123" }
+ * ```
+ */
 export function shortcuts<
   Spec extends Record<string, readonly string[]>,
   H extends {
@@ -11,27 +23,35 @@ export function shortcuts<
     ) => any;
   },
 >(
-  helpers: H, // precisa ter, no mínimo, as chaves do spec
+  helpers: H,
   spec: Spec,
 ) {
-  const out: Partial<Record<keyof Spec, (...args: unknown[]) => any>> = {};
+  const out: any = {};
 
-  (Object.keys(spec) as (keyof Spec)[]).forEach((kind) => {
+  for (const kind of Object.keys(spec)) {
     const keys = spec[kind];
     out[kind] = (...args: unknown[]) => {
-      const cause = args.length > keys.length ? args[keys.length] : undefined;
+      // O último argumento pode ser a 'cause' se houver mais argumentos que chaves no spec
+      const hasCause = args.length > keys.length;
+      const cause = hasCause ? args[keys.length] : undefined;
+      
       const ctx: Record<string, unknown> = {};
       for (let i = 0; i < keys.length; i++) {
-        const v = args[i];
-        if (v !== undefined) ctx[keys[i] as string] = v;
+        const key = keys[i];
+        const value = args[i];
+        if (value !== undefined) {
+          ctx[key] = value;
+        }
       }
-      return helpers[kind]?.(ctx, { cause });
+      
+      return helpers[kind as keyof H](ctx, { cause });
     };
-  });
+  }
 
+  type ArgsFor<S extends readonly unknown[]> = { [I in keyof S]: unknown };
+  
   type Ret = {
-    [K in keyof Spec]: ((...args: ArgsFor<Spec[K]>) => ReturnType<H[K]>) &
-      ((...args: [...ArgsFor<Spec[K]>, unknown]) => ReturnType<H[K]>); // com cause
+    [K in keyof Spec]: ((...args: [...ArgsFor<Spec[K]>, unknown?]) => ReturnType<H[K]>);
   };
 
   return out as Ret;

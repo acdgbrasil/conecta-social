@@ -1,113 +1,94 @@
 export type ImutableList<T> = readonly T[];
 
-const clone = <T>(list: ImutableList<T>): readonly T[] => [...list];
+// --- Constructors ---
 
-const add = <T>(list: ImutableList<T>, element: T): ImutableList<T> => [...list, element];
-const remove = <T>(list: ImutableList<T>, element: T): ImutableList<T> => list.filter((candidate) => candidate !== element);
-const getAll = <T>(list: ImutableList<T>): T[] => [...list];
+const empty = <T>(): ImutableList<T> => [];
+
+const of = <T>(...elements: T[]): ImutableList<T> => elements;
+
+const from = <T>(iterable: Iterable<T>): ImutableList<T> =>
+	Array.from(iterable);
+
+// --- Operations (Pure & Immutable) ---
+
+const add = <T>(list: ImutableList<T>, element: T): ImutableList<T> => [
+	...list,
+	element,
+];
+
+const remove = <T>(list: ImutableList<T>, element: T): ImutableList<T> =>
+	list.filter((e) => e !== element);
+
+const map = <T, U>(
+	list: ImutableList<T>,
+	fn: (item: T) => U,
+): ImutableList<U> => list.map(fn);
+
+const filter = <T>(
+	list: ImutableList<T>,
+	predicate: (item: T) => boolean,
+): ImutableList<T> => list.filter(predicate);
+
+// --- Queries ---
+
 const isEmpty = <T>(list: ImutableList<T>): boolean => list.length === 0;
+
 const count = <T>(list: ImutableList<T>): number => list.length;
-const contains = <T>(list: ImutableList<T>, element: T): boolean => list.includes(element);
-const empty = <T>(): ImutableList<T> => [] as const;
-const fromArray = <T>(elements: readonly T[]): ImutableList<T> => [...elements];
-const castTolist = <T>(list: ImutableList<T>): ImutableList<T> => [...list];
-const setUnique = <T>(list: ImutableList<T>): ImutableList<T> => {
-  const seen = new Set<T>();
-  const result: T[] = [];
-  for (const item of list) {
-    if (!seen.has(item)) {
-      seen.add(item);
-      result.push(item);
-    }
-  }
-  return result;
-};
 
-function stableStringify(value: any): string {
-  const cache = new Set<any>();
+const has = <T>(list: ImutableList<T>, element: T): boolean =>
+	list.includes(element);
 
-  const replacer = (_key: string, val: any) => {
-    if (typeof val === "object" && val !== null) {
-      if (cache.has(val)) return "[Circular]";
-      cache.add(val);
-    }
+/**
+ * Retorna uma nova lista sem duplicatas.
+ * Para primitivos, usa Set (O(n)).
+ * Para objetos, aceita uma função seletora de chave opcional. Se não fornecida, usa referência.
+ */
+const unique = <T, K = T>(
+	list: ImutableList<T>,
+	keySelector?: (item: T) => K,
+): ImutableList<T> => {
+	if (!keySelector) return Array.from(new Set(list));
 
-    if (Array.isArray(val)) return val;
-    if (val && typeof val === "object" && !(val instanceof Date)) {
-      const ordered: any = {};
-      Object.keys(val)
-        .sort()
-        .forEach((k) => (ordered[k] = (val as any)[k]));
-      return ordered;
-    }
-    return val;
-  };
-
-  return JSON.stringify(value, replacer);
-}
-
-function hashValue(value: unknown): string {
-  if (value === null) return "p:null";
-  const type = typeof value;
-  switch (type) {
-    case "undefined":
-      return "p:undefined";
-    case "string":
-      return `p:string:${value as string}`;
-    case "number":
-      return `p:number:${value as number}`;
-    case "boolean":
-      return `p:boolean:${value as boolean}`;
-    case "bigint":
-      return `p:bigint:${value.toString()}`;
-    case "symbol":
-      return `p:symbol:${String(value)}`;
-  }
-
-  if (value instanceof Date) return `d:${value.toISOString()}`;
-  return stableStringify(value as any);
-}
-
-const hasDuplicates = <T>(list: ImutableList<T>): boolean => {
-  const seen = new Set<string>();
-  for (const item of list) {
-    const hash = hashValue(item);
-    if (seen.has(hash)) return true;
-    seen.add(hash);
-  }
-  return false;
-};
-
-const findDuplicates = <T>(list: ImutableList<T>): T[] => {
-  const seen = new Map<string, T>();
-  const duplicates: T[] = [];
-  for (const item of list) {
-    const hash = hashValue(item);
-    if (seen.has(hash)) {
-      if (!duplicates.includes(item)) duplicates.push(item);
-    } else {
-      seen.set(hash, item);
-    }
-  }
-  return duplicates;
+	const seen = new Set<K>();
+	return list.filter((item) => {
+		const key = keySelector(item);
+		if (seen.has(key)) return false;
+		seen.add(key);
+		return true;
+	});
 };
 
 /**
- * Compat layer preservando API ImutableListFactory, mas usando readonly arrays.
+ * Verifica se existem duplicatas na lista.
+ * Otimizado para falhar rápido (early return).
  */
-export const ImutableListFactory = {
-  empty,
-  fromArray,
-  castTolist,
-  add: <T>(list: ImutableList<T>, element: T) => add(list, element),
-  remove: <T>(list: ImutableList<T>, element: T) => remove(list, element),
-  getAll: <T>(list: ImutableList<T>) => getAll(list),
-  isEmpty: <T>(list: ImutableList<T>) => isEmpty(list),
-  count: <T>(list: ImutableList<T>) => count(list),
-  contains: <T>(list: ImutableList<T>, element: T) => contains(list, element),
-  setUnique: <T>(list: ImutableList<T>) => setUnique(list),
-  hasDuplicates: <T>(list: ImutableList<T>) => hasDuplicates(list),
-  findDuplicates: <T>(list: ImutableList<T>) => findDuplicates(list),
+const hasDuplicates = <T, K = T>(
+	list: ImutableList<T>,
+	keySelector?: (item: T) => K,
+): boolean => {
+	const seen = new Set<K>();
+	for (const item of list) {
+		const key = keySelector ? keySelector(item) : (item as unknown as K);
+		if (seen.has(key)) return true;
+		seen.add(key);
+	}
+	return false;
 };
 
-export { stableStringify };
+// --- Namespace ---
+
+export const List = {
+	empty,
+	of,
+	from,
+	add,
+	remove,
+	isEmpty,
+	count,
+	has,
+	map,
+	filter,
+	unique,
+	hasDuplicates,
+	toArray: <T>(list: ImutableList<T>): T[] => [...list],
+};

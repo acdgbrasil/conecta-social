@@ -1,192 +1,135 @@
-/**
- * @module @conecta/uuid
- * @description Um Value Object imutável e uma API de utilitários para manuseio de UUIDs.
- *
- * @example
- * ```ts
- * import { Uuid, Version } from '@conecta/uuid';
- * import { randomInt } from 'crypto';
- *
- * // Validar e criar um Uuid a partir de uma string
- * const result = Uuid.create('123e4567-e89b-12d3-a456-426614174000');
- * if (result.isOk) {
- *   const myId = result.unwrap();
- *   console.log(myId.toString()); // '123e4567-e89b-12d3-a456-426614174000'
- *   console.log(myId.getVersion()); // Version.V1
- * }
- *
- * // Gerar um novo UUID v7
- * const rng = { nextInt: (max: number) => randomInt(max) };
- * const newId = Uuid.generateV7({ rng });
- * console.log(`Novo ID v7: ${newId}`);
- * ```
- */
-import { err, ok, type Result } from "../result-pattern";
-
-/** Enum para identificar a versão de um UUID suportado. */
-export enum Version {
-  V1 = "v1",
-  V3 = "v3",
-  V4 = "v4",
-  V7 = "v7",
-}
-
-/** Interface para um gerador de números aleatórios injetável. */
-export interface Rng {
-  nextInt(maxExclusive: number): number;
-}
-
-/** Erro lançado quando uma string não representa um UUID válido. */
-export class InvalidUuidError extends Error {
-  constructor(value: string) {
-    super(`O valor fornecido '${value}' não é um UUID suportado.`);
-    this.name = "InvalidUuidError";
-  }
-}
+import type { Branded } from "@conecta/fn";
+import { type Result, Result as R } from "@conecta/result";
 
 /**
- * Representa um UUID (Universally Unique Identifier) como um Value Object imutável.
- *
- * Esta classe fornece métodos para criar, validar, gerar e inspecionar UUIDs
- * das versões v1, v3, v4 e v7.
+ * Representa um UUID validado e tipado nominalmente.
+ * Em runtime é apenas uma string, garantindo zero overhead de serialização/deserialização.
  */
-export class Uuid {
-  // Expressões Regulares para validação, 'i' para case-insensitivity.
-  private static readonly RE_V1 =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  private static readonly RE_V3 =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-3[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  private static readonly RE_V4 =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  private static readonly RE_V7 =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+export type Uuid = Branded<string, "Uuid">;
 
+export type InvalidUuidError = {
+  readonly kind: "InvalidUuidError";
+  readonly message: string;
   readonly value: string;
+};
 
-  private constructor(value: string) {
-    this.value = value;
-    Object.freeze(this);
+// Expressões Regulares para validação (case-insensitive)
+const RE = {
+  V1: /^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+  V3: /^[0-9a-f]{8}-[0-9a-f]{4}-3[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+  V4: /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+  V7: /^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+};
+
+/**
+ * Interface para injeção de dependência do gerador de números aleatórios.
+ */
+export type Rng = {
+  nextInt(maxExclusive: number): number;
+};
+
+const defaultRng: Rng = {
+  nextInt: (max) => Math.floor(Math.random() * max),
+};
+
+// --- Funções Puras ---
+
+const isV1 = (s: string): boolean => RE.V1.test(s);
+const isV3 = (s: string): boolean => RE.V3.test(s);
+const isV4 = (s: string): boolean => RE.V4.test(s);
+const isV7 = (s: string): boolean => RE.V7.test(s);
+
+const isValid = (s: string): boolean => isV1(s) || isV3(s) || isV4(s) || isV7(s);
+
+/**
+ * Cria um UUID a partir de uma string existente.
+ * Retorna Result.ok(Uuid) se válido, ou Result.err(InvalidUuidError).
+ */
+const create = (value: string): Result<Uuid, InvalidUuidError> => {
+  if (isValid(value)) {
+    return R.ok(value.toLowerCase() as Uuid);
   }
+  return R.err({
+    kind: "InvalidUuidError",
+    message: `O valor '${value}' não é um UUID suportado (v1, v3, v4, v7).`,
+    value,
+  });
+};
 
-  /**
-   * Cria uma instância de `Uuid` a partir de uma string.
-   * A criação só é bem-sucedida se a string for um UUID v1, v3, v4 ou v7 válido.
-   *
-   * @param value A string a ser validada.
-   * @returns Um `Result` contendo a instância de `Uuid` ou um `InvalidUuidError`.
-   */
-  public static create(): Result<Uuid, InvalidUuidError>;
-  public static create(value: string): Result<Uuid, InvalidUuidError>;
-  public static create(value?: string): Result<Uuid, InvalidUuidError> {
-    if (typeof value === "undefined") {
-      if (!Uuid.autoSeq) Uuid.autoSeq = 0;
-      const { uuid, nextSeq } = Uuid.generateV7({
-        rng: Uuid.defaultRng,
-        seq: Uuid.autoSeq,
-      });
-      Uuid.autoSeq = nextSeq;
-      return ok(uuid);
-    }
-    if (!Uuid.isSupported(value)) {
-      return err(new InvalidUuidError(value));
-    }
-    return ok(new Uuid(value.toLowerCase()));
+/** Alias para create, mantendo compatibilidade com parse antigo */
+const parse = create;
+
+/**
+ * Gera um novo UUID v4 (aleatório).
+ */
+const v4 = (rng: Rng = defaultRng): Uuid => {
+  const bytes = new Uint8Array(16);
+  for (let i = 0; i < 16; i++) {
+    bytes[i] = rng.nextInt(256);
   }
-  private static autoSeq = 0;
-  private static readonly defaultRng: Rng = {
-    nextInt(maxExclusive: number) {
-      return Math.floor(Math.random() * maxExclusive);
-    },
-  };
+  bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+  bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant RFC 4122
+  return format(bytes) as Uuid;
+};
 
-  /** Retorna a representação canônica (lowercase) do UUID. */
-  public toString(): string {
-    return this.value;
-  }
-
-  /** Compara este Uuid com outro para verificar a igualdade. */
-  public equals(other?: Uuid): boolean {
-    return this.value === other?.value;
-  }
-
-  /** Retorna a versão do UUID. */
-  public getVersion(): Version | null {
-    if (Uuid.isV1(this.value)) return Version.V1;
-    if (Uuid.isV3(this.value)) return Version.V3;
-    if (Uuid.isV4(this.value)) return Version.V4;
-    if (Uuid.isV7(this.value)) return Version.V7;
-    return null;
-  }
-
-  // --- Métodos Estáticos de Validação ---
-
-  /** Verifica se uma string é um UUID v1 canônico. */
-  public static isV1 = (s: string): boolean => Uuid.RE_V1.test(s);
-  /** Verifica se uma string é um UUID v3 canônico. */
-  public static isV3 = (s: string): boolean => Uuid.RE_V3.test(s);
-  /** Verifica se uma string é um UUID v4 canônico. */
-  public static isV4 = (s: string): boolean => Uuid.RE_V4.test(s);
-  /** Verifica se uma string é um UUID v7 canônico. */
-  public static isV7 = (s: string): boolean => Uuid.RE_V7.test(s);
-
-  /** Verifica se uma string é um UUID suportado (v1, v3, v4 ou v7). */
-  public static isSupported(s: string): boolean {
-    return Uuid.isV1(s) || Uuid.isV3(s) || Uuid.isV4(s) || Uuid.isV7(s);
-  }
-
-  // --- Métodos Estáticos de Geração ---
-
-  /** Gera um UUID v4 (aleatório). */
-  public static generateV4(rng: Rng): Uuid {
-    const bytes = new Uint8Array(16);
-    for (let i = 0; i < 16; i++) {
-      bytes[i] = rng.nextInt(256);
-    }
-    bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
-    bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant RFC 4122
-    return new Uuid(Uuid.format(bytes));
-  }
-
-  /** Gera um UUID v7 (ordenado por tempo). */
-  public static generateV7(ctx: {
+/**
+ * Gera um novo UUID v7 (ordenado por tempo).
+ */
+const v7 = (
+  options: {
     unixMillis?: number;
-    rng: Rng;
+    rng?: Rng;
     seq?: number;
-  }): { uuid: Uuid; nextSeq: number } {
-    const { unixMillis = Date.now(), rng, seq = 0 } = ctx;
-    const currentSeq = seq & 0x0fff;
+  } = {},
+): { uuid: Uuid; nextSeq: number } => {
+  const { unixMillis = Date.now(), rng = defaultRng, seq = 0 } = options;
+  const currentSeq = seq & 0x0fff;
 
-    const bytes = new Uint8Array(16);
-    for (let i = 0; i < 16; i++) {
-      bytes[i] = rng.nextInt(256);
-    }
-
-    for (let i = 0; i < 6; i++) {
-      bytes[i] = (unixMillis / 2 ** (8 * (5 - i))) & 0xff;
-    }
-
-    bytes[6] = 0x70 | ((currentSeq >> 8) & 0x0f);
-    bytes[7] = currentSeq & 0xff;
-    bytes[8] = (bytes[8] & 0x3f) | 0x80;
-
-    return {
-      uuid: new Uuid(Uuid.format(bytes)),
-      nextSeq: (currentSeq + 1) & 0x0fff,
-    };
+  const bytes = new Uint8Array(16);
+  for (let i = 0; i < 16; i++) {
+    bytes[i] = rng.nextInt(256);
   }
 
-  /** Formata um array de 16 bytes em uma string UUID canônica. */
-  private static format(bytes: Uint8Array): string {
-    let hex = "";
-    for (let i = 0; i < bytes.length; i++) {
-      hex += bytes[i].toString(16).padStart(2, "0");
-    }
-    return (
-      `${hex.substring(0, 8)}-` +
-      `${hex.substring(8, 12)}-` +
-      `${hex.substring(12, 16)}-` +
-      `${hex.substring(16, 20)}-` +
-      `${hex.substring(20)}`
-    );
+  // Timestamp (48 bits)
+  for (let i = 0; i < 6; i++) {
+    bytes[i] = (unixMillis / 2 ** (8 * (5 - i))) & 0xff;
   }
-}
+
+  // Version 7 e Sequence
+  bytes[6] = 0x70 | ((currentSeq >> 8) & 0x0f);
+  bytes[7] = currentSeq & 0xff;
+
+  // Variant RFC 4122
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+
+  return {
+    uuid: format(bytes) as Uuid,
+    nextSeq: (currentSeq + 1) & 0x0fff,
+  };
+};
+
+/** Formata bytes para string (helper interno). */
+const format = (bytes: Uint8Array): string => {
+  let hex = "";
+  for (let i = 0; i < bytes.length; i++) {
+    hex += bytes[i].toString(16).padStart(2, "0");
+  }
+  return (
+    `${hex.substring(0, 8)}-` +
+    `${hex.substring(8, 12)}-` +
+    `${hex.substring(12, 16)}-` +
+    `${hex.substring(16, 20)}-` +
+    `${hex.substring(20)}`
+  );
+};
+
+// --- Namespace Público ---
+
+export const Uuid = {
+  create,
+  parse,
+  v4,
+  v7,
+  isValid: (s: string): s is Uuid => isValid(s),
+  isV7: (s: string): boolean => isV7(s),
+};

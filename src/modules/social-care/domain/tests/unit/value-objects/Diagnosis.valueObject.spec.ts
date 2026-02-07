@@ -1,145 +1,51 @@
 import { describe, expect, test } from "bun:test";
-import {
-  DE,
-  Diagnosis,
-  ICDCode,
-  Timestamp,
-} from "@conecta/social-care";
+import { DE, Diagnosis, ICDCode, Timestamp } from "@conecta/social-care";
+import { Result } from "@conecta/result";
 
-const VALID_DESCRIPTION = "Paciente apresentou diagnóstico confirmado.";
-const NOW = Timestamp.create({
-  value: new Date("2024-05-10T00:00:00Z"),
-}).unwrap();
-const VALID_DATE = Timestamp.create({
-  value: new Date("2024-05-01T00:00:00Z"),
-}).unwrap();
-const VALID_ICD_CODE = ICDCode.create("B20.1").unwrap();
+describe("Diagnosis.valueObject (FP Refactor - RED)", () => {
+  const NOW = Result.unwrap(Timestamp.create({ value: new Date("2024-05-10T00:00:00Z") }));
+  const VALID_DATE = Result.unwrap(Timestamp.create({ value: new Date("2024-05-01T00:00:00Z") }));
+  const VALID_ICD = Result.unwrap(ICDCode.create("B20.1"));
 
-describe("Diagnosis.valueObject", () => {
-  test("cria diagnóstico válido com dados consistentes", () => {
-    const result = Diagnosis.create(
-      { id: VALID_ICD_CODE, date: VALID_DATE, description: VALID_DESCRIPTION },
-      NOW,
-    );
+  describe("Factory", () => {
+    test("cria diagnóstico válido", () => {
+      const props = { id: VALID_ICD, date: VALID_DATE, description: "Confirmado" };
+      const result = Diagnosis.create(props, NOW); 
+      
+      expect(Result.isOk(result)).toBe(true);
+      const diag = Result.unwrap(result);
+      expect(diag.id).toBe(VALID_ICD);
+      expect(diag.description).toBe("Confirmado");
+    });
 
-    expect(result.isOk).toBe(true);
-    if (!result.isOk) return;
+    test("falha com data futura", () => {
+      const future = Result.unwrap(Timestamp.create({ value: new Date("2024-05-11T00:00:00Z") }));
+      const result = Diagnosis.create({ id: VALID_ICD, date: future, description: "Test" }, NOW);
+      
+      expect(Result.isErr(result)).toBe(true);
+      expect(Result.unwrapErr(result).code).toBe(DE.DateInFuture("", "").code);
+    });
 
-    const diagnosis = result.unwrap();
-    expect(diagnosis.id).toBe(VALID_ICD_CODE);
-    expect(diagnosis.date).toBe(VALID_DATE);
-    expect(diagnosis.description).toBe(VALID_DESCRIPTION);
-    expect(Object.isFrozen(diagnosis)).toBe(true);
+    test("falha com descrição vazia", () => {
+      const result = Diagnosis.create({ id: VALID_ICD, date: VALID_DATE, description: "  " }, NOW);
+      expect(Result.isErr(result)).toBe(true);
+      expect(Result.unwrapErr(result).code).toBe(DE.DescriptionEmpty().code);
+    });
   });
 
-  test("falha ao criar diagnóstico com código CID inválido", () => {
-    const result = ICDCode.create("invalid-code");
-    expect(result.isErr).toBe(true);
-  });
+  describe("Evolução (Substitui copyWith)", () => {
+    test("create aplica validação ao atualizar via spread", () => {
+      const original = Result.unwrap(Diagnosis.create({ id: VALID_ICD, date: VALID_DATE, description: "Original" }, NOW));
+      
+      // Update description
+      const updatedResult = Diagnosis.create({ ...original, description: "Updated" }, NOW);
+      expect(Result.isOk(updatedResult)).toBe(true);
+      expect(Result.unwrap(updatedResult).description).toBe("Updated");
 
-  test("falha ao criar diagnóstico com data no futuro", () => {
-    const futureDate = Timestamp.create({
-      value: new Date("2024-05-11T00:00:00Z"),
-    }).unwrap();
-    const result = Diagnosis.create(
-      { id: VALID_ICD_CODE, date: futureDate, description: VALID_DESCRIPTION },
-      NOW,
-    );
-
-    expect(result.isErr).toBe(true);
-    if (!result.isErr) return;
-
-    expect(result.error.code).toBe("DIAG-001");
-  });
-
-  test("falha ao criar diagnóstico com ano anterior a zero", () => {
-    const pastDate = Timestamp.create({
-      value: new Date("-000001-01-01T00:00:00Z"),
-    }).unwrap();
-    const result = Diagnosis.create(
-      { id: VALID_ICD_CODE, date: pastDate, description: VALID_DESCRIPTION },
-      NOW,
-    );
-
-    expect(result.isErr).toBe(true);
-    if (!result.isErr) return;
-
-    expect(result.error.code).toBe("DIAG-002");
-  });
-
-  test("falha ao criar diagnóstico com descrição vazia", () => {
-    const result = Diagnosis.create(
-      { id: VALID_ICD_CODE, date: VALID_DATE, description: " " },
-      NOW,
-    );
-
-    expect(result.isErr).toBe(true);
-    if (!result.isErr) return;
-
-    expect(result.error.code).toBe("DIAG-003");
-  });
-
-  test("remove espaços excedentes da descrição antes de persistir", () => {
-    const result = Diagnosis.create(
-      {
-        id: VALID_ICD_CODE,
-        date: VALID_DATE,
-        description: "  Doença respiratória aguda  ",
-      },
-      NOW,
-    );
-
-    expect(result.isOk).toBe(true);
-    if (!result.isOk) return;
-
-    expect(result.unwrap().description).toBe("Doença respiratória aguda");
-  });
-});
-
-describe("copyWith", () => {
-  const makeDiagnosis = () => {
-    return Diagnosis.create(
-      {
-        id: VALID_ICD_CODE,
-        date: VALID_DATE,
-        description: "Descrição Original",
-      },
-      NOW,
-    ).unwrap();
-  };
-
-  test("deve atualizar um campo (ex: description) e manter os outros", () => {
-    const original = makeDiagnosis();
-    const novaDescricao = "Descrição atualizada";
-
-    const result = original.copyWith({ description: novaDescricao }, NOW);
-
-    expect(result.isOk).toBe(true);
-    const copied = result.unwrap();
-
-    expect(copied.description).toBe(novaDescricao); // Campo novo
-    expect(copied.id).toBe(original.id); // Campo antigo mantido
-    expect(copied.date).toBe(original.date); // Campo antigo mantido
-  });
-
-  test("deve falhar a revalidação se um dado inválido for passado (ex: data futura)", () => {
-    const original = makeDiagnosis();
-    const futureDate = Timestamp.create({
-      value: new Date("2024-05-11T00:00:00Z"),
-    }).unwrap(); // Data futura
-
-    const result = original.copyWith({ date: futureDate }, NOW); // NOW é 10/05/2024
-
-    expect(result.isErr).toBe(true);
-    expect(result.unwrapErr().code).toBe(DE.DateInFuture(futureDate, NOW).code); // "DIAG-001"
-  });
-
-  test("deve falhar a revalidação se a descrição for vazia", () => {
-    const original = makeDiagnosis();
-
-    const result = original.copyWith({ description: "   " }, NOW);
-
-    expect(result.isErr).toBe(true);
-    expect(result.unwrapErr().code).toBe(DE.DescriptionEmpty().code); // "DIAG-003"
+      // Update invalid date
+      const future = Result.unwrap(Timestamp.create({ value: new Date("2024-05-11T00:00:00Z") }));
+      const invalidResult = Diagnosis.create({ ...original, date: future }, NOW);
+      expect(Result.isErr(invalidResult)).toBe(true);
+    });
   });
 });

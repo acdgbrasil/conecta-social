@@ -1,5 +1,5 @@
 import type { DomainError } from "@conecta/domain-error";
-import type { Result } from "@conecta/result";
+import { Result } from "@conecta/result";
 
 export type HttpResponse<T> = {
   status: number;
@@ -67,14 +67,14 @@ export const mapResultToHttpResponse = <T>(
   result: Result<T, DomainError>,
   opts: { readonly successStatus?: number } = {},
 ): HttpResponse<HttpSuccessBody<T> | HttpErrorBody> => {
-  if (result.isErr) {
-    return mapDomainErrorToHttpResponse(result.error);
+  if (Result.isErr(result)) {
+    return mapDomainErrorToHttpResponse(Result.unwrapErr(result));
   }
 
   return {
     status: opts.successStatus ?? 200,
     body: {
-      data: result.value,
+      data: Result.unwrap(result),
     },
   };
 };
@@ -136,12 +136,12 @@ export const mapResultToGrpcResponse = <T>(
   result: Result<T, DomainError>,
   opts: { readonly successStatus?: GrpcStatusCode } = {},
 ): GrpcResponse<T> => {
-  if (result.isErr) {
-    return mapDomainErrorToGrpcResponse(result.error);
+  if (Result.isErr(result)) {
+    return mapDomainErrorToGrpcResponse(Result.unwrapErr(result));
   }
 
   return {
     status: opts.successStatus ?? GrpcStatus.OK,
-    data: result.value,
+    data: Result.unwrap(result),
   };
 };

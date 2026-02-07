@@ -1,37 +1,41 @@
 import { uuidV7Provider } from "@conecta/adapters";
 import type { DomainError } from "@conecta/domain-error";
+import type { Branded } from "@conecta/fn";
 import type { IdProviderPort } from "@conecta/ports";
-import { err, ok, type Result } from "@conecta/result";
+import { Result } from "@conecta/result";
 import { Uuid } from "@conecta/uuid";
 import { PID } from "../errors/PersonId.error";
 
-export class PersonId {
-  private constructor(readonly value: string) {
-    Object.freeze(this);
-  }
+// 1. Definição do Tipo (Branded Primitivo)
+export type PersonId = Branded<string, "PersonId">;
 
-  public static create(): Result<PersonId, DomainError>;
-  public static create(value: string): Result<PersonId, DomainError>;
-  public static create(
+// 2. Namespace de Funções Puras
+export const PersonId = {
+  create(
     value?: string,
     idProvider: IdProviderPort = uuidV7Provider,
   ): Result<PersonId, DomainError> {
-    if (typeof value === "undefined") {
+    if (value === undefined) {
       const generated = idProvider.generate();
       const candidate = Uuid.create(generated);
-      if (candidate.isErr) return err(PID.InvalidFormat(generated));
-      return ok(new PersonId(candidate.value.toString()));
+      if (Result.isErr(candidate)) return Result.err(PID.InvalidFormat(generated));
+      return Result.ok(candidate.value.toString() as PersonId);
     }
-    const normalized = value.toLowerCase().trim();
-    if (!Uuid.isV7(normalized)) return err(PID.InvalidFormat(normalized));
-    return ok(new PersonId(normalized));
-  }
 
-  public toString(): string {
-    return this.value;
-  }
+    const normalized = value.trim().toLowerCase();
+    if (!Uuid.isV7(normalized)) {
+      return Result.err(PID.InvalidFormat(normalized));
+    }
 
-  public equals(other: PersonId): boolean {
-    return this.value === other.value;
+    return Result.ok(normalized as PersonId);
+  },
+
+  equals(a: PersonId, b: PersonId): boolean {
+    return a === b;
+  },
+
+  // Helper opcional para compatibilidade durante migração
+  toString(id: PersonId): string {
+    return id;
   }
-}
+} as const;

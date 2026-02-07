@@ -1,86 +1,44 @@
 import type { DomainError } from "@conecta/domain-error";
-import { err, ok, type Result } from "@conecta/result";
+import type { DeepReadonly } from "@conecta/fn";
+import { Result } from "@conecta/result";
 import { SES } from "../errors/SocioEconomicSituation.error";
-import type { SocioEconomicSituationProps } from "./props/socioEconomicSituation.props";
-import type { SocialBenefitsCollection } from "./SocialBenefitsCollection.valueObject";
+import { SocialBenefitsCollection } from "./SocialBenefitsCollection.valueObject";
 
-export class SocioEconomicSituation implements SocioEconomicSituationProps {
+export type SocioEconomicSituationProps = {
   readonly totalFamilyIncome: number;
   readonly incomePerCapita: number;
   readonly receivesSocialBenefit: boolean;
   readonly socialBenefits: SocialBenefitsCollection;
   readonly mainSourceOfIncome: string;
   readonly hasUnemployed: boolean;
+};
 
-  private constructor(props: SocioEconomicSituationProps) {
-    this.totalFamilyIncome = props.totalFamilyIncome;
-    this.incomePerCapita = props.incomePerCapita;
-    this.receivesSocialBenefit = props.receivesSocialBenefit;
-    this.socialBenefits = props.socialBenefits;
-    this.mainSourceOfIncome = props.mainSourceOfIncome;
-    this.hasUnemployed = props.hasUnemployed;
-    Object.freeze(this);
-  }
+export type SocioEconomicSituation = DeepReadonly<SocioEconomicSituationProps>;
 
-  static create(
-    props: SocioEconomicSituationProps,
-  ): Result<SocioEconomicSituation, DomainError> {
-    if (
-      props.receivesSocialBenefit === false &&
-      !props.socialBenefits.isEmpty()
-    ) {
-      return err(SES.InconsistentSocialBenefit());
+export const SocioEconomicSituation = {
+  create(props: SocioEconomicSituationProps): Result<SocioEconomicSituation, DomainError> {
+    if (props.receivesSocialBenefit === false && !SocialBenefitsCollection.isEmpty(props.socialBenefits)) {
+      return Result.err(SES.InconsistentSocialBenefit());
     }
-    if (
-      props.receivesSocialBenefit === true &&
-      props.socialBenefits.isEmpty()
-    ) {
-      return err(SES.MissingSocialBenefits());
+    if (props.receivesSocialBenefit === true && SocialBenefitsCollection.isEmpty(props.socialBenefits)) {
+      return Result.err(SES.MissingSocialBenefits());
     }
-    if (props.totalFamilyIncome < 0)
-      return err(
-        SES.NegativeFamilyIncome({
-          totalFamilyIncome: props.totalFamilyIncome,
-        }),
-      );
-    if (props.incomePerCapita < 0)
-      return err(
-        SES.NegativeIncomePerCapita({ incomePerCapita: props.incomePerCapita }),
-      );
-    if (
-      !props.mainSourceOfIncome ||
-      props.mainSourceOfIncome.trim().length === 0
-    )
-      return err(SES.EmptyMainSourceOfIncome());
-    if (props.incomePerCapita > props.totalFamilyIncome)
-      return err(
-        SES.InconsistentIncomePerCapita(
-          props.incomePerCapita,
-          props.totalFamilyIncome,
-        ),
-      );
-    const socioEconomicSituation = new SocioEconomicSituation({
-      hasUnemployed: props.hasUnemployed,
-      mainSourceOfIncome: props.mainSourceOfIncome.trim(),
-      socialBenefits: props.socialBenefits,
-      receivesSocialBenefit: props.receivesSocialBenefit,
-      incomePerCapita: props.incomePerCapita,
-      totalFamilyIncome: props.totalFamilyIncome,
-    });
-    return ok(new SocioEconomicSituation(socioEconomicSituation));
-  }
+    if (props.totalFamilyIncome < 0) {
+      return Result.err(SES.NegativeFamilyIncome({ totalFamilyIncome: props.totalFamilyIncome }));
+    }
+    if (props.incomePerCapita < 0) {
+      return Result.err(SES.NegativeIncomePerCapita({ incomePerCapita: props.incomePerCapita }));
+    }
+    if (!props.mainSourceOfIncome || props.mainSourceOfIncome.trim().length === 0) {
+      return Result.err(SES.EmptyMainSourceOfIncome());
+    }
+    if (props.incomePerCapita > props.totalFamilyIncome) {
+      return Result.err(SES.InconsistentIncomePerCapita(props.incomePerCapita, props.totalFamilyIncome));
+    }
 
-  copyWith(
-    props: Partial<SocioEconomicSituationProps>,
-  ): Result<SocioEconomicSituation, DomainError> {
-    return SocioEconomicSituation.create({
-      totalFamilyIncome: props.totalFamilyIncome ?? this.totalFamilyIncome,
-      incomePerCapita: props.incomePerCapita ?? this.incomePerCapita,
-      receivesSocialBenefit:
-        props.receivesSocialBenefit ?? this.receivesSocialBenefit,
-      socialBenefits: props.socialBenefits ?? this.socialBenefits,
-      mainSourceOfIncome: props.mainSourceOfIncome ?? this.mainSourceOfIncome,
-      hasUnemployed: props.hasUnemployed ?? this.hasUnemployed,
+    return Result.ok({
+      ...props,
+      mainSourceOfIncome: props.mainSourceOfIncome.trim()
     });
   }
-}
+} as const;

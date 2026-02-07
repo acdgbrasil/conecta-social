@@ -1,10 +1,5 @@
-export type { FamilyMemberProps } from "./FamilyMember.entity";
 export * from "./FamilyMember.entity";
-export type { PatientProps } from "./Patient.entity";
-export * from "./Patient.entity";
-export type { ReferralProps, ReferralStatus } from "./Referral.entity";
+export * from "./patient"; // Namespace unificado
 export * from "./Referral.entity";
-export type { RightsViolationReportProps } from "./RightsViolationReport.entity";
 export * from "./RightsViolationReport.entity";
-export type { SocialCareAppointmentProps } from "./SocialCareAppointment.entity";
 export * from "./SocialCareAppointment.entity";

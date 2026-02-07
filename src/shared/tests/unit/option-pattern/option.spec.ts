@@ -1,71 +1,103 @@
-import { describe, expect, test } from "bun:test";
-import { None, Some, Option, unSafe } from "@conecta/option";
+import { describe, expect, it } from "bun:test";
+import { Option } from "@conecta/option";
 
-describe("Option", () => {
-  test("Some encapsula valor com flags corretas", () => {
-    const option = Some("valor");
+describe("Option Pattern", () => {
+  describe("Constructors", () => {
+    it("none cria um Option vazio", () => {
+      const opt = Option.none();
+      expect(Option.isNone(opt)).toBe(true);
+      expect(Option.isSome(opt)).toBe(false);
+      expect(() => Option.unwrap(opt)).toThrow();
+    });
 
-    expect(option.isSome).toBe(true);
-    expect(option.isNone).toBe(false);
-    expect(option.kind).toBe("some");
-    const mapped = Option.map(option, (v) => v.toUpperCase());
-    expect(Option.unwrap(mapped)).toBe("VALOR");
-  });
+    it("isSome e isNone funcionam como type guards", () => {
+      const some = Option.some(1);
+      const none = Option.none();
+      
+      expect(Option.isSome(some)).toBe(true);
+      expect(Option.isNone(some)).toBe(false);
+      expect(Option.isSome(none)).toBe(false);
+      expect(Option.isNone(none)).toBe(true);
+    });
 
-  test("None representa ausência de valor", () => {
-    const option = None();
+    it("some cria um Option com valor", () => {
+      const opt = Option.some(10);
+      expect(Option.isSome(opt)).toBe(true);
+      expect(Option.isNone(opt)).toBe(false);
+      expect(Option.unwrap(opt)).toBe(10);
+    });
 
-    expect(option.isSome).toBe(false);
-    expect(option.isNone).toBe(true);
-    expect("value" in option).toBe(false);
-    expect(option.kind).toBe("none");
-    expect(Option.isNone(Option.map(option, () => {}))).toBe(true);
-    expect(() => Option.unwrap(option)).toThrowError("Cannot unwrap value from None");
-  });
+    it("fromNullable lida com null/undefined", () => {
+      expect(Option.isNone(Option.fromNullable(null))).toBe(true);
+      expect(Option.isNone(Option.fromNullable(undefined))).toBe(true);
+      expect(Option.isSome(Option.fromNullable(0))).toBe(true);
+    });
 
-  test("unwrap e unwrapOr respeitam presença ou ausência de valor", () => {
-    const some = Some(42);
-    expect(Option.unwrap(some)).toBe(42);
-    expect(Option.unwrapOr(some, 0)).toBe(42);
+    it("fromPredicate cria Some se o predicado for verdadeiro", () => {
+      expect(Option.isSome(Option.fromPredicate(10, (n) => n > 5))).toBe(true);
+      expect(Option.isNone(Option.fromPredicate(10, (n) => n < 5))).toBe(true);
+    });
 
-    const none = None<number>();
-    expect(Option.unwrapOr(none, 7)).toBe(7);
-    expect(() => Option.unwrap(none)).toThrowError("Cannot unwrap value from None");
-  });
-});
+    it("safe captura exceções", () => {
+      const success = Option.safe(() => JSON.parse('{"a":1}'));
+      const failure = Option.safe(() => JSON.parse("invalid"));
 
-describe("unSafe factory", () => {
-  test("deve retornar Some para valores não nulos e não indefinidos", () => {
-    const values = ["string", 42, { a: 1 }, [], true, false, 0, ""];
-    values.forEach((value) => {
-      const option = unSafe(value);
-      expect(Option.isSome(option)).toBe(true);
-      expect(Option.unwrap(option)).toBe(value);
+      expect(Option.isSome(success)).toBe(true);
+      expect(Option.isNone(failure)).toBe(true);
     });
   });
 
-  test("deve retornar None para valor nulo", () => {
-    const option = unSafe(null);
-    expect(Option.isNone(option)).toBe(true);
+  describe("Transformations", () => {
+    it("map transforma o valor", () => {
+      const opt = Option.some(2);
+      const mapped = Option.map(opt, (n) => n * 2);
+      expect(Option.unwrap(mapped)).toBe(4);
+    });
+
+    it("flatMap encadeia Options", () => {
+      const opt = Option.some("10");
+      const result = Option.flatMap(opt, (s) => {
+        const n = parseInt(s);
+        return isNaN(n) ? Option.none() : Option.some(n);
+      });
+      expect(Option.unwrap(result)).toBe(10);
+    });
+
+    it("filter retém valores que passam no predicado", () => {
+      const opt = Option.some(10);
+      expect(Option.isSome(Option.filter(opt, (n) => n > 5))).toBe(true);
+      expect(Option.isNone(Option.filter(opt, (n) => n > 15))).toBe(true);
+    });
   });
 
-  test("deve retornar None para valor indefinido", () => {
-    const option = unSafe(undefined);
-    expect(Option.isNone(option)).toBe(true);
-  });
+  describe("Utilities", () => {
+    it("unwrapOr retorna fallback", () => {
+      const none = Option.none<number>();
+      expect(Option.unwrapOr(none, 5)).toBe(5);
+    });
 
-  test("deve inferir o tipo corretamente e retornar Some", () => {
-    const value = { id: "123" };
-    const option = unSafe(value);
-    expect(Option.isSome(option)).toBe(true);
-    // O tipo de `v` deve ser inferido como `{ id: string }`
-    const id = Option.unwrapOr(Option.map(option, (v) => v.id), "");
-    expect(id).toBe("123");
-  });
+    it("unwrapOrElse retorna fallback lazy", () => {
+      const none = Option.none<number>();
+      expect(Option.unwrapOrElse(none, () => 10)).toBe(10);
+      expect(Option.unwrapOrElse(Option.some(5), () => 10)).toBe(5);
+    });
 
-  test("deve retornar None para um tipo que pode ser nulo", () => {
-    const value: string | null = null;
-    const option = unSafe(value);
-    expect(Option.isNone(option)).toBe(true);
+    it("zip combina dois valores", () => {
+      const a = Option.some(1);
+      const b = Option.some(2);
+      const c = Option.none();
+
+      expect(Option.unwrap(Option.zip(a, b))).toEqual([1, 2]);
+      expect(Option.isNone(Option.zip(a, c))).toBe(true);
+      expect(Option.isNone(Option.zip(c, a))).toBe(true);
+    });
+
+    it("all combina lista de options", () => {
+      const list = [Option.some(1), Option.some(2)];
+      expect(Option.unwrap(Option.all(list))).toEqual([1, 2]);
+
+      const listWithNone = [Option.some(1), Option.none()];
+      expect(Option.isNone(Option.all(listWithNone))).toBe(true);
+    });
   });
 });

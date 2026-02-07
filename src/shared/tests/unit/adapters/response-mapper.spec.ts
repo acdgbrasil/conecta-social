@@ -1,14 +1,14 @@
 import { describe, expect, test } from "bun:test";
-import { err, ok } from "@conecta/result";
+import { Result } from "@conecta/result";
 import {
   mapDomainErrorToHttpResponse,
   mapResultToHttpResponse,
   mapResultToGrpcResponse,
   GrpcStatus,
-} from "../../response.mapper";
-import { ErrorTaxonomy, makeDomainErrorFactory } from "@conecta/domain-error";
+} from "@conecta/adapters";
+import { ErrorTaxonomy, DomainError } from "@conecta/domain-error";
 
-const TestError = makeDomainErrorFactory<"TestFailure">({
+const TestError = DomainError.makeFactory({
   bc: "TEST",
   module: "response-mapper",
   codePrefix: "TST",
@@ -32,7 +32,7 @@ describe("ResponseMapper", () => {
   });
 
   test("mapResultToHttpResponse retorna sucesso com payload", () => {
-    const result = ok({ ok: true });
+    const result = Result.ok({ ok: true });
     const response = mapResultToHttpResponse(result);
 
     expect(response.status).toBe(200);
@@ -43,7 +43,7 @@ describe("ResponseMapper", () => {
 
   test("mapResultToHttpResponse retorna erro consistente", () => {
     const error = TestError.TestFailure();
-    const result = err(error);
+    const result = Result.err(error);
     const response = mapResultToHttpResponse(result);
 
     expect(response.status).toBe(422);
@@ -54,10 +54,29 @@ describe("ResponseMapper", () => {
 
   test("mapResultToGrpcResponse usa status mapeado", () => {
     const error = TestError.TestFailure();
-    const result = err(error);
+    const result = Result.err(error);
     const response = mapResultToGrpcResponse(result);
 
     expect(response.status).toBe(GrpcStatus.FAILED_PRECONDITION);
     expect(response.message).toBe("Falha de teste.");
+  });
+
+  test("mapDomainErrorToGrpcResponse usa UNKNOWN para status não mapeado", () => {
+    const CustomError = DomainError.makeFactory({
+      bc: "TEST",
+      module: "test",
+      catalog: {
+        Fail: { code: "F", http: 418, category: ErrorTaxonomy.UnexpectedSystemState, template: () => "Err" }
+      }
+    });
+    const response = mapResultToGrpcResponse(Result.err(CustomError.Fail()));
+    expect(response.status).toBe(GrpcStatus.UNKNOWN);
+  });
+
+  test("mapResultToGrpcResponse retorna sucesso com dados", () => {
+    const result = Result.ok({ id: 1 });
+    const response = mapResultToGrpcResponse(result);
+    expect(response.status).toBe(GrpcStatus.OK);
+    expect(response.data).toEqual({ id: 1 });
   });
 });

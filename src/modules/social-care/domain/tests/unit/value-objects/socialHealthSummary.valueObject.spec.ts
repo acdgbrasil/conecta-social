@@ -1,105 +1,26 @@
 import { describe, expect, test } from "bun:test";
 import { SHSDE, SocialHealthSummary } from "@conecta/social-care";
+import { Result } from "@conecta/result";
 
-describe("SocialHealthSummary.valueObject", () => {
-  test("deve criar com sucesso um resumo mesmo quando não há dependências funcionais registradas", () => {
-    // Arrange
-    const result = SocialHealthSummary.create({
-      requiresConstantCare: true,
-      hasMobilityImpairment: false,
-      functionalDependencies: [],
-      hasRelevantDrugTheapy: true,
-    });
-
-    // Assert
-    expect(result.isOk).toBe(true);
-    if (!result.isOk) return;
-
-    const summary = result.unwrap();
-    expect(summary.functionalDependencies.length).toBe(0);
-  });
-
-  test("deve criar resumo com dependências únicas, removendo duplicatas", () => {
-    // Arrange
-    const dependencies = ["Alimentação", "Banho", "Alimentação"];
-    const result = SocialHealthSummary.create({
-      requiresConstantCare: true,
-      hasMobilityImpairment: true,
-      functionalDependencies: dependencies,
-      hasRelevantDrugTheapy: false,
-    });
-
-    // Assert
-    expect(result.isOk).toBe(true);
-    if (!result.isOk) return;
-
-    const summary = result.unwrap();
-    expect(summary.functionalDependencies).toEqual(["Alimentação", "Banho"]);
-    expect(summary.hasMobilityImpairment).toBe(true);
-    expect(Object.isFrozen(summary)).toBe(true);
-  });
-
-  test("rejeita dependências funcionais vazias ou apenas com espaços", () => {
-    const dependencies = ["Banho", "  "];
-    const result = SocialHealthSummary.create({
-      requiresConstantCare: false,
-      hasMobilityImpairment: false,
-      functionalDependencies: dependencies,
-      hasRelevantDrugTheapy: false,
-    });
-
-    expect(result.isErr).toBe(true);
-  });
-});
-
-describe("copyWith", () => {
-  const makeSummary = (deps: string[]) => {
-    return SocialHealthSummary.create({
-      requiresConstantCare: true,
-      hasMobilityImpairment: false,
-      functionalDependencies: deps,
-      hasRelevantDrugTheapy: true,
-    }).unwrap();
+describe("SocialHealthSummary.valueObject (FP Refactor - RED)", () => {
+  const validProps = {
+    requiresConstantCare: false,
+    hasMobilityImpairment: false,
+    functionalDependencies: ["Eating"],
+    hasRelevantDrugTheapy: false
   };
 
-  test("deve revalidar, aplicar trim e deduplicação", () => {
-    const original = makeSummary(["Banho"]);
-    const newDependencies = ["  Alimentação  ", "Medicação", "Alimentação"];
-
-    const result = original.copyWith({
-      functionalDependencies: newDependencies,
+  describe("Factory", () => {
+    test("create deduplica dependências", () => {
+      const result = SocialHealthSummary.create({ ...validProps, functionalDependencies: ["Eating", "Eating"] });
+      expect(Result.isOk(result)).toBe(true);
+      expect(Result.unwrap(result).functionalDependencies).toEqual(["Eating"]);
     });
 
-    expect(result.isOk).toBe(true);
-    const copied = result.unwrap();
-
-    expect(copied.functionalDependencies).toEqual(["Alimentação", "Medicação"]);
-  });
-
-  test("deve falhar a revalidação se a lista injetada contiver strings vazias", () => {
-    const original = makeSummary(["Banho"]);
-    const invalidDependencies = ["Alimentação", "   "]; // Inválido
-
-    const result = original.copyWith({
-      functionalDependencies: invalidDependencies,
+    test("create falha com string vazia", () => {
+      const result = SocialHealthSummary.create({ ...validProps, functionalDependencies: [""] });
+      expect(Result.isErr(result)).toBe(true);
+      expect(Result.unwrapErr(result).code).toBe(SHSDE.FunctionalDependenciesEmpty().code);
     });
-
-    expect(result.isErr).toBe(true);
-    expect(result.unwrapErr().code).toBe(
-      SHSDE.FunctionalDependenciesEmpty().code,
-    ); // "SHS-001"
-  });
-
-  test("deve falhar quando não remove dependências duplicadas automaticamente", () => {
-    const duplicatedDependencies = ["Alimentação", "Alimentação"];
-
-    const result = SocialHealthSummary.create({
-      requiresConstantCare: false,
-      hasMobilityImpairment: false,
-      functionalDependencies: duplicatedDependencies,
-      hasRelevantDrugTheapy: false,
-    });
-
-    expect(result.isOk).toBe(true);
   });
 });

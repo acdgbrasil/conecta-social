@@ -9,6 +9,7 @@ export * from "./PersonId.error";
 export * from "./Referral.error";
 export * from "./RightsViolationReport.error";
 export * from "./SocialBenefit.error";
+export * from "./SocialBenefitsCollection.error";
 export * from "./SocialCareAppointment.error";
 export * from "./SocialHealthSummary.error";
 export * from "./SocioEconomicSituation.error";

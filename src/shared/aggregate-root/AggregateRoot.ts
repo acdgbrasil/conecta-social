@@ -1,6 +1,10 @@
 import type { DomainEvent } from "@conecta/ports/event-bus.protocol";
 import type { Uuid } from "@conecta/uuid";
 
+/**
+ * @deprecated Use o padrão funcional `Aggregate<State>` e `Aggregate.*` helpers.
+ * Esta classe será removida após a migração completa do domínio Social Care.
+ */
 export abstract class AggregateRoot<Props> {
   protected constructor(
     public readonly id: Uuid,
