@@ -22,23 +22,18 @@ jobs:
     env:
       SC_DB_HOST: 127.0.0.1
       SC_DB_PORT: "5432"
-      SC_DB_USER: ${{ secrets.SC_DB_USER || 'admin' }}
-      SC_DB_PASSWORD: ${{ secrets.SC_DB_PASSWORD || 'admin' }}
-      SC_DB_NAME: ${{ secrets.SC_DB_NAME || 'social_care' }}
+      SC_DB_USER: ${{ secrets.SC_DB_USER }}
+      SC_DB_PASSWORD: ${{ secrets.SC_DB_PASSWORD }}
+      SC_DB_NAME: ${{ secrets.SC_DB_NAME }}
     services:
       postgres:
         image: postgres:17-alpine
         env:
-          POSTGRES_USER: ${{ secrets.SC_DB_USER || 'admin' }}
-          POSTGRES_PASSWORD: ${{ secrets.SC_DB_PASSWORD || 'admin' }}
-          POSTGRES_DB: ${{ secrets.SC_DB_NAME || 'social_care' }}
+          POSTGRES_USER: ${{ secrets.SC_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.SC_DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.SC_DB_NAME }}
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U ${{ secrets.SC_DB_USER || 'admin' }} -d ${{ secrets.SC_DB_NAME || 'social_care' }}"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 20
 
     steps:
       - name: Checkout

@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   notify:
-    if: ${{ secrets.DISCORD_WEBHOOK_URL_PR != '' && github.event.pull_request.draft == false }}
+    if: ${{ github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -27,6 +27,11 @@ jobs:
           PR_HEAD: ${{ github.event.pull_request.head.ref }}
           REPOSITORY: ${{ github.repository }}
         run: |
+          if [ -z "${DISCORD_WEBHOOK_URL_PR}" ]; then
+            echo "DISCORD_WEBHOOK_URL_PR nao configurada. Pulando notificacao."
+            exit 0
+          fi
+
           payload=$(jq -nc \
             --arg repo "${REPOSITORY}" \
             --arg title "${PR_TITLE}" \
