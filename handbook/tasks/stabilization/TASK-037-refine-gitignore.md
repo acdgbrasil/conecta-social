@@ -1,4 +1,4 @@
-# [TASK-026] Refinar .gitignore (Remover ignorados indevidos)
+# [TASK-037] Refinar .gitignore (Remover ignorados indevidos)
 
 **Status:** ✅ Done
 **Prioridade:** 🟡 Média

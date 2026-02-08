@@ -54,4 +54,4 @@ Quando esta tarefa for priorizada, seguir este roteiro:
 - [x] Refatorar o método `copyWith` removendo lógica de negócio.
 - [x] Substituir `ImutableList` por arrays nativos (`readonly string[]`) para as dependências funcionais.
 - [x] Centralizar validação e sanitização (trim/filter) no método `create`.
-- [x] Garantir que todos os testes existentes em `packages/conecta-raros/social-care/tests/unit/value-objects/socialHealthSummary.valueObject.spec.ts` continuem passando (Refactor sem regressão).
+- [x] Garantir que todos os testes existentes em `src/modules/social-care/domain/tests/unit/value-objects/socialHealthSummary.valueObject.spec.ts` continuem passando (Refactor sem regressão).

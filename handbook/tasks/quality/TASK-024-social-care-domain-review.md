@@ -1,6 +1,6 @@
 # Review de Qualidade - Social Care Domain
 
-**Status:** ✅ Endereçado via Refatoração FP
+**Status:** 🟡 In Progress (maioria endereçada via Refatoração FP)
 **Prioridade:** 🔥 Alta
 
 ## Resumo das Ações (07/02/2026)
