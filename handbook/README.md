@@ -6,6 +6,7 @@ Este diretório concentra toda a documentação viva do projeto. A ideia é mant
 - `reports/` — registros cronológicos (diários, code reviews e relatórios de refatoração). Funcionam como log histórico.
 - `quality/` — estado da suíte de testes, planos de correção e métricas de qualidade.
 - `process/` — regras operacionais, incluindo versionamento, retrocompatibilidade e rituais de PR.
+- `cicd/` — estratégia de pipelines, ambientes, governança de deploy, segurança e releases.
 - `principles/` — fundamentos técnicos e culturais (DDD + EDD, TDD/BDD e como manter testes como documentação viva).
 - `tooling/` — notas de ferramentas, com foco especial em Bun e no ecossistema atual.
 - `codebase/` — documentação viva dos módulos (`src/modules/**`) e kernel compartilhado (`src/shared/**`), incluindo guias detalhados e cookbooks.
