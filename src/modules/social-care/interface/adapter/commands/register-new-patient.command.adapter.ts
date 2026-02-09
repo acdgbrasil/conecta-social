@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "@conecta/shared";
+import { Result } from "@conecta/result";
 import { CmdError } from "@conecta/social-care/application/errors/command.error";
 import type { RegisterNewPatientCommand } from "@conecta/social-care/application/ports/commands/register-new-patient.command";
 import z from "zod";
@@ -17,6 +17,6 @@ const RegisterNewPatientCommandSchema = z.object({
 
 export const createRegisterNewPatientCommand = (data: unknown): Result<RegisterNewPatientCommand,  ReturnType<typeof CmdError.InvalidCommandInput>> => {
   const parseResult = RegisterNewPatientCommandSchema.safeParse(data);
-  if (!parseResult.success) return err(CmdError.InvalidCommandInput(z.prettifyError(parseResult.error),parseResult.error));
-  return ok(parseResult.data as RegisterNewPatientCommand);
+  if (!parseResult.success) return Result.err(CmdError.InvalidCommandInput(z.prettifyError(parseResult.error),parseResult.error));
+  return Result.ok(parseResult.data as RegisterNewPatientCommand);
 }

@@ -10,13 +10,13 @@ describe("PersonId.valueObject (FP Refactor - RED)", () => {
     test("create normaliza (trim + lowercase)", () => {
       const result = PersonId.create(`  ${VALID_ID}  `);
       expect(Result.isOk(result)).toBe(true);
-      expect(Result.unwrap(result)).toBe(LOWER_ID);
+      expect(Result.unwrap(result).toString()).toBe(LOWER_ID);
     });
 
     test("create gera novo ID se vazio", () => {
       const result = PersonId.create();
       expect(Result.isOk(result)).toBe(true);
-      expect(Result.unwrap(result)).toHaveLength(36);
+      expect(Result.unwrap(result).toString()).toHaveLength(36);
     });
 
     test("create falha com UUID inválido", () => {

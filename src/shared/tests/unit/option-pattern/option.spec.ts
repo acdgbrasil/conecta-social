@@ -72,12 +72,12 @@ describe("Option Pattern", () => {
 
   describe("Utilities", () => {
     it("unwrapOr retorna fallback", () => {
-      const none = Option.none<number>();
+      const none = Option.none();
       expect(Option.unwrapOr(none, 5)).toBe(5);
     });
 
     it("unwrapOrElse retorna fallback lazy", () => {
-      const none = Option.none<number>();
+      const none = Option.none();
       expect(Option.unwrapOrElse(none, () => 10)).toBe(10);
       expect(Option.unwrapOrElse(Option.some(5), () => 10)).toBe(5);
     });

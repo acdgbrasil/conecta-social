@@ -11,12 +11,12 @@ import {
   Timestamp,
 } from "@conecta/social-care";
 import { Option } from "@conecta/option";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 import { List } from "@conecta/fn";
 import { makeUpdateHousingConditionUseCase } from "@conecta/social-care/application/use-cases/update-housing-condition.use-case";
-import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
+import type { UseCasePort } from "@conecta/ports";
 import type { UpdateHousingConditionCommand } from "@conecta/social-care/application/ports/commands/update-housing-condition.command";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 
 const NOW = new Date("2025-01-01T12:00:00Z");
 const PATIENT_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
@@ -25,7 +25,6 @@ type MockedFn<T extends (...args: any[]) => any> = ReturnType<typeof mock<T>>;
 type PatientRepositoryMock = {
   save: MockedFn<PatientRepositoryPort["save"]>;
   findByPersonId: MockedFn<PatientRepositoryPort["findByPersonId"]>;
-  addFamilyMember: MockedFn<PatientRepositoryPort["addFamilyMember"]>;
   existsByPersonId: MockedFn<PatientRepositoryPort["existsByPersonId"]>;
 };
 
@@ -69,7 +68,6 @@ describe("UseCase: UpdateHousingCondition", () => {
         Result.err(P.PatientNotFound({ id: PATIENT_UUID })),
       ),
       existsByPersonId: mock(),
-      addFamilyMember: mock(),
     };
 
     eventBus = inMemoryEventBus();

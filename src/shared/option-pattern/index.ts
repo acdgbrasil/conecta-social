@@ -1,2 +1,5 @@
-export type { Option, Some, None } from "./Option";
-export { Option } from "./Option";
+import { Option as OptionNamespace } from "./Option";
+
+export const Option = OptionNamespace;
+export type { Some, None } from "./Option";
+export type Option<T> = import("./Option").Option<T>;

@@ -2,7 +2,7 @@ import { Result } from "@conecta/result";
 import { List } from "@conecta/fn";
 import { describe, test, expect, mock, beforeEach } from "bun:test";
 import { inMemoryEventBus } from "@conecta/adapters";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 import { makeRegisterNewPatientUseCase } from "../../use-cases/register-patient.use-case";
 import { AppError } from "../../errors/application.error";
 import type { Patient } from "@conecta/social-care";
@@ -14,7 +14,6 @@ type MockedFn<T extends (...args: any[]) => any> = ReturnType<typeof mock<T>>;
 type PatientRepositoryMock = {
   save: MockedFn<PatientRepositoryPort["save"]>;
   findByPersonId: MockedFn<PatientRepositoryPort["findByPersonId"]>;
-  addFamilyMember: MockedFn<PatientRepositoryPort["addFamilyMember"]>;
   existsByPersonId: MockedFn<PatientRepositoryPort["existsByPersonId"]>;
 };
 
@@ -28,7 +27,6 @@ describe("UseCase: RegisterNewPatient", () => {
       save: mock(async () => Result.ok(undefined)),
       existsByPersonId: mock(async () => Result.ok(false)),
       findByPersonId: mock(async () => Result.err(AppError.RepositoryNotAvailable())),
-      addFamilyMember: mock(),
     };
 
     eventBus = inMemoryEventBus();

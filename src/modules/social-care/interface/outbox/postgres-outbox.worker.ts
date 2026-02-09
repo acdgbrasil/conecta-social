@@ -1,5 +1,5 @@
-import { err, ok, type Result } from "@conecta/result";
-import type { DomainError } from "@conecta/domain-error";
+import { Result } from "@conecta/result";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { DomainEvent, EventBusPort, SqlPort } from "@conecta/ports";
 import { AppError } from "@conecta/social-care/application/errors/application.error";
 
@@ -28,14 +28,14 @@ export class PostgresOutboxWorker {
   ): Promise<Result<number, DomainError>> {
     try {
       const rows = await this.sql.begin(async (tx) => {
-        const pending = await tx<OutboxRow[]>`
+        const pending = (await tx`
           SELECT id, event_name, payload, metadata, occurred_at
           FROM outbox_events
           WHERE status = 'PENDING'
           ORDER BY occurred_at ASC
           LIMIT ${batchSize}
           FOR UPDATE SKIP LOCKED
-        `;
+        `) as OutboxRow[];
 
         if (pending.length === 0) return [] as OutboxRow[];
 
@@ -50,7 +50,7 @@ export class PostgresOutboxWorker {
         return pending;
       });
 
-      if (rows.length === 0) return ok(0);
+      if (rows.length === 0) return Result.ok(0);
 
       const events: DomainEvent[] = rows.map((row) => ({
         id: row.id,
@@ -61,7 +61,7 @@ export class PostgresOutboxWorker {
       }));
 
       const publishResult = await this.eventBus.publish(events);
-      if (publishResult.isErr) {
+      if (Result.isErr(publishResult)) {
         for (const row of rows) {
           await this.sql`
             UPDATE outbox_events
@@ -69,7 +69,7 @@ export class PostgresOutboxWorker {
             WHERE id = ${row.id}
           `;
         }
-        return err(publishResult.error);
+        return Result.err(publishResult.error);
       }
 
       for (const row of rows) {
@@ -80,10 +80,10 @@ export class PostgresOutboxWorker {
         `;
       }
 
-      return ok(rows.length);
+      return Result.ok(rows.length);
     } catch (error) {
       console.error("Erro ao processar outbox:", error);
-      return err(AppError.RepositoryNotAvailable());
+      return Result.err(AppError.RepositoryNotAvailable());
     }
   }
 }

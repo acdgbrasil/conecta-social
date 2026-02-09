@@ -38,9 +38,7 @@ describe("DomainError (Functional Pattern)", () => {
   it("deve ser imutável (DeepReadonly)", () => {
     const error = PatientErrors.NotFound({ id: "123" });
     
-    // @ts-expect-error: readonly
     expect(() => { (error as any).message = "novo"; }).toThrow();
-    // @ts-expect-error: readonly
     expect(() => { (error.observability as any).severity = "CRITICAL"; }).toThrow();
   });
 

@@ -113,19 +113,21 @@ const buildSafeContext = (
 export function makeDomainErrorFactory<K extends string>(opts: MakeFactoryOptions<K>) {
   const { bc, module, catalog, redactor, codePrefix, now = () => new Date() } = opts;
 
-  const helpers = Object.entries(catalog).reduce(
+  const helpers = (Object.entries(catalog) as Array<[K, CatalogEntry]>).reduce(
     (acc, [kind, entry]) => {
-      const typedKind = kind as K;
+      const typedKind = kind;
 
       const createError = (
         ctx: Record<string, unknown> = {},
         extra: { cause?: unknown; stackTrace?: string } = {},
       ): SpecificDomainError<K> => {
         const generationTime = now();
-        const message = entry.template(ctx).replace(/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, (_, key) => {
+        const message = entry
+          .template(ctx)
+          .replace(/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, (_: string, key: string) => {
           const val = ctx[key];
           return val === null || val === undefined ? "∅" : String(val);
-        });
+          });
 
         const id = generateErrorId({ bc, module, kind: typedKind, now: generationTime });
 

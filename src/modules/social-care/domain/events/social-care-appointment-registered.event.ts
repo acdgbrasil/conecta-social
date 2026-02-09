@@ -1,5 +1,5 @@
 import { makeEvent } from "./factory";
-import type { DomainEvent } from "@conecta/shared/protocols/event-bus.protocol";
+import type { DomainEvent } from "@conecta/ports";
 import type { SocialCareAppointmentType } from "../entities/SocialCareAppointment.entity";
 
 export const SocialCareAppointmentRegisteredEvent = (props: {

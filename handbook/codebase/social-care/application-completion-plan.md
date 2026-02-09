@@ -9,7 +9,7 @@
 
 ## 🏗️ Fase 1: Fundação & Interface (Ports)
 
-### [TASK-001] Expandir `PatientRepositoryProtocol` ✅
+### [TASK-001] Expandir `PatientRepositoryPort` ✅
 ### [TASK-002] Padronizar DTOs de Entrada ✅
 
 ---

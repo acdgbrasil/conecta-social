@@ -26,7 +26,11 @@ describe("SocialBenefit.valueObject (FP Refactor - RED)", () => {
   describe("Evolução", () => {
     test("create revalida atualizações", () => {
       const original = Result.unwrap(SocialBenefit.create({ benefitName: "A", amount: 100, beneficiaryId: BEN_ID }));
-      const updated = SocialBenefit.create({ ...original, amount: 200 });
+      const updated = SocialBenefit.create({
+        ...original,
+        amount: 200,
+        beneficiaryId: BEN_ID,
+      });
       expect(Result.isOk(updated)).toBe(true);
       expect(Result.unwrap(updated).amount).toBe(200);
     });

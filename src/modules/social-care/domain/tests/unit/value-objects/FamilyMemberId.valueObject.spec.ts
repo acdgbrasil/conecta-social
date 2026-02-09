@@ -10,7 +10,7 @@ describe("FamilyMemberId.valueObject (FP Refactor - RED)", () => {
     test("create normaliza e valida", () => {
       const result = FamilyMemberId.create(VALID_ID);
       expect(Result.isOk(result)).toBe(true);
-      expect(Result.unwrap(result)).toBe(LOWER_ID);
+      expect(Result.unwrap(result).toString()).toBe(LOWER_ID);
     });
 
     test("create falha com ID inválido", () => {

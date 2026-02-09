@@ -11,12 +11,12 @@ import {
   PersonId,
   Timestamp,
 } from "@conecta/social-care";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 import { List } from "@conecta/fn";
 import { makeAssignPrimaryCaregiverUseCase } from "@conecta/social-care/application/use-cases/assign-primary-caregiver.use-case";
-import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
+import type { UseCasePort } from "@conecta/ports";
 import type { AssignPrimaryCaregiverCommand } from "@conecta/social-care/application/ports/commands/assign-primary-caregiver.command";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 
 const NOW = new Date("2025-01-01T12:00:00Z");
 const PATIENT_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
@@ -27,7 +27,6 @@ type MockedFn<T extends (...args: any[]) => any> = ReturnType<typeof mock<T>>;
 type PatientRepositoryMock = {
   save: MockedFn<PatientRepositoryPort["save"]>;
   findByPersonId: MockedFn<PatientRepositoryPort["findByPersonId"]>;
-  addFamilyMember: MockedFn<PatientRepositoryPort["addFamilyMember"]>;
   existsByPersonId: MockedFn<PatientRepositoryPort["existsByPersonId"]>;
 };
 
@@ -65,7 +64,6 @@ describe("UseCase: AssignPrimaryCaregiver", () => {
       save: mock(async () => Result.ok(undefined)),
       findByPersonId: mock(async () => Result.err(P.PatientNotFound({ id: PATIENT_UUID }))),
       existsByPersonId: mock(),
-      addFamilyMember: mock(),
     };
     
     eventBus = inMemoryEventBus();
@@ -77,8 +75,8 @@ describe("UseCase: AssignPrimaryCaregiver", () => {
     const member1 = makeMember(MEMBER_1_UUID, true);
     const member2 = makeMember(MEMBER_2_UUID, false);
     
-    patient = Result.unwrap(Patient.addFamilyMember(patient, member1));
-    patient = Result.unwrap(Patient.addFamilyMember(patient, member2));
+    patient = Result.unwrap(Patient.addFamilyMember(patient, member1, NOW));
+    patient = Result.unwrap(Patient.addFamilyMember(patient, member2, NOW));
     
     repository.findByPersonId.mockResolvedValue(Result.ok(patient));
 
@@ -92,7 +90,7 @@ describe("UseCase: AssignPrimaryCaregiver", () => {
     
     // Verifica se salvou o paciente com as flags trocadas
     const savedPatient = repository.save.mock.calls[0][0] as Patient;
-    const savedMembers = List.toArray(savedPatient.props.familyMembers);
+    const savedMembers = List.toArray(savedPatient.props.familyMembers) as FamilyMember[];
     const m1 = savedMembers.find(m => m.personId.toString() === MEMBER_1_UUID);
     const m2 = savedMembers.find(m => m.personId.toString() === MEMBER_2_UUID);
 

@@ -1,4 +1,4 @@
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { DeepReadonly } from "@conecta/fn";
 import { Result } from "@conecta/result";
 import type { Uuid } from "@conecta/uuid";
@@ -74,6 +74,6 @@ export const RightsViolationReport = {
   },
 
   equals(a: RightsViolationReport, b: RightsViolationReport): boolean {
-    return a.id.equals(b.id);
+    return a.id === b.id;
   }
 } as const;

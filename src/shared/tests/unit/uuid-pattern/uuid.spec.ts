@@ -9,7 +9,7 @@ describe("Uuid (Functional Pattern)", () => {
 
     expect(Result.isOk(result)).toBe(true);
     const id = Result.unwrap(result);
-    expect(id).toBe(validV4.toLowerCase());
+    expect(id.toString()).toBe(validV4.toLowerCase());
   });
 
   test("parse rejeita string inválida", () => {

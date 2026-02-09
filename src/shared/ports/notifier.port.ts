@@ -1,4 +1,4 @@
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { Result } from "@conecta/result";
 
 export type NotifierMessage = {

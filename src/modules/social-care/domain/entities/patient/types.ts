@@ -9,11 +9,11 @@ import {
   PersonId,
   SocialHealthSummary,
   SocioEconomicSituation,
-} from "..";
-import { FamilyMember } from "./FamilyMember.entity";
-import { Referral } from "./Referral.entity";
-import { RightsViolationReport } from "./RightsViolationReport.entity";
-import { SocialCareAppointment } from "./SocialCareAppointment.entity";
+} from "../../value-objects";
+import { FamilyMember } from "../FamilyMember.entity";
+import { Referral } from "../Referral.entity";
+import { RightsViolationReport } from "../RightsViolationReport.entity";
+import { SocialCareAppointment } from "../SocialCareAppointment.entity";
 
 /**
  * Estado interno do Agregado Patient.

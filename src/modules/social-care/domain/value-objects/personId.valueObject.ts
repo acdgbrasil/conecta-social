@@ -1,5 +1,5 @@
 import { uuidV7Provider } from "@conecta/adapters";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { Branded } from "@conecta/fn";
 import type { IdProviderPort } from "@conecta/ports";
 import { Result } from "@conecta/result";

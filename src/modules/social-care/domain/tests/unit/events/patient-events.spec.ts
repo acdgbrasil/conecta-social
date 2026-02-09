@@ -99,7 +99,7 @@ describe("Social Care Domain Events", () => {
         patientId: "uuid-patient",
         appointmentId: "uuid-appointment",
         professionalInChargeId: "uuid-professional",
-        type: "FOLLOW_UP",
+        type: "OTHER",
         occurredAt: mockDate,
       });
 
@@ -108,7 +108,7 @@ describe("Social Care Domain Events", () => {
         patientId: "uuid-patient",
         appointmentId: "uuid-appointment",
         professionalInChargeId: "uuid-professional",
-        type: "FOLLOW_UP",
+        type: "OTHER",
       });
     });
   });

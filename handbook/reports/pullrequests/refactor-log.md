@@ -37,3 +37,9 @@ Estamos migrando o domínio `social-care` de um modelo orientado a objetos (Clas
 ### Próximos Passos
 - Adaptar Camada de Aplicação (Use Cases) para consumir a nova API do Domínio.
 - Adaptar Camada de Infraestrutura (Repositories e Mappers).
+
+### [09/02/2026] - Fechamento da Trilha de Stabilization
+- **Ação:** Conclusão das tasks `TASK-012`, `TASK-013`, `TASK-014` e `TASK-036`, com atualização do board em `handbook/KANBAN.md`.
+- **Ação:** Recuperação da baseline de TypeScript (`ANL-002`) e estabilização do fluxo de integração Postgres.
+- **Ação:** Padronização de `scripts/**` para Python com migração de `scripts/version.ts` para `scripts/version.py`.
+- **Resultado:** Branch preparada para encerramento com relatórios consolidados e automação padronizada.

@@ -11,7 +11,7 @@ import {
   PersonId,
   Timestamp,
 } from "@conecta/social-care";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 import { List } from "@conecta/fn";
 import { makeAddFamilyMemberUseCase } from "@conecta/social-care/application/use-cases/add-family-member.use-case";
 
@@ -22,7 +22,6 @@ type MockedFn<T extends (...args: any[]) => any> = ReturnType<typeof mock<T>>;
 type PatientRepositoryMock = {
   save: MockedFn<PatientRepositoryPort["save"]>;
   findByPersonId: MockedFn<PatientRepositoryPort["findByPersonId"]>;
-  addFamilyMember: MockedFn<PatientRepositoryPort["addFamilyMember"]>;
   existsByPersonId: MockedFn<PatientRepositoryPort["existsByPersonId"]>;
 };
 
@@ -49,7 +48,6 @@ describe("UseCase: AddFamilyMember", () => {
     repository = {
       save: mock(async () => Result.ok(undefined)),
       findByPersonId: mock(async () => Result.err(P.PatientNotFound({ id: VALID_UUID }))),
-      addFamilyMember: mock(async () => Result.ok(undefined)),
       existsByPersonId: mock(),
     };
 
@@ -108,7 +106,9 @@ describe("UseCase: AddFamilyMember", () => {
       isPrimaryCaregiver: false,
       residesWithPatient: true,
     }));
-    const patientWithMember = Result.unwrap(Patient.addFamilyMember(patient, member));
+    const patientWithMember = Result.unwrap(
+      Patient.addFamilyMember(patient, member, NOW),
+    );
     
     repository.findByPersonId.mockResolvedValue(Result.ok(patientWithMember));
 

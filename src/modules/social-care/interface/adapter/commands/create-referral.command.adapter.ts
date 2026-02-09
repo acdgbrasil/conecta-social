@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "@conecta/shared";
+import { Result } from "@conecta/result";
 import { CmdError } from "@conecta/social-care/application/errors/command.error";
 import type { CreateReferralCommand } from "@conecta/social-care/application/ports/commands/create-referral.command";
 import { ReferralDestinationService } from "@conecta/social-care/domain/entities/Referral.entity";
@@ -18,11 +18,11 @@ export const createCreateReferralCommand = (
 ): Result<CreateReferralCommand, ReturnType<typeof CmdError.InvalidCommandInput>> => {
   const parseResult = CreateReferralCommandSchema.safeParse(data);
   if (!parseResult.success)
-    return err(
+    return Result.err(
       CmdError.InvalidCommandInput(
         z.prettifyError(parseResult.error),
         parseResult.error,
       ),
     );
-  return ok(parseResult.data as CreateReferralCommand);
+  return Result.ok(parseResult.data as CreateReferralCommand);
 };

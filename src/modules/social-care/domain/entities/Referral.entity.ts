@@ -1,4 +1,4 @@
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { DeepReadonly } from "@conecta/fn";
 import { Result } from "@conecta/result";
 import type { Uuid } from "@conecta/uuid";
@@ -49,10 +49,10 @@ export const Referral = {
 
     if (!Object.values(ReferralDestinationService).includes(props.destinationService)) {
       return Result.err(
-        RE.InvalidDestinationService({
-          service: props.destinationService,
-          allowed: Object.values(ReferralDestinationService).join(", "),
-        }),
+        RE.InvalidDestinationService(
+          props.destinationService,
+          Object.values(ReferralDestinationService).join(", "),
+        ),
       );
     }
 
@@ -77,7 +77,7 @@ export const Referral = {
   },
 
   equals(a: Referral, b: Referral): boolean {
-    return a.id.equals(b.id);
+    return a.id === b.id;
   }
 } as const;
 

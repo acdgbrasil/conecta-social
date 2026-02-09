@@ -28,14 +28,33 @@ describe("UseCasePipeline (Generators)", () => {
     expect(secondStepCalled).toBe(false);
   });
 
-  test("deve lidar com passos assíncronos (Promises)", async () => {
+  test("deve lidar com passos assíncronos reais (I/O simulado)", async () => {
     const result = await runPipeline(async function* () {
-      const val = yield Promise.resolve(Result.ok(50));
+      const val = yield new Promise((resolve) => {
+        setTimeout(() => resolve(Result.ok(50)), 5);
+      });
       return Result.ok(val * 2);
     });
 
     expect(Result.isOk(result)).toBe(true);
     expect(Result.unwrap(result)).toBe(100);
+  });
+
+  test("deve aguardar Promise assíncrona real antes de inspecionar Result", async () => {
+    let stepAfterIoCalled = false;
+
+    const result = await runPipeline(async function* () {
+      yield new Promise((resolve) => {
+        setTimeout(() => resolve(Result.err("io-error")), 5);
+      });
+
+      stepAfterIoCalled = true;
+      return Result.ok("nao-deveria-chegar-aqui");
+    });
+
+    expect(Result.isErr(result)).toBe(true);
+    expect(Result.unwrapErr(result)).toBe("io-error");
+    expect(stepAfterIoCalled).toBe(false);
   });
 
   test("deve permitir misturar valores puros e Results", async () => {

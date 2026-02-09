@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "@conecta/shared";
+import { Result } from "@conecta/result";
 import { CmdError } from "@conecta/social-care/application/errors/command.error";
 import type { ReportRightsViolationCommand } from "@conecta/social-care/application/ports/commands/report-rights-violation.command";
 import z from "zod";
@@ -22,11 +22,11 @@ export const createReportRightsViolationCommand = (
 > => {
   const parseResult = ReportRightsViolationCommandSchema.safeParse(data);
   if (!parseResult.success)
-    return err(
+    return Result.err(
       CmdError.InvalidCommandInput(
         z.prettifyError(parseResult.error),
         parseResult.error,
       ),
     );
-  return ok(parseResult.data as ReportRightsViolationCommand);
+  return Result.ok(parseResult.data as ReportRightsViolationCommand);
 };

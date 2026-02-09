@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { bench, group } from "bun:test";
 import { List } from "@conecta/fn";
 

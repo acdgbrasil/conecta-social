@@ -1,10 +1,9 @@
 import { Result } from "@conecta/result";
 import type { UpdateSocioEconomicSituationCommand } from "@conecta/social-care/application/ports/commands/update-socioeconomic-situation.command";
-import type { DomainError } from "@conecta/domain-error";
 import type { EventBusPort } from "@conecta/ports";
 import { Patient, PersonId } from "@conecta/social-care";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
 import { UseCasePipeline } from "@conecta/fn";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 
 export type UpdateSocioEconomicSituationDeps = {
   readonly repository: PatientRepositoryPort;

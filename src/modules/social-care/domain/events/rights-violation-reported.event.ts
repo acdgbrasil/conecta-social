@@ -1,5 +1,5 @@
 import { makeEvent } from "./factory";
-import type { DomainEvent } from "@conecta/shared/protocols/event-bus.protocol";
+import type { DomainEvent } from "@conecta/ports";
 
 export const RightsViolationReportedEvent = (props: {
   patientId: string;

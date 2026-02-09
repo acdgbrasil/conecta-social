@@ -2,15 +2,17 @@
   "name": "conecta-social",
   "private": true,
   "scripts": {
-    "infra:up": "bws run -- docker compose up -d",
-    "test:infra": "bws run -- bun test src/modules/social-care/interface/tests/integration/",
+    "infra:up": "bws run -- docker compose up -d social-care-db",
+    "infra:reset-db": "bws run -- docker compose down -v && bws run -- docker compose up -d social-care-db",
+    "test:infra": "bws run -- /bin/zsh -lc 'SC_DB_HOST=127.0.0.1 SC_DB_PORT=5433 bun test src/modules/social-care/interface/tests/integration'",
+    "test:infra:local": "bun test src/modules/social-care/interface/tests/integration",
     "test:perf": "bun test src/shared/tests/perf/imutable-list.hasDuplicates.perf.test.ts",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "version:patch": "bun run scripts/version.ts patch",
-    "version:minor": "bun run scripts/version.ts minor",
-    "version:major": "bun run scripts/version.ts major",
-    "version:prerelease": "bun run scripts/version.ts prerelease"
+    "version:patch": "python3 scripts/version.py patch",
+    "version:minor": "python3 scripts/version.py minor",
+    "version:major": "python3 scripts/version.py major",
+    "version:prerelease": "python3 scripts/version.py prerelease"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.11",

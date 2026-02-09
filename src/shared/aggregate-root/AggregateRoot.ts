@@ -1,4 +1,4 @@
-import type { DomainEvent } from "@conecta/ports/event-bus.protocol";
+import type { DomainEvent } from "@conecta/ports";
 import type { Uuid } from "@conecta/uuid";
 
 /**

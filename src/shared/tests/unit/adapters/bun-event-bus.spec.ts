@@ -36,28 +36,51 @@ describe("BunEventBus Adapter", () => {
   test("deve lidar com erros no handler sem quebrar o barramento", async () => {
     const bus = createBunEventBus();
     const eventName = "ErrorEvent";
-    
+
     const consoleSpy = mock((...args: any[]) => {});
     const originalConsoleError = console.error;
-    console.error = consoleSpy;
+    console.error = consoleSpy as unknown as typeof console.error;
 
+    try {
+      const handler = {
+        handle: async () => {
+          throw new Error("Boom!");
+        },
+      };
+
+      bus.subscribe(eventName, handler);
+
+      await bus.publish({
+        name: eventName,
+        payload: {},
+        occurredAt: new Date(),
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(consoleSpy).toHaveBeenCalled();
+    } finally {
+      console.error = originalConsoleError;
+    }
+  });
+
+  test("deve permitir unsubscribe para evitar handlers pendurados", async () => {
+    const bus = createBunEventBus();
+    const eventName = "UnsubEvent";
     const handler = {
-      handle: async () => {
-        throw new Error("Boom!");
-      },
+      handle: mock(async () => {}),
     };
 
-    bus.subscribe(eventName, handler);
+    const subscription = bus.subscribe(eventName, handler);
+    subscription.unsubscribe();
 
-    await bus.publish({
+    const publishResult = await bus.publish({
       name: eventName,
-      payload: {},
+      payload: { ok: true },
       occurredAt: new Date(),
     });
 
+    expect(Result.isOk(publishResult)).toBe(true);
     await new Promise(resolve => setTimeout(resolve, 10));
-    
-    expect(consoleSpy).toHaveBeenCalled();
-    console.error = originalConsoleError;
+    expect(handler.handle).not.toHaveBeenCalled();
   });
 });

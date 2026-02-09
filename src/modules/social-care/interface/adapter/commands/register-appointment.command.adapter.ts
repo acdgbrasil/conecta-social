@@ -1,4 +1,4 @@
-import { err, ok, type Result } from "@conecta/shared";
+import { Result } from "@conecta/result";
 import { CmdError } from "@conecta/social-care/application/errors/command.error";
 import type { RegisterAppointmentCommand } from "@conecta/social-care/application/ports/commands/register-appointment.command";
 import { SocialCareAppointmentType } from "@conecta/social-care/domain/entities/SocialCareAppointment.entity";
@@ -21,11 +21,11 @@ export const createRegisterAppointmentCommand = (
 > => {
   const parseResult = RegisterAppointmentCommandSchema.safeParse(data);
   if (!parseResult.success)
-    return err(
+    return Result.err(
       CmdError.InvalidCommandInput(
         z.prettifyError(parseResult.error),
         parseResult.error,
       ),
     );
-  return ok(parseResult.data as RegisterAppointmentCommand);
+  return Result.ok(parseResult.data as RegisterAppointmentCommand);
 };

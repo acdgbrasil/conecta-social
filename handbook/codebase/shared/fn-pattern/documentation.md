@@ -10,7 +10,7 @@
 Namespace que fornece operações puras e de alta performance para coleções imutáveis baseadas em arrays nativos. Otimizado para o runtime Bun.
 
 ```ts typescript
-import { List } from "@/shared/fn-pattern/imutable-list";
+import { List } from "@conecta/fn";
 
 // Construção
 const list = List.of("A", "B", "B");

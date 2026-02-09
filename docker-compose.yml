@@ -17,7 +17,7 @@ services:
     networks:
       - conecta-internal-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${SC_DB_USER:-admin} -d ${SC_DB_NAME:-social_care}"]
+      test: ["CMD", "pg_isready", "-U", "${SC_DB_USER:-admin}", "-d", "${SC_DB_NAME:-social_care}"]
       interval: 5s
       timeout: 5s
       retries: 5

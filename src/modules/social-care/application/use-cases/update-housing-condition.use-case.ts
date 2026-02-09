@@ -1,9 +1,9 @@
 import { Result } from "@conecta/result";
 import type { UpdateHousingConditionCommand } from "@conecta/social-care/application/ports/commands/update-housing-condition.command";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { EventBusPort } from "@conecta/ports";
 import { Patient, PersonId } from "@conecta/social-care";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 import { UseCasePipeline } from "@conecta/fn";
 
 export type UpdateHousingConditionDeps = {

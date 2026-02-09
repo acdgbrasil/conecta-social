@@ -1,9 +1,9 @@
 import { List } from "@conecta/fn";
 import { Result } from "@conecta/result";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import { FamilyMemberAddedEvent } from "../../events";
 import { P } from "../../errors/Patient.error";
-import type { PersonId } from "../..";
+import type { PersonId } from "../../value-objects";
 import { FamilyMember } from "../FamilyMember.entity";
 import type { Patient } from "./types";
 import { copyWith } from "./core";

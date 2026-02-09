@@ -1,4 +1,4 @@
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import { pipe } from "@conecta/fn";
 import type { Branded } from "@conecta/fn";
 import { Result } from "@conecta/result";

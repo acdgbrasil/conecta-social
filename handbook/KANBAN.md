@@ -7,23 +7,24 @@ Este documento é a fonte da verdade para o progresso do projeto.
 - Links internos foram corrigidos para a estrutura real em `handbook/tasks/**`.
 - Status revisados com base no estado atual dos arquivos em `src/` e `handbook/tasks/**`.
 
+## Notas de Análise (2026-02-09)
+- `bun test` (suite completa) teve 1 falha: `src/shared/tests/performance/load.test.ts` com `EADDRINUSE` ao iniciar `Bun.serve({ port: 0 })`.
+- `bunx --bun tsc --noEmit` reportou alto volume de erros de tipagem (baseline atual): `TS1362` (600 ocorrências) e `TS2307` (48 ocorrências).
+- Foram detectados imports legados para `patient.repository.protocol` enquanto o arquivo atual é `patient.repository.port.ts` (ponto corrigido no ANL-001).
+- O backlog abaixo inclui itens de estabilização para recuperar confiança de typecheck e previsibilidade da suíte.
+- `ANL-002` concluído em 2026-02-09 com recuperação de baseline de TypeScript (`bunx --bun tsc --noEmit` => `EXIT:0`).
+
 ## 🟢 To Do (Próximas Tarefas)
 
 | Task | Título | Prioridade | Labels |
 | :--- | :--- | :--- | :--- |
 | [TASK-010](./tasks/social-care-completion/TASK-010-usecase-report-rights-violation.md) | UseCase: ReportRightsViolation | 🔥 Alta | `feature`, `application` |
-| [TASK-012](./tasks/stabilization/TASK-012-fix-postgres-auth.md) | Corrigir autenticação Postgres (Integração) | 🔥 Alta | `infra`, `fix` |
-| [TASK-013](./tasks/stabilization/TASK-013-implement-report-rights-violation.md) | Implementar `ReportRightsViolationUseCase` | 🔥 Alta | `feature`, `application` |
-| [TASK-014](./tasks/stabilization/TASK-014-fix-event-assertion-add-family-member.md) | Ajustar asserção de eventos (AddFamilyMember) | 🟡 Média | `test`, `fix` |
 | [TASK-015](./tasks/quality/TASK-015-github-actions-ci-setup.md) | Configurar CI com GitHub Actions (testes de PR) | 🟡 Média | `ci`, `infra` |
 | [TASK-016](./tasks/modules/TASK-016-api-layer-setup.md) | Setup da camada de API (Hono/Elysia) | 🔥 Alta | `feature`, `interface` |
-| [TASK-041](./tasks/stabilization/TASK-041-command-adapter-uuid-validation-compatibility.md) | Revisar validação UUID nos command adapters | 🔥 Alta | `validation`, `adapter`, `compatibility` |
-| [TASK-043](./tasks/stabilization/TASK-043-people-context-governance-and-events-consistency.md) | Alinhar governança e eventos do People Context | 🛡️ Alta | `security`, `docs`, `people-context` |
+| [TASK-043](./tasks/stabilization/TODO/TASK-043-people-context-governance-and-events-consistency.md) | Alinhar governança e eventos do People Context | 🛡️ Alta | `security`, `docs`, `people-context` |
 | [TASK-020](./tasks/modules/TASK-020-form-conversions-setup.md) | Setup do módulo Form Conversions | 🔵 Baixa | `feature`, `fmt` |
 | [TASK-034](./tasks/modules/TASK-034-analysis-bi-setup.md) | Setup do módulo Analysis & Research | 🔵 Baixa | `feature`, `bi` |
-| [TASK-035](./tasks/stabilization/TASK-035-fix-docker-injection-vulnerability.md) | Corrigir vulnerabilidade no `docker-compose` | 🛡️ Alta | `security`, `infra` |
-| [TASK-036](./tasks/stabilization/TASK-036-fix-handbook-paths.md) | Corrigir caminhos desatualizados no handbook | 🔵 Baixa | `docs`, `fix` |
-| [TASK-039](./tasks/stabilization/TASK-039-fix-vscode-workspace-portability.md) | Ajustar portabilidade dos arquivos do VSCode | 🟡 Média | `dx`, `tooling`, `vscode` |
+| [TASK-039](./tasks/stabilization/TODO/TASK-039-fix-vscode-workspace-portability.md) | Ajustar portabilidade dos arquivos do VSCode | 🟡 Média | `dx`, `tooling`, `vscode` |
 
 ## 🟡 In Progress (Em Andamento)
 
@@ -33,12 +34,18 @@ Este documento é a fonte da verdade para o progresso do projeto.
 
 | Task | Título | Origem | Labels |
 | :--- | :--- | :--- | :--- |
-| - | (Nenhuma task em backlog aberta no momento) | - | - |
+| ANL-003 | Alinhar `BunSqlAdapter` ao contrato `SqlPort` (erro `TS2420`) | Análise local (Typecheck 2026-02-09) | `infra`, `sql`, `typing` |
+| ANL-004 | Estabilizar `load.test.ts` e separar testes de performance da suíte padrão (`bun test`) | Análise local (Tests 2026-02-09) | `tests`, `perf`, `reliability` |
 
 ## ✅ Done (Histórico de Tarefas Concluídas)
 
 | Task | Título | Concluído em | Trilha |
 | :--- | :--- | :--- | :--- |
+| [TASK-012](./tasks/stabilization/DONE/TASK-012-fix-postgres-auth.md) | Corrigir autenticação Postgres (Integração) | 09/02/2026 | stabilization |
+| [TASK-013](./tasks/stabilization/DONE/TASK-013-implement-report-rights-violation.md) | Implementar `ReportRightsViolationUseCase` | 09/02/2026 | stabilization |
+| [TASK-014](./tasks/stabilization/DONE/TASK-014-fix-event-assertion-add-family-member.md) | Ajustar asserção de eventos (AddFamilyMember) | 09/02/2026 | stabilization |
+| [TASK-036](./tasks/stabilization/DONE/TASK-036-fix-handbook-paths.md) | Corrigir caminhos desatualizados no handbook | 09/02/2026 | stabilization |
+| ANL-002 | Recuperar baseline de TypeScript (`TS1362`/`TS2307`) e reativar typecheck no fluxo de CI | 09/02/2026 | analysis |
 | [TASK-038](./tasks/stabilization/TASK-038-fix-public-api-barrel-export-order.md) | Corrigir ordem dos exports da API pública | 08/02/2026 | stabilization |
 | [TASK-041](./tasks/stabilization/TASK-041-command-adapter-uuid-validation-compatibility.md) | Hardening UUID v7 nos Command Adapters | 08/02/2026 | stabilization |
 | [TASK-042](./tasks/stabilization/TASK-042-fix-deepreadonly-function-signature.md) | Corrigir `DeepReadonly` para funções com argumentos | 08/02/2026 | stabilization |

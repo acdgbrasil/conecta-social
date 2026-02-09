@@ -1,18 +1,8 @@
-import { Result } from "@conecta/result";
-import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
-import type { RegisterAppointmentCommand } from "@conecta/social-care/application/ports/commands/register-appointment.command";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
-import type { DomainError } from "@conecta/domain-error";
-import type { EventBusPort, ClockPort } from "@conecta/ports";
-import { Patient, PersonId, type AppointmentDraft, Timestamp } from "@conecta/social-care";
-import { Uuid } from "@conecta/uuid";
-
-import { Result } from "@conecta/result";
 import { UseCasePipeline } from "@conecta/fn";
+import type { ClockPort, EventBusPort } from "@conecta/ports";
+import { Result } from "@conecta/result";
 import type { RegisterAppointmentCommand } from "@conecta/social-care/application/ports/commands/register-appointment.command";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
-import type { DomainError } from "@conecta/domain-error";
-import type { EventBusPort, ClockPort } from "@conecta/ports";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 import { Patient, PersonId, type AppointmentDraft, Timestamp } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 

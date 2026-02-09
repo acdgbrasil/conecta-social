@@ -1,7 +1,7 @@
-import { err, ok, type Result } from "@conecta/shared";
+import { Result } from "@conecta/result";
 import { CmdError } from "@conecta/social-care/application/errors/command.error";
 import type { UpdateHousingConditionCommand } from "@conecta/social-care/application/ports/commands/update-housing-condition.command";
-import { mapHousingConditionDtoToDomain } from "../mappers/social-assessment.mapper";
+import { HousingCondition, type HousingConditionProps } from "@conecta/social-care";
 import {
   ACCESSIBILITY_LEVEL,
   ELECTRICITY_ACCESS,
@@ -43,24 +43,24 @@ export const createUpdateHousingConditionCommand = (
 > => {
   const parseResult = UpdateHousingConditionCommandSchema.safeParse(data);
   if (!parseResult.success)
-    return err(
+    return Result.err(
       CmdError.InvalidCommandInput(
         z.prettifyError(parseResult.error),
         parseResult.error,
       ),
     );
-  const conditionResult = mapHousingConditionDtoToDomain(
-    parseResult.data.condition,
+  const conditionResult = HousingCondition.create(
+    parseResult.data.condition as HousingConditionProps,
   );
-  if (conditionResult.isErr) {
-    return err(
+  if (Result.isErr(conditionResult)) {
+    return Result.err(
       CmdError.InvalidCommandInput(
         conditionResult.error.message ?? "Invalid housing condition",
         conditionResult.error,
       ),
     );
   }
-  return ok({
+  return Result.ok({
     patientId: parseResult.data.patientId,
     condition: conditionResult.value,
   });

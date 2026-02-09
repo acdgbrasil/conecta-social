@@ -1,7 +1,7 @@
 import { List } from "@conecta/fn";
 import { Result } from "@conecta/result";
 import { Uuid } from "@conecta/uuid";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import { 
   ReferralCreatedEvent, 
   RightsViolationReportedEvent, 
@@ -13,7 +13,9 @@ import { RightsViolationReport } from "../RightsViolationReport.entity";
 import { SocialCareAppointment, SocialCareAppointmentType } from "../SocialCareAppointment.entity";
 import type { Patient } from "./types";
 import { copyWith } from "./core";
-import type { ReferralDraft, ViolationDraft, AppointmentDraft } from "../..";
+import type { ReferralDraft } from "../Referral.entity";
+import type { ViolationDraft } from "../RightsViolationReport.entity";
+import type { AppointmentDraft } from "../SocialCareAppointment.entity";
 import { Timestamp } from "../../value-objects/timestamp.valueObject";
 
 /**

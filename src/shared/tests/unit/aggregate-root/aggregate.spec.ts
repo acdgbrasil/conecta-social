@@ -21,8 +21,6 @@ describe("Aggregate (Functional Core)", () => {
     expect(initialUser.props.name).toBe("Alice");
     expect(initialUser.events).toBeEmpty();
     
-    // @ts-expect-error: Tentativa de mutação deve falhar em tempo de compilação
-    // initialUser.props.name = "Bob";
   });
 
   it("update() cria nova instância com props atualizadas", () => {
@@ -66,9 +64,6 @@ describe("Aggregate (Functional Core)", () => {
   });
 
   it("DeepReadonly protege arrays aninhados", () => {
-    // @ts-expect-error: push não existe em readonly array
-    // initialUser.props.roles.push("admin");
-    
     const admin = Aggregate.update(initialUser, (current) => ({
       roles: [...current.roles, "admin"]
     }));

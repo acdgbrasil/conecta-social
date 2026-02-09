@@ -1,4 +1,3 @@
-import { Result } from "@conecta/result";
 import type { DomainEvent, SqlTransaction } from "@conecta/ports";
 import { Uuid } from "@conecta/uuid";
 
@@ -19,7 +18,7 @@ export const enqueueOutboxEvents = async (
   if (ctx.events.length === 0) return;
 
   for (const event of ctx.events) {
-    const eventId = event.id ?? Result.unwrap(Uuid.create()).toString();
+    const eventId = event.id ?? Uuid.v7().uuid.toString();
     await tx`
       INSERT INTO outbox_events (
         id,

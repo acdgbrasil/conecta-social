@@ -1,6 +1,6 @@
 # 📘 Documento Conciso de Domínio — Sistema Conecta Raros (Social Care)
 
-Documento condensado do domínio do **Sistema Conecta Raros - Módulo Social Care**, baseado na implementação atual em `@packages/conecta-raros/social-care`.
+Documento condensado do domínio do **Sistema Conecta Raros - Módulo Social Care**, baseado na implementação atual em `src/modules/social-care` e no alias público `@conecta/social-care`.
 
 ---
 
@@ -65,7 +65,9 @@ O sistema comunica mudanças via eventos de domínio:
 
 - **`PatientCreated`**: Novo prontuário iniciado.
 - **`FamilyMemberAdded`**: Alteração na composição familiar.
-- *(Planejados)*: `ReferralCreated`, `RightsViolationReported`.
+- **`ReferralCreated`**: Encaminhamento social registrado.
+- **`RightsViolationReported`**: Violação de direitos reportada.
+- **`SocialCareAppointmentRegistered`**: Atendimento social registrado.
 
 ---
 

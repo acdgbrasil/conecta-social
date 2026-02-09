@@ -1,4 +1,4 @@
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { DeepReadonly } from "@conecta/fn";
 import { Result } from "@conecta/result";
 import type { Uuid } from "@conecta/uuid";
@@ -48,10 +48,10 @@ export const SocialCareAppointment = {
 
     if (!Object.values(SocialCareAppointmentType).includes(props.type)) {
       return Result.err(
-        SCAE.InvalidType({
-          type: props.type,
-          allowed: Object.values(SocialCareAppointmentType).join(", "),
-        }),
+        SCAE.InvalidType(
+          props.type,
+          Object.values(SocialCareAppointmentType).join(", "),
+        ),
       );
     }
 
@@ -63,11 +63,11 @@ export const SocialCareAppointment = {
     }
 
     if (summary.length > SUMMARY_LIMIT) {
-      return Result.err(SCAE.SummaryTooLong({ limit: SUMMARY_LIMIT }));
+      return Result.err(SCAE.SummaryTooLong(SUMMARY_LIMIT));
     }
 
     if (actionPlan.length > ACTION_PLAN_LIMIT) {
-      return Result.err(SCAE.ActionPlanTooLong({ limit: ACTION_PLAN_LIMIT }));
+      return Result.err(SCAE.ActionPlanTooLong(ACTION_PLAN_LIMIT));
     }
 
     return Result.ok({
@@ -78,6 +78,6 @@ export const SocialCareAppointment = {
   },
 
   equals(a: SocialCareAppointment, b: SocialCareAppointment): boolean {
-    return a.id.equals(b.id);
+    return a.id === b.id;
   }
 } as const;

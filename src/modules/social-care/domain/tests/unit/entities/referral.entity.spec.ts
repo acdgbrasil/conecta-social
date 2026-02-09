@@ -1,5 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { RE, Referral, Timestamp } from "@conecta/social-care";
+import {
+  RE,
+  Referral,
+  ReferralDestinationService,
+  Timestamp,
+} from "@conecta/social-care";
 import { Result } from "@conecta/result";
 import { Uuid } from "@conecta/uuid";
 
@@ -10,7 +15,7 @@ describe("Referral.entity (FP Refactor - RED)", () => {
     date: Result.unwrap(Timestamp.create({ value: NOW })),
     requestingProfessionalId: Uuid.v7().uuid,
     referredPersonId: Uuid.v7().uuid,
-    destinationService: "CRAS",
+    destinationService: ReferralDestinationService.CRAS,
     reason: "Reason",
     status: "PENDING" as const
   });

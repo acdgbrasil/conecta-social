@@ -1,4 +1,4 @@
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import { type DeepReadonly, List } from "@conecta/fn";
 import { Result } from "@conecta/result";
 import { SBC } from "@conecta/social-care/domain/errors/SocialBenefitsCollection.error";

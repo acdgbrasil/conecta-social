@@ -1,5 +1,5 @@
 import type { Result } from "@conecta/result";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 
 export type SqlTag = (
   strings: TemplateStringsArray,

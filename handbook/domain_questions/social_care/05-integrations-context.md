@@ -17,14 +17,15 @@ O Social Care é agnóstico sobre *quem* é a pessoa no mundo real (login, foto,
 ### 1.2 Repositórios (Port & Adapter)
 O domínio define contratos (Ports) que a infraestrutura implementa (Adapters), invertendo a dependência.
 
-* **Port**: `PatientRepositoryProtocol`
+* **Port**: `PatientRepositoryPort`
   * `save(patient: Patient): Promise<Result<void, DomainError>>`
   * `existsByPersonId(personId: PersonId): Promise<Result<boolean, DomainError>>`
-  * `addFamilyMember(familyMember: FamilyMember): ...`
+  * `findByPersonId(personId: PersonId): Promise<Result<Patient, DomainError>>`
+  * **Observação**: operações de mutação de agregado (ex.: `addFamilyMember`) **não** pertencem ao contrato de repositório.
 
-* **Adapter (Atual)**: `PatientSQLiteRepository`
-  * Implementação usando `Bun.SQL` e SQLite (em memória para testes/dev).
-  * Traduz o Agregado `Patient` (rico) para tabelas relacionais (normalizadas ou documento JSON).
+* **Adapter (Atual)**: em consolidação
+  * A implementação concreta de `PatientRepositoryPort` está em evolução na camada `src/modules/social-care/interface/`.
+  * A integração já operacional de persistência nesta camada inclui o outbox (`src/modules/social-care/interface/outbox/**`).
 
 ### 1.3 Casos de Uso (Application Layer)
 Camada que orquestra o domínio sem vazar regras de negócio para a infraestrutura (HTTP/Controllers).
@@ -32,7 +33,7 @@ Camada que orquestra o domínio sem vazar regras de negócio para a infraestrutu
 * **`RegisterNewPatientUseCase`**:
   * **Entrada**: DTO primitivo (`{ personId: string, diagnoses: [...] }`).
   * **Processo**:
-    1. Converte DTOs para Value Objects (`createDtoPersonID`, `createDtoIcdCode`).
+    1. Converte DTOs para Value Objects (`PersonId.create`, `ICDCode.create`, `Timestamp.create`).
     2. Checa existência no repositório.
     3. Chama a fábrica do Agregado (`Patient.createFromScratch`).
     4. Persiste via repositório.
@@ -71,4 +72,4 @@ Futuramente, o Social Care utilizará o módulo de **Format Conversions** para g
 | **PersonId** | Identificador universal de pessoas, originado no Identity Context. |
 | **ACL (Anti-Corruption Layer)** | Camada que traduz modelos externos para o modelo do Social Care (ex: DTOs de entrada nos Use Cases). |
 | **DTO (Data Transfer Object)** | Objetos simples de dados usados para tráfego entre camadas (sem comportamento). |
-| **Repository Protocol** | Interface que define como o domínio quer salvar/ler dados, sem saber qual é o banco. |
+| **Repository Port** | Interface que define como o domínio quer salvar/ler dados, sem saber qual é o banco. |

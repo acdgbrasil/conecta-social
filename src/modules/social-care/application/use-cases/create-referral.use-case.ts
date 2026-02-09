@@ -1,8 +1,8 @@
 import { Result } from "@conecta/result";
 import { UseCasePipeline } from "@conecta/fn";
 import type { CreateReferralCommand } from "@conecta/social-care/application/ports/commands/create-referral.command";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
-import type { DomainError } from "@conecta/domain-error";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { EventBusPort, ClockPort } from "@conecta/ports";
 import { Patient, PersonId, Timestamp } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";

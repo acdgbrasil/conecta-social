@@ -3,14 +3,14 @@ import { List, UseCasePipeline } from "@conecta/fn";
 import { AppError } from "@conecta/social-care/application/errors/application.error";
 import type { RegisterNewPatientCommand } from "@conecta/social-care/application/ports/commands/register-new-patient.command";
 import { Patient } from "@conecta/social-care/domain/entities";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 import {
   Diagnosis,
   ICDCode,
   PersonId,
   Timestamp,
 } from "@conecta/social-care/domain/value-objects";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { EventBusPort } from "@conecta/ports";
 
 export type RegisterNewPatientDeps = {

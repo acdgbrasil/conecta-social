@@ -1,5 +1,11 @@
 import { Result } from "@conecta/result";
-import type { DomainEvent, EventBusPort, EventHandler } from "@conecta/ports";
+import type { DomainError } from "@conecta/domain-error/DomainError";
+import type {
+  DomainEvent,
+  EventBusPort,
+  EventHandler,
+  EventSubscription,
+} from "@conecta/ports";
 
 /**
  * BunEventBus - Implementação usando EventTarget nativo.
@@ -19,7 +25,9 @@ export class BunEventBus implements EventBusPort {
    * Publica um ou mais eventos de domínio.
    * Utiliza CustomEvent para transportar o payload pelo barramento nativo.
    */
-  async publish(event: DomainEvent | DomainEvent[]): Promise<Result<void, any>> {
+  async publish(
+    event: DomainEvent | readonly DomainEvent[],
+  ): Promise<Result<void, DomainError>> {
     const events = Array.isArray(event) ? event : [event];
 
     for (const e of events) {
@@ -39,7 +47,7 @@ export class BunEventBus implements EventBusPort {
   subscribe<T extends DomainEvent>(
     eventName: string,
     handler: EventHandler<T>,
-  ): void {
+  ): EventSubscription {
     const wrapper = async (nativeEvent: Event) => {
       const domainEvent = (nativeEvent as CustomEvent).detail as T;
       try {
@@ -53,6 +61,10 @@ export class BunEventBus implements EventBusPort {
     };
 
     this.bus.addEventListener(eventName, wrapper as any);
+
+    return {
+      unsubscribe: () => this.bus.removeEventListener(eventName, wrapper as any),
+    };
   }
 }
 

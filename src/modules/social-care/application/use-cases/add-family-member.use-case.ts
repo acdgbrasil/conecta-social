@@ -1,6 +1,6 @@
 import type { AddFamilyMemberCommand } from "@conecta/social-care/application/ports/commands/add-family-member.command";
 import { Result } from "@conecta/result";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { EventBusPort } from "@conecta/ports";
 import {
   FamilyMember,
@@ -10,7 +10,7 @@ import {
   PersonId,
 } from "@conecta/social-care";
 import { List, UseCasePipeline } from "@conecta/fn";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
 
 export type AddFamilyMemberDeps = {
   readonly repository: PatientRepositoryPort;
@@ -27,16 +27,22 @@ export const makeAddFamilyMemberUseCase = (deps: AddFamilyMemberDeps) =>
         relationship: Result.ok(command.relationship),
         isResiding: Result.ok(command.isResiding),
         isCaregiver: Result.ok(command.isCaregiver),
+        now: Result.ok(new Date()),
       }),
 
     handle: async function* (ctx) {
       const patient = yield deps.repository.findByPersonId(ctx.patientPersonId);
 
-      const existingMember = List.toArray(patient.props.familyMembers)
-        .find((member) => PersonId.equals(member.personId, ctx.personId));
+      const existingMember = (List.toArray(
+        patient.props.familyMembers,
+      ) as FamilyMember[]).find(
+        (member) => member.personId.toString() === ctx.personId.toString(),
+      );
       
       if (existingMember)
-        return Result.err(P.FamilyMemberAlreadyExists({ memberId: ctx.personId }));
+        return Result.err(
+          P.FamilyMemberAlreadyExists({ memberId: ctx.personId.toString() }),
+        );
 
       const newFamilyMember = yield FamilyMember.create({
         id: ctx.familyMemberId,
@@ -46,7 +52,11 @@ export const makeAddFamilyMemberUseCase = (deps: AddFamilyMemberDeps) =>
         residesWithPatient: ctx.isResiding,
       });
 
-      const updatedPatient = yield Patient.addFamilyMember(patient, newFamilyMember);
+      const updatedPatient = yield Patient.addFamilyMember(
+        patient,
+        newFamilyMember,
+        ctx.now,
+      );
 
       return Result.ok({ aggregate: updatedPatient, result: true });
     },

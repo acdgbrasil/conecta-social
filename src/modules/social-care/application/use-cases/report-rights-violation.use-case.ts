@@ -1,10 +1,10 @@
 import { Result } from "@conecta/result";
 import { UseCasePipeline } from "@conecta/fn";
 import type { ReportRightsViolationCommand } from "@conecta/social-care/application/ports/commands/report-rights-violation.command";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
-import type { DomainError } from "@conecta/domain-error";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { EventBusPort, ClockPort } from "@conecta/ports";
-import { Patient, PersonId, Timestamp } from "@conecta/social-care";
+import { Patient, PersonId, Timestamp, ViolationType } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 
 export type ReportRightsViolationDeps = {
@@ -37,7 +37,7 @@ export const makeReportRightsViolationUseCase = (deps: ReportRightsViolationDeps
         patient,
         {
           victimId: ctx.victimId,
-          violationType: ctx.violationType,
+          violationType: ctx.violationType as (typeof ViolationType)[keyof typeof ViolationType],
           descriptionOfFact: ctx.descriptionOfFact,
           reportDate: ctx.reportDate,
           incidentDate: ctx.incidentDate,

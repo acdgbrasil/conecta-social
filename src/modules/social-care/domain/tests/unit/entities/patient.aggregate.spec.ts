@@ -27,7 +27,7 @@ describe("Patient Aggregate (FP Refactor - RED)", () => {
         residesWithPatient: true
       }));
 
-      const result = Patient.addFamilyMember(patient, member);
+      const result = Patient.addFamilyMember(patient, member, new Date());
       expect(Result.isOk(result)).toBe(true);
     });
   });

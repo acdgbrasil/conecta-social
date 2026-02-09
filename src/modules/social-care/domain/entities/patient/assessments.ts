@@ -1,7 +1,7 @@
 import { Result } from "@conecta/result";
 import { Option } from "@conecta/option";
-import type { DomainError } from "@conecta/domain-error";
-import type { HousingCondition, SocioEconomicSituation } from "../..";
+import type { DomainError } from "@conecta/domain-error/DomainError";
+import type { HousingCondition, SocioEconomicSituation } from "../../value-objects";
 import type { Patient } from "./types";
 import { copyWith } from "./core";
 

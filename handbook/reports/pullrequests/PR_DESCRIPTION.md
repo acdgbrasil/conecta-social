@@ -1,30 +1,43 @@
-# PR Description: Hardening de Segurança (UUID v7) e Infraestrutura de Eventos
+# PR Description: Fechamento da Trilha de Stabilization e Consolidação do Handbook
 
-## 🚀 Resumo
-Este Pull Request foca na **estabilidade e segurança** da aplicação. Implementamos uma política estrita de UUID v7 para garantir ordenação cronológica e performance de indexação, além de introduzir um novo barramento de eventos de alta performance baseado em `EventTarget` (nativo do Bun).
+## Resumo
+Este PR fecha a rodada de estabilização do `social-care` com foco em:
+- validação da integração Postgres,
+- consolidação do contrato de domínio/eventos,
+- correções de documentação e Kanban,
+- padronização de scripts de automação para Python.
 
-## 🔑 Mudanças Principais
+## Entregas Principais
 
-### 🛡️ Segurança e Integridade (UUID v7)
-- **Validation Hardening:** Todos os Command Adapters (`src/modules/social-care/interface/adapter/commands/*.ts`) agora exigem estritamente `z.uuidv7()`.
-- **Limpeza de Legado:** Removidas chamadas residuais a `Uuid.v4()` em testes e código de produção.
-- **Benefício:** Elimina fragmentação de índices no banco e garante IDs ordenáveis por tempo em todo o sistema.
+### Stabilization concluída
+- `TASK-012`: autenticação Postgres em integração corrigida e fluxo local de infra validado.
+- `TASK-013`: `ReportRightsViolationUseCase` implementado e coberto por testes.
+- `TASK-014`: ajuste de asserções de eventos em `AddFamilyMember`.
+- `TASK-036`: caminhos e referências do handbook atualizados para estrutura real de `src/modules/social-care` e `src/shared`.
+- `ANL-002`: baseline de TypeScript recuperada com `bunx --bun tsc --noEmit` verde.
 
-### ⚡ Infraestrutura (BunEventBus)
-- **Novo Adapter:** Adicionado `src/shared/adapters/bun-event-bus.adapter.ts`.
-- **Tecnologia:** Utiliza a API `EventTarget` (Web Standard) otimizada pelo Bun para mensageria *in-process*.
-- **Pub/Sub:** Interface `EventBusPort` expandida para suportar `subscribe`, permitindo desacoplamento reativo dentro do monolito.
+### Documentação e governança técnica
+- Atualização de `handbook/KANBAN.md` com cards movidos para `Done`.
+- Revisão dos documentos de arquitetura e domínio para eliminar paths legados e inconsistências de contrato.
+- Registro dos resultados em `handbook/reports/**` para fechamento de branch.
 
-### 🐛 Correções de Bugs (Stabilization)
-- **Stack Overflow:** Corrigida recursão infinita em `Timestamp.toISOString`.
-- **Barrel Order:** Ajustada a ordem de exportação em `src/index.ts` para evitar sombreamento de tipos do Shared Kernel.
-- **Tipagem:** Correção do utilitário `DeepReadonly` para preservar assinaturas de funções com argumentos.
-- **ICD Error:** Ajuste no template de erro do Value Object `ICDCode` para renderizar corretamente valores nulos (`∅`).
+### Tooling/scripts
+- Padronização da pasta `scripts/**` para Python:
+  - remoção de `scripts/version.ts`,
+  - criação de `scripts/version.py`,
+  - atualização dos atalhos `version:*` no `package.json`,
+  - atualização da referência em `handbook/process/versioning.md`.
 
-## ✅ Verificação
-- [x] **Testes Unitários (App/Domain)**: 100% Pass (215 testes).
-- [x] **Testes de Integração**: Testes de repositório ajustados para a nova API de UUID (falha de auth do banco é esperada e requer reset de ambiente).
-- [x] **Smoke Test**: Criado teste de fumaça para garantir integridade da API pública (`src/index.ts`).
+## Verificação executada
+- `bun run infra:reset-db`
+- `bun run test:infra`
+- `python3 scripts/version.py --help`
+- `python3 scripts/version.py patch --dry-run`
+- `bun run version:patch -- --dry-run`
+- `python3 scripts/sync_kanban_github.py --help`
+- `python3 scripts/sync_kanban_github.py --repo acdgbrasil/conecta-social --project-owner acdgbrasil --project-number 10 --dry-run` (bloqueado neste ambiente por indisponibilidade de rede para `api.github.com`)
 
----
-*Gerado via Gemini CLI Agent*
+## Impacto
+- Reduz risco de regressão na integração com Postgres.
+- Mantém o Kanban e reports como fonte confiável de status.
+- Unifica automação em uma linguagem de script (`Python`), simplificando manutenção.

@@ -1,5 +1,16 @@
 import { Result } from "@conecta/result";
 
+type ResultLike = { kind: "ok"; value: unknown } | { kind: "err"; error: unknown };
+
+const isResultLike = (value: unknown): value is ResultLike => {
+  if (typeof value !== "object" || value === null || !("kind" in value)) {
+    return false;
+  }
+
+  const candidate = value as { kind?: unknown };
+  return candidate.kind === "ok" || candidate.kind === "err";
+};
+
 /**
  * Motor de execução para Pipelines Funcionais baseados em Generators.
  * Permite escrever fluxos que parecem imperativos (sem aninhamento de ifs)
@@ -22,19 +33,21 @@ export async function runPipeline<T, E>(
         return value as Result<T, E>;
       }
 
-      // Se o valor yielded for um Result e for erro, interrompe imediatamente (Short-circuit)
-      if (typeof value === "object" && value !== null && "kind" in value) {
-        if (value.kind === "err") {
-          return value as Result<any, E>;
+      // Primeiro, resolve qualquer Promise yielded pelo generator.
+      const resolvedValue = await value;
+
+      // Depois da resolução, aplica semântica de Result (ROP).
+      if (isResultLike(resolvedValue)) {
+        if (resolvedValue.kind === "err") {
+          return resolvedValue as Result<any, E>;
         }
-        if (value.kind === "ok") {
-          nextValue = value.value;
+        if (resolvedValue.kind === "ok") {
+          nextValue = resolvedValue.value;
           continue;
         }
       }
 
-      // Se for um valor puro ou Promise, aguarda e passa adiante
-      nextValue = await value;
+      nextValue = resolvedValue;
     }
   } catch (error) {
     // Erros não tratados (exceções) são propagados

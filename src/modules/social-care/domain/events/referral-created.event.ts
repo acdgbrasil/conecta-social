@@ -1,5 +1,5 @@
 import { makeEvent } from "./factory";
-import type { DomainEvent } from "@conecta/shared/protocols/event-bus.protocol";
+import type { DomainEvent } from "@conecta/ports";
 import type { ReferralDestinationService, ReferralStatus } from "../entities/Referral.entity";
 
 export const ReferralCreatedEvent = (props: {

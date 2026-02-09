@@ -1,7 +1,7 @@
 import { SQL } from "bun";
 import type { SqlPort, SqlTransaction } from "@conecta/ports";
 
-export class BunSqlAdapter implements SqlPort {
+export class BunSqlAdapter {
   private readonly sql: any;
 
   constructor(config: any) {

@@ -1,5 +1,5 @@
 import { systemClock, uuidV7Provider } from "@conecta/adapters";
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import { List } from "@conecta/fn";
 import { Option } from "@conecta/option";
 import type { ClockPort, DomainEvent, IdProviderPort } from "@conecta/ports";
@@ -8,7 +8,7 @@ import { Uuid } from "@conecta/uuid";
 import { Aggregate } from "@conecta/shared/aggregate-root/aggregate";
 import { PatientCreatedEvent } from "../../events";
 import { P } from "../../errors/Patient.error";
-import type { PersonId, Diagnosis } from "../..";
+import type { Diagnosis, PersonId } from "../../value-objects";
 import type { Patient, PatientProps } from "./types";
 
 export type PatientDependencies = {
@@ -52,7 +52,7 @@ export const PatientCore = {
   ): Result<Patient, DomainError> {
     const resolvedDeps = resolveDeps(deps);
     const patientIdResult = Uuid.create(resolvedDeps.idProvider.generate());
-    if (Result.isErr(patientIdResult)) return Result.err(patientIdResult.error);
+    if (Result.isErr(patientIdResult)) return Result.err(P.InitialIdIsRequired());
     const patientId = patientIdResult.value;
     
     if (!personId) return Result.err(P.InitialPersonIdIsRequired());
@@ -86,10 +86,16 @@ export const PatientCore = {
     return Aggregate.of(id, props, version);
   },
 
-  pullDomainEvents(patient: Patient): { events: readonly DomainEvent[], patient: Patient } {
+  pullDomainEvents(patient: Patient): {
+    events: readonly DomainEvent[];
+    aggregate: Patient;
+    patient: Patient;
+  } {
+    const cleared = Aggregate.clearEvents(patient);
     return {
       events: patient.events,
-      patient: Aggregate.clearEvents(patient)
+      aggregate: cleared,
+      patient: cleared,
     };
   }
 } as const;

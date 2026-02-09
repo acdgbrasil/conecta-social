@@ -1,7 +1,7 @@
 import { Result } from "@conecta/result";
 import type { RemoveFamilyMemberCommand } from "@conecta/social-care/application/ports/commands/remove-family-member.command";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
-import type { DomainError } from "@conecta/domain-error";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import type { EventBusPort } from "@conecta/ports";
 import { Patient, PersonId } from "@conecta/social-care";
 import { UseCasePipeline } from "@conecta/fn";
