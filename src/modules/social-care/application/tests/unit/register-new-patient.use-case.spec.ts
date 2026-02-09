@@ -1,9 +1,9 @@
-import { ok, err, type Result } from "@conecta/result";
-import { ImutableListFactory } from "@conecta/fn";
+import { Result } from "@conecta/result";
+import { List } from "@conecta/fn";
 import { describe, test, expect, mock, beforeEach } from "bun:test";
 import { inMemoryEventBus } from "@conecta/adapters";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
-import { RegisterNewPatientUseCase } from "../../use-cases/register-patient.use-case";
+import { makeRegisterNewPatientUseCase } from "../../use-cases/register-patient.use-case";
 import { AppError } from "../../errors/application.error";
 import type { Patient } from "@conecta/social-care";
 
@@ -21,18 +21,18 @@ type PatientRepositoryMock = {
 describe("UseCase: RegisterNewPatient", () => {
   let repository: PatientRepositoryMock;
   let eventBus: any;
-  let useCase: RegisterNewPatientUseCase;
+  let useCase: ReturnType<typeof makeRegisterNewPatientUseCase>;
 
   beforeEach(() => {
     repository = {
-      save: mock(async () => ok(undefined)),
-      existsByPersonId: mock(async () => ok(false)),
-      findByPersonId: mock(async () => err(AppError.RepositoryNotAvailable())),
+      save: mock(async () => Result.ok(undefined)),
+      existsByPersonId: mock(async () => Result.ok(false)),
+      findByPersonId: mock(async () => Result.err(AppError.RepositoryNotAvailable())),
       addFamilyMember: mock(),
     };
 
     eventBus = inMemoryEventBus();
-    useCase = new RegisterNewPatientUseCase(repository, eventBus);
+    useCase = makeRegisterNewPatientUseCase({ repository, eventBus });
   });
 
   test("deve criar novo paciente, salvar e publicar evento", async () => {
@@ -49,13 +49,13 @@ describe("UseCase: RegisterNewPatient", () => {
 
     const result = await useCase.execute(input);
 
-    expect(result.isOk).toBe(true);
+    expect(Result.isOk(result)).toBe(true);
     expect(repository.save).toHaveBeenCalled();
     
     const savedPatient = repository.save.mock.calls[0][0] as Patient;
     expect(savedPatient).toBeDefined();
-    expect(savedPatient.personId.toString()).toBe(VALID_UUID);
-    expect(ImutableListFactory.count(savedPatient.diagnoses)).toBe(1);
+    expect(savedPatient.props.personId.toString()).toBe(VALID_UUID);
+    expect(List.count(savedPatient.props.diagnoses)).toBe(1);
     
     // Validar eventos
     expect(eventBus.published.length).toBe(1);
@@ -73,12 +73,12 @@ describe("UseCase: RegisterNewPatient", () => {
       initialDiagnoses: [],
     });
 
-    expect(result.isErr).toBe(true);
+    expect(Result.isErr(result)).toBe(true);
     expect(repository.save).not.toHaveBeenCalled();
   });
 
   test("deve falhar se paciente já existe", async () => {
-    repository.existsByPersonId.mockResolvedValue(ok(true));
+    repository.existsByPersonId.mockResolvedValue(Result.ok(true));
 
     const input = {
       personId: VALID_UUID,
@@ -93,8 +93,8 @@ describe("UseCase: RegisterNewPatient", () => {
 
     const result = await useCase.execute(input);
 
-    expect(result.isErr).toBe(true);
-    expect(result.unwrapErr().code).toBe(AppError.PersonIdAlreadyExists().code);
+    expect(Result.isErr(result)).toBe(true);
+    expect(Result.unwrapErr(result).code).toBe(AppError.PersonIdAlreadyExists().code);
     expect(repository.save).not.toHaveBeenCalled();
   });
 
@@ -112,13 +112,13 @@ describe("UseCase: RegisterNewPatient", () => {
 
     const result = await useCase.execute(input);
 
-    expect(result.isErr).toBe(true);
+    expect(Result.isErr(result)).toBe(true);
     expect(repository.save).not.toHaveBeenCalled();
   });
   
   test("deve falhar se repositório falhar no existsByPersonId", async () => {
      repository.existsByPersonId.mockResolvedValue(
-       err(AppError.RepositoryNotAvailable()),
+       Result.err(AppError.RepositoryNotAvailable()),
      );
  
      const input = {
@@ -134,12 +134,12 @@ describe("UseCase: RegisterNewPatient", () => {
  
      const result = await useCase.execute(input);
  
-     expect(result.isErr).toBe(true);
-     expect(result.unwrapErr().code).toBe("APP-002");
+     expect(Result.isErr(result)).toBe(true);
+     expect(Result.unwrapErr(result).code).toBe("APP-002");
   });
 
   test("deve falhar se repositório falhar no save", async () => {
-      repository.save.mockResolvedValue(err(AppError.RepositoryNotAvailable()));
+      repository.save.mockResolvedValue(Result.err(AppError.RepositoryNotAvailable()));
       
       const input = {
         personId: VALID_UUID,
@@ -154,7 +154,7 @@ describe("UseCase: RegisterNewPatient", () => {
   
       const result = await useCase.execute(input);
   
-      expect(result.isErr).toBe(true);
-      expect(result.unwrapErr().code).toBe("APP-002");
+      expect(Result.isErr(result)).toBe(true);
+      expect(Result.unwrapErr(result).code).toBe("APP-002");
    });
 });

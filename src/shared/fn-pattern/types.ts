@@ -16,7 +16,7 @@ export type Branded<T, Brand extends string> = T & { readonly __brand: Brand };
  */
 export type DeepReadonly<T> = T extends (infer R)[]
 	? ReadonlyArray<DeepReadonly<R>>
-	: T extends (...args: never[]) => unknown
+	: T extends (...args: any[]) => unknown
 		? T
 		: T extends object
 			? { readonly [K in keyof T]: DeepReadonly<T[K]> }

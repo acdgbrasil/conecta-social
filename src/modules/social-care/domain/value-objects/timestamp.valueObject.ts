@@ -41,7 +41,7 @@ export const Timestamp = {
   },
 
   toISOString(self: Timestamp): string {
-    return self.toISOString();
+    return Date.prototype.toISOString.call(self);
   },
 
   toDate(self: Timestamp): Date {

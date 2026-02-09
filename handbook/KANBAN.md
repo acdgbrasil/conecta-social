@@ -17,10 +17,7 @@ Este documento é a fonte da verdade para o progresso do projeto.
 | [TASK-014](./tasks/stabilization/TASK-014-fix-event-assertion-add-family-member.md) | Ajustar asserção de eventos (AddFamilyMember) | 🟡 Média | `test`, `fix` |
 | [TASK-015](./tasks/quality/TASK-015-github-actions-ci-setup.md) | Configurar CI com GitHub Actions (testes de PR) | 🟡 Média | `ci`, `infra` |
 | [TASK-016](./tasks/modules/TASK-016-api-layer-setup.md) | Setup da camada de API (Hono/Elysia) | 🔥 Alta | `feature`, `interface` |
-| [TASK-038](./tasks/stabilization/TASK-038-fix-public-api-barrel-export-order.md) | Corrigir ordem dos exports da API pública | 🔥 Alta | `bug`, `api`, `barrel` |
-| [TASK-040](./tasks/stabilization/TASK-040-fix-timestamp-toisostring-recursion.md) | Corrigir recursão em `Timestamp.toISOString` | 🔥 Alta | `bug`, `domain`, `value-object` |
 | [TASK-041](./tasks/stabilization/TASK-041-command-adapter-uuid-validation-compatibility.md) | Revisar validação UUID nos command adapters | 🔥 Alta | `validation`, `adapter`, `compatibility` |
-| [TASK-042](./tasks/stabilization/TASK-042-fix-deepreadonly-function-signature.md) | Corrigir `DeepReadonly` para funções com argumentos | 🔥 Alta | `type-safety`, `shared`, `typescript` |
 | [TASK-043](./tasks/stabilization/TASK-043-people-context-governance-and-events-consistency.md) | Alinhar governança e eventos do People Context | 🛡️ Alta | `security`, `docs`, `people-context` |
 | [TASK-020](./tasks/modules/TASK-020-form-conversions-setup.md) | Setup do módulo Form Conversions | 🔵 Baixa | `feature`, `fmt` |
 | [TASK-034](./tasks/modules/TASK-034-analysis-bi-setup.md) | Setup do módulo Analysis & Research | 🔵 Baixa | `feature`, `bi` |
@@ -30,10 +27,7 @@ Este documento é a fonte da verdade para o progresso do projeto.
 
 ## 🟡 In Progress (Em Andamento)
 
-| Task | Título | Status Atual | Próximo Passo |
-| :--- | :--- | :--- | :--- |
-| [TASK-024](./tasks/quality/TASK-024-social-care-domain-review.md) | Review de Qualidade — Social Care | Maioria dos achados já endereçada na refatoração FP | Fechar pendências de enums e typo no `socialHealthSummary` |
-| [TASK-033](./tasks/quality/TASK-033-domain-code-smell-cleanup.md) | Limpeza de code smells do domínio | Escopo estrutural implementado | Estabilizar suíte completa da camada `application` |
+(Nenhuma task em andamento no momento)
 
 ## 📁 Backlog (Sugestões de Reviews & Melhorias)
 
@@ -45,6 +39,12 @@ Este documento é a fonte da verdade para o progresso do projeto.
 
 | Task | Título | Concluído em | Trilha |
 | :--- | :--- | :--- | :--- |
+| [TASK-038](./tasks/stabilization/TASK-038-fix-public-api-barrel-export-order.md) | Corrigir ordem dos exports da API pública | 08/02/2026 | stabilization |
+| [TASK-041](./tasks/stabilization/TASK-041-command-adapter-uuid-validation-compatibility.md) | Hardening UUID v7 nos Command Adapters | 08/02/2026 | stabilization |
+| [TASK-042](./tasks/stabilization/TASK-042-fix-deepreadonly-function-signature.md) | Corrigir `DeepReadonly` para funções com argumentos | 08/02/2026 | stabilization |
+| [TASK-040](./tasks/stabilization/TASK-040-fix-timestamp-toisostring-recursion.md) | Corrigir recursão em `Timestamp.toISOString` | 08/02/2026 | stabilization |
+| [TASK-033](./tasks/quality/TASK-033-domain-code-smell-cleanup.md) | Limpeza de code smells do domínio | 08/02/2026 | quality |
+| [TASK-024](./tasks/quality/TASK-024-social-care-domain-review.md) | Review de Qualidade — Social Care | 08/02/2026 | quality |
 | [TASK-001](./tasks/social-care-completion/TASK-001-expand-repository.md) | Expandir repositório com `findById` | 05/02/2026 | social-care-completion |
 | [TASK-002](./tasks/social-care-completion/TASK-002-standardize-dtos.md) | Padronizar DTOs de entrada | 03/02/2026 | social-care-completion |
 | [TASK-003](./tasks/social-care-completion/TASK-003-usecase-add-family-member.md) | UseCase: AddFamilyMember | 03/02/2026 | social-care-completion |
@@ -52,7 +52,7 @@ Este documento é a fonte da verdade para o progresso do projeto.
 | [TASK-005](./tasks/social-care-completion/TASK-005-usecase-remove-family-member.md) | UseCase: RemoveFamilyMember | 03/02/2026 | social-care-completion |
 | [TASK-006](./tasks/social-care-completion/TASK-006-usecase-update-housing.md) | UseCase: UpdateHousingCondition | 03/02/2026 | social-care-completion |
 | [TASK-007](./tasks/social-care-completion/TASK-007-usecase-update-socioeconomic.md) | UseCase: UpdateSocioEconomicSituation | 03/02/2026 | social-care-completion |
-| [TASK-008](./tasks/social-care-completion/TASK-008-usecase-register-appointment.md) | UseCase: RegisterAppointment | 03/02/2026 | social-care-completion |
+| [TASK-008](./tasks/social-care-completion/TASK-008-usecase-register-appointment.md) | UseCase: RegisterAppointment | 03/02/2026 | social-care-appointment |
 | [TASK-009](./tasks/social-care-completion/TASK-009-usecase-create-referral.md) | UseCase: CreateReferral | 03/02/2026 | social-care-completion |
 | [TASK-011](./tasks/social-care-completion/TASK-011-refactor-social-health-summary.md) | Refatorar SocialHealthSummary | 03/02/2026 | social-care-completion |
 | [TASK-017](./tasks/backlog/TASK-017-aggregate-event-cleanup.md) | Limpeza de eventos no agregado | 06/02/2026 | backlog |

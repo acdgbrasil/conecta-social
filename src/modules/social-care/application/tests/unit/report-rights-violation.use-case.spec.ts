@@ -1,4 +1,4 @@
-import { ok, err } from "@conecta/result";
+import { Result } from "@conecta/result";
 import { describe, test, expect, mock, beforeEach } from "bun:test";
 import { inMemoryEventBus } from "@conecta/adapters";
 import {
@@ -9,10 +9,11 @@ import {
   PersonId,
   Timestamp,
 } from "@conecta/social-care";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
-import { ImutableListFactory } from "@conecta/fn";
-import { ReportRightsViolationUseCase } from "@conecta/social-care/application/use-cases/report-rights-violation.use-case";
-const describeOrSkip = describe.skip; // skip enquanto o use case não está implementado
+import { List } from "@conecta/fn";
+import { makeReportRightsViolationUseCase } from "@conecta/social-care/application/use-cases/report-rights-violation.use-case";
+
+import type { ReportRightsViolationCommand } from "@conecta/social-care/application/ports/commands/report-rights-violation.command";
+import type { DomainError } from "@conecta/domain-error";
 
 const NOW = new Date("2025-01-01T12:00:00Z");
 const PATIENT_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
@@ -28,30 +29,30 @@ type PatientRepositoryMock = {
 };
 
 const makePatient = (): Patient => {
-  const personId = PersonId.create(PATIENT_UUID).unwrap();
-  const icdCode = ICDCode.create("A00.0").unwrap();
-  const timestamp = Timestamp.create({ value: NOW }).unwrap();
-  const diagnosis = Diagnosis.create(
+  const personId = Result.unwrap(PersonId.create(PATIENT_UUID));
+  const icdCode = Result.unwrap(ICDCode.create("A00.0"));
+  const timestamp = Result.unwrap(Timestamp.create({ value: NOW }));
+  const diagnosis = Result.unwrap(Diagnosis.create(
     { id: icdCode, date: timestamp, description: "Diagnóstico inicial" },
     timestamp,
-  ).unwrap();
-  const diagnoses = ImutableListFactory.fromArray([diagnosis]);
-  const patient = Patient.createFromScratch(personId, diagnoses).unwrap();
-  patient.pullDomainEvents();
-  return patient;
+  ));
+  const diagnoses = List.from([diagnosis]);
+  const patient = Result.unwrap(Patient.createFromScratch(personId, diagnoses));
+  const { patient: cleanPatient } = Patient.pullDomainEvents(patient);
+  return cleanPatient;
 };
 
-describeOrSkip("UseCase: ReportRightsViolation", () => {
+describe("UseCase: ReportRightsViolation", () => {
   let repository: PatientRepositoryMock;
   let eventBus: any;
   let clock: any;
-  let useCase: ReportRightsViolationUseCase;
+  let useCase: UseCasePort<ReportRightsViolationCommand, Result<boolean, DomainError>>;
 
   beforeEach(() => {
     repository = {
-      save: mock(async () => ok(undefined)),
+      save: mock(async () => Result.ok(undefined)),
       findByPersonId: mock(async () =>
-        err(P.PatientNotFound({ id: PATIENT_UUID })),
+        Result.err(P.PatientNotFound({ id: PATIENT_UUID })),
       ),
       existsByPersonId: mock(),
       addFamilyMember: mock(),
@@ -61,12 +62,12 @@ describeOrSkip("UseCase: ReportRightsViolation", () => {
     clock = {
       now: mock(() => NOW),
     };
-    useCase = new ReportRightsViolationUseCase(repository, eventBus, clock);
+    useCase = makeReportRightsViolationUseCase({ repository, eventBus, clock });
   });
 
   test("deve registrar um relato de violação com sucesso", async () => {
     const patient = makePatient();
-    repository.findByPersonId.mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(Result.ok(patient));
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
@@ -77,11 +78,11 @@ describeOrSkip("UseCase: ReportRightsViolation", () => {
       incidentDate: new Date(NOW.getTime() - 10000), // Incidente no passado
     });
 
-    expect(result.isOk).toBe(true);
+    expect(Result.isOk(result)).toBe(true);
     expect(repository.save).toHaveBeenCalled();
 
     const savedPatient = repository.save.mock.calls[0][0] as Patient;
-    expect(ImutableListFactory.count(savedPatient.violationsReports)).toBe(1);
+    expect(List.count(savedPatient.props.violationsReports)).toBe(1);
     
     // Validar eventos
     expect(eventBus.published.length).toBe(1);
@@ -90,7 +91,7 @@ describeOrSkip("UseCase: ReportRightsViolation", () => {
 
   test("deve retornar erro quando o paciente não existe", async () => {
     repository.findByPersonId.mockResolvedValue(
-      err(P.PatientNotFound({ id: PATIENT_UUID })),
+      Result.err(P.PatientNotFound({ id: PATIENT_UUID })),
     );
 
     const result = await useCase.execute({
@@ -102,13 +103,13 @@ describeOrSkip("UseCase: ReportRightsViolation", () => {
       incidentDate: NOW,
     });
 
-    expect(result.isErr).toBe(true);
+    expect(Result.isErr(result)).toBe(true);
     expect(repository.save).not.toHaveBeenCalled();
   });
 
   test("deve falhar se a vítima estiver fora da fronteira do agregado", async () => {
     const patient = makePatient();
-    repository.findByPersonId.mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(Result.ok(patient));
 
     const result = await useCase.execute({
       patientId: PATIENT_UUID,
@@ -119,9 +120,9 @@ describeOrSkip("UseCase: ReportRightsViolation", () => {
       incidentDate: NOW,
     });
 
-    expect(result.isErr).toBe(true);
-    if (!result.isErr) return;
-    expect(result.unwrapErr().code).toBe("PAT-004"); // ViolationTargetOutsideBoundary
+    expect(Result.isErr(result)).toBe(true);
+    if (!Result.isErr(result)) return;
+    expect(Result.unwrapErr(result).code).toBe("PAT-004"); // ViolationTargetOutsideBoundary
     expect(repository.save).not.toHaveBeenCalled();
   });
 });

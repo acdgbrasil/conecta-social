@@ -37,4 +37,18 @@ describe("fp foundations types", () => {
     // @ts-expect-error: arrays internos devem ser readonly
     readonlyConfig.list.push({ name: "beta" });
   });
+
+  test("DeepReadonly deve preservar assinaturas de funcoes com argumentos", () => {
+    type WithCallback = {
+      callback: (id: string, count: number) => boolean;
+    };
+
+    const obj: DeepReadonly<WithCallback> = {
+      callback: (id: string, count: number) => id.length > count
+    };
+
+    // Nao deve dar erro ao chamar a funcao
+    const result = obj.callback("test", 2);
+    expect(result).toBe(true);
+  });
 });

@@ -1,74 +1,55 @@
-import { err, ok, type Result } from "@conecta/result";
-import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
+import { Result } from "@conecta/result";
+import { UseCasePipeline } from "@conecta/fn";
 import type { CreateReferralCommand } from "@conecta/social-care/application/ports/commands/create-referral.command";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
 import type { DomainError } from "@conecta/domain-error";
 import type { EventBusPort, ClockPort } from "@conecta/ports";
-import { PersonId, type ReferralDraft, Timestamp } from "@conecta/social-care";
+import { Patient, PersonId, Timestamp } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 
-export class CreateReferralUseCase
-  implements UseCasePort<CreateReferralCommand, Result<boolean, DomainError>>
-{
-  constructor(
-    private readonly repository: PatientRepositoryPort,
-    private readonly eventBus: EventBusPort,
-    private readonly clock: ClockPort,
-  ) {}
+export type CreateReferralDeps = {
+  readonly repository: PatientRepositoryPort;
+  readonly eventBus: EventBusPort;
+  readonly clock: ClockPort;
+};
 
-  async execute(
-    command: Readonly<CreateReferralCommand>,
-  ): Promise<Result<boolean, DomainError>> {
-    const patientPersonIdResult = PersonId.create(command.patientId);
-    if (patientPersonIdResult.isErr) return err(patientPersonIdResult.error);
+export const makeCreateReferralUseCase = (deps: CreateReferralDeps) =>
+  UseCasePipeline.build({
+    parse: (command: Readonly<CreateReferralCommand>) =>
+      Result.combine({
+        patientPersonId: PersonId.create(command.patientId),
+        referredPersonId: Uuid.create(command.referredPersonId),
+        requestingProfessionalId: command.professionalId
+          ? Uuid.create(command.professionalId)
+          : Result.ok(undefined),
+        date: command.date
+          ? Timestamp.create({ value: command.date })
+          : Result.ok(undefined),
+        destinationService: Result.ok(command.destinationService),
+        reason: Result.ok(command.reason),
+      }),
 
-    const patientResult = await this.repository.findByPersonId(
-      patientPersonIdResult.value,
-    );
-    if (patientResult.isErr) return err(patientResult.error);
-    const patient = patientResult.value;
+    handle: async function* (ctx) {
+      const patient = yield deps.repository.findByPersonId(ctx.patientPersonId);
 
-    const referredPersonIdResult = Uuid.create(command.referredPersonId);
-    if (referredPersonIdResult.isErr) return err(referredPersonIdResult.error);
+      const updatedPatient = yield Patient.createReferral(
+        patient,
+        {
+          referredPersonId: ctx.referredPersonId,
+          destinationService: ctx.destinationService,
+          reason: ctx.reason,
+          requestingProfessionalId: ctx.requestingProfessionalId,
+          date: ctx.date,
+        },
+        deps.clock.now(),
+        Uuid.v7().uuid,
+        Uuid.v7().uuid,
+      );
 
-    let requestingProfessionalId: Uuid | undefined;
-    if (command.professionalId) {
-      const profIdResult = Uuid.create(command.professionalId);
-      if (profIdResult.isErr) return err(profIdResult.error);
-      requestingProfessionalId = profIdResult.value;
-    }
+      return Result.ok({ aggregate: updatedPatient, result: true });
+    },
 
-    let date: Timestamp | undefined;
-    if (command.date) {
-      const tsResult = Timestamp.create({ value: command.date });
-      if (tsResult.isErr) return err(tsResult.error);
-      date = tsResult.value;
-    }
-
-    const draft: ReferralDraft = {
-      referredPersonId: referredPersonIdResult.value,
-      destinationService: command.destinationService,
-      reason: command.reason,
-      requestingProfessionalId,
-      date,
-    };
-
-    const referralResult = patient.createReferral(
-      draft,
-      this.clock.now(),
-    );
-
-    if (referralResult.isErr) return err(referralResult.error);
-    const updatedPatient = referralResult.value;
-
-    const saveResult = await this.repository.save(updatedPatient);
-    if (saveResult.isErr) return err(saveResult.error);
-
-    const events = updatedPatient.pullDomainEvents();
-    if (events.length > 0) {
-      this.eventBus.publish(events);
-    }
-
-    return ok(true);
-  }
-}
+    repository: deps.repository,
+    eventBus: deps.eventBus,
+    pullEvents: Patient.pullDomainEvents,
+  });

@@ -8,7 +8,8 @@ type SocialCareAppointmentErrorKind =
   | "DateInFuture"
   | "MissingNarrative"
   | "SummaryTooLong"
-  | "ActionPlanTooLong";
+  | "ActionPlanTooLong"
+  | "InvalidType";
 
 export const SocialCareAppointmentErrors =
   makeDomainErrorFactory<SocialCareAppointmentErrorKind>({
@@ -44,6 +45,13 @@ export const SocialCareAppointmentErrors =
         template: ({ limit }) =>
           `O plano de ação não pode exceder ${limit} caracteres.`,
       },
+      InvalidType: {
+        code: "SCA-005",
+        http: 422,
+        category: ErrorTaxonomy.DomainRuleViolation,
+        template: ({ type, allowed }) =>
+          `Tipo de atendimento inválido: ${type}. Valores permitidos: ${allowed}.`,
+      },
     },
   });
 
@@ -52,4 +60,5 @@ export const SCAE = shortcuts(SocialCareAppointmentErrors, {
   MissingNarrative: [] as const,
   SummaryTooLong: ["limit"] as const,
   ActionPlanTooLong: ["limit"] as const,
+  InvalidType: ["type", "allowed"] as const,
 });

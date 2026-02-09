@@ -1,17 +1,20 @@
-import type { DomainError } from "@conecta/domain-error";
-import type { Result } from "@conecta/result";
-import type {
-  Patient,
-  PersonId,
-} from "@conecta/social-care";
+import type { Result } from "@conecta/shared";
+import type { DomainError } from "@conecta/shared/erros-pattern/DomainError";
+import type { FamilyMember, Patient } from "@conecta/social-care/domain/entities";
+import type { PersonId } from "@conecta/social-care/domain/value-objects";
+
 
 /**
  * Contrato para o Repositório de Pacientes.
  * Focado na persistência do Agregado completo para manter invariantes.
  */
-export interface PatientRepositoryPort {
+export type PatientRepositoryPort = {
   /** Salva ou atualiza o agregado completo. */
   save(patient: Patient): Promise<Result<void, DomainError>>;
+
+  addFamilyMember(
+    familyMember: FamilyMember,
+  ): Promise<Result<void, DomainError>>;
   
   /** Verifica se já existe um paciente para o ID de pessoa informado. */
   existsByPersonId(personId: PersonId): Promise<Result<boolean, DomainError>>;

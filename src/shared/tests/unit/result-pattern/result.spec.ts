@@ -121,6 +121,25 @@ describe("Result Pattern", () => {
 
         });
 
+    it("combine agrupa objeto de resultados", () => {
+      const results = {
+        id: Result.ok(1),
+        name: Result.ok("test")
+      };
+      const combined = Result.combine(results);
+      expect(Result.unwrap(combined)).toEqual({ id: 1, name: "test" });
+    });
+
+    it("combine falha se houver um erro no objeto", () => {
+      const results = {
+        id: Result.ok(1),
+        name: Result.err("missing name")
+      };
+      const combined = Result.combine(results);
+      expect(Result.isErr(combined)).toBe(true);
+      expect(Result.unwrapErr(combined)).toBe("missing name");
+    });
+
       });
 
     });

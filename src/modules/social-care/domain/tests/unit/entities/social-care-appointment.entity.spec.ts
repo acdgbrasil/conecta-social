@@ -1,15 +1,15 @@
 import { describe, expect, test } from "bun:test";
-import { SocialCareAppointment, Timestamp } from "@conecta/social-care";
+import { SocialCareAppointment, SocialCareAppointmentType, Timestamp } from "@conecta/social-care";
 import { Result } from "@conecta/result";
 import { Uuid } from "@conecta/uuid";
 
 describe("SocialCareAppointment.entity (FP Refactor - RED)", () => {
   const NOW = new Date();
   const validProps = {
-    id: Uuid.v4(),
+    id: Uuid.v7().uuid,
     date: Result.unwrap(Timestamp.create({ value: NOW })),
-    professionalInChargeId: Uuid.v4(),
-    type: "VISIT",
+    professionalInChargeId: Uuid.v7().uuid,
+    type: SocialCareAppointmentType.HOME_VISIT,
     summary: "Summary",
     actionPlan: "Plan"
   };

@@ -7,7 +7,8 @@ import {
 type ReferralErrorKind =
   | "DateInFuture"
   | "ReasonMissing"
-  | "InvalidStatusTransition";
+  | "InvalidStatusTransition"
+  | "InvalidDestinationService";
 
 export const ReferralErrors = makeDomainErrorFactory<ReferralErrorKind>({
   bc: "SOCIAL",
@@ -33,6 +34,13 @@ export const ReferralErrors = makeDomainErrorFactory<ReferralErrorKind>({
       template: ({ from, to }) =>
         `Não é permitido mover o encaminhamento de ${from} para ${to}.`,
     },
+    InvalidDestinationService: {
+      code: "REF-004",
+      http: 422,
+      category: ErrorTaxonomy.DomainRuleViolation,
+      template: ({ service, allowed }) =>
+        `Serviço de destino inválido: ${service}. Valores permitidos: ${allowed}.`,
+    },
   },
 });
 
@@ -40,4 +48,5 @@ export const RE = shortcuts(ReferralErrors, {
   DateInFuture: [] as const,
   ReasonMissing: [] as const,
   InvalidStatusTransition: ["from", "to"] as const,
+  InvalidDestinationService: ["service", "allowed"] as const,
 });

@@ -6,9 +6,9 @@ import { Uuid } from "@conecta/uuid";
 describe("RightsViolationReport.entity (FP Refactor - RED)", () => {
   const NOW = new Date();
   const validProps = {
-    id: Uuid.v4(),
+    id: Uuid.v7().uuid,
     reportDate: Result.unwrap(Timestamp.create({ value: NOW })),
-    victimId: Uuid.v4(),
+    victimId: Uuid.v7().uuid,
     violationType: ViolationType.NEGLECT,
     descriptionOfFact: "Desc",
     actionsTaken: "Actions"

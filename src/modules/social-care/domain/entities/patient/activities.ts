@@ -8,9 +8,9 @@ import {
   SocialCareAppointmentRegisteredEvent 
 } from "../../events";
 import { P } from "../../errors/Patient.error";
-import { Referral } from "../Referral.entity";
+import { Referral, ReferralDestinationService } from "../Referral.entity";
 import { RightsViolationReport } from "../RightsViolationReport.entity";
-import { SocialCareAppointment } from "../SocialCareAppointment.entity";
+import { SocialCareAppointment, SocialCareAppointmentType } from "../SocialCareAppointment.entity";
 import type { Patient } from "./types";
 import { copyWith } from "./core";
 import type { ReferralDraft, ViolationDraft, AppointmentDraft } from "../..";
@@ -44,7 +44,7 @@ export const PatientActivities = {
         date,
         requestingProfessionalId: draft.requestingProfessionalId ?? professionalId,
         referredPersonId: draft.referredPersonId,
-        destinationService: draft.destinationService ?? "UNSPECIFIED",
+        destinationService: draft.destinationService ?? ReferralDestinationService.OTHER,
         reason: draft.reason ?? "Encaminhamento registrado a partir do agregado Patient.",
         status: draft.status,
       },
@@ -122,7 +122,7 @@ export const PatientActivities = {
         id: draft.id ?? newId,
         date,
         professionalInChargeId: draft.professionalInChargeId ?? professionalId,
-        type: draft.type ?? "FOLLOW_UP",
+        type: draft.type ?? SocialCareAppointmentType.OTHER,
         summary: draft.summary,
         actionPlan: draft.actionPlan ?? "",
       },

@@ -1,4 +1,4 @@
-import { ok, err } from "@conecta/result";
+import { Result } from "@conecta/result";
 import { describe, test, expect, mock, beforeEach } from "bun:test";
 import { inMemoryEventBus } from "@conecta/adapters";
 import {
@@ -11,9 +11,9 @@ import {
   PersonId,
   Timestamp,
 } from "@conecta/social-care";
-import type { PatientRepositoryPort } from "../../../domain/repository/patient.repository.protocol";
-import { ImutableListFactory } from "@conecta/fn";
-import { AddFamilyMemberUseCase } from "@conecta/social-care/application/use-cases/add-family-member.use-case";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import { List } from "@conecta/fn";
+import { makeAddFamilyMemberUseCase } from "@conecta/social-care/application/use-cases/add-family-member.use-case";
 
 const NOW = new Date("2025-01-01T12:00:00Z");
 const VALID_UUID = "018f4a7a-1e37-7b2c-8f00-123456789abc";
@@ -27,37 +27,39 @@ type PatientRepositoryMock = {
 };
 
 const makePatient = (): Patient => {
-  const personId = PersonId.create(VALID_UUID).unwrap();
-  const icdCode = ICDCode.create("A00.0").unwrap();
-  const timestamp = Timestamp.create({ value: NOW }).unwrap();
-  const diagnosis = Diagnosis.create(
+  const personId = Result.unwrap(PersonId.create(VALID_UUID));
+  const icdCode = Result.unwrap(ICDCode.create("A00.0"));
+  const timestamp = Result.unwrap(Timestamp.create({ value: NOW }));
+  const diagnosis = Result.unwrap(Diagnosis.create(
     { id: icdCode, date: timestamp, description: "Diagnóstico inicial" },
     timestamp,
-  ).unwrap();
-  const diagnoses = ImutableListFactory.fromArray([diagnosis]);
-  return Patient.createFromScratch(personId, diagnoses).unwrap();
+  ));
+  const diagnoses = List.from([diagnosis]);
+  const patient = Result.unwrap(Patient.createFromScratch(personId, diagnoses));
+  const { patient: cleanPatient } = Patient.pullDomainEvents(patient);
+  return cleanPatient;
 };
 
 describe("UseCase: AddFamilyMember", () => {
   let repository: PatientRepositoryMock;
   let eventBus: any;
-  let useCase: AddFamilyMemberUseCase;
+  let useCase: ReturnType<typeof makeAddFamilyMemberUseCase>;
 
   beforeEach(() => {
     repository = {
-      save: mock(async () => ok(undefined)),
-      findByPersonId: mock(async () => err(P.PatientNotFound({ id: VALID_UUID }))),
-      addFamilyMember: mock(async () => ok(undefined)),
+      save: mock(async () => Result.ok(undefined)),
+      findByPersonId: mock(async () => Result.err(P.PatientNotFound({ id: VALID_UUID }))),
+      addFamilyMember: mock(async () => Result.ok(undefined)),
       existsByPersonId: mock(),
     };
 
     eventBus = inMemoryEventBus();
-    useCase = new AddFamilyMemberUseCase(repository, eventBus);
+    useCase = makeAddFamilyMemberUseCase({ repository, eventBus });
   });
 
   test("deve adicionar membro, salvar e publicar evento", async () => {
     const patient = makePatient();
-    repository.findByPersonId.mockResolvedValue(ok(patient));
+    repository.findByPersonId.mockResolvedValue(Result.ok(patient));
 
     const result = await useCase.execute({
       patientId: VALID_UUID,
@@ -67,7 +69,7 @@ describe("UseCase: AddFamilyMember", () => {
       isCaregiver: false,
     });
 
-    expect(result.isOk).toBe(true);
+    expect(Result.isOk(result)).toBe(true);
     expect(repository.save).toHaveBeenCalled();
     expect(eventBus.published.length).toBe(1);
     expect(eventBus.published[0].name).toBe("FamilyMemberAdded");
@@ -75,7 +77,7 @@ describe("UseCase: AddFamilyMember", () => {
 
   test("deve retornar erro quando paciente não existe", async () => {
     repository.findByPersonId.mockResolvedValue(
-      err(P.PatientNotFound({ id: VALID_UUID })),
+      Result.err(P.PatientNotFound({ id: VALID_UUID })),
     );
 
     const result = await useCase.execute({
@@ -86,9 +88,9 @@ describe("UseCase: AddFamilyMember", () => {
       isCaregiver: false,
     });
 
-    expect(result.isErr).toBe(true);
-    if (!result.isErr) return;
-    expect(result.unwrapErr().code).toBe(P.PatientNotFound({ id: VALID_UUID }).code);
+    expect(Result.isErr(result)).toBe(true);
+    if (!Result.isErr(result)) return;
+    expect(Result.unwrapErr(result).code).toBe(P.PatientNotFound({ id: VALID_UUID }).code);
     expect(repository.save).not.toHaveBeenCalled();
     expect(eventBus.published.length).toBe(0);
   });
@@ -97,18 +99,18 @@ describe("UseCase: AddFamilyMember", () => {
     const patient = makePatient();
     
     // Adiciona o membro primeiro
-    const personId = PersonId.create(VALID_UUID).unwrap();
-    const familyMemberId = FamilyMemberId.create(VALID_UUID).unwrap();
-    const member = FamilyMember.create({
+    const personId = Result.unwrap(PersonId.create(VALID_UUID));
+    const familyMemberId = Result.unwrap(FamilyMemberId.create(VALID_UUID));
+    const member = Result.unwrap(FamilyMember.create({
       id: familyMemberId,
       personId,
       relationship: "SPOUSE",
       isPrimaryCaregiver: false,
       residesWithPatient: true,
-    }).unwrap();
-    const patientWithMember = patient.addFamilyMember(member).unwrap();
+    }));
+    const patientWithMember = Result.unwrap(Patient.addFamilyMember(patient, member));
     
-    repository.findByPersonId.mockResolvedValue(ok(patientWithMember));
+    repository.findByPersonId.mockResolvedValue(Result.ok(patientWithMember));
 
     const result = await useCase.execute({
       patientId: VALID_UUID,
@@ -118,8 +120,8 @@ describe("UseCase: AddFamilyMember", () => {
       isCaregiver: false,
     });
 
-    expect(result.isErr).toBe(true);
-    if (!result.isErr) return;
-    expect(result.unwrapErr().code).toBe(P.FamilyMemberAlreadyExists({ memberId: VALID_UUID }).code);
+    expect(Result.isErr(result)).toBe(true);
+    if (!Result.isErr(result)) return;
+    expect(Result.unwrapErr(result).code).toBe(P.FamilyMemberAlreadyExists({ memberId: VALID_UUID }).code);
   });
 });

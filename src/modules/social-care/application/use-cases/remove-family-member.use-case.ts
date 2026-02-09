@@ -1,45 +1,36 @@
-import { err, ok, type Result } from "@conecta/result";
-import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
+import { Result } from "@conecta/result";
 import type { RemoveFamilyMemberCommand } from "@conecta/social-care/application/ports/commands/remove-family-member.command";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
 import type { DomainError } from "@conecta/domain-error";
 import type { EventBusPort } from "@conecta/ports";
-import { PersonId } from "@conecta/social-care";
+import { Patient, PersonId } from "@conecta/social-care";
+import { UseCasePipeline } from "@conecta/fn";
 
-export class RemoveFamilyMemberUseCase
-  implements
-    UseCasePort<RemoveFamilyMemberCommand, Result<boolean, DomainError>>
-{
-  constructor(
-    private readonly repository: PatientRepositoryPort,
-    private readonly eventBus: EventBusPort,
-  ) {}
+export type RemoveFamilyMemberDeps = {
+  readonly repository: PatientRepositoryPort;
+  readonly eventBus: EventBusPort;
+};
 
-  async execute(
-    command: Readonly<RemoveFamilyMemberCommand>,
-  ): Promise<Result<boolean, DomainError>> {
-    const patientPersonIdResult = PersonId.create(command.patientId);
-    if (patientPersonIdResult.isErr) return err(patientPersonIdResult.error);
+export const makeRemoveFamilyMemberUseCase = (deps: RemoveFamilyMemberDeps) =>
+  UseCasePipeline.build({
+    parse: (command: Readonly<RemoveFamilyMemberCommand>) =>
+      Result.combine({
+        patientPersonId: PersonId.create(command.patientId),
+        memberPersonId: PersonId.create(command.memberPersonId),
+      }),
 
-    const memberPersonIdResult = PersonId.create(command.memberPersonId);
-    if (memberPersonIdResult.isErr) return err(memberPersonIdResult.error);
+    handle: async function* (ctx) {
+      const patient = yield deps.repository.findByPersonId(ctx.patientPersonId);
 
-    const patientResult = await this.repository.findByPersonId(
-      patientPersonIdResult.value,
-    );
-    if (patientResult.isErr) return err(patientResult.error);
-    const patient = patientResult.value;
+      const updatedPatient = yield Patient.removeFamilyMember(
+        patient,
+        ctx.memberPersonId,
+      );
 
-    const removeResult = patient.removeFamilyMember(memberPersonIdResult.value);
-    if (removeResult.isErr) return err(removeResult.error);
+      return Result.ok({ aggregate: updatedPatient, result: true });
+    },
 
-    const updatedPatient = removeResult.value;
-
-    const saveResult = await this.repository.save(updatedPatient);
-    if (saveResult.isErr) return err(saveResult.error);
-
-    const events = updatedPatient.pullDomainEvents();
-    if (events.length > 0) this.eventBus.publish(events);
-    return ok(true);
-  }
-}
+    repository: deps.repository,
+    eventBus: deps.eventBus,
+    pullEvents: Patient.pullDomainEvents,
+  });

@@ -7,7 +7,7 @@ describe("SocialHealthSummary.valueObject (FP Refactor - RED)", () => {
     requiresConstantCare: false,
     hasMobilityImpairment: false,
     functionalDependencies: ["Eating"],
-    hasRelevantDrugTheapy: false
+    hasRelevantDrugTherapy: false
   };
 
   describe("Factory", () => {

@@ -1,4 +1,4 @@
-import type { DomainError } from "@conecta/domain-error";
+import type { DomainError } from "@conecta/shared/erros-pattern/DomainError";
 
 // --- Tipos Base Imutáveis (Plain Objects) ---
 export type Ok<T> = { readonly kind: "ok"; readonly value: T };
@@ -84,6 +84,21 @@ const all = <T, E>(results: readonly Result<T, E>[]): Result<T[], E> => {
 const promiseAll = async <T, E>(promises: Promise<Result<T, E>>[]): Promise<Result<T[], E>> =>
   all(await Promise.all(promises));
 
+/**
+ * Combina um objeto de Results em um único Result de um objeto.
+ * Útil para validação de múltiplos DTOs/VOs simultaneamente.
+ */
+const combine = <T extends Record<string, Result<any, any>>>(
+  results: T,
+): Result<{ [K in keyof T]: T[K] extends Result<infer V, any> ? V : never }, any> => {
+  const values = {} as any;
+  for (const [key, result] of Object.entries(results)) {
+    if (isErr(result)) return result;
+    values[key] = result.value;
+  }
+  return ok(values);
+};
+
 // --- Namespace Unificado (Único Export de Valor) ---
 export const Result = {
   ok,
@@ -103,4 +118,5 @@ export const Result = {
   unwrapOrElse,
   all,
   promiseAll,
+  combine,
 };

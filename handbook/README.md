@@ -15,6 +15,7 @@ Este diretório concentra toda a documentação viva do projeto. A ideia é mant
 ## Convenções gerais
 - Alterações estruturais no código ou domínio devem ser refletidas neste handbook (reports, principles ou process).
 - Sempre que uma decisão afetar retrocompatibilidade, registrar no arquivo `process/versioning.md`.
+- Decisões de fronteira de segurança entre cliente e servidor devem ser registradas em `process/browser-trust-boundary.md`.
 - Antes de abrir PR, revisar a seção `quality/` para garantir que o estado esperado dos testes esteja alinhado com a realidade.
 - Testes fazem parte da documentação: manter descrições claras (`describe/it`) e, quando necessário, registrar resumos no handbook para orientar futuros colaboradores.
 

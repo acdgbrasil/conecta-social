@@ -5,11 +5,22 @@ import type { Uuid } from "@conecta/uuid";
 import { SCAE } from "../errors/SocialCareAppointment.error";
 import { Timestamp } from "../value-objects/timestamp.valueObject";
 
+export const SocialCareAppointmentType = {
+  HOME_VISIT: "HOME_VISIT",
+  OFFICE_APPOINTMENT: "OFFICE_APPOINTMENT",
+  PHONE_CALL: "PHONE_CALL",
+  MULTIDISCIPLINARY: "MULTIDISCIPLINARY",
+  OTHER: "OTHER",
+} as const;
+
+export type SocialCareAppointmentType =
+  (typeof SocialCareAppointmentType)[keyof typeof SocialCareAppointmentType];
+
 export type SocialCareAppointmentProps = {
   id: Uuid;
   date: Timestamp;
   professionalInChargeId: Uuid;
-  type: string;
+  type: SocialCareAppointmentType;
   summary: string;
   actionPlan: string;
 };
@@ -33,6 +44,15 @@ export const SocialCareAppointment = {
 
     if (Timestamp.isAfter(props.date, now)) {
       return Result.err(SCAE.DateInFuture());
+    }
+
+    if (!Object.values(SocialCareAppointmentType).includes(props.type)) {
+      return Result.err(
+        SCAE.InvalidType({
+          type: props.type,
+          allowed: Object.values(SocialCareAppointmentType).join(", "),
+        }),
+      );
     }
 
     const summary = props.summary?.trim() ?? "";

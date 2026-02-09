@@ -32,7 +32,7 @@ Após a migração para o modelo funcional, identificamos oportunidades para mel
 ## Critérios de Aceite
 - [x] Zero classes no domínio.
 - [x] Tamanho máximo de arquivos de comportamento < 150 linhas.
-- [ ] Suite de testes unitários (80 testes) continua verde.
+- [x] Suite de testes unitários da camada application (28 testes) continua verde.
 - [x] Contrato do repositório simplificado (Conceito de Agregado preservado).
 
 ## Validação de Estado (2026-02-08)

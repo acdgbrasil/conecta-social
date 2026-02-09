@@ -6,10 +6,10 @@ import { Uuid } from "@conecta/uuid";
 describe("Referral.entity (FP Refactor - RED)", () => {
   const NOW = new Date();
   const createValidProps = () => ({
-    id: Uuid.v4(),
+    id: Uuid.v7().uuid,
     date: Result.unwrap(Timestamp.create({ value: NOW })),
-    requestingProfessionalId: Uuid.v4(),
-    referredPersonId: Uuid.v4(),
+    requestingProfessionalId: Uuid.v7().uuid,
+    referredPersonId: Uuid.v7().uuid,
     destinationService: "CRAS",
     reason: "Reason",
     status: "PENDING" as const

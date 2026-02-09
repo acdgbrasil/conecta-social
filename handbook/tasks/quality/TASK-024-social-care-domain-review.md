@@ -12,8 +12,8 @@ A grande refatoração para o modelo funcional (TASK-029 a TASK-032) endereçou 
 4.  **Invariantes de VO (Severidade Média):** Refatorados VOs como `SocialBenefit` e `HousingCondition` para garantir validação estrita no `create` funcional, sem brechas para `unSafe` ou estados parciais.
 
 ## Itens Pendentes (Acompanhamento)
-- [ ] Validar campos livres (`destinationService`, `type`) com enums reais nas entidades `Referral` e `SocialCareAppointment` (Melhoria de UX/Segurança).
-- [ ] Renomear typo `hasRelevantDrugTheapy` (para `Therapy`) no `socialHealthSummary`.
+- [x] Validar campos livres (`destinationService`, `type`) com enums reais nas entidades `Referral` e `SocialCareAppointment` (Melhoria de UX/Segurança).
+- [x] Renomear typo `hasRelevantDrugTheapy` (para `Therapy`) no `socialHealthSummary`.
 
 ---
 Achados Originais (Histórico)...

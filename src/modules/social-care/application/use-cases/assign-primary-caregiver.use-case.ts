@@ -1,49 +1,36 @@
-import { err, ok, type Result } from "@conecta/result";
+import { Result } from "@conecta/result";
 import type { AssignPrimaryCaregiverCommand } from "@conecta/social-care/application/ports/commands/assign-primary-caregiver.command";
 import type { DomainError } from "@conecta/domain-error";
-import type { EventBusPort, UseCasePort } from "@conecta/ports";
-import { PersonId } from "@conecta/social-care";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
+import type { EventBusPort } from "@conecta/ports";
+import { Patient, PersonId } from "@conecta/social-care";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import { UseCasePipeline } from "@conecta/fn";
 
-export class AssignPrimaryCaregiverUseCase
-  implements
-    UseCasePort<AssignPrimaryCaregiverCommand, Result<boolean, DomainError>>
-{
-  constructor(
-    private readonly repository: PatientRepositoryPort,
-    private readonly eventBus: EventBusPort,
-  ) {}
+export type AssignPrimaryCaregiverDeps = {
+  readonly repository: PatientRepositoryPort;
+  readonly eventBus: EventBusPort;
+};
 
-  async execute(
-    command: Readonly<AssignPrimaryCaregiverCommand>,
-  ): Promise<Result<boolean, DomainError>> {
-    const patientPersonIdResult = PersonId.create(command.patientId);
-    if (patientPersonIdResult.isErr) return err(patientPersonIdResult.error);
+export const makeAssignPrimaryCaregiverUseCase = (deps: AssignPrimaryCaregiverDeps) =>
+  UseCasePipeline.build({
+    parse: (command: Readonly<AssignPrimaryCaregiverCommand>) =>
+      Result.combine({
+        patientPersonId: PersonId.create(command.patientId),
+        memberPersonId: PersonId.create(command.memberPersonId),
+      }),
 
-    const memberPersonIdResult = PersonId.create(command.memberPersonId);
-    if (memberPersonIdResult.isErr) return err(memberPersonIdResult.error);
+    handle: async function* (ctx) {
+      const patient = yield deps.repository.findByPersonId(ctx.patientPersonId);
 
-    const patientResult = await this.repository.findByPersonId(
-      patientPersonIdResult.value,
-    );
-    if (patientResult.isErr) return err(patientResult.error);
-    const patient = patientResult.value;
+      const updatedPatient = yield Patient.assignPrimaryCaregiver(
+        patient,
+        ctx.memberPersonId,
+      );
 
-    const assignResult = patient.assignPrimaryCaregiver(
-      memberPersonIdResult.value,
-    );
-    if (assignResult.isErr) return err(assignResult.error);
+      return Result.ok({ aggregate: updatedPatient, result: true });
+    },
 
-    const updatedPatient = assignResult.value;
-
-    const saveResult = await this.repository.save(updatedPatient);
-    if (saveResult.isErr) return err(saveResult.error);
-
-    const events = updatedPatient.pullDomainEvents();
-    if (events.length > 0) {
-      this.eventBus.publish(events);
-    }
-
-    return ok(true);
-  }
-}
+    repository: deps.repository,
+    eventBus: deps.eventBus,
+    pullEvents: Patient.pullDomainEvents,
+  });

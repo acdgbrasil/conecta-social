@@ -7,12 +7,24 @@ import { Timestamp } from "../value-objects/timestamp.valueObject";
 
 export type ReferralStatus = "PENDING" | "COMPLETED" | "CANCELLED";
 
+export const ReferralDestinationService = {
+  CRAS: "CRAS",
+  CREAS: "CREAS",
+  HEALTH_CARE: "HEALTH_CARE",
+  EDUCATION: "EDUCATION",
+  LEGAL: "LEGAL",
+  OTHER: "OTHER",
+} as const;
+
+export type ReferralDestinationService =
+  (typeof ReferralDestinationService)[keyof typeof ReferralDestinationService];
+
 export type ReferralProps = {
   id: Uuid;
   date: Timestamp;
   requestingProfessionalId: Uuid;
   referredPersonId: Uuid;
-  destinationService: string;
+  destinationService: ReferralDestinationService;
   reason: string;
   status?: ReferralStatus;
 };
@@ -30,9 +42,18 @@ export const Referral = {
     const nowResult = Timestamp.create({ value: referenceDate });
     if (Result.isErr(nowResult)) return Result.err(nowResult.error);
     const now = nowResult.value;
-    
+
     if (Timestamp.isAfter(props.date, now)) {
       return Result.err(RE.DateInFuture());
+    }
+
+    if (!Object.values(ReferralDestinationService).includes(props.destinationService)) {
+      return Result.err(
+        RE.InvalidDestinationService({
+          service: props.destinationService,
+          allowed: Object.values(ReferralDestinationService).join(", "),
+        }),
+      );
     }
 
     const reason = props.reason?.trim() ?? "";

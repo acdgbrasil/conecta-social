@@ -4,11 +4,12 @@ import { ICDError } from "@conecta/social-care";
 describe("ICDError helpers", () => {
   test("INVALID_CID_NUMBER template usa ∅ para valores ausentes", () => {
     // A lib shared renderiza ∅ na MENSAGEM, não no contexto bruto.
-    const error = ICDError.INVALID_CID_NUMBER({
-      received: undefined,
-      candidate: null,
-      expectedPattern: undefined,
-    } as any);
+    // Usando argumentos posicionais para o shortcut
+    const error = ICDError.INVALID_CID_NUMBER(
+      undefined as any,
+      null as any,
+      undefined as any,
+    );
 
     expect(error.message).toContain("Valor '∅' não representa um CID válido.");
     expect(error.message).toContain("Candidato normalizado: '∅'.");

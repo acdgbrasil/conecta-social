@@ -1,68 +1,64 @@
-import { err, ok, type Result } from "@conecta/result";
+import { Result } from "@conecta/result";
 import type { UseCasePort } from "@conecta/shared/protocols/UseCase.protocol";
 import type { RegisterAppointmentCommand } from "@conecta/social-care/application/ports/commands/register-appointment.command";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
 import type { DomainError } from "@conecta/domain-error";
 import type { EventBusPort, ClockPort } from "@conecta/ports";
-import { PersonId, type AppointmentDraft, Timestamp } from "@conecta/social-care";
+import { Patient, PersonId, type AppointmentDraft, Timestamp } from "@conecta/social-care";
 import { Uuid } from "@conecta/uuid";
 
-export class RegisterAppointmentUseCase
-  implements
-    UseCasePort<RegisterAppointmentCommand, Result<boolean, DomainError>>
-{
-  constructor(
-    private readonly repository: PatientRepositoryPort,
-    private readonly eventBus: EventBusPort,
-    private readonly clock: ClockPort,
-  ) {}
+import { Result } from "@conecta/result";
+import { UseCasePipeline } from "@conecta/fn";
+import type { RegisterAppointmentCommand } from "@conecta/social-care/application/ports/commands/register-appointment.command";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
+import type { DomainError } from "@conecta/domain-error";
+import type { EventBusPort, ClockPort } from "@conecta/ports";
+import { Patient, PersonId, type AppointmentDraft, Timestamp } from "@conecta/social-care";
+import { Uuid } from "@conecta/uuid";
 
-  async execute(
-    command: Readonly<RegisterAppointmentCommand>,
-  ): Promise<Result<boolean, DomainError>> {
-    const personIdResult = PersonId.create(command.patientId);
-    if (personIdResult.isErr) return err(personIdResult.error);
+export type RegisterAppointmentDeps = {
+  readonly repository: PatientRepositoryPort;
+  readonly eventBus: EventBusPort;
+  readonly clock: ClockPort;
+};
 
-    const patientResult = await this.repository.findByPersonId(
-      personIdResult.value,
-    );
-    if (patientResult.isErr) return err(patientResult.error);
-    const patient = patientResult.value;
+export const makeRegisterAppointmentUseCase = (deps: RegisterAppointmentDeps) =>
+  UseCasePipeline.build({
+    parse: (command: Readonly<RegisterAppointmentCommand>) =>
+      Result.combine({
+        personId: PersonId.create(command.patientId),
+        professionalId: Uuid.create(command.professionalId),
+        date: command.date 
+          ? Timestamp.create({ value: command.date }) 
+          : Result.ok(undefined),
+        summary: Result.ok(command.summary),
+        actionPlan: Result.ok(command.actionPlan),
+        type: Result.ok(command.type),
+      }),
 
-    let timestamp: Timestamp | undefined;
-    if (command.date) {
-      const tsResult = Timestamp.create({ value: command.date });
-      if (tsResult.isErr) return err(tsResult.error);
-      timestamp = tsResult.value;
-    }
+    handle: async function* (ctx) {
+      const patient = yield deps.repository.findByPersonId(ctx.personId);
 
-    const professionalIdResult = Uuid.create(command.professionalId);
-    if (professionalIdResult.isErr) return err(professionalIdResult.error);
+      const draft: AppointmentDraft = {
+        summary: ctx.summary,
+        actionPlan: ctx.actionPlan,
+        type: ctx.type,
+        date: ctx.date,
+        professionalInChargeId: ctx.professionalId,
+      };
 
-    const draft: AppointmentDraft = {
-      summary: command.summary,
-      actionPlan: command.actionPlan,
-      type: command.type,
-      date: timestamp,
-      professionalInChargeId: professionalIdResult.value,
-    };
+      const updatedPatient = yield Patient.registerAppointment(
+        patient,
+        draft,
+        deps.clock.now(),
+        Uuid.v7().uuid,
+        ctx.professionalId,
+      );
 
-    const registerResult = patient.registerAppointment(
-      draft,
-      this.clock.now(),
-    );
-    if (registerResult.isErr) return err(registerResult.error);
+      return Result.ok({ aggregate: updatedPatient, result: true });
+    },
 
-    const updatedPatient = registerResult.value;
-
-    const saveResult = await this.repository.save(updatedPatient);
-    if (saveResult.isErr) return err(saveResult.error);
-
-    const events = updatedPatient.pullDomainEvents();
-    if (events.length > 0) {
-      this.eventBus.publish(events);
-    }
-
-    return ok(true);
-  }
-}
+    repository: deps.repository,
+    eventBus: deps.eventBus,
+    pullEvents: Patient.pullDomainEvents,
+  });

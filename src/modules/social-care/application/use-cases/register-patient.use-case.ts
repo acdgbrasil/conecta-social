@@ -1,143 +1,59 @@
-import {
-  err,
-  ImutableListFactory,
-  ok,
-  Some,
-  type DomainError,
-  type EventBusPort,
-  type Result,
-  type UseCasePort,
-} from "@conecta/shared";
+import { Result } from "@conecta/result";
+import { List, UseCasePipeline } from "@conecta/fn";
 import { AppError } from "@conecta/social-care/application/errors/application.error";
 import type { RegisterNewPatientCommand } from "@conecta/social-care/application/ports/commands/register-new-patient.command";
 import { Patient } from "@conecta/social-care/domain/entities";
-import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
+import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.protocol";
 import {
   Diagnosis,
   ICDCode,
   PersonId,
   Timestamp,
 } from "@conecta/social-care/domain/value-objects";
+import type { DomainError } from "@conecta/domain-error";
+import type { EventBusPort } from "@conecta/ports";
 
-// export class RegisterNewPatientUseCase
-//   implements
-//     UseCasePort<RegisterNewPatientCommand, Result<boolean, DomainError>>
-// {
-//   constructor(
-//     private readonly repository: PatientRepositoryPort,
-//     private readonly eventBus: EventBusPort,
-//   ) {}
+export type RegisterNewPatientDeps = {
+  readonly repository: PatientRepositoryPort;
+  readonly eventBus: EventBusPort;
+};
 
-//   async execute(
-//     command: Readonly<RegisterNewPatientCommand>,
-//   ): Promise<Result<boolean, DomainError>> {
-//     const personIdResult = PersonId.create(command.personId);
-//     if (personIdResult.isErr) return err(personIdResult.error);
-//     const personId = personIdResult.value;
+export const makeRegisterNewPatientUseCase = (deps: RegisterNewPatientDeps) =>
+  UseCasePipeline.build({
+    parse: (command: Readonly<RegisterNewPatientCommand>) => {
+      const personIdResult = PersonId.create(command.personId);
+      if (Result.isErr(personIdResult)) return Result.err(personIdResult.error);
 
-//     const existsResult = await this.repository.existsByPersonId(personId);
-//     if (existsResult.isErr) return err(existsResult.error);
+      const diagnosesResults = command.initialDiagnoses.map((d) =>
+        Result.flatMap(ICDCode.create(d.icdCode), (icdCode) =>
+          Result.flatMap(Timestamp.create({ value: d.date }), (date) =>
+            Diagnosis.create({ date, description: d.description, id: icdCode }, date)
+          )
+        )
+      );
 
-//     if (existsResult.value) return err(AppError.PersonIdAlreadyExists());
+      const diagnosesResult = Result.all(diagnosesResults);
+      if (Result.isErr(diagnosesResult)) return Result.err(diagnosesResult.error);
 
-//     const newDiagnoses: Diagnosis[] = [];
-//     for (const diagnosisInput of command.initialDiagnoses) {
-//       const icdCodeResult = ICDCode.create(diagnosisInput.icdCode);
-//       if (icdCodeResult.isErr) return err(icdCodeResult.error);
+      return Result.ok({
+        personId: personIdResult.value,
+        diagnoses: diagnosesResult.value,
+      });
+    },
 
-//       const dateResult = Timestamp.create({ value: diagnosisInput.date });
-//       if (dateResult.isErr) return err(dateResult.error);
-//       const timestamp = dateResult.value;
+    handle: async function* (ctx) {
+      const exists = yield deps.repository.existsByPersonId(ctx.personId);
+      if (exists) return Result.err(AppError.PersonIdAlreadyExists());
 
-//       const diagnosisResult = Diagnosis.create(
-//         {
-//           date: timestamp,
-//           description: diagnosisInput.description,
-//           id: icdCodeResult.value,
-//         },
-//         timestamp,
-//       );
+      const newPatient = yield Patient.createFromScratch(
+        ctx.personId,
+        ctx.diagnoses,
+      );
 
-//       if (diagnosisResult.isErr) return err(diagnosisResult.error);
-//       newDiagnoses.push(diagnosisResult.value);
-//     }
+      return Result.ok({ aggregate: newPatient, result: true });
+    },
 
-//     const imutableNewDiagnoses = ImutableListFactory.fromArray(newDiagnoses);
-//     const createPatientResult = Patient.createFromScratch(
-//       personId,
-//       imutableNewDiagnoses,
-//     );
-//     if (createPatientResult.isErr) return err(createPatientResult.error);
-//     const newPatient = createPatientResult.value;
-
-//     const saveResult = await this.repository.save(newPatient);
-//     if (saveResult.isErr) return err(saveResult.error);
-
-//     const events = newPatient.pullDomainEvents();
-//     if (events.length > 0) {
-//       this.eventBus.publish(events);
-//     }
-
-//     return ok(true);
-//   }
-// }
-
-export class RegisterNewPatientUseCase
-  implements
-    UseCasePort<RegisterNewPatientCommand, Result<boolean, DomainError>>
-{
-  constructor(
-    private readonly repository: PatientRepositoryPort,
-    private readonly eventBus: EventBusPort,
-  ) {}
-
-  private createDiagnosis(
-    d: RegisterNewPatientCommand["initialDiagnoses"][0],
-  ): Result<Diagnosis, DomainError> {
-    return ICDCode.create(d.icdCode).flatMap((icdCode) =>
-      Timestamp.create({ value: d.date }).flatMap((date) =>
-        Diagnosis.create(
-          { date, description: d.description, id: icdCode },
-          date,
-        ),
-      ),
-    );
-  }
-
-  async execute(
-    command: RegisterNewPatientCommand,
-  ): Promise<Result<boolean, DomainError>> {
-    const personIdResult = PersonId.create(command.personId);
-    if (personIdResult.isErr) return err(personIdResult.error);
-    const personId = personIdResult.value;
-
-    const existsResult = await this.repository.existsByPersonId(personId);
-    if (existsResult.isErr) return err(existsResult.error);
-    if (existsResult.value) return err(AppError.PersonIdAlreadyExists());
-
-    const diagnosesResults = command.initialDiagnoses.map(d => this.createDiagnosis(d));
-    const initialAcc = ok<Diagnosis[], DomainError>([]);
-    const diagnosesResult = diagnosesResults.reduce((acc, cur) => {
-      return acc.flatMap(list => cur.map(item => [...list, item]));
-    }, initialAcc);
-
-    if (diagnosesResult.isErr) return err(diagnosesResult.error);
-
-    const imutableDiagnoses = ImutableListFactory.fromArray(diagnosesResult.value);
-  
-    const createPatientResult = Patient.createFromScratch(
-      personId,
-      imutableDiagnoses,
-    );
-    
-    if (createPatientResult.isErr) return err(createPatientResult.error);
-    const newPatient = createPatientResult.value;
-
-    const saveResult = await this.repository.save(newPatient);
-    if (saveResult.isErr) return err(saveResult.error);
-
-    this.eventBus.publish(newPatient.pullDomainEvents());
-
-    return ok(true);
-  }
-}
+    repository: deps.repository,
+    eventBus: deps.eventBus,
+    pullEvents: Patient.pullDomainEvents,
+  });

@@ -7,7 +7,7 @@ export type SocialHealthSummaryProps = {
   readonly requiresConstantCare: boolean;
   readonly hasMobilityImpairment: boolean;
   readonly functionalDependencies: readonly string[];
-  readonly hasRelevantDrugTheapy: boolean;
+  readonly hasRelevantDrugTherapy: boolean;
 };
 
 export type SocialHealthSummary = DeepReadonly<SocialHealthSummaryProps>;
@@ -21,7 +21,7 @@ export const SocialHealthSummary = {
       requiresConstantCare: props.requiresConstantCare,
       hasMobilityImpairment: props.hasMobilityImpairment,
       functionalDependencies: unique,
-      hasRelevantDrugTheapy: props.hasRelevantDrugTheapy,
+      hasRelevantDrugTherapy: props.hasRelevantDrugTherapy,
     });
   }
 } as const;

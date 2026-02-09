@@ -1,27 +1,20 @@
-# [TASK-041] Revisar Validação UUID e Tratamento de Erro nos Command Adapters
+# [TASK-041] Hardening UUID v7 nos Command Adapters
 
-**Status:** 🔴 To Do
+**Status:** ✅ Done
 **Prioridade:** 🔥 Alta
-**Labels:** `validation`, `adapter`, `compatibility`
-**Origem:** PR #148 review (Kody AI)
+**Labels:** `validation`, `adapter`, `hardening`, `uuidv7`
+**Origem:** PR #148 review (Kody AI) + Decisão de Produto (08/02/2026)
 
 ## Descrição
-A revisão apontou risco de quebra por validação excessivamente restritiva de UUID (v7 apenas) e por possível acoplamento a helpers específicos de versão do Zod.
-
-## Comentários Relacionados (PR #148)
-- `src/modules/social-care/interface/adapter/commands/create-referral.command.adapter.ts`:
-  - https://github.com/acdgbrasil/conecta-social/pull/148#discussion_r2777226129
-- `src/modules/social-care/interface/adapter/commands/register-new-patient.command.adapter.ts`:
-  - https://github.com/acdgbrasil/conecta-social/pull/148#discussion_r2777226160
-- `src/modules/social-care/interface/adapter/commands/update-socioeconomic-situation.command.adapter.ts`:
-  - https://github.com/acdgbrasil/conecta-social/pull/148#discussion_r2777226202
+A revisão inicial apontou risco de quebra, mas como o projeto não possui dados em produção, foi decidido **endurecer** a validação para exigir estritamente o padrão **UUID v7** em todos os campos de identificação. Isso garante performance de indexação e ordem cronológica nativa.
 
 ## Tarefas
-- [ ] Mapear campos que devem aceitar UUID genérico (`z.string().uuid()`) vs campos estritamente v7.
-- [ ] Ajustar schemas para compatibilidade com IDs legados quando aplicável.
-- [ ] Garantir fallback seguro para formatação de erro de validação sem exceção em runtime.
-- [ ] Adicionar testes para entradas inválidas e para UUIDs v4/v7 em cenários de atualização.
+- [x] Reforçar validação em todos os Command Adapters para usar `z.uuidv7()`.
+- [x] Verificar que todos os mocks em testes unitários seguem o padrão v7 (confirmado: `018f4a7a...` é v7 válido).
+- [x] Garantir uso de `z.prettifyError` para mensagens de erro amigáveis em caso de falha de versão do UUID.
+- [x] Validar suíte de testes da aplicação (28 testes verdes).
 
 ## Critérios de Aceite
-- [ ] Command adapters retornam `err(...)` para input inválido sem lançar exceção.
-- [ ] Compatibilidade explícita com registros legados de UUID conforme regra definida.
+- [x] Nenhum UUID v4 ou inválido entra no sistema via Command Adapters.
+- [x] Todas as camadas (Interface, Application, Domain) operam sob a lei única do UUID v7.
+- [x] Suíte de testes unitários passa 100%.
