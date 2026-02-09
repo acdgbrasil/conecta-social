@@ -11,3 +11,5 @@ firebase-debug.log
 types/docs/
 .gemini/
 handbook/tooling/
+__pycache__/
+*.pyc
