@@ -6,7 +6,7 @@
 ## Ferramentas
 - `Result` (`flatMap`, `isOk`, `unwrap`)
 - Value objects já exportados por `@conecta/social-care`
-- `DiagnosisErrors` (`packages/social/social-care/err/Diagnosis.error.ts`)
+- `DiagnosisErrors` (`src/modules/social-care/domain/errors/Diagnosis.error.ts`)
 
 ## Passo a passo
 

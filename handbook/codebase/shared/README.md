@@ -1,6 +1,6 @@
 # Shared packages
 
-> Building blocks usados em todos os bounded contexts. Este diretório cobre apenas o que já está estável dentro de `packages/shared`.
+> Building blocks usados em todos os bounded contexts. Este diretório cobre apenas o que já está estável dentro de `src/shared`.
 
 ## Índice
 - [erros-pattern](./erros-pattern/documentation.md)

@@ -1,0 +1,17 @@
+{
+  "name": "@conecta/option",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "import": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./Option": {
+      "import": "./Option.ts",
+      "default": "./Option.ts"
+    }
+  }
+}

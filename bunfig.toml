@@ -1,18 +1,6 @@
-[alias]
-"@conecta/result" = "./packages/shared/result-pattern/index.ts"
-"@conecta/domain-error" = "./packages/shared/erros-pattern/index.ts"
-"@conecta/fn" = "./packages/shared/fn-pattern/index.ts"
-"@conecta/uuid" = "./packages/shared/uuid-pattern/index.ts"
-"@conecta/option" = "./packages/shared/option-pattern/index.ts"
-"@conecta/shared" = "./packages/shared/index.ts"
-"@conecta/shared/*" = "./packages/shared/*"
-"@conecta/social-care" = "./packages/social/social-care/index.ts"
-"@conecta/social-care/*" = "./packages/social/social-care/*"
-
 [test]
 coverage = true
 coverageReporter = ["text", "lcov"]
 coverageDir = "./coverage"
 coverageSkipTestFiles = true
 coverageThreshold = { lines = 0.85, functions = 0.85, statements = 0.85 }
-

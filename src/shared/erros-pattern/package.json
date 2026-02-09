@@ -1,0 +1,29 @@
+{
+  "name": "@conecta/domain-error",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "import": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./DomainError": {
+      "import": "./DomainError.ts",
+      "default": "./DomainError.ts"
+    },
+    "./DomainError.factory": {
+      "import": "./DomainError.factory.ts",
+      "default": "./DomainError.factory.ts"
+    },
+    "./DomainError.shortcuts": {
+      "import": "./DomainError.shortcuts.ts",
+      "default": "./DomainError.shortcuts.ts"
+    },
+    "./DomainError.composition": {
+      "import": "./DomainError.composition.ts",
+      "default": "./DomainError.composition.ts"
+    }
+  }
+}

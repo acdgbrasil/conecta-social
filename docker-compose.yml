@@ -1,0 +1,31 @@
+services:
+  # Banco de Dados Dedicado - Social Care Context
+  # Isolado: Apenas o módulo Social Care deve conectar aqui.
+  social-care-db:
+    image: postgres:17-alpine
+    container_name: conecta-social-care-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${SC_DB_USER:-admin}
+      POSTGRES_PASSWORD: ${SC_DB_PASSWORD:-admin}
+      POSTGRES_DB: ${SC_DB_NAME:-social_care}
+    ports:
+      # Exposto na porta 5433 para evitar conflito com outros containers.
+      - "5433:5432"
+    volumes:
+      - social_care_data:/var/lib/postgresql/data
+    networks:
+      - conecta-internal-net
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${SC_DB_USER:-admin}", "-d", "${SC_DB_NAME:-social_care}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  social_care_data:
+    driver: local
+
+networks:
+  conecta-internal-net:
+    driver: bridge

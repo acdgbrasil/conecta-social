@@ -1,0 +1,60 @@
+name: sync-kanban-project
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - handbook/KANBAN.md
+      - handbook/tasks/**
+      - scripts/sync_kanban_github.py
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Executar em modo simulação (sem alterar issues/project)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  issues: write
+  repository-projects: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      REPO: acdgbrasil/conecta-social
+      PROJECT_OWNER: acdgbrasil
+      PROJECT_NUMBER: "10"
+      GH_TOKEN: ${{ secrets.PROJECT_SYNC_TOKEN || github.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate token presence
+        run: |
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "GH_TOKEN ausente. Configure o secret PROJECT_SYNC_TOKEN."
+            exit 1
+          fi
+
+      - name: Validate gh auth
+        run: gh auth status -h github.com
+
+      - name: Sync Kanban -> Issues/Project
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
+            python3 scripts/sync_kanban_github.py \
+              --repo "${REPO}" \
+              --project-owner "${PROJECT_OWNER}" \
+              --project-number "${PROJECT_NUMBER}" \
+              --dry-run
+          else
+            python3 scripts/sync_kanban_github.py \
+              --repo "${REPO}" \
+              --project-owner "${PROJECT_OWNER}" \
+              --project-number "${PROJECT_NUMBER}"
+          fi

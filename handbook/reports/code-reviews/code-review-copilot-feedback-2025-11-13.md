@@ -10,7 +10,7 @@ Analisamos os 9 comentários automáticos feitos pelo Copilot no PR que consolid
 | CR-02 | `err/ICDCode.error.ts` | breaking-risk | média | Regex de placeholders ficou mais restritiva; precisa garantir que nenhum template usa `{0foo}`. |
 | CR-03 | `tests/unit/value-objects/SocialBenefitsCollection.valueObject.spec.ts` | style | baixa | Falta `;` após a constante `internId`; manter consistência do estilo. |
 | CR-04 | `shared/fn-pattern/imutable-list.ts` | docs/perf | média | `hasDuplicates`/`stableStringify` precisam de documentação e nota sobre custo; eventualmente otimizar. |
-| CR-05 | `value-objects/communitySupportNetwort.valueObject.ts` | domain | baixa | Limite mágico `300` para `familyConflicts`; extrair constante nomeada. |
+| CR-05 | `value-objects/CommunitySupportNetwork.valueObject.ts` | domain | baixa | Limite mágico `300` para `familyConflicts`; extrair constante nomeada. |
 | CR-06 | `value-objects/SocialBenefitsCollection.valueObject.ts` | domain | média | Mensagem de duplicidade sempre cita o primeiro benefício, mesmo quando outro é o duplicado. |
 | CR-07 | `tests/unit/value-objects/socioEconomicSituation.valueObject.spec.ts` | hygiene | baixa | Import de `Uuid` ficou órfão após migração para `FamilyMemberId`. |
 | CR-08 | `value-objects/SocialBenefit.valueObject.ts` | hygiene | baixa | Imports `None/Some` não usados. |
@@ -47,7 +47,7 @@ Analisamos os 9 comentários automáticos feitos pelo Copilot no PR que consolid
   2. Documentar `stableStringify` mencionando impacto em performance e possíveis otimizações (cache por referência, fast-path para primitivos). Não é obrigatório otimizar agora, mas precisamos sinalizar a preocupação.
 
 ### CR-05 — Limite mágico para `familyConflicts`
-- **Trecho**: `packages/social/social-care/value-objects/communitySupportNetwort.valueObject.ts:26-34`.
+- **Trecho**: `packages/social/social-care/value-objects/CommunitySupportNetwork.valueObject.ts:26-34`.
 - **Problema**: o tamanho máximo de 300 caracteres aparece inline. Caso o requisito mude, temos que caçar esse número manualmente.
 - **Ação**: definir `const MAX_FAMILY_CONFLICTS_LENGTH = 300;` próximo ao topo do arquivo e usar a constante nas validações.
 
@@ -85,7 +85,7 @@ Analisamos os 9 comentários automáticos feitos pelo Copilot no PR que consolid
 | CR-02 | ✅ Validado | `rg -Pn '(?<!\\)\\{[0-9]' packages/social/social-care/err` não encontrou placeholders iniciando com dígito. Registrar o comando no PR. |
 | CR-03 | ✅ Ajustado | `packages/social/social-care/tests/unit/value-objects/SocialBenefitsCollection.valueObject.spec.ts:5` agora termina a declaração com `;`. |
 | CR-04 | ✅ Documentado / ⚠️ melhoria futura | Comentários adicionados em `packages/shared/fn-pattern/imutable-list.ts` e plano detalhado em `handbook/reports/perf/imutable-list-hasDuplicates.md` para tratar performance quando houver bandwidth. |
-| CR-05 | ✅ Ajustado | Limite virou `MAX_FAMILY_CONFLICTS_LENGTH` em `communitySupportNetwort.valueObject.ts`. |
+| CR-05 | ✅ Ajustado | Limite virou `MAX_FAMILY_CONFLICTS_LENGTH` em `CommunitySupportNetwork.valueObject.ts`. |
 | CR-06 | ✅ Ajustado | `SocialBenefitsCollection.create` usa `findDuplicates` para apontar o benefício correto; teste RED incluído em `SocialBenefitsCollection.valueObject.spec.ts`. |
 | CR-07 | ✅ Ajustado | Import órfão removido de `socioEconomicSituation.valueObject.spec.ts`. |
 | CR-08 | ✅ Ajustado | VO de benefício e `socialHealthSummary` agora importam apenas `unSafe` via barrel; `@conecta/option` re-exporta a função. |

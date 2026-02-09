@@ -1,0 +1,17 @@
+{
+  "name": "@conecta/result",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "import": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./Result": {
+      "import": "./Result.ts",
+      "default": "./Result.ts"
+    }
+  }
+}

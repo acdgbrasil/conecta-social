@@ -1,0 +1,29 @@
+name: perf-benchmarks
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  imutable-list-hasDuplicates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.1"
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run ImutableList benchmarks
+        run: bun run test:perf
+        env:
+          IMUTABLE_LIST_PERF_THRESHOLD_PRIMITIVE: "2"
+          IMUTABLE_LIST_PERF_THRESHOLD_SHALLOW: "3"
+          IMUTABLE_LIST_PERF_THRESHOLD_NESTED: "5"

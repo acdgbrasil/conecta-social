@@ -1,7 +1,7 @@
 # Construindo catálogos de erros consistentes
 
 ## Cenário
-O agregado `Patient` delega toda validação para erros de domínio ricos (`@conecta/domain-error`). Precisamos manter catálogo, atalhos e integração HTTP alinhados ao que está versionado em `packages/social/social-care/err`.
+O agregado `Patient` delega toda validação para erros de domínio ricos (`@conecta/domain-error`). Precisamos manter catálogo, atalhos e integração HTTP alinhados ao que está versionado em `src/modules/social-care/domain/errors`.
 
 ## Ferramentas
 - `makeDomainErrorFactory`
@@ -13,7 +13,7 @@ O agregado `Patient` delega toda validação para erros de domínio ricos (`@con
 ### 1. Declare o catálogo com as mesmas chaves usadas no domínio
 
 ```ts typescript
-// packages/social/social-care/err/Patient.error.ts
+// src/modules/social-care/domain/errors/Patient.error.ts
 import {
   ErrorTaxonomy,
   ObservabilitySeverity,
@@ -81,7 +81,7 @@ export const P = shortcuts(PatientErrors, {
 ### 3. Use no agregado e exponha para outras camadas
 
 ```ts typescript
-// packages/social/social-care/entities/Patient.entity.ts
+// src/modules/social-care/domain/entities/Patient.entity.ts
 import { err, ok } from "@conecta/result";
 import { P, PatientErrors } from "../err/Patient.error";
 
@@ -127,6 +127,6 @@ const ICDCodeErrorCatalog = {
 </Note>
 
 ### Checklist de qualidade
-- `catalog` e `codePrefix` refletem exatamente os códigos presentes em `packages/social/social-care/err`.
+- `catalog` e `codePrefix` refletem exatamente os códigos presentes em `src/modules/social-care/domain/errors`.
 - Campos sensíveis aparecem em `redact` sempre que usarmos valores externos (`received`, `reason`, etc.).
 - Sempre exponha erros através de `toHttp`/`toTelemetry` fora do domínio, garantindo payload consistente com os handlers atuais.
