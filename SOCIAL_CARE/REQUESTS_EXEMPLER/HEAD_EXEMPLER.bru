@@ -1,0 +1,22 @@
+meta {
+  name: HEAD_EXEMPLER
+  type: http
+  seq: 2
+}
+
+options {
+  url: HEAD_EXEMPLER_URL
+  body: none
+  auth: apikey
+}
+
+auth:apikey {
+  key: API_KEY_EXEMPLER
+  value: VALUE
+  placement: header
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

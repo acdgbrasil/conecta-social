@@ -1,0 +1,27 @@
+meta {
+  name: Update Housing Condition
+  type: http
+  seq: 1
+}
+
+patch {
+  url: {{baseUrl}}/patients/{{patientId}}/housing-condition
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "housingConditionType": "OWNED",
+    "wallMaterial": "MASONRY",
+    "numberOfRooms": 4,
+    "numberOfBathrooms": 2,
+    "waterSupplyType": "PUBLIC_NETWORK",
+    "electricityAccess": "METERED_CONNECTION",
+    "sewerDisposalMethod": "PUBLIC_SEWER",
+    "wasteCollectionType": "DIRECT_COLLECTION",
+    "accessibilityLevel": "FULLY_ACCESSIBLE",
+    "isInGeographicRiskArea": false,
+    "isInSocialConflictArea": false
+  }
+}

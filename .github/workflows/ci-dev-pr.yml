@@ -39,6 +39,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Get Secrets from Bitwarden
+        uses: bitwarden/sm-action@v2
+        with:
+          access_token: ${{ secrets.BW_ACCESS_TOKEN }}
+          secrets: |
+            da849b99-fe62-496a-9357-b3e80047b6c1 > SC_DB_USER
+            2773679e-367a-40e8-bbc5-b3e80047d48b > SC_DB_PASSWORD
+            40250cc3-8ecf-4842-8d4f-b3e80047e968 > SC_DB_NAME
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:

@@ -1,0 +1,11 @@
+meta {
+  name: Remove Family Member
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/patients/{{patientId}}/family-members/{{memberId}}
+  body: none
+  auth: inherit
+}

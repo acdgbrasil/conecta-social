@@ -18,13 +18,10 @@ Este documento é a fonte da verdade para o progresso do projeto.
 
 | Task | Título | Prioridade | Labels |
 | :--- | :--- | :--- | :--- |
-| [TASK-010](./tasks/social-care-completion/TASK-010-usecase-report-rights-violation.md) | UseCase: ReportRightsViolation | 🔥 Alta | `feature`, `application` |
 | [TASK-015](./tasks/quality/TASK-015-github-actions-ci-setup.md) | Configurar CI com GitHub Actions (testes de PR) | 🟡 Média | `ci`, `infra` |
-| [TASK-016](./tasks/modules/TASK-016-api-layer-setup.md) | Setup da camada de API (Hono/Elysia) | 🔥 Alta | `feature`, `interface` |
 | [TASK-043](./tasks/stabilization/TODO/TASK-043-people-context-governance-and-events-consistency.md) | Alinhar governança e eventos do People Context | 🛡️ Alta | `security`, `docs`, `people-context` |
 | [TASK-020](./tasks/modules/TASK-020-form-conversions-setup.md) | Setup do módulo Form Conversions | 🔵 Baixa | `feature`, `fmt` |
 | [TASK-034](./tasks/modules/TASK-034-analysis-bi-setup.md) | Setup do módulo Analysis & Research | 🔵 Baixa | `feature`, `bi` |
-| [TASK-039](./tasks/stabilization/TODO/TASK-039-fix-vscode-workspace-portability.md) | Ajustar portabilidade dos arquivos do VSCode | 🟡 Média | `dx`, `tooling`, `vscode` |
 
 ## 🟡 In Progress (Em Andamento)
 
@@ -41,6 +38,9 @@ Este documento é a fonte da verdade para o progresso do projeto.
 
 | Task | Título | Concluído em | Trilha |
 | :--- | :--- | :--- | :--- |
+| [TASK-016](./tasks/modules/TASK-016-api-layer-setup.md) | Setup da camada de API (Hono/Elysia) | 11/02/2026 | feature |
+| [TASK-010](./tasks/social-care-completion/DONE/TASK-010-usecase-report-rights-violation.md) | UseCase: ReportRightsViolation | 10/02/2026 | social-care-completion |
+| [TASK-039](./tasks/stabilization/DONE/TASK-039-fix-vscode-workspace-portability.md) | Ajustar portabilidade dos arquivos do VSCode | 10/02/2026 | stabilization |
 | [TASK-012](./tasks/stabilization/DONE/TASK-012-fix-postgres-auth.md) | Corrigir autenticação Postgres (Integração) | 09/02/2026 | stabilization |
 | [TASK-013](./tasks/stabilization/DONE/TASK-013-implement-report-rights-violation.md) | Implementar `ReportRightsViolationUseCase` | 09/02/2026 | stabilization |
 | [TASK-014](./tasks/stabilization/DONE/TASK-014-fix-event-assertion-add-family-member.md) | Ajustar asserção de eventos (AddFamilyMember) | 09/02/2026 | stabilization |

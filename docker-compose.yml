@@ -22,8 +22,54 @@ services:
       timeout: 5s
       retries: 5
 
+  # Banco de Dados Dedicado - Logto (Auth & IAM)
+  logto-db:
+    image: postgres:17-alpine
+    container_name: conecta-logto-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${LOGTO_DB_USER:-logto}
+      POSTGRES_PASSWORD: ${LOGTO_DB_PASSWORD:-logto_pass}
+      POSTGRES_DB: ${LOGTO_DB_NAME:-logto}
+    ports:
+      - "5434:5432"
+    volumes:
+      - logto_data:/var/lib/postgresql/data
+    networks:
+      - conecta-internal-net
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${LOGTO_DB_USER:-logto}", "-d", "${LOGTO_DB_NAME:-logto}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Logto Core Service
+  logto:
+    image: svhd/logto:latest
+    container_name: conecta-logto
+    restart: always
+    environment:
+      # URL de conexão com o banco (usa o nome do serviço docker)
+      DB_URL: postgresql://${LOGTO_DB_USER:-logto}:${LOGTO_DB_PASSWORD:-logto_pass}@logto-db:5432/${LOGTO_DB_NAME:-logto}
+      # URL pública do Logto (mudar para o IP/Domínio da VPS na Magalu em produção)
+      ENDPOINT: ${LOGTO_ENDPOINT:-http://localhost:3001}
+      # URL da console de administração
+      ADMIN_ENDPOINT: ${LOGTO_ADMIN_ENDPOINT:-http://localhost:3002}
+      # Chave de criptografia do Vault (Base64) - MANTENHA EM SEGREDO
+      SECRET_VAULT_KEK: ${LOGTO_SECRET_VAULT_KEK:-Y29uZWN0YS1zb2NpYWwtZGV2LWtleS0xMjM0NTY3ODkwMTI=}
+    ports:
+      - "3001:3001" # Porta do Core (API/Auth)
+      - "3002:3002" # Porta do Admin Console
+    depends_on:
+      logto-db:
+        condition: service_healthy
+    networks:
+      - conecta-internal-net
+
 volumes:
   social_care_data:
+    driver: local
+  logto_data:
     driver: local
 
 networks:

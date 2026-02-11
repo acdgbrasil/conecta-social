@@ -2,13 +2,16 @@
   "name": "conecta-social",
   "private": true,
   "scripts": {
+    "dev": "bws run -- bun --watch src/server.ts",
     "infra:up": "bws run -- docker compose up -d social-care-db",
+    "infra:auth:init": "bws run -- /bin/zsh -lc 'docker compose up -d logto-db && sleep 5 && DB_URL=postgresql://$LOGTO_DB_USER:$LOGTO_DB_PASSWORD@localhost:5434/$LOGTO_DB_NAME bunx @logto/cli db seed --no-interact'",
+    "infra:auth:up": "bws run -- docker compose up -d logto-db logto",
     "infra:reset-db": "bws run -- docker compose down -v && bws run -- docker compose up -d social-care-db",
     "test:infra": "bws run -- /bin/zsh -lc 'SC_DB_HOST=127.0.0.1 SC_DB_PORT=5433 bun test src/modules/social-care/interface/tests/integration'",
     "test:infra:local": "bun test src/modules/social-care/interface/tests/integration",
     "test:perf": "bun test src/shared/tests/perf/imutable-list.hasDuplicates.perf.test.ts",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
+    "lint": "bunx biome check .",
+    "lint:fix": "bunx biome check --write .",
     "version:patch": "python3 scripts/version.py patch",
     "version:minor": "python3 scripts/version.py minor",
     "version:major": "python3 scripts/version.py major",
@@ -20,6 +23,9 @@
   },
   "version": "0.3.0",
   "dependencies": {
+    "@hono/swagger-ui": "^0.5.3",
+    "@hono/zod-openapi": "^1.2.1",
+    "hono": "^4.11.9",
     "zod": "^4.3.6"
   }
 }
