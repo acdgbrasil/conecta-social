@@ -1,0 +1,20 @@
+meta {
+  name: Add Family Member
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/patients/{{patientId}}/family-members
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "memberPersonId": "018f4a7a-1e37-7b2c-8f00-999999999999",
+    "relationship": "Mother",
+    "isResiding": true,
+    "isCaregiver": true
+  }
+}

@@ -7,6 +7,7 @@ import {
   SocialBenefitsCollection,
   SocioEconomicSituation,
 } from "@conecta/social-care";
+import type { DomainError } from "@conecta/domain-error/DomainError";
 import z from "zod";
 
 const SocialBenefitSchema = z.object({
@@ -31,6 +32,11 @@ const UpdateSocioEconomicSituationCommandSchema = z.object({
 
 export const createUpdateSocioEconomicSituationCommand = (
   data: unknown,
+  deps: {
+    createFamilyMemberId: (value?: string) => Result<any, DomainError>;
+  } = {
+    createFamilyMemberId: FamilyMemberId.create,
+  },
 ): Result<
   UpdateSocioEconomicSituationCommand,
   ReturnType<typeof CmdError.InvalidCommandInput>
@@ -45,7 +51,7 @@ export const createUpdateSocioEconomicSituationCommand = (
     );
   const socialBenefits: SocialBenefit[] = [];
   for (const item of parseResult.data.situation.socialBenefits) {
-    const beneficiaryId = FamilyMemberId.create(item.beneficiaryId);
+    const beneficiaryId = deps.createFamilyMemberId(item.beneficiaryId);
     if (Result.isErr(beneficiaryId)) {
       return Result.err(
         CmdError.InvalidCommandInput(

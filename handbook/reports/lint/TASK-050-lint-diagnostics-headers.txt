@@ -1,0 +1,486 @@
+src/shared/fn-pattern/pipeline.ts:54:5 lint/complexity/noUselessCatch  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/option-pattern/option.spec.ts:60:19 lint/correctness/useParseIntRadix  FIXABLE  ━━━━━━━━━━
+src/shared/tests/unit/result-pattern/result.spec.ts:51:56 lint/correctness/useParseIntRadix  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/normalize-internal-links.js:29:41 lint/complexity/useArrowFunction  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/normalize-internal-links.js:30:23 lint/complexity/useArrowFunction  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/normalize-internal-links.js:1:2 lint/complexity/useArrowFunction  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/snippets/guides.jsx:150:30 lint/suspicious/noUselessEscapeInString  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/snippets/guides.jsx:234:47 lint/suspicious/noUselessEscapeInString  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:177:38 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:42:33 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:47:32 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:48:31 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:53:32 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:54:31 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:58:27 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:62:27 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:66:42 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:70:42 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:78:65 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:83:33 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:87:20 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:88:23 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:96:15 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:101:21 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:105:16 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:112:34 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:126:41 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:131:29 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:10:20 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:187:42 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:14:21 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:18:23 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css:37:43 lint/complexity/noImportantStyles  FIXABLE  ━━━━━━━━━━
+src/infrastructure/auth/logto/management.client.ts:2:8 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:32:11 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:4:29 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:4:37 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:7:25 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:9:23 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:19:64 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:19:80 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:37:69 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:42:39 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:43:64 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:14:31 lint/correctness/noUnusedFunctionParameters  FIXABLE  ━━━━━━━━━━
+src/infrastructure/runtime/bun/tests/unit/sql.adapter.spec.ts:79:48 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/infrastructure/runtime/bun/tests/unit/sql.adapter.spec.ts:30:9 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/infrastructure/runtime/bun/tests/unit/sql.adapter.spec.ts:77:56 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/infrastructure/runtime/bun/tests/unit/sql.adapter.spec.ts:63:57 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/infrastructure/runtime/bun/tests/unit/sql.adapter.spec.ts:32:30 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/infrastructure/runtime/bun/tests/unit/sql.adapter.spec.ts:40:10 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/infrastructure/runtime/bun/tests/unit/sql.adapter.spec.ts:50:8 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/people-context/interface/adapter/persistence/person.persistence.adapter.ts:74:14 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+src/modules/people-context/interface/adapter/persistence/person.persistence.adapter.ts:55:30 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/people-context/interface/adapter/persistence/person.persistence.adapter.ts:65:14 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+src/modules/people-context/interface/adapter/persistence/person.persistence.adapter.ts:52:82 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/add-family-member.use-case.spec.ts:21:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/add-family-member.use-case.spec.ts:21:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/add-family-member.use-case.spec.ts:44:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/assign-primary-caregiver.use-case.spec.ts:26:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/assign-primary-caregiver.use-case.spec.ts:26:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/assign-primary-caregiver.use-case.spec.ts:59:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/create-referral.use-case.spec.ts:25:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/create-referral.use-case.spec.ts:25:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/create-referral.use-case.spec.ts:48:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/create-referral.use-case.spec.ts:49:14 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-appointment.use-case.spec.ts:24:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-appointment.use-case.spec.ts:47:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-appointment.use-case.spec.ts:48:14 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-appointment.use-case.spec.ts:3:28 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-appointment.use-case.spec.ts:24:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-new-patient.use-case.spec.ts:22:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-new-patient.use-case.spec.ts:13:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-new-patient.use-case.spec.ts:13:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/remove-family-member.use-case.spec.ts:58:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/remove-family-member.use-case.spec.ts:25:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/remove-family-member.use-case.spec.ts:25:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/report-rights-violation.use-case.spec.ts:25:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/report-rights-violation.use-case.spec.ts:48:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/report-rights-violation.use-case.spec.ts:49:14 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/report-rights-violation.use-case.spec.ts:25:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-housing-condition.use-case.spec.ts:24:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-housing-condition.use-case.spec.ts:24:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-housing-condition.use-case.spec.ts:61:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-socioeconomic-situation.use-case.spec.ts:28:35 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-socioeconomic-situation.use-case.spec.ts:28:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-socioeconomic-situation.use-case.spec.ts:69:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/application/use-cases/assign-primary-caregiver.use-case.ts:3:13 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/use-cases/remove-family-member.use-case.ts:4:13 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/use-cases/update-housing-condition.use-case.ts:3:13 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/activities.ts:3:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:14:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:5:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:13:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:1:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:15:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:16:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:1:10 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:2:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:4:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:3:8 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/Patient.entity.spec.ts:5:8 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/family-member.entity.spec.ts:16:69 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/referral.entity.spec.ts:39:67 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/social-care-appointment.entity.spec.ts:44:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/errors/ICDCode.error.spec.ts:9:20 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/errors/ICDCode.error.spec.ts:10:15 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/errors/ICDCode.error.spec.ts:11:20 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/housingCondition.valueObject.spec.ts:37:65 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/housingCondition.valueObject.spec.ts:31:65 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/timestamp.valueObject.spec.ts:28:57 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/domain/value-objects/SocialBenefit.valueObject.ts:5:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/tests/unit/command.adapters.spec.ts:283:56 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/update-socioeconomic-situation.command.adapter.ts:36:54 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/register-patient.controller.ts:17:8 lint/suspicious/noTsIgnore  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/report-rights-violation.controller.ts:42:39 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:39:34 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:50:46 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:63:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:76:53 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:89:59 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:102:52 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:116:50 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:130:50 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:145:46 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts:158:49 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/register-appointment.controller.spec.ts:15:48 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:27:5 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:14:72 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:15:67 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:15:72 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:17:5 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:18:5 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:21:5 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:22:5 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:24:66 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:24:71 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:26:5 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:30:5 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:31:5 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:35:32 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:35:37 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:53:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:14:67 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:133:46 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:158:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:180:46 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:201:46 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:226:48 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:250:49 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:265:49 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:286:49 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:302:50 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:321:50 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:356:52 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:375:53 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:405:53 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:453:58 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:472:59 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:503:59 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:541:44 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:557:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:576:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:605:51 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:627:52 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:651:52 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts:101:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.ts:1:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/patient.persistence.adapter.ts:76:14 lint/correctness/noUnusedVariables  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts:51:70 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts:59:16 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts:72:70 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts:77:16 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts:108:68 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts:109:74 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts:110:81 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts:111:61 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/adapters/bun-event-bus.adapter.ts:63:53 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+src/shared/adapters/bun-event-bus.adapter.ts:66:77 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+src/shared/adapters/logto-signature.verifier.ts:1:8 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/shared/adapters/tests/unit/auth.middleware.spec.ts:70:8 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/erros-pattern/DomainError.composition.ts:7:10 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/shared/erros-pattern/DomainError.composition.ts:175:16 lint/performance/noAccumulatingSpread ━━━━━━━━━━
+src/shared/erros-pattern/DomainError.shortcuts.ts:29:14 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+src/shared/erros-pattern/DomainError.shortcuts.ts:23:10 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+src/shared/erros-pattern/DomainError.shortcuts.ts:1:13 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━
+src/shared/fn-pattern/pipeline.ts:23:65 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/pipeline.ts:28:20 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/pipeline.ts:42:42 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/pipeline.ts:1:8 lint/style/useImportType  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/types.ts:19:24 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/use-case-pipeline.ts:30:44 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/use-case-pipeline.ts:30:104 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/sql.port.ts:6:14 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/sql.port.ts:7:14 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/sql.port.ts:1:13 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/sql.port.ts:2:13 lint/correctness/noUnusedImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/result-pattern/Result.ts:93:58 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/result-pattern/Result.ts:94:24 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/result-pattern/Result.ts:93:78 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/result-pattern/Result.ts:91:50 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/result-pattern/Result.ts:91:55 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/perf/imutable-list.hasDuplicates.perf.test.ts:48:32 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/adapters/bun-event-bus.spec.ts:12:24 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+src/shared/tests/unit/adapters/bun-event-bus.spec.ts:14:29 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+src/shared/tests/unit/adapters/bun-event-bus.spec.ts:40:39 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+src/shared/tests/unit/adapters/bun-event-bus.spec.ts:40:33 lint/correctness/noUnusedFunctionParameters  FIXABLE  ━━━━━━━━━━
+src/shared/tests/unit/erros-pattern/DomainError.spec.ts:41:30 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/erros-pattern/DomainError.spec.ts:42:44 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:194:58 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:198:32 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:202:48 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:184:32 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:188:48 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:194:43 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:194:48 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:194:53 lint/suspicious/noExplicitAny ━━━━━━━━━━
+src/shared/tests/unit/option-pattern/option.spec.ts:61:16 lint/suspicious/noGlobalIsNan  FIXABLE  ━━━━━━━━━━
+.vscode/launch.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.vscode/settings.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SOCIAL_CARE/bruno.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+handbook/tooling/Hono/examples/menu.data.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+handbook/tooling/bun/bun_docs/docs.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+handbook/tooling/bun/bun_docs/normalize-internal-links.js format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+handbook/tooling/bun/bun_docs/snippets/guides.jsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+handbook/tooling/bun/bun_docs/style.css format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/index.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/infrastructure/auth/logto/management.client.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/infrastructure/auth/logto/types/logto.types.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/index.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/runtime.adapter.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/infrastructure/runtime/bun/sql.adapter.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/infrastructure/runtime/bun/tests/unit/sql.adapter.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/people-context/application/ports/commands/register-person-from-logto.command.ts format ━━━━━━━━━━
+src/modules/people-context/application/use-cases/register-person-from-logto.use-case.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/people-context/application/use-cases/register-person-from-logto.use-case.ts:30:13 lint/correctness/useYield ━━━━━━━━━━
+src/modules/people-context/application/use-cases/register-person-from-logto.use-case.ts format ━━━━━━━━━━
+src/modules/people-context/domain/entities/person.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/people-context/domain/entities/person.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/people-context/domain/repository/person.repository.port.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/people-context/domain/repository/person.repository.port.ts format ━━━━━━━━━━━━━━━━━━━━━━
+src/modules/people-context/interface/adapter/http/webhooks/logto.webhook.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/people-context/interface/adapter/http/webhooks/logto.webhook.ts format ━━━━━━━━━━━━━━━━━
+src/modules/people-context/interface/adapter/persistence/person.persistence.adapter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/people-context/interface/adapter/persistence/person.persistence.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/application/errors/application.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/application/errors/command.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/application/ports/commands/add-family-member.command.ts format ━━━━━━━━━━━━━
+src/modules/social-care/application/ports/commands/assign-primary-caregiver.command.ts format ━━━━━━━━━━
+src/modules/social-care/application/ports/commands/create-referral.command.ts format ━━━━━━━━━━━━━━━
+src/modules/social-care/application/ports/commands/register-appointment.command.ts format ━━━━━━━━━━
+src/modules/social-care/application/ports/commands/register-new-patient.command.ts format ━━━━━━━━━━
+src/modules/social-care/application/ports/commands/remove-family-member.command.ts format ━━━━━━━━━━
+src/modules/social-care/application/ports/commands/report-rights-violation.command.ts format ━━━━━━━━━━
+src/modules/social-care/application/ports/commands/update-housing-condition.command.ts format ━━━━━━━━━━
+src/modules/social-care/application/ports/commands/update-socioeconomic-situation.command.ts format ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/add-family-member.use-case.spec.ts format ━━━━━━━━━━━
+src/modules/social-care/application/tests/unit/add-family-member.use-case.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/assign-primary-caregiver.use-case.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/assign-primary-caregiver.use-case.spec.ts format ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/create-referral.use-case.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/create-referral.use-case.spec.ts format ━━━━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-appointment.use-case.spec.ts format ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-appointment.use-case.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-new-patient.use-case.spec.ts format ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/register-new-patient.use-case.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/remove-family-member.use-case.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/remove-family-member.use-case.spec.ts format ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/report-rights-violation.use-case.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/report-rights-violation.use-case.spec.ts format ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-housing-condition.use-case.spec.ts format ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-housing-condition.use-case.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-socioeconomic-situation.use-case.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/tests/unit/update-socioeconomic-situation.use-case.spec.ts format ━━━━━━━━━━
+src/modules/social-care/application/use-cases/assign-primary-caregiver.use-case.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/use-cases/assign-primary-caregiver.use-case.ts format ━━━━━━━━━━
+src/modules/social-care/application/use-cases/remove-family-member.use-case.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/use-cases/remove-family-member.use-case.ts format ━━━━━━━━━━━━━━
+src/modules/social-care/application/use-cases/update-housing-condition.use-case.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/use-cases/update-housing-condition.use-case.ts format ━━━━━━━━━━
+src/modules/social-care/application/use-cases/update-socioeconomic-situation.use-case.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/application/use-cases/update-socioeconomic-situation.use-case.ts format ━━━━━━━━━━
+src/modules/social-care/domain/entities/FamilyMember.entity.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/Referral.entity.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/RightsViolationReport.entity.ts format ━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/SocialCareAppointment.entity.ts format ━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/index.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/activities.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/activities.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/assessments.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/assessments.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/core.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/core.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/family.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/family.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/index.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/index.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/entities/patient/types.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/CommunitySupportNetwork.error.ts format ━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/Diagnosis.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/FamilyMember.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/FamilyMemberId.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/HousingCondition.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/ICDCode.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/Patient.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/PersonId.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/Referral.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/RightsViolationReport.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/SocialBenefit.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/SocialBenefitsCollection.error.ts format ━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/SocialCareAppointment.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/SocialHealthSummary.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/SocioEconomicSituation.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/Timestamp.error.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/errors/index.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/events/factory.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/events/factory.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/events/family-member-added.event.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/events/family-member-added.event.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/events/patient-created.event.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/events/patient-created.event.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/events/referral-created.event.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/events/referral-created.event.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/events/rights-violation-reported.event.ts format ━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/events/rights-violation-reported.event.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/events/social-care-appointment-registered.event.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/events/social-care-appointment-registered.event.ts format ━━━━━━━━━━━
+src/modules/social-care/domain/repository/patient.repository.port.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/repository/patient.repository.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/Patient.entity.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/Patient.entity.spec.ts format ━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/family-member.entity.spec.ts format ━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/family-member.entity.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/patient.activities.spec.ts format ━━━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/patient.activities.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/patient.aggregate.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/patient.aggregate.spec.ts format ━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/referral.entity.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/referral.entity.spec.ts format ━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/rights-violation-report.entity.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/rights-violation-report.entity.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/social-care-appointment.entity.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/entities/social-care-appointment.entity.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/errors/ICDCode.error.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/errors/Patient.error.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/errors/SocialBenefit.error.spec.ts format ━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/events/patient-events.spec.ts format ━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/Diagnosis.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/Diagnosis.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/FamilyMemberId.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/FamilyMemberId.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/PersonId.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/PersonId.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/SocialBenefitsCollection.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/SocialBenefitsCollection.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/communitySupportNetwork.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/communitySupportNetwork.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/housingCondition.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/housingCondition.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/icdCode.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/icdCode.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/socialBenefits.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/socialBenefits.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/socialHealthSummary.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/socialHealthSummary.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/socioEconomicSituation.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/socioEconomicSituation.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/timestamp.valueObject.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/tests/unit/value-objects/timestamp.valueObject.spec.ts format ━━━━━━━━━━
+src/modules/social-care/domain/value-objects/Diagnosis.valueObject.ts format ━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/value-objects/FamilyMemberId.valueObject.ts format ━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/value-objects/SocialBenefit.valueObject.ts format ━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/value-objects/SocialBenefitsCollection.valueObject.ts format ━━━━━━━━━━
+src/modules/social-care/domain/value-objects/communitySupportNetwork.valueObject.ts format ━━━━━━━━━━
+src/modules/social-care/domain/value-objects/housingCondition.valueObject.ts format ━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/value-objects/icdCode.valueObject.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/domain/value-objects/icdCode.valueObject.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/value-objects/personId.valueObject.ts format ━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/domain/value-objects/socialHealthSummary.valueObject.ts format ━━━━━━━━━━━━━
+src/modules/social-care/domain/value-objects/socioEconomicSituation.valueObject.ts format ━━━━━━━━━━
+src/modules/social-care/domain/value-objects/timestamp.valueObject.ts format ━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/add-family-member.command.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/assign-primary-caregiver.command.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/create-referral.command.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/register-appointment.command.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/register-new-patient.command.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/remove-family-member.command.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/report-rights-violation.command.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/update-housing-condition.command.adapter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/update-housing-condition.command.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/update-socioeconomic-situation.command.adapter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/commands/update-socioeconomic-situation.command.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/add-family-member.controller.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/add-family-member.controller.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/create-referral.controller.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/create-referral.controller.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/register-patient.controller.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/register-patient.controller.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/remove-family-member.controller.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/remove-family-member.controller.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/report-rights-violation.controller.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/report-rights-violation.controller.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/tests/controllers.coverage.spec.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/update-housing-condition.controller.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/update-housing-condition.controller.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/update-socioeconomic-situation.controller.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/controllers/update-socioeconomic-situation.controller.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.spec.ts format ━━━━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/http/social-care.http.adapter.ts format ━━━━━━━━━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/patient.mapper.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/patient.mapper.ts format ━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/patient.persistence.adapter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/patient.persistence.adapter.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts format ━━━━━━━━━━
+src/modules/social-care/interface/adapter/persistence/tests/unit/patient.mapper.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/dto/enums/housing-condition.enums.ts format ━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/interface/dto/social-assessment.dto.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/interface/outbox/postgres-outbox.repository.ts format ━━━━━━━━━━━━━━━━━━━━━━
+src/modules/social-care/interface/outbox/postgres-outbox.worker.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/modules/social-care/interface/outbox/postgres-outbox.worker.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/adapters/bun-event-bus.adapter.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━
+src/shared/adapters/bun-event-bus.adapter.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/adapters/in-memory-event-bus.adapter.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/adapters/logto-signature.verifier.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/adapters/noop-notifier.adapter.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/adapters/system-clock.adapter.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/adapters/tests/unit/auth.middleware.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/adapters/uuid-v7.adapter.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/aggregate-root/AggregateRoot.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/aggregate-root/aggregate.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━
+src/shared/aggregate-root/aggregate.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/erros-pattern/DomainError.composition.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/erros-pattern/DomainError.shortcuts.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/erros-pattern/DomainError.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/erros-pattern/index.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/erros-pattern/package.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/index.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/package.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/pipeline.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/fn-pattern/use-case-pipeline.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━
+src/shared/fn-pattern/use-case-pipeline.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/option-pattern/Option.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/option-pattern/index.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+src/shared/option-pattern/package.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/auth.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/auth.port.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/clock.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/event-bus.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/id-provider.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/mapper.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/notifier.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/runtime.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/sql.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/sql.port.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/ports/use-case.port.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/result-pattern/Result.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/result-pattern/index.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+src/shared/result-pattern/package.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/bench/list-unique.bench.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/adapters/bun-event-bus.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/shared/tests/unit/adapters/bun-event-bus.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/aggregate-root/aggregate-root-legacy.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/aggregate-root/aggregate.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/erros-pattern/DomainError.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/curry.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/list.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/pipe.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/pipeline.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/pipeline.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/types.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:51:15 lint/correctness/useYield ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:183:15 lint/correctness/useYield ━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/fn-pattern/use-case-pipeline.spec.ts:165:15 lint/correctness/useYield ━━━━━━━━━━
+src/shared/tests/unit/option-pattern/option.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/result-pattern/result.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/uuid-pattern/uuid.spec.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/tests/unit/uuid-pattern/uuid.spec.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━
+src/shared/uuid-pattern/package.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/uuid-pattern/uuid.ts:1:1 assist/source/organizeImports  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
+src/shared/uuid-pattern/uuid.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+tsconfig.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

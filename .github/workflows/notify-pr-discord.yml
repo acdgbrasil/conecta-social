@@ -16,9 +16,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Get Bitwarden Secrets
+        uses: ./.github/actions/get-bitwarden-secrets
+        with:
+          access_token: ${{ secrets.BW_ACCESS_TOKEN }}
+          base_url: ${{ vars.BW_BASE_URL || 'https://vault.bitwarden.com' }}
+          secrets_list: |
+            835f452d-51eb-4bfb-a0af-b3f0005e72d6 > DISCORD_WEBHOOK_URL_PR
+
       - name: Send PR notification to Discord
         env:
-          DISCORD_WEBHOOK_URL_PR: ${{ secrets.DISCORD_WEBHOOK_URL_PR }}
+          DISCORD_WEBHOOK_URL_PR: ${{ env.DISCORD_WEBHOOK_URL_PR }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_URL: ${{ github.event.pull_request.html_url }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
@@ -31,7 +42,12 @@ jobs:
             echo "DISCORD_WEBHOOK_URL_PR nao configurada. Pulando notificacao."
             exit 0
           fi
+          if ! echo "${DISCORD_WEBHOOK_URL_PR}" | grep -qE '^https://discord(app)?\.com/api/webhooks/'; then
+            echo "DISCORD_WEBHOOK_URL_PR invalida."
+            exit 1
+          fi
 
+          # Use jq --arg para escapar strings com segurança
           payload=$(jq -nc \
             --arg repo "${REPOSITORY}" \
             --arg title "${PR_TITLE}" \
@@ -49,7 +65,7 @@ jobs:
                  "Link: " + $url)
             }')
 
-          curl -sS -X POST \
+          curl --fail-with-body --retry 3 --retry-delay 2 --retry-all-errors -sS -X POST \
             -H "Content-Type: application/json" \
             -d "${payload}" \
             "${DISCORD_WEBHOOK_URL_PR}"

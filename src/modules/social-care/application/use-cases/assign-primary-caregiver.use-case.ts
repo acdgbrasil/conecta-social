@@ -31,6 +31,4 @@ export const makeAssignPrimaryCaregiverUseCase = (deps: AssignPrimaryCaregiverDe
     },
 
     repository: deps.repository,
-    eventBus: deps.eventBus,
-    pullEvents: Patient.pullDomainEvents,
   });

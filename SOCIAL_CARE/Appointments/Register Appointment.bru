@@ -1,0 +1,21 @@
+meta {
+  name: Register Appointment
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/patients/{{patientId}}/appointments
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "professionalId": "018f4a7a-1e37-7b2c-8f00-888888888888",
+    "summary": "Atendimento de acompanhamento mensal",
+    "actionPlan": "Encaminhar para CRAS",
+    "date": "2024-02-11T14:30:00Z",
+    "type": "DOMICILIARY"
+  }
+}

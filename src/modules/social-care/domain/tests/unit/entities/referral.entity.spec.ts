@@ -33,6 +33,25 @@ describe("Referral.entity (FP Refactor - RED)", () => {
       expect(Result.isErr(result)).toBe(true);
       expect(Result.unwrapErr(result).code).toBe(RE.DateInFuture().code);
     });
+
+    test("create falha com serviço de destino inválido", () => {
+      const result = Referral.create(
+        { ...createValidProps(), destinationService: "INVALID" as any },
+        NOW,
+      );
+
+      expect(Result.isErr(result)).toBe(true);
+      expect(Result.unwrapErr(result).code).toBe(
+        RE.InvalidDestinationService("INVALID", "").code,
+      );
+    });
+
+    test("create falha com motivo vazio", () => {
+      const result = Referral.create({ ...createValidProps(), reason: "   " }, NOW);
+
+      expect(Result.isErr(result)).toBe(true);
+      expect(Result.unwrapErr(result).code).toBe(RE.ReasonMissing().code);
+    });
   });
 
   describe("Transitions (Namespace Functions)", () => {
@@ -53,6 +72,15 @@ describe("Referral.entity (FP Refactor - RED)", () => {
       const result = Referral.cancel(completed);
       expect(Result.isErr(result)).toBe(true);
       expect(Result.unwrapErr(result).code).toBe(RE.InvalidStatusTransition("COMPLETED", "CANCELLED").code);
+    });
+
+    test("equals compara pelo id", () => {
+      const referral = Result.unwrap(Referral.create(createValidProps(), NOW));
+      const sameId = { ...referral, reason: "Alterado" };
+      const other = Result.unwrap(Referral.create(createValidProps(), NOW));
+
+      expect(Referral.equals(referral, sameId)).toBe(true);
+      expect(Referral.equals(referral, other)).toBe(false);
     });
   });
 });

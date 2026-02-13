@@ -1,11 +1,13 @@
 import { SQL } from "bun";
 import type { SqlPort, SqlTransaction } from "@conecta/ports";
 
+type SqlCtor = new (config: any) => any;
+
 export class BunSqlAdapter {
   private readonly sql: any;
 
-  constructor(config: any) {
-    this.sql = new SQL(config);
+  constructor(config: any, sqlCtor: SqlCtor = SQL) {
+    this.sql = new sqlCtor(config);
   }
 
   // Permite uso como tag: sql`SELECT...`
@@ -26,8 +28,11 @@ export class BunSqlAdapter {
 /**
  * Cria uma instância do adaptador SQL para Bun que funciona como uma Tag Function.
  */
-export function createBunSqlAdapter(config: any): SqlPort {
-  const sql = new SQL(config);
+export function createBunSqlAdapter(
+  config: any,
+  sqlCtor: SqlCtor = SQL,
+): SqlPort {
+  const sql = new sqlCtor(config);
 
   const adapter = (async (strings: TemplateStringsArray, ...values: any[]) => {
     return await sql(strings, ...values);

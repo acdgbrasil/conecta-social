@@ -21,6 +21,14 @@ describe("ICDCode.valueObject (FP Refactor - RED)", () => {
       expect(Result.isErr(result)).toBe(true);
       expect(Result.unwrapErr(result).code).toBe(ICDError.EmptyCidCode().code);
     });
+
+    test("create falha com padrão inválido e preenche contexto esperado", () => {
+      const result = ICDCode.create("AA", { requireDot: true, autoDot: false });
+      expect(Result.isErr(result)).toBe(true);
+      if (!Result.isErr(result)) return;
+      expect(result.error.code).toBe(ICDError.InvalidCidNumber("", "", "").code);
+      expect(result.error.message).toContain("Esperado padrão");
+    });
   });
 
   describe("Namespace Helpers", () => {

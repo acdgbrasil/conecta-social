@@ -35,6 +35,5 @@
   },
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome"
-  },
-  "idf.pythonInstallPath": "/Users/gabriel_aderaldo/.platformio/penv/bin/python"
+  }
 }

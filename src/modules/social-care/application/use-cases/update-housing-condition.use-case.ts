@@ -31,6 +31,4 @@ export const makeUpdateHousingConditionUseCase = (deps: UpdateHousingConditionDe
     },
 
     repository: deps.repository,
-    eventBus: deps.eventBus,
-    pullEvents: Patient.pullDomainEvents,
   });

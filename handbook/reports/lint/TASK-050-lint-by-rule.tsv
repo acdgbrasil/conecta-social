@@ -1,0 +1,16 @@
+186	format
+152	lint/suspicious/noExplicitAny
+78	assist/source/organizeImports
+25	lint/complexity/noImportantStyles
+13	lint/correctness/noUnusedImports
+12	lint/style/useImportType
+4	lint/correctness/useYield
+3	lint/correctness/noUnusedVariables
+3	lint/complexity/useArrowFunction
+2	lint/suspicious/noUselessEscapeInString
+2	lint/correctness/useParseIntRadix
+2	lint/correctness/noUnusedFunctionParameters
+1	lint/suspicious/noTsIgnore
+1	lint/suspicious/noGlobalIsNan
+1	lint/performance/noAccumulatingSpread
+1	lint/complexity/noUselessCatch
