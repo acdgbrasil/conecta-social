@@ -12,6 +12,16 @@ Este diretório concentra toda a documentação viva do projeto. A ideia é mant
 - `codebase/` — documentação viva dos módulos (`src/modules/**`) e kernel compartilhado (`src/shared/**`), incluindo guias detalhados e cookbooks.
 - `references/` — material de apoio (livros, artigos, PDFs). Mantido aqui para consulta offline.
 
+## Programa Atual: Roles & Permissões (2026-02-13)
+- Diagnóstico técnico: `reports/TASK-049-roles-permissions-assessment.md`
+- Modelo alvo RBAC + scopes: `reports/TASK-049-rbac-target-model.md`
+- Plano de implementação em fases: `reports/TASK-049-implementation-plan.md`
+- Plano de testes e observabilidade: `reports/TASK-049-test-and-observability-plan.md`
+
+Objetivo imediato:
+- Proteger 100% das rotas de mutação com autenticação e autorização explícitas.
+- Garantir trilha auditável de decisões de acesso (401/403 e allow).
+
 ## Convenções gerais
 - Alterações estruturais no código ou domínio devem ser refletidas neste handbook (reports, principles ou process).
 - Sempre que uma decisão afetar retrocompatibilidade, registrar no arquivo `process/versioning.md`.

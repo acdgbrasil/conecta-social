@@ -14,11 +14,24 @@ Este documento é a fonte da verdade para o progresso do projeto.
 - O backlog abaixo inclui itens de estabilização para recuperar confiança de typecheck e previsibilidade da suíte.
 - `ANL-002` concluído em 2026-02-09 com recuperação de baseline de TypeScript (`bunx --bun tsc --noEmit` => `EXIT:0`).
 
+## Notas de Segurança (2026-02-13)
+- Foi publicado o pacote de diagnóstico e execução de ROLES/PERMISSÕES:
+  - `./reports/TASK-049-roles-permissions-assessment.md`
+  - `./reports/TASK-049-rbac-target-model.md`
+  - `./reports/TASK-049-implementation-plan.md`
+  - `./reports/TASK-049-test-and-observability-plan.md`
+- Prioridade operacional: implementar middleware real de auth/authz e proteger 100% das rotas de mutação de `social-care`.
+
 ## 🟢 To Do (Próximas Tarefas)
 
 | Task | Título | Prioridade | Labels |
 | :--- | :--- | :--- | :--- |
-| [TASK-015](./tasks/quality/TASK-015-github-actions-ci-setup.md) | Configurar CI com GitHub Actions (testes de PR) | 🟡 Média | `ci`, `infra` |
+| [RBAC-001](./reports/TASK-049-implementation-plan.md) | Implementar AuthPort real + middleware authn/authz no runtime | 🔴 Crítica | `security`, `rbac`, `auth` |
+| [RBAC-002](./reports/TASK-049-rbac-target-model.md) | Aplicar matriz Endpoint x Scope em todas as rotas Social Care | 🔴 Crítica | `security`, `rbac`, `social-care` |
+| [RBAC-003](./reports/TASK-049-implementation-plan.md) | Governança de roles no People Context (promoção + validação persistência) | 🛡️ Alta | `people-context`, `rbac`, `governance` |
+| [RBAC-004](./reports/TASK-049-test-and-observability-plan.md) | Cobertura de testes de autorização + observabilidade de 401/403 | 🛡️ Alta | `tests`, `security`, `observability` |
+| [TASK-015](./tasks/quality/TASK-015-github-actions-ci-setup.md) | Configurar CI com GitHub Actions (testes de PR) | 11/02/2026 | quality |
+| [TASK-016](./tasks/modules/TASK-016-api-layer-setup.md) | Setup da camada de API (Hono/Elysia) | 11/02/2026 | feature |
 | [TASK-043](./tasks/stabilization/TODO/TASK-043-people-context-governance-and-events-consistency.md) | Alinhar governança e eventos do People Context | 🛡️ Alta | `security`, `docs`, `people-context` |
 | [TASK-020](./tasks/modules/TASK-020-form-conversions-setup.md) | Setup do módulo Form Conversions | 🔵 Baixa | `feature`, `fmt` |
 | [TASK-034](./tasks/modules/TASK-034-analysis-bi-setup.md) | Setup do módulo Analysis & Research | 🔵 Baixa | `feature`, `bi` |
@@ -31,6 +44,8 @@ Este documento é a fonte da verdade para o progresso do projeto.
 
 | Task | Título | Origem | Labels |
 | :--- | :--- | :--- | :--- |
+| RBAC-005 | Revisar scopes M2M e remover uso amplo (`scope=all`) no Management Client | TASK-049 (roles/permissões) | `security`, `logto`, `m2m` |
+| RBAC-006 | Introduzir guard automático que falha CI para rota sem policy de scope | TASK-049 (roles/permissões) | `quality`, `security`, `ci` |
 | ANL-003 | Alinhar `BunSqlAdapter` ao contrato `SqlPort` (erro `TS2420`) | Análise local (Typecheck 2026-02-09) | `infra`, `sql`, `typing` |
 | ANL-004 | Estabilizar `load.test.ts` e separar testes de performance da suíte padrão (`bun test`) | Análise local (Tests 2026-02-09) | `tests`, `perf`, `reliability` |
 
@@ -39,6 +54,7 @@ Este documento é a fonte da verdade para o progresso do projeto.
 | Task | Título | Concluído em | Trilha |
 | :--- | :--- | :--- | :--- |
 | [TASK-016](./tasks/modules/TASK-016-api-layer-setup.md) | Setup da camada de API (Hono/Elysia) | 11/02/2026 | feature |
+| [TASK-048](./tasks/quality/TASK-048-quality-tests-and-docs-refinement.md) | Refinamento de Qualidade e Testes de Persistência | 11/02/2026 | quality |
 | [TASK-010](./tasks/social-care-completion/DONE/TASK-010-usecase-report-rights-violation.md) | UseCase: ReportRightsViolation | 10/02/2026 | social-care-completion |
 | [TASK-039](./tasks/stabilization/DONE/TASK-039-fix-vscode-workspace-portability.md) | Ajustar portabilidade dos arquivos do VSCode | 10/02/2026 | stabilization |
 | [TASK-012](./tasks/stabilization/DONE/TASK-012-fix-postgres-auth.md) | Corrigir autenticação Postgres (Integração) | 09/02/2026 | stabilization |

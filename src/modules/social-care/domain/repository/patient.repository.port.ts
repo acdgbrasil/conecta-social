@@ -1,5 +1,6 @@
 import type { Result } from "@conecta/shared";
 import type { DomainError } from "@conecta/shared/erros-pattern/DomainError";
+import type { Uuid } from "@conecta/uuid";
 import type { Patient } from "@conecta/social-care/domain/entities";
 import type { PersonId } from "@conecta/social-care/domain/value-objects";
 
@@ -17,4 +18,7 @@ export type PatientRepositoryPort = {
   
   /** Recupera o agregado completo pelo ID de pessoa. */
   findByPersonId(personId: PersonId): Promise<Result<Patient, DomainError>>;  
+
+  /** Recupera o agregado completo pelo ID interno (UUID v7). */
+  findById(id: Uuid): Promise<Result<Patient, DomainError>>;
 }

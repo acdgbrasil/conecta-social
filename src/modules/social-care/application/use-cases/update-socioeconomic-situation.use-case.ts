@@ -30,6 +30,4 @@ export const makeUpdateSocioEconomicSituationUseCase = (deps: UpdateSocioEconomi
     },
 
     repository: deps.repository,
-    eventBus: deps.eventBus,
-    pullEvents: Patient.pullDomainEvents,
   });

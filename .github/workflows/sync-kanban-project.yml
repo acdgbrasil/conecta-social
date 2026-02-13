@@ -16,10 +16,14 @@ on:
         default: false
         type: boolean
 
+concurrency:
+  group: sync-kanban-project-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   issues: write
-  repository-projects: write
+  # repository-projects: write # Removido conforme auditoria (PROJECT_SYNC_TOKEN já tem permissões)
 
 jobs:
   sync:
@@ -31,31 +35,28 @@ jobs:
       PROJECT_NUMBER: "10"
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Get Secrets from Bitwarden
-        uses: bitwarden/sm-action@v2
+      - name: Get Bitwarden Secrets
+        uses: ./.github/actions/get-bitwarden-secrets
         with:
           access_token: ${{ secrets.BW_ACCESS_TOKEN }}
-          secrets: |
+          base_url: ${{ vars.BW_BASE_URL || 'https://vault.bitwarden.com' }}
+          secrets_list: |
             393831c2-ddfc-4865-ad31-b3ee003a93d1 > PROJECT_SYNC_TOKEN
 
-      - name: Validate token presence
-        run: |
-          if [ -z "${{ env.PROJECT_SYNC_TOKEN }}" ]; then
-            echo "PROJECT_SYNC_TOKEN ausente no Bitwarden."
-            exit 1
-          fi
-
-      - name: Validate gh auth
-        run: gh auth status -h github.com
-        env:
-          GH_TOKEN: ${{ env.PROJECT_SYNC_TOKEN }}
+      - name: Validate sync script syntax
+        run: python3 -m py_compile scripts/sync_kanban_github.py
 
       - name: Sync Kanban -> Issues/Project
         env:
           GH_TOKEN: ${{ env.PROJECT_SYNC_TOKEN }}
         run: |
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "ERRO: PROJECT_SYNC_TOKEN ausente."
+            exit 1
+          fi
+
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
             python3 scripts/sync_kanban_github.py \
               --repo "${REPO}" \

@@ -14,7 +14,7 @@ export const reportRightsViolationController = (
 ) => async (c: Context) => {
   try {
     const patientId = c.req.param("id");
-    const body = c.req.valid("json" as never);
+    const body = await c.req.json().catch(() => ({}));
     
     // 1. Adaptação para o Comando de Aplicação (Mesclando o ID da URL)
     const commandResult = createReportRightsViolationCommand({ ...body, patientId });
@@ -31,12 +31,12 @@ export const reportRightsViolationController = (
     const result = await useCase.execute(commandResult.value);
 
     if (Result.isErr(result)) {
-      const error = result.error as any;
-      if (error.code === "NOT_FOUND") return c.json({ success: false, error: error.message }, 404);
+      const error = result.error;
+      const status = error.http ?? 422;
       return c.json({ 
         success: false, 
         error: error.message 
-      }, 422);
+      }, status as never);
     }
 
     const reportId = (result.value as any)?.id;

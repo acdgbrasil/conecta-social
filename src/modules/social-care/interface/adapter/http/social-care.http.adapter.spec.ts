@@ -1,267 +1,672 @@
-import { describe, test, expect, mock, beforeEach } from "bun:test";
-import { Result } from "@conecta/result";
-import { makeSocialCareHttpAdapter, type SocialCareUseCases } from "./social-care.http.adapter";
+import { beforeEach, describe, expect, mock, test } from "bun:test";
 import type { UseCasePort } from "@conecta/ports";
+import { Result } from "@conecta/result";
+import {
+	makeSocialCareHttpAdapter,
+	type SocialCareUseCases,
+} from "./social-care.http.adapter";
 
 describe("SocialCareHttpAdapter", () => {
-  let mockUseCases: SocialCareUseCases;
+	let mockUseCases: SocialCareUseCases;
 
-  beforeEach(() => {
-    mockUseCases = {
-      registerPatient: { execute: mock() } as unknown as UseCasePort<any, any>,
-      addFamilyMember: { execute: mock() } as unknown as UseCasePort<any, any>,
-      removeFamilyMember: { execute: mock() } as unknown as UseCasePort<any, any>,
-      registerAppointment: { execute: mock() } as unknown as UseCasePort<any, any>,
-      createReferral: { execute: mock() } as unknown as UseCasePort<any, any>,
-      reportRightsViolation: { execute: mock() } as unknown as UseCasePort<any, any>,
-      updateHousingCondition: { execute: mock() } as unknown as UseCasePort<any, any>,
-      updateSocioEconomicSituation: { execute: mock() } as unknown as UseCasePort<any, any>,
-    };
-  });
+	beforeEach(() => {
+		mockUseCases = {
+			registerPatient: { execute: mock() } as unknown as UseCasePort<any, any>,
+			addFamilyMember: { execute: mock() } as unknown as UseCasePort<any, any>,
+			removeFamilyMember: { execute: mock() } as unknown as UseCasePort<
+				any,
+				any
+			>,
+			registerAppointment: { execute: mock() } as unknown as UseCasePort<
+				any,
+				any
+			>,
+			createReferral: { execute: mock() } as unknown as UseCasePort<any, any>,
+			reportRightsViolation: { execute: mock() } as unknown as UseCasePort<
+				any,
+				any
+			>,
+			updateHousingCondition: { execute: mock() } as unknown as UseCasePort<
+				any,
+				any
+			>,
+			updateSocioEconomicSituation: {
+				execute: mock(),
+			} as unknown as UseCasePort<any, any>,
+		};
+	});
 
-  describe("POST /patients", () => {
-    test("should return 201 when patient is registered successfully", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const patientData = {
-        personId: "018f4a7a-1e37-7b2c-8f00-123456789abc",
-        initialDiagnoses: [
-          { icdCode: "F84.0", date: "2024-01-01", description: "Initial diagnosis of autism" }
-        ],
-      };
+		describe("POST /patients", () => {
+		test("should return 201 when patient is registered successfully", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const patientData = {
+				personId: "018f4a7a-1e37-7b2c-8f00-123456789abc",
+				initialDiagnoses: [
+					{
+						icdCode: "F84.0",
+						date: "2024-01-01",
+						description: "Initial diagnosis of autism",
+					},
+				],
+			};
 
-      (mockUseCases.registerPatient.execute as any).mockResolvedValue(
-        Result.ok({ id: patientData.personId })
-      );
+			(mockUseCases.registerPatient.execute as any).mockResolvedValue(
+				Result.ok({ id: patientData.personId }),
+			);
 
-      const res = await app.request("/patients", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(patientData),
-      });
+			const res = await app.request("/patients", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(patientData),
+			});
 
-      expect(res.status).toBe(201);
-      const body = await res.json();
-      expect(body.success).toBe(true);
-      expect(res.headers.get("Location")).toBe(`/social-care/patients/${patientData.personId}`);
-    });
+			expect(res.status).toBe(201);
+			const body = await res.json();
+			expect(body.success).toBe(true);
+			expect(res.headers.get("Location")).toBe(
+				`/social-care/patients/${patientData.personId}`,
+			);
+		});
 
-    test("should return 400 when input is invalid", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const invalidData = {
-        personId: "invalid-uuid",
-      };
+		test("should return 400 when input is invalid", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const invalidData = {
+				personId: "invalid-uuid",
+			};
 
-      const res = await app.request("/patients", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(invalidData),
-      });
+			const res = await app.request("/patients", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(invalidData),
+			});
 
-      expect(res.status).toBe(400);
-      const body = await res.json();
-      expect(body.success).toBe(false);
-    });
+			expect(res.status).toBe(400);
+			const body = await res.json();
+			expect(body.success).toBe(false);
+		});
 
-    test("should return 409 when patient already exists (Domain Error)", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const patientData = {
-        personId: "018f4a7a-1e37-7b2c-8f00-123456789abc",
-        initialDiagnoses: [
-          { icdCode: "F84.0", date: "2024-01-01", description: "Initial diagnosis of autism" }
-        ],
-      };
+			test("should return 409 when patient already exists (Domain Error)", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const patientData = {
+				personId: "018f4a7a-1e37-7b2c-8f00-123456789abc",
+				initialDiagnoses: [
+					{
+						icdCode: "F84.0",
+						date: "2024-01-01",
+						description: "Initial diagnosis of autism",
+					},
+				],
+			};
 
-      (mockUseCases.registerPatient.execute as any).mockResolvedValue(
-        Result.err({ code: "CONFLICT", message: "Patient already exists" })
-      );
+			(mockUseCases.registerPatient.execute as any).mockResolvedValue(
+				Result.err({
+					code: "CONFLICT",
+					message: "Patient already exists",
+					http: 409,
+				}),
+			);
 
-      const res = await app.request("/patients", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(patientData),
-      });
+			const res = await app.request("/patients", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(patientData),
+			});
 
-      expect(res.status).toBe(409);
-      const body = await res.json();
-      expect(body.success).toBe(false);
-      expect(body.error).toBe("Patient already exists");
-    });
-  });
+			expect(res.status).toBe(409);
+			const body = await res.json();
+			expect(body.success).toBe(false);
+				expect(body.error).toBe("Patient already exists");
+			});
 
-  describe("POST /patients/{id}/family-members", () => {
-    test("should merge patientId from URL and return 200 on success", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
-      const memberData = {
-        memberPersonId: "018f4a7a-1e37-7b2c-8f00-999999999999",
-        relationship: "Mother",
-        isResiding: true,
-        isCaregiver: true,
-      };
+			test("should return 500 when register patient use case crashes", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientData = {
+					personId: "018f4a7a-1e37-7b2c-8f00-123456789abc",
+					initialDiagnoses: [
+						{
+							icdCode: "F84.0",
+							date: "2024-01-01",
+							description: "Initial diagnosis of autism",
+						},
+					],
+				};
+				(mockUseCases.registerPatient.execute as any).mockRejectedValue(
+					new Error("boom"),
+				);
 
-      (mockUseCases.addFamilyMember.execute as any).mockResolvedValue(Result.ok({ success: true }));
+				const res = await app.request("/patients", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(patientData),
+				});
 
-      const res = await app.request(`/patients/${patientId}/family-members`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(memberData),
-      });
+				expect(res.status).toBe(500);
+			});
+		});
 
-      expect(res.status).toBe(200);
-      expect(mockUseCases.addFamilyMember.execute).toHaveBeenCalledWith(
-        expect.objectContaining({
-          patientId,
-          memberPersonId: memberData.memberPersonId,
-        })
-      );
-    });
-  });
+		describe("POST /patients/{id}/family-members", () => {
+			test("should merge patientId from URL and return 200 on success", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+			const memberData = {
+				memberPersonId: "018f4a7a-1e37-7b2c-8f00-999999999999",
+				relationship: "Mother",
+				isResiding: true,
+				isCaregiver: true,
+			};
 
-  describe("DELETE /patients/{id}/family-members/{memberId}", () => {
-    test("should merge patientId and memberId from URL and return 200", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
-      const memberId = "018f4a7a-1e37-7b2c-8f00-999999999999";
+			(mockUseCases.addFamilyMember.execute as any).mockResolvedValue(
+				Result.ok({ success: true }),
+			);
 
-      (mockUseCases.removeFamilyMember.execute as any).mockResolvedValue(Result.ok({ success: true }));
+			const res = await app.request(`/patients/${patientId}/family-members`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(memberData),
+			});
 
-      const res = await app.request(`/patients/${patientId}/family-members/${memberId}`, {
-        method: "DELETE",
-      });
+			expect(res.status).toBe(200);
+				expect(mockUseCases.addFamilyMember.execute).toHaveBeenCalledWith(
+					expect.objectContaining({
+						patientId,
+						memberPersonId: memberData.memberPersonId,
+					}),
+				);
+			});
 
-      expect(res.status).toBe(200);
-      expect(mockUseCases.removeFamilyMember.execute).toHaveBeenCalledWith(
-        expect.objectContaining({
-          patientId,
-          memberPersonId: memberId,
-        })
-      );
-    });
-  });
+			test("should return 422 on domain error", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.addFamilyMember.execute as any).mockResolvedValue(
+					Result.err({ message: "domain", http: 422 }),
+				);
 
-  describe("POST /patients/{id}/appointments", () => {
-    test("should return 201 on success", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
-      const data = { professionalId: "018f4a7a-1e37-7b2c-8f00-888888888888", summary: "Test" };
+				const res = await app.request(`/patients/${patientId}/family-members`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						memberPersonId: "018f4a7a-1e37-7b2c-8f00-999999999999",
+						relationship: "Mother",
+						isResiding: true,
+						isCaregiver: true,
+					}),
+				});
 
-      (mockUseCases.registerAppointment.execute as any).mockResolvedValue(Result.ok({ success: true }));
+				expect(res.status).toBe(422);
+			});
 
-      const res = await app.request(`/patients/${patientId}/appointments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+			test("should return 500 when use case crashes", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.addFamilyMember.execute as any).mockRejectedValue(
+					new Error("boom"),
+				);
 
-      expect(res.status).toBe(201);
-    });
-  });
+				const res = await app.request(`/patients/${patientId}/family-members`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						memberPersonId: "018f4a7a-1e37-7b2c-8f00-999999999999",
+						relationship: "Mother",
+						isResiding: true,
+						isCaregiver: true,
+					}),
+				});
 
-  describe("PATCH /patients/{id}/housing-condition", () => {
-    test("should merge patientId and wrap body into 'condition' property", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
-      const conditionData = { 
-        housingConditionType: "OWNED",
-        wallMaterial: "MASONRY",
-        numberOfRooms: 4,
-        numberOfBathrooms: 2,
-        waterSupplyType: "PUBLIC_NETWORK",
-        electricityAccess: "METERED_CONNECTION",
-        sewerDisposalMethod: "PUBLIC_SEWER",
-        wasteCollectionType: "DIRECT_COLLECTION",
-        accessibilityLevel: "FULLY_ACCESSIBLE",
-        isInGeographicRiskArea: false,
-        isInSocialConflictArea: false,
-      };
+				expect(res.status).toBe(500);
+			});
+		});
 
-      (mockUseCases.updateHousingCondition.execute as any).mockResolvedValue(Result.ok({ success: true }));
+		describe("DELETE /patients/{id}/family-members/{memberId}", () => {
+			test("should merge patientId and memberId from URL and return 200", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+			const memberId = "018f4a7a-1e37-7b2c-8f00-999999999999";
 
-      const res = await app.request(`/patients/${patientId}/housing-condition`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(conditionData),
-      });
+			(mockUseCases.removeFamilyMember.execute as any).mockResolvedValue(
+				Result.ok({ success: true }),
+			);
 
-      expect(res.status).toBe(200);
-    });
-  });
+			const res = await app.request(
+				`/patients/${patientId}/family-members/${memberId}`,
+				{
+					method: "DELETE",
+				},
+			);
 
-  describe("PATCH /patients/{id}/socioeconomic-situation", () => {
-    test("should merge patientId and wrap body into 'situation' property", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
-      const situationData = { 
-        totalFamilyIncome: 5000,
-        incomePerCapita: 1250,
-        receivesSocialBenefit: true,
-        socialBenefits: [
-          {
-            benefitName: "Bolsa Familia",
-            amount: 600,
-            beneficiaryId: "018f4a7a-1e37-7b2c-8f00-999999999999"
-          }
-        ],
-        mainSourceOfIncome: "Salary",
-        hasUnemployed: false
-      };
+			expect(res.status).toBe(200);
+				expect(mockUseCases.removeFamilyMember.execute).toHaveBeenCalledWith(
+					expect.objectContaining({
+						patientId,
+						memberPersonId: memberId,
+					}),
+				);
+			});
 
-      (mockUseCases.updateSocioEconomicSituation.execute as any).mockResolvedValue(Result.ok({ success: true }));
+			test("should return 422 on domain error", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				const memberId = "018f4a7a-1e37-7b2c-8f00-999999999999";
+				(mockUseCases.removeFamilyMember.execute as any).mockResolvedValue(
+					Result.err({ message: "domain", http: 422 }),
+				);
 
-      const res = await app.request(`/patients/${patientId}/socioeconomic-situation`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(situationData),
-      });
+				const res = await app.request(
+					`/patients/${patientId}/family-members/${memberId}`,
+					{ method: "DELETE" },
+				);
+				expect(res.status).toBe(422);
+			});
 
-      expect(res.status).toBe(200);
-    });
-  });
+			test("should return 500 when use case crashes", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				const memberId = "018f4a7a-1e37-7b2c-8f00-999999999999";
+				(mockUseCases.removeFamilyMember.execute as any).mockRejectedValue(
+					new Error("boom"),
+				);
 
-  describe("POST /patients/{id}/referrals", () => {
-    test("should return 201 on success", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
-      const data = { 
-        referredPersonId: "018f4a7a-1e37-7b2c-8f00-777777777777",
-        destinationService: "HEALTH_CARE",
-        reason: "Routine checkup",
-      };
+				const res = await app.request(
+					`/patients/${patientId}/family-members/${memberId}`,
+					{ method: "DELETE" },
+				);
+				expect(res.status).toBe(500);
+			});
+		});
 
-      (mockUseCases.createReferral.execute as any).mockResolvedValue(Result.ok({ success: true }));
+		describe("POST /patients/{id}/appointments", () => {
+			test("should return 201 on success", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+			const data = {
+				professionalId: "018f4a7a-1e37-7b2c-8f00-888888888888",
+				summary: "Test",
+			};
 
-      const res = await app.request(`/patients/${patientId}/referrals`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+			(mockUseCases.registerAppointment.execute as any).mockResolvedValue(
+				Result.ok({ success: true }),
+			);
 
-      expect(res.status).toBe(201);
-    });
-  });
+			const res = await app.request(`/patients/${patientId}/appointments`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
+			});
 
-  describe("POST /patients/{id}/rights-violations", () => {
-    test("should return 201 on success", async () => {
-      const app = makeSocialCareHttpAdapter(mockUseCases);
-      const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
-      const data = { 
-        victimId: patientId,
-        violationType: "NEGLIGENCIA",
-        reportDate: "2024-01-01",
-        incidentDate: "2024-01-01",
-        descriptionOfFact: "Test description",
-      };
+				expect(res.status).toBe(201);
+			});
 
-      (mockUseCases.reportRightsViolation.execute as any).mockResolvedValue(Result.ok({ id: "report-123" }));
+			test("should return 422 on domain error", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.registerAppointment.execute as any).mockResolvedValue(
+					Result.err({ message: "domain", http: 422 }),
+				);
 
-      const res = await app.request(`/patients/${patientId}/rights-violations`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+				const res = await app.request(`/patients/${patientId}/appointments`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						professionalId: "018f4a7a-1e37-7b2c-8f00-888888888888",
+						summary: "Test",
+					}),
+				});
 
-      expect(res.status).toBe(201);
-      expect(res.headers.get("Location")).toContain("rights-violations/report-123");
-    });
-  });
-});
+				expect(res.status).toBe(422);
+			});
+
+			test("should return 500 when use case crashes", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.registerAppointment.execute as any).mockRejectedValue(
+					new Error("boom"),
+				);
+
+				const res = await app.request(`/patients/${patientId}/appointments`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						professionalId: "018f4a7a-1e37-7b2c-8f00-888888888888",
+						summary: "Test",
+					}),
+				});
+
+				expect(res.status).toBe(500);
+			});
+		});
+
+		describe("PATCH /patients/{id}/housing-condition", () => {
+			test("should merge patientId and wrap body into 'condition' property", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+			const conditionData = {
+				housingConditionType: "OWNED",
+				wallMaterial: "MASONRY",
+				numberOfRooms: 4,
+				numberOfBathrooms: 2,
+				waterSupplyType: "PUBLIC_NETWORK",
+				electricityAccess: "METERED_CONNECTION",
+				sewerDisposalMethod: "PUBLIC_SEWER",
+				wasteCollectionType: "DIRECT_COLLECTION",
+				accessibilityLevel: "FULLY_ACCESSIBLE",
+				isInGeographicRiskArea: false,
+				isInSocialConflictArea: false,
+			};
+
+			(mockUseCases.updateHousingCondition.execute as any).mockResolvedValue(
+				Result.ok({ success: true }),
+			);
+
+			const res = await app.request(
+				`/patients/${patientId}/housing-condition`,
+				{
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(conditionData),
+				},
+			);
+
+				expect(res.status).toBe(200);
+			});
+
+			test("should return 422 on domain error", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.updateHousingCondition.execute as any).mockResolvedValue(
+					Result.err({ message: "domain", http: 422 }),
+				);
+
+				const res = await app.request(
+					`/patients/${patientId}/housing-condition`,
+					{
+						method: "PATCH",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							housingConditionType: "OWNED",
+							wallMaterial: "MASONRY",
+							numberOfRooms: 4,
+							numberOfBathrooms: 2,
+							waterSupplyType: "PUBLIC_NETWORK",
+							electricityAccess: "METERED_CONNECTION",
+							sewerDisposalMethod: "PUBLIC_SEWER",
+							wasteCollectionType: "DIRECT_COLLECTION",
+							accessibilityLevel: "FULLY_ACCESSIBLE",
+							isInGeographicRiskArea: false,
+							isInSocialConflictArea: false,
+						}),
+					},
+				);
+				expect(res.status).toBe(422);
+			});
+
+			test("should return 500 when use case crashes", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.updateHousingCondition.execute as any).mockRejectedValue(
+					new Error("boom"),
+				);
+
+				const res = await app.request(
+					`/patients/${patientId}/housing-condition`,
+					{
+						method: "PATCH",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							housingConditionType: "OWNED",
+							wallMaterial: "MASONRY",
+							numberOfRooms: 4,
+							numberOfBathrooms: 2,
+							waterSupplyType: "PUBLIC_NETWORK",
+							electricityAccess: "METERED_CONNECTION",
+							sewerDisposalMethod: "PUBLIC_SEWER",
+							wasteCollectionType: "DIRECT_COLLECTION",
+							accessibilityLevel: "FULLY_ACCESSIBLE",
+							isInGeographicRiskArea: false,
+							isInSocialConflictArea: false,
+						}),
+					},
+				);
+				expect(res.status).toBe(500);
+			});
+		});
+
+		describe("PATCH /patients/{id}/socioeconomic-situation", () => {
+			test("should merge patientId and wrap body into 'situation' property", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+			const situationData = {
+				totalFamilyIncome: 5000,
+				incomePerCapita: 1250,
+				receivesSocialBenefit: true,
+				socialBenefits: [
+					{
+						benefitName: "Bolsa Familia",
+						amount: 600,
+						beneficiaryId: "018f4a7a-1e37-7b2c-8f00-999999999999",
+					},
+				],
+				mainSourceOfIncome: "Salary",
+				hasUnemployed: false,
+			};
+
+			(
+				mockUseCases.updateSocioEconomicSituation.execute as any
+			).mockResolvedValue(Result.ok({ success: true }));
+
+			const res = await app.request(
+				`/patients/${patientId}/socioeconomic-situation`,
+				{
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(situationData),
+				},
+			);
+
+				expect(res.status).toBe(200);
+			});
+
+			test("should return 422 on domain error", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(
+					mockUseCases.updateSocioEconomicSituation.execute as any
+				).mockResolvedValue(Result.err({ message: "domain", http: 422 }));
+
+				const res = await app.request(
+					`/patients/${patientId}/socioeconomic-situation`,
+					{
+						method: "PATCH",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							totalFamilyIncome: 5000,
+							incomePerCapita: 1250,
+							receivesSocialBenefit: true,
+							socialBenefits: [
+								{
+									benefitName: "Bolsa Familia",
+									amount: 600,
+									beneficiaryId: "018f4a7a-1e37-7b2c-8f00-999999999999",
+								},
+							],
+							mainSourceOfIncome: "Salary",
+							hasUnemployed: false,
+						}),
+					},
+				);
+				expect(res.status).toBe(422);
+			});
+
+			test("should return 500 when use case crashes", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(
+					mockUseCases.updateSocioEconomicSituation.execute as any
+				).mockRejectedValue(new Error("boom"));
+
+				const res = await app.request(
+					`/patients/${patientId}/socioeconomic-situation`,
+					{
+						method: "PATCH",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							totalFamilyIncome: 5000,
+							incomePerCapita: 1250,
+							receivesSocialBenefit: true,
+							socialBenefits: [
+								{
+									benefitName: "Bolsa Familia",
+									amount: 600,
+									beneficiaryId: "018f4a7a-1e37-7b2c-8f00-999999999999",
+								},
+							],
+							mainSourceOfIncome: "Salary",
+							hasUnemployed: false,
+						}),
+					},
+				);
+				expect(res.status).toBe(500);
+			});
+		});
+
+		describe("POST /patients/{id}/referrals", () => {
+			test("should return 201 on success", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+			const data = {
+				referredPersonId: "018f4a7a-1e37-7b2c-8f00-777777777777",
+				destinationService: "HEALTH_CARE",
+				reason: "Routine checkup",
+			};
+
+			(mockUseCases.createReferral.execute as any).mockResolvedValue(
+				Result.ok({ success: true }),
+			);
+
+			const res = await app.request(`/patients/${patientId}/referrals`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
+			});
+
+				expect(res.status).toBe(201);
+			});
+
+			test("should return 422 on domain error", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.createReferral.execute as any).mockResolvedValue(
+					Result.err({ message: "domain", http: 422 }),
+				);
+
+				const res = await app.request(`/patients/${patientId}/referrals`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						referredPersonId: "018f4a7a-1e37-7b2c-8f00-777777777777",
+						destinationService: "HEALTH_CARE",
+						reason: "Routine checkup",
+					}),
+				});
+				expect(res.status).toBe(422);
+			});
+
+			test("should return 500 when use case crashes", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.createReferral.execute as any).mockRejectedValue(
+					new Error("boom"),
+				);
+
+				const res = await app.request(`/patients/${patientId}/referrals`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						referredPersonId: "018f4a7a-1e37-7b2c-8f00-777777777777",
+						destinationService: "HEALTH_CARE",
+						reason: "Routine checkup",
+					}),
+				});
+				expect(res.status).toBe(500);
+			});
+		});
+
+		describe("POST /patients/{id}/rights-violations", () => {
+			test("should return 201 on success", async () => {
+			const app = makeSocialCareHttpAdapter(mockUseCases);
+			const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+			const data = {
+				victimId: patientId,
+				violationType: "NEGLIGENCIA",
+				reportDate: "2024-01-01",
+				incidentDate: "2024-01-01",
+				descriptionOfFact: "Test description",
+			};
+
+			(mockUseCases.reportRightsViolation.execute as any).mockResolvedValue(
+				Result.ok({ id: "report-123" }),
+			);
+
+			const res = await app.request(
+				`/patients/${patientId}/rights-violations`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(data),
+				},
+			);
+
+			expect(res.status).toBe(201);
+				expect(res.headers.get("Location")).toContain(
+					"rights-violations/report-123",
+				);
+			});
+
+			test("should return 422 on domain error", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.reportRightsViolation.execute as any).mockResolvedValue(
+					Result.err({ message: "domain", http: 422 }),
+				);
+
+				const res = await app.request(
+					`/patients/${patientId}/rights-violations`,
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							victimId: patientId,
+							violationType: "NEGLIGENCIA",
+							reportDate: "2024-01-01",
+							incidentDate: "2024-01-01",
+							descriptionOfFact: "Test description",
+						}),
+					},
+				);
+				expect(res.status).toBe(422);
+			});
+
+			test("should return 500 when use case crashes", async () => {
+				const app = makeSocialCareHttpAdapter(mockUseCases);
+				const patientId = "018f4a7a-1e37-7b2c-8f00-123456789abc";
+				(mockUseCases.reportRightsViolation.execute as any).mockRejectedValue(
+					new Error("boom"),
+				);
+
+				const res = await app.request(
+					`/patients/${patientId}/rights-violations`,
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							victimId: patientId,
+							violationType: "NEGLIGENCIA",
+							reportDate: "2024-01-01",
+							incidentDate: "2024-01-01",
+							descriptionOfFact: "Test description",
+						}),
+					},
+				);
+				expect(res.status).toBe(500);
+			});
+		});
+	});

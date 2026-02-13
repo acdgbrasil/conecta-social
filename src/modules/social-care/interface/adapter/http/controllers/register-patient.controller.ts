@@ -13,8 +13,9 @@ export const registerPatientController = (
   useCase: UseCasePort<RegisterNewPatientCommand, Result<unknown, DomainError>>
 ) => async (c: Context) => {
   try {
-    // 1. Obtém dados já validados pelo middleware do Hono OpenAPI
-    const body = c.req.valid("json" as never);
+    // 1. Obtém dados validados pelo middleware OpenAPI
+    // @ts-ignore
+    const body = c.req.valid("json");
     
     // 2. Adaptação para o Comando de Aplicação
     const commandResult = createRegisterNewPatientCommand(body);
@@ -31,21 +32,19 @@ export const registerPatientController = (
     const result = await useCase.execute(commandResult.value);
 
     if (Result.isErr(result)) {
-      const error = result.error as any; // Cast temporário para acessar 'code' se existir
-      // Mapeamento semântico de erros de domínio para status HTTP (RFC 9110)
-      if (error.code === "CONFLICT") return c.json({ success: false, error: error.message }, 409);
-      if (error.code === "NOT_FOUND") return c.json({ success: false, error: error.message }, 404);
+      const error = result.error;
+      const status = error.http ?? 422;
       
       return c.json({ 
         success: false, 
         error: error.message 
-      }, 422);
+      }, status as never);
     }
 
     // 4. Resposta Síncrona (201 Created com cabeçalho Location)
-    const resourceId = (result.value as any)?.id || (result.value as any)?.personId;
-    if (resourceId) {
-      c.header("Location", `/social-care/patients/${resourceId}`);
+    const data = result.value as { id: string };
+    if (data?.id) {
+      c.header("Location", `/social-care/patients/${data.id}`);
     }
 
     return c.json({ 

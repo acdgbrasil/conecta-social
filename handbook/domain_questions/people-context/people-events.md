@@ -33,6 +33,7 @@ O People Context atua como o **emissor primário de identidade**. Eventos dispar
 | Evento | SOC (Social Care) | BI (Analytics) | NOTI (Notificações) | AUTH (Plataforma) |
 | --- | --- | --- | --- | --- |
 | **PersonRegistered** | C (Sincronia) | C |  | C |
+| **AccountCreated** |  | C |  | **C** |
 | **PersonRolePromoted** |  | C | C | C |
 | **DataAccessRequested** |  |  | C |  |
 | **DataAccessAuthorized** |  | C | C |  |

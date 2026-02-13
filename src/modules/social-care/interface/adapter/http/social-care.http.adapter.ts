@@ -26,12 +26,12 @@ import { updateSocioEconomicSituationController } from "./controllers/update-soc
 const ErrorSchema = z.object({
   success: z.boolean().openapi({ example: false }),
   error: z.string().openapi({ example: "Mensagem de erro explicativa" }),
-  details: z.any().optional(),
+  details: z.unknown().optional(),
 });
 
 const SuccessSchema = z.object({
   success: z.boolean().openapi({ example: true }),
-  data: z.any(), // Aqui usamos any apenas no Zod para permitir polimorfismo de retorno
+  data: z.unknown(), // Substituído any por unknown para maior segurança
 });
 
 /**

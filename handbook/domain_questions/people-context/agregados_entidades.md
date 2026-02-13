@@ -77,6 +77,7 @@ DataAccessRequest {
 * **Temporalidade Estrita (R6)**: O acesso é concedido por um período definido pelo autorizador, com um teto máximo de **7 dias corridos**.
 * **Hierarquia de Contingência (R7)**: Na ausência ou impedimento do autorizador primário (ex: Profissional de Férias), um `Admin` ou `Coordinator` do setor pode atuar como `authorizerId`.
 * **Aviso de Efemeridade (R8)**: Ao ser autorizado, o sistema deve registrar e exibir o aviso: *"Dado temporário para consulta. Cópia proibida para evitar decisões baseadas em informações desatualizadas"*.
+* **Proibição de Autoaprovação (R9)**: Um `PersonID` não pode autorizar sua própria solicitação de acesso (`requesterId != authorizerId`). Tentativas de autoaprovação devem ser bloqueadas e registradas como incidentes de auditoria.
 
 ---
 

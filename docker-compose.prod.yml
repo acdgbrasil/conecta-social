@@ -1,0 +1,25 @@
+name: conecta-social-prod
+
+services:
+  postgres:
+    # Em produção, não expor Postgres para o host por padrão.
+    ports: []
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  logto-db-bootstrap:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  logto:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"

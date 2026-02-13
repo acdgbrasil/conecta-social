@@ -66,4 +66,15 @@ describe("UseCasePipeline (Generators)", () => {
 
     expect(Result.unwrap(result)).toBe(30);
   });
+
+  test("deve propagar exceções não tratadas do pipeline", async () => {
+    const expectedError = new Error("boom");
+
+    const run = runPipeline(async function* () {
+      yield Promise.reject(expectedError);
+      return Result.ok("nunca");
+    });
+
+    await expect(run).rejects.toThrow("boom");
+  });
 });

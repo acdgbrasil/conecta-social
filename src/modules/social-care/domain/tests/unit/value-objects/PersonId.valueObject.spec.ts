@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { PersonId, PID } from "@conecta/social-care";
+import type { IdProviderPort } from "@conecta/ports";
 import { Result } from "@conecta/result";
 
 const VALID_ID = "01890E18-257B-7B32-B264-93C9D46242AB";
@@ -24,6 +25,18 @@ describe("PersonId.valueObject (FP Refactor - RED)", () => {
       expect(Result.isErr(result)).toBe(true);
       expect(Result.unwrapErr(result).code).toBe(PID.InvalidFormat("invalid").code);
     });
+
+    test("create falha quando idProvider gera UUID inválido", () => {
+      const invalidProvider: IdProviderPort = {
+        generate: () => "not-a-uuid",
+      };
+      const result = PersonId.create(undefined, invalidProvider);
+
+      expect(Result.isErr(result)).toBe(true);
+      expect(Result.unwrapErr(result).code).toBe(
+        PID.InvalidFormat("not-a-uuid").code,
+      );
+    });
   });
 
   describe("Namespace Helpers", () => {
@@ -32,6 +45,11 @@ describe("PersonId.valueObject (FP Refactor - RED)", () => {
       const id2 = Result.unwrap(PersonId.create(LOWER_ID));
       
       expect(PersonId.equals(id1, id2)).toBe(true);
+    });
+
+    test("toString retorna valor primitivo do PersonId", () => {
+      const id = Result.unwrap(PersonId.create(VALID_ID));
+      expect(PersonId.toString(id)).toBe(LOWER_ID);
     });
   });
 });

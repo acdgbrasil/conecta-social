@@ -37,10 +37,11 @@ export function copyWith(
   newEvents: DomainEvent[] = []
 ): Patient {
   const updated = Aggregate.update(patient, changes);
+  const currentEvents = patient.events ?? [];
   return {
     ...updated,
     version: patient.version + 1,
-    events: [...patient.events, ...newEvents],
+    events: [...currentEvents, ...newEvents],
   };
 }
 

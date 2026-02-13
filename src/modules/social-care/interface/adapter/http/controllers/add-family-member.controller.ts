@@ -13,7 +13,7 @@ export const addFamilyMemberController = (
 ) => async (c: Context) => {
   try {
     const patientId = c.req.param("id");
-    const body = c.req.valid("json" as never);
+    const body = await c.req.json().catch(() => ({}));
     
     // Mescla o ID da URL com os dados do corpo
     const commandResult = createAddFamilyMemberCommand({ ...body, patientId });
@@ -25,9 +25,9 @@ export const addFamilyMemberController = (
     const result = await useCase.execute(commandResult.value);
 
     if (Result.isErr(result)) {
-      const error = result.error as any;
-      if (error.code === "NOT_FOUND") return c.json({ success: false, error: error.message }, 404);
-      return c.json({ success: false, error: error.message }, 422);
+      const error = result.error;
+      const status = error.http ?? 422;
+      return c.json({ success: false, error: error.message }, status as never);
     }
 
     return c.json({ success: true, data: result.value }, 200);

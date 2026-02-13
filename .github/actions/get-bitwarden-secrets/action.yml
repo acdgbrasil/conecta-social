@@ -1,0 +1,24 @@
+name: 'Get Bitwarden Secrets'
+description: 'Recupera segredos do Bitwarden Secrets Manager e os disponibiliza como variáveis de ambiente'
+
+inputs:
+  access_token:
+    description: 'Bitwarden Access Token (BWS)'
+    required: true
+  base_url:
+    description: 'Bitwarden base URL (use em self-hosted)'
+    required: false
+    default: 'https://vault.bitwarden.com'
+  secrets_list:
+    description: 'Lista de segredos no formato ID > NAME'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Get Secrets from Bitwarden
+      uses: bitwarden/sm-action@14f92f1d294ae3c2b6a3845d389cd2c318b0dfd8 # v2.2.0
+      with:
+        access_token: ${{ inputs.access_token }}
+        base_url: ${{ inputs.base_url }}
+        secrets: ${{ inputs.secrets_list }}

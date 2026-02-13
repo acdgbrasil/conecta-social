@@ -1,75 +1,124 @@
 services:
-  # Banco de Dados Dedicado - Social Care Context
-  # Isolado: Apenas o módulo Social Care deve conectar aqui.
-  social-care-db:
+  # Cluster de Banco de Dados Central (Modular)
+  postgres:
     image: postgres:17-alpine
-    container_name: conecta-social-care-db
+    container_name: conecta-postgres-cluster
     restart: always
     environment:
-      POSTGRES_USER: ${SC_DB_USER:-admin}
-      POSTGRES_PASSWORD: ${SC_DB_PASSWORD:-admin}
-      POSTGRES_DB: ${SC_DB_NAME:-social_care}
+      POSTGRES_USER: ${SC_DB_USER:?ERRO - SC_DB_USER obrigatório}
+      POSTGRES_PASSWORD: ${SC_DB_PASSWORD:?ERRO - SC_DB_PASSWORD obrigatório}
+      POSTGRES_DB: ${SC_DB_NAME:?ERRO - SC_DB_NAME obrigatório}
+      # Vars para o script de init (criam o banco do Logto no cluster)
+      LOGTO_DB_USER: ${LOGTO_DB_USER:?ERRO - LOGTO_DB_USER obrigatório}
+      LOGTO_DB_PASSWORD: ${LOGTO_DB_PASSWORD:?ERRO - LOGTO_DB_PASSWORD obrigatório}
+      LOGTO_DB_NAME: ${LOGTO_DB_NAME:?ERRO - LOGTO_DB_NAME obrigatório}
     ports:
-      # Exposto na porta 5433 para evitar conflito com outros containers.
       - "5433:5432"
     volumes:
-      - social_care_data:/var/lib/postgresql/data
+      - postgres_cluster_data:/var/lib/postgresql/data
+      - ./infrastructure/database/postgres/init-scripts:/docker-entrypoint-initdb.d
     networks:
       - conecta-internal-net
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${SC_DB_USER:-admin}", "-d", "${SC_DB_NAME:-social_care}"]
-      interval: 5s
+      test: ["CMD", "pg_isready", "-U", "${SC_DB_USER:?ERRO - SC_DB_USER obrigatório}", "-d", "${SC_DB_NAME:?ERRO - SC_DB_NAME obrigatório}"]
+      interval: 10s
       timeout: 5s
       retries: 5
 
-  # Banco de Dados Dedicado - Logto (Auth & IAM)
-  logto-db:
+  # Bootstrap idempotente para garantir role/database do Logto
+  logto-db-bootstrap:
     image: postgres:17-alpine
-    container_name: conecta-logto-db
-    restart: always
+    restart: "no"
     environment:
-      POSTGRES_USER: ${LOGTO_DB_USER:-logto}
-      POSTGRES_PASSWORD: ${LOGTO_DB_PASSWORD:-logto_pass}
-      POSTGRES_DB: ${LOGTO_DB_NAME:-logto}
-    ports:
-      - "5434:5432"
-    volumes:
-      - logto_data:/var/lib/postgresql/data
-    networks:
-      - conecta-internal-net
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${LOGTO_DB_USER:-logto}", "-d", "${LOGTO_DB_NAME:-logto}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      SC_DB_USER: ${SC_DB_USER:?ERRO - SC_DB_USER obrigatório}
+      SC_DB_PASSWORD: ${SC_DB_PASSWORD:?ERRO - SC_DB_PASSWORD obrigatório}
+      SC_DB_NAME: ${SC_DB_NAME:?ERRO - SC_DB_NAME obrigatório}
+      LOGTO_DB_USER: ${LOGTO_DB_USER:?ERRO - LOGTO_DB_USER obrigatório}
+      LOGTO_DB_PASSWORD: ${LOGTO_DB_PASSWORD:?ERRO - LOGTO_DB_PASSWORD obrigatório}
+      LOGTO_DB_NAME: ${LOGTO_DB_NAME:?ERRO - LOGTO_DB_NAME obrigatório}
+    command:
+      - sh
+      - -c
+      - |
+        set -eu
+        export PGPASSWORD="$$SC_DB_PASSWORD"
+        psql -h postgres -p 5432 -U "$$SC_DB_USER" -d "$$SC_DB_NAME" -v ON_ERROR_STOP=1 \
+          --set=logto_db_user="$$LOGTO_DB_USER" \
+          --set=logto_db_password="$$LOGTO_DB_PASSWORD" \
+          --set=logto_db_name="$$LOGTO_DB_NAME" \
+          --set=postgres_user="$$SC_DB_USER" <<'SQL'
+        SELECT format(
+          'CREATE ROLE %I LOGIN PASSWORD %L',
+          :'logto_db_user',
+          :'logto_db_password'
+        )
+        WHERE NOT EXISTS (SELECT 1 FROM pg_catalog.pg_roles WHERE rolname = :'logto_db_user')\gexec
 
-  # Logto Core Service
-  logto:
-    image: svhd/logto:latest
-    container_name: conecta-logto
-    restart: always
-    environment:
-      # URL de conexão com o banco (usa o nome do serviço docker)
-      DB_URL: postgresql://${LOGTO_DB_USER:-logto}:${LOGTO_DB_PASSWORD:-logto_pass}@logto-db:5432/${LOGTO_DB_NAME:-logto}
-      # URL pública do Logto (mudar para o IP/Domínio da VPS na Magalu em produção)
-      ENDPOINT: ${LOGTO_ENDPOINT:-http://localhost:3001}
-      # URL da console de administração
-      ADMIN_ENDPOINT: ${LOGTO_ADMIN_ENDPOINT:-http://localhost:3002}
-      # Chave de criptografia do Vault (Base64) - MANTENHA EM SEGREDO
-      SECRET_VAULT_KEK: ${LOGTO_SECRET_VAULT_KEK:-Y29uZWN0YS1zb2NpYWwtZGV2LWtleS0xMjM0NTY3ODkwMTI=}
-    ports:
-      - "3001:3001" # Porta do Core (API/Auth)
-      - "3002:3002" # Porta do Admin Console
+        SELECT format(
+          'ALTER ROLE %I WITH LOGIN PASSWORD %L',
+          :'logto_db_user',
+          :'logto_db_password'
+        )
+        WHERE EXISTS (SELECT 1 FROM pg_catalog.pg_roles WHERE rolname = :'logto_db_user')
+          AND :'logto_db_user' <> :'postgres_user'\gexec
+
+        SELECT format('CREATE DATABASE %I', :'logto_db_name')
+        WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = :'logto_db_name')\gexec
+
+        SELECT format('ALTER DATABASE %I OWNER TO %I', :'logto_db_name', :'logto_db_user')\gexec
+        SELECT format('GRANT ALL PRIVILEGES ON DATABASE %I TO %I', :'logto_db_name', :'logto_db_user')\gexec
+        SQL
     depends_on:
-      logto-db:
+      postgres:
         condition: service_healthy
     networks:
       - conecta-internal-net
 
+  # Logto Core Service (Identity Provider)
+  logto:
+    image: ghcr.io/logto-io/logto:1.20.0
+    container_name: conecta-logto
+    restart: always
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "if [ \"$$LOGTO_DB_USER\" = \"$$SC_DB_USER\" ]; then DB_PASSWORD=\"$$SC_DB_PASSWORD\"; else DB_PASSWORD=\"$$LOGTO_DB_PASSWORD\"; fi; export DB_URL=\"postgresql://$$LOGTO_DB_USER:$$DB_PASSWORD@postgres:5432/$$LOGTO_DB_NAME\"; npm run cli db seed -- --swe && npm start",
+      ]
+    environment:
+      # Mantendo vars para o runtime normal do Logto
+      ENDPOINT: ${LOGTO_ENDPOINT:-http://localhost:3001}
+      ADMIN_ENDPOINT: ${LOGTO_ADMIN_ENDPOINT:-http://localhost:3002}
+      SECRET_VAULT_KEK: ${LOGTO_SECRET_VAULT_KEK:?ERRO - LOGTO_SECRET_VAULT_KEK não definido}
+      TRUST_PROXY_HEADER: 1
+      SC_DB_USER: ${SC_DB_USER:?ERRO - SC_DB_USER obrigatório}
+      SC_DB_PASSWORD: ${SC_DB_PASSWORD:?ERRO - SC_DB_PASSWORD obrigatório}
+      LOGTO_DB_USER: ${LOGTO_DB_USER:?ERRO - LOGTO_DB_USER obrigatório}
+      LOGTO_DB_PASSWORD: ${LOGTO_DB_PASSWORD:?ERRO - LOGTO_DB_PASSWORD obrigatório}
+      LOGTO_DB_NAME: ${LOGTO_DB_NAME:?ERRO - LOGTO_DB_NAME obrigatório}
+    ports:
+      - "3001:3001"
+      - "3002:3002"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q -O /dev/null http://localhost:3001/ && wget -q -O /dev/null http://localhost:3002/console/welcome || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      logto-db-bootstrap:
+        condition: service_completed_successfully
+    networks:
+      - conecta-internal-net
+
 volumes:
-  social_care_data:
-    driver: local
-  logto_data:
+  postgres_cluster_data:
     driver: local
 
 networks:

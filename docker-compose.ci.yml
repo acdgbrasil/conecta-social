@@ -1,0 +1,14 @@
+name: conecta-social-ci
+
+services:
+  postgres:
+    restart: "no"
+
+  logto-db-bootstrap:
+    restart: "no"
+
+  # No CI padrão, executamos apenas o banco para testes da aplicação.
+  logto:
+    restart: "no"
+    profiles:
+      - full-stack

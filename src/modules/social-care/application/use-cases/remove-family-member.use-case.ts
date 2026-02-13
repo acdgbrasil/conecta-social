@@ -31,6 +31,4 @@ export const makeRemoveFamilyMemberUseCase = (deps: RemoveFamilyMemberDeps) =>
     },
 
     repository: deps.repository,
-    eventBus: deps.eventBus,
-    pullEvents: Patient.pullDomainEvents,
   });

@@ -1,10 +1,13 @@
 import { Result } from "@conecta/result";
 import type { SqlPort, SqlTransaction } from "@conecta/ports";
+import type { Uuid } from "@conecta/uuid";
 import type { Patient } from "@conecta/social-care/domain/entities";
 import type { PatientRepositoryPort } from "@conecta/social-care/domain/repository/patient.repository.port";
-import { PatientPersistenceMapper } from "./patient.mapper";
+import type { PersonId } from "@conecta/social-care/domain/value-objects";
+import { PatientPersistenceMapper, type PatientPersistenceRow } from "./patient.mapper";
 import { enqueueOutboxEvents } from "../../outbox/postgres-outbox.repository";
 import { AppError } from "@conecta/social-care/application/errors/application.error";
+import { P } from "@conecta/social-care/domain/errors/Patient.error";
 
 /**
  * Adaptador de Persistência Funcional (Actions) para o Agregado Patient.
@@ -26,24 +29,28 @@ export const makePatientPersistenceAdapter = (sql: SqlPort): PatientRepositoryPo
             person_id, 
             housing_condition, 
             socioeconomic_situation,
+            community_support_network,
+            social_health_summary,
             updated_at
           ) VALUES (
             ${persistenceModel.id}, 
             ${persistenceModel.person_id}, 
             ${persistenceModel.housing_condition}, 
             ${persistenceModel.socioeconomic_situation},
+            ${persistenceModel.community_support_network},
+            ${persistenceModel.social_health_summary},
             NOW()
           )
           ON CONFLICT (id) DO UPDATE SET
             housing_condition = EXCLUDED.housing_condition,
             socioeconomic_situation = EXCLUDED.socioeconomic_situation,
+            community_support_network = EXCLUDED.community_support_network,
+            social_health_summary = EXCLUDED.social_health_summary,
             updated_at = NOW();
         `;
 
         // 2. Persiste os eventos no Outbox (Obrigatório - Mesma Transação)
-        // Note: O UseCasePipeline já deve ter extraído os eventos, 
-        // mas aqui garantimos a integridade se o agregado tiver eventos pendentes.
-        const events = (patient as any).pullDomainEvents?.()?.events ?? [];
+        const events = patient.events;
         if (events.length > 0) {
           await enqueueOutboxEvents(tx, {
             aggregateId: persistenceModel.id,
@@ -60,10 +67,10 @@ export const makePatientPersistenceAdapter = (sql: SqlPort): PatientRepositoryPo
     }
   },
 
-  existsByPersonId: async (personId: string) => {
+  existsByPersonId: async (personId: PersonId) => {
     try {
       const rows = await sql`
-        SELECT 1 FROM patients WHERE person_id = ${personId} LIMIT 1
+        SELECT 1 FROM patients WHERE person_id = ${personId.toString()} LIMIT 1
       `;
       return Result.ok(rows.length > 0);
     } catch (error) {
@@ -71,31 +78,36 @@ export const makePatientPersistenceAdapter = (sql: SqlPort): PatientRepositoryPo
     }
   },
 
-  findByPersonId: async (personId: string) => {
+  findByPersonId: async (personId: PersonId) => {
     try {
-      const rows = await sql`
-        SELECT * FROM patients WHERE person_id = ${personId} LIMIT 1
+      const rows = await sql<PatientPersistenceRow[]>`
+        SELECT * FROM patients WHERE person_id = ${personId.toString()} LIMIT 1
       `;
       
       if (rows.length === 0) {
-        return Result.err(AppError.PatientNotFound?.() ?? { message: "Patient not found" });
+        return Result.err(P.PatientNotFound({ id: personId.toString() }));
       }
 
       return PatientPersistenceMapper.toDomain(rows[0]);
     } catch (error) {
+      console.error("[PostgresAdapter] Erro ao buscar paciente por personId:", error);
       return Result.err(AppError.RepositoryNotAvailable());
     }
   },
 
-  // Implementação do findById conforme solicitado na TASK-001
-  findById: async (id: string) => {
+  findById: async (id: Uuid) => {
     try {
-      const rows = await sql`
-        SELECT * FROM patients WHERE id = ${id} LIMIT 1
+      const rows = await sql<PatientPersistenceRow[]>`
+        SELECT * FROM patients WHERE id = ${id.toString()} LIMIT 1
       `;
-      if (rows.length === 0) return Result.err(AppError.PatientNotFound?.() ?? { message: "Patient not found" });
+      
+      if (rows.length === 0) {
+        return Result.err(P.PatientNotFound({ id: id.toString() }));
+      }
+      
       return PatientPersistenceMapper.toDomain(rows[0]);
     } catch (error) {
+      console.error("[PostgresAdapter] Erro ao buscar paciente por id:", error);
       return Result.err(AppError.RepositoryNotAvailable());
     }
   }
